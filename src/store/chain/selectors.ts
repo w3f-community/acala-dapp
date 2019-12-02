@@ -1,1 +1,1 @@
-import { Selector } from '@/index.types';
+import { Selector } from '@/utils/store';
