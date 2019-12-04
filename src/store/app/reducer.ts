@@ -1,15 +1,8 @@
-import { AppState } from './types';
-import { fromJS } from 'immutable';
+import { State } from './types';
 import { createReducer } from 'typesafe-actions';
 
-const initialState: AppState = {
-    menu: [
-        {
-            name: 'CDP',
-            icon: 'solution',
-        }
-    ],
-    icon: '',
+const initialState: State = {
+    menu: [],
 };
 
-export default createReducer(fromJS(initialState));
+export default createReducer(initialState);

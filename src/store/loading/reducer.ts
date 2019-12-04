@@ -1,29 +1,29 @@
-import { fromJS } from "immutable";
+import { fromJS } from 'immutable';
 
 export interface LoadingAction {
-    type: string,
-    payload: null,
+    type: string;
+    payload: null;
 }
 
 // actions
-export function startLoading (originType: string) : LoadingAction {
+export function startLoading(originType: string): LoadingAction {
     return {
         type: `${originType}/loading/start`,
-        payload: null
+        payload: null,
     };
 }
 
-export function endLoading(originType: string) : LoadingAction {
+export function endLoading(originType: string): LoadingAction {
     return {
         type: `${originType}/loading/end`,
-        payload: null
+        payload: null,
     };
 }
 
 // selector
-export const loadingSelector = (type: string) => (state: any)=> {
+export const loadingSelector = (type: string) => (state: any) => {
     return state.loading.get(type);
-}
+};
 
 // reducer
 const initialState = {};

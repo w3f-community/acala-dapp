@@ -1,4 +1,4 @@
-interface IConfig {
-    toJS?: boolean,
+interface BaseConfig {
+    toJS?: boolean;
 }
-export type Selector<Result, Config> = (config: IConfig & Config) => Result;
+export type Selector<Result, Config> = (config: BaseConfig & Config) => Result;

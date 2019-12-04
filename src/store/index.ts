@@ -5,9 +5,7 @@ import rootReducer from './reducer';
 import { RootAction, RootState } from 'typesafe-actions';
 
 export default function create() {
-    const rootEpic = combineEpics(
-        ...Object.values(chainEpics),
-    );
+    const rootEpic = combineEpics(...Object.values(chainEpics));
     const epicMiddleware = createEpicMiddleware<RootAction, RootAction, RootState>();
     const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
     const store = createStore(
@@ -15,8 +13,8 @@ export default function create() {
         composeEnhancers(
             applyMiddleware(
                 epicMiddleware, // redux-observable
-            )
-        )
+            ),
+        ),
     );
 
     epicMiddleware.run(rootEpic);

@@ -1,7 +1,6 @@
-export function menuSelector(state: any) {
-    return state.app.get('menu');
-}
+import { Menu } from './types';
+import { RootState } from 'typesafe-actions';
 
-export function logoSelector(state: any) {
-    return state.app.get('logo');
+export function menuSelector(state: RootState): Menu[] {
+    return state.app.menu;
 }

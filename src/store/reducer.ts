@@ -7,4 +7,4 @@ export default combineReducers({
     loading: loadingReducer,
     chain: chainReducer,
     app: appReducer,
-})
+});

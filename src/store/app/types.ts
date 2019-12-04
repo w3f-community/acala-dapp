@@ -1,9 +1,8 @@
 export interface Menu {
-    name: string,
-    icon: string
+    name: string;
+    icon: string;
 }
 
-export interface AppState {
-    menu: Menu[],
-    icon: string,
+export interface State {
+    menu: Menu[];
 }
