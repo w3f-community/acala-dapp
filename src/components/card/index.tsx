@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         headerDivider: {
             borderBottom: `1px solid ${theme.palette.primary.light}`,
-        }
+        },
     }),
 );
 
@@ -30,7 +30,7 @@ interface Props {
     children: ReactNode;
     headerClassName?: string;
     contentClassName?: string;
-    divider?: boolean
+    divider?: boolean;
 }
 
 const Card: React.FC<Props> = ({
@@ -53,9 +53,13 @@ const Card: React.FC<Props> = ({
             })}
         >
             <Grid container direction="column">
-                <div className={clsx(classes.header, headerClassName, {
-                    [classes.headerDivider]: divider
-                })}>{header}</div>
+                <div
+                    className={clsx(classes.header, headerClassName, {
+                        [classes.headerDivider]: divider,
+                    })}
+                >
+                    {header}
+                </div>
                 <div className={clsx(contentClassName)}>{children}</div>
             </Grid>
         </Paper>

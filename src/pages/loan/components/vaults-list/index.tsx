@@ -63,9 +63,7 @@ const VaultsList: React.FC<Props> = ({ vaults }) => {
                 <Grid item key={`vault-type-${item.asset}`}>
                     <Paper elevation={2} className={classes.cardRoot} square={true}>
                         <Grid container direction="column" justify="space-between" className={classes.cardContent}>
-                            <Box>
-                                <Typography variant="h6">{getAssetName(item.asset)}</Typography>
-                            </Box>
+                            <Typography variant="h6">{getAssetName(item.asset)}</Typography>
                             <Typography variant="body1">{item.liquidationRatio}%</Typography>
                         </Grid>
                     </Paper>

@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { get, template } from 'lodash';
+import { isEmpty, get, template } from 'lodash';
 
 type Language = 'zh' | 'en';
 
@@ -9,7 +9,6 @@ interface Options {
     i18n: object;
 }
 
-// promise context vaule is not empty
 const context = React.createContext<Translator>({} as Translator);
 const Provider = context.Provider;
 
@@ -22,12 +21,41 @@ class Translator {
         this.language = language ? language : (navigator.language as Language);
         this.feedback = feedback;
         this.i18n = i18n;
+
+        this.getTranslateResult = this.getTranslateResult.bind(this);
         this.translate = this.translate.bind(this);
     }
 
-    translate(name: string, options?: object): string {
-        const origin = get(this.i18n, `${this.language}.${name}`) || name;
-        const formatter = template(origin, { interpolate: /{{([\s\S]+?)}}/g });
+    private getTranslateResult(name: string): string {
+        const warn = (name: string, language: string, type: string) => {
+            console.warn(
+                `can not find i18n config for %c${name}%c, ${type} | ${language}`,
+                'color: red',
+                'color: inherit',
+            );
+        };
+
+        // try use this.language
+        let result = get(this.i18n, `${this.language}.${name}`);
+        if (!isEmpty(result)) {
+            return result;
+        }
+
+        // try use this.feedback
+        warn(name, this.language, 'current');
+        result = get(this.i18n, `${this.feedback}.${name}`);
+        if (!isEmpty(result)) {
+            return result;
+        }
+
+        // try use origin name
+        warn(name, this.feedback, 'feedback');
+        return name;
+    }
+
+    public translate(name: string, options?: object): string {
+        const result = this.getTranslateResult(name);
+        const formatter = template(result, { interpolate: /{{([\s\S]+?)}}/g });
         return formatter(options);
     }
 }

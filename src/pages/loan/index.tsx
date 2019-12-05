@@ -2,13 +2,15 @@ import React from 'react';
 import { Grid, Box } from '@material-ui/core';
 import { useTranslate } from '@/hooks/i18n';
 
-import { Vault, SystemInfoData, CollateralInfoData } from './index.types';
+import { Vault, SystemInfoData, CollateralInfoData, TransactionHistoryData, CurrentVault } from './index.types';
 
 import FeedPrices from './components/feed-prices';
 import VaultsList from './components/vaults-list';
 import SystemInfo from './components/system-info';
 import CollateralInfo from './components/collateral-info';
 import VaultPanel from './components/vault-panel';
+import TransactionHistory from './components/transaction-history';
+import VaultInfo from './components/vault-info';
 
 const Loan: React.FC = () => {
     const { t } = useTranslate();
@@ -40,13 +42,36 @@ const Loan: React.FC = () => {
         },
     };
 
+    const mockTransactionHistoryData: TransactionHistoryData[] = [
+        {
+            asset: 2,
+            action: 'Create CDP',
+            when: 112312312,
+            from: 'sdfsdfsdfsd',
+            tx: 'xxxxxxxxxxxx',
+        },
+    ];
+
+    const mockCurrentVault: CurrentVault = {
+        asset: 2,
+        stabilityFee: 5,
+        currentCollateralRatio: 200,
+        liquidationRatio: 200,
+        liquidationPrice: 250,
+        liquidationPenalty: 5,
+    };
+
     return (
         <div>
             <VaultsList vaults={vaults} />
             <Box paddingTop={7} />
             <Grid container spacing={6}>
                 <Grid item xs={8}>
-                    <VaultPanel asset={2}/>
+                    <VaultInfo data={mockCurrentVault} />
+                    <Box paddingTop={7} />
+                    <VaultPanel asset={2} />
+                    <Box paddingTop={7} />
+                    <TransactionHistory data={mockTransactionHistoryData} />
                 </Grid>
                 <Grid item xs={4}>
                     <FeedPrices data={feedData} />
