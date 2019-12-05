@@ -5,7 +5,7 @@ import { makeStyles, createStyles } from '@material-ui/styles';
 import { Theme } from '@material-ui/core/styles';
 import acalaTypes from '@acala-network/types/interfaces/runtime/definitions';
 
-import Sidebar from '@/components/side-bar';
+import Sidebar from './components/side-bar';
 import rootActions from '@/store/actions';
 
 const useStyles = makeStyles((theme: Theme) =>

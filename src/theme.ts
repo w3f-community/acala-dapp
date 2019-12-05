@@ -16,19 +16,21 @@ export const createTypography = (
     color,
 });
 
+const BODY_GRAY_COLOR = '#6a6a6a';
+const BODY_BLACK_COLOR = '#1a1a1a';
 // custom thme
 const createTheme = (options: ThemeOptions) =>
     createMuiTheme({
         palette: {
             common: {
-                black: '#1a1a1a',
+                black: BODY_BLACK_COLOR,
             },
             primary: {
                 main: '#01279c',
                 light: '#0055ff',
             },
             secondary: {
-                main: '#6A6A6A',
+                main: BODY_GRAY_COLOR,
             },
             text: {
                 secondary: '#4d4d4d',
@@ -52,7 +54,38 @@ const createTheme = (options: ThemeOptions) =>
         overrides: {
             MuiButton: {
                 root: {
-                    borderRadius: 0, // disable button border radius
+                    minWidth: 114,
+                    height: 48,
+                    borderRadius: 0, // clear default button border radius
+                },
+            },
+            MuiDialogContent: {
+                root: {
+                    padding: '35px 0 0 0', // override default dialog content padding
+                },
+            },
+            MuiListItem: {
+                root: {
+                    paddingTop: 0, // clear default list item padding
+                    paddingBottom: 0, // clear default list item padding
+                    marginBottom: 20,
+                    '&:last-child': {
+                        marginBottom: 0,
+                    },
+                },
+            },
+            MuiListItemText: {
+                primary: {
+                    ...createTypography(15, 22, 600),
+                    color: BODY_GRAY_COLOR,
+                },
+                secondary: {
+                    ...createTypography(22, 32, 600),
+                    color: BODY_BLACK_COLOR,
+                },
+                multiline: {
+                    marginTop: 0,
+                    marginBottom: 0,
                 },
             },
         },

@@ -5,27 +5,11 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core';
 import Card from '@/components/card';
 import { useTranslate } from '@/hooks/i18n';
 import { getAssetName } from '@/utils';
-import { createTypography } from '@/theme';
 import ActionModal, { ActionModalProps } from '../action-modal';
-
-const useListItemStyles = makeStyles((theme: Theme) =>
-    createStyles({
-        primary: {
-            ...createTypography(15, 22, 600),
-            color: theme.palette.secondary.main,
-        },
-        secondary: {
-            ...createTypography(22, 32, 600),
-            color: theme.palette.grey[900],
-        },
-    }),
-);
 
 const useButtonStyle = makeStyles((theme: Theme) =>
     createStyles({
         root: {
-            width: 114,
-            height: 48,
             background: theme.palette.primary.light,
         },
     }),
@@ -37,11 +21,11 @@ interface Props {
 
 const VaultPanel: React.FC<Props> = ({ asset }) => {
     const { t } = useTranslate();
-    const listItemClasses = useListItemStyles();
     const buttonClasses = useButtonStyle();
 
-    const [modalProps, setModalProps] = useState<ActionModalProps>({} as ActionModalProps);
+    const [modalProps, setModalProps] = useState<ActionModalProps>({ open: false, action: 'any' });
 
+    const handleCloseModal = () => setModalProps({ open: false, action: 'any' });
     const handleShowPayBack = () => setModalProps({ open: true, action: 'payback' });
     const handleShowGenerate = () => setModalProps({ open: true, action: 'generate' });
     const handleShowDeposit = () => setModalProps({ open: true, action: 'deposit' });
@@ -49,7 +33,7 @@ const VaultPanel: React.FC<Props> = ({ asset }) => {
 
     return (
         <Grid container spacing={5}>
-            <ActionModal {...modalProps} />
+            <ActionModal {...modalProps} onClose={handleCloseModal} />
             <Grid item xs={6}>
                 <Card
                     size="large"
@@ -59,7 +43,6 @@ const VaultPanel: React.FC<Props> = ({ asset }) => {
                     <List>
                         <ListItem disableGutters>
                             <ListItemText
-                                classes={listItemClasses}
                                 primary={t('Can Pay Back')}
                                 secondary={t('{{number}} {{asset}}', { number: 100, asset: 'aUSD' })}
                             />
@@ -74,7 +57,6 @@ const VaultPanel: React.FC<Props> = ({ asset }) => {
                         </ListItem>
                         <ListItem disableGutters>
                             <ListItemText
-                                classes={listItemClasses}
                                 primary={t('Can Generate')}
                                 secondary={t('{{number}} {{asset}}', { number: 100, asset: 'aUSD' })}
                             />
@@ -103,7 +85,6 @@ const VaultPanel: React.FC<Props> = ({ asset }) => {
                     <List>
                         <ListItem disableGutters>
                             <ListItemText
-                                classes={listItemClasses}
                                 primary={t('Required for Safety')}
                                 secondary={t('{{number}} {{asset}}', { number: 100, asset: 'ETH' })}
                             />
@@ -118,7 +99,6 @@ const VaultPanel: React.FC<Props> = ({ asset }) => {
                         </ListItem>
                         <ListItem disableGutters>
                             <ListItemText
-                                classes={listItemClasses}
                                 primary={t('Able to Withdraw')}
                                 secondary={t('{{number}} {{asset}}', { number: 100, asset: 'ETH' })}
                             />

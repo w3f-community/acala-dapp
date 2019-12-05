@@ -8,11 +8,16 @@ const useStyles = makeStyles((theme: Theme) =>
         root: {
             width: theme.sidebar.width,
             flexShrink: 0,
+            '& .MuiTypography-h1': {
+                color: theme.palette.common.white,
+            },
+            '& .MuiTypography-h2': {
+                color: theme.palette.common.white,
+            },
         },
         container: {
             width: theme.sidebar.width,
             background: theme.palette.primary.main,
-            color: '#fff',
         },
         header: {
             display: 'flex',
@@ -26,6 +31,7 @@ const useStyles = makeStyles((theme: Theme) =>
         listItem: {
             height: 60,
             padding: '0 0 0 50px',
+            color: theme.palette.common.white,
         },
     }),
 );
