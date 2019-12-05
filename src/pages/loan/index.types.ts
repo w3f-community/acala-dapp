@@ -4,9 +4,10 @@ export interface Vault {
     liquidationRatio?: number;
     liquidationPrice?: number;
     liquidationPenalty?: number;
+    availableBalance?: number;
 }
 
-export type CurrentVault = Required<Vault> & { currentCollateralRatio: number };
+export type CurrentVault = Required<Omit<Vault, 'availableBalance'>> & { currentCollateralRatio: number };
 
 export interface SystemInfoData {
     aUSDSupply: number;

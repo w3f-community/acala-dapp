@@ -1,6 +1,6 @@
 import React from 'react';
 import { Grid, Box } from '@material-ui/core';
-import { useTranslate } from '@/hooks/i18n';
+import { HashRouter as Router, Switch, Route } from 'react-router-dom';
 
 import { Vault, SystemInfoData, CollateralInfoData, TransactionHistoryData, CurrentVault } from './index.types';
 
@@ -11,9 +11,9 @@ import CollateralInfo from './components/collateral-info';
 import VaultPanel from './components/vault-panel';
 import TransactionHistory from './components/transaction-history';
 import VaultInfo from './components/vault-info';
+import AddVault from './components/add-vault';
 
 const Loan: React.FC = () => {
-    const { t } = useTranslate();
     const vaults: Vault[] = [
         {
             asset: 2,
@@ -67,11 +67,22 @@ const Loan: React.FC = () => {
             <Box paddingTop={7} />
             <Grid container spacing={6}>
                 <Grid item xs={8}>
-                    <VaultInfo data={mockCurrentVault} />
-                    <Box paddingTop={7} />
-                    <VaultPanel asset={2} />
-                    <Box paddingTop={7} />
-                    <TransactionHistory data={mockTransactionHistoryData} />
+                    <Router>
+                        <Switch>
+                            <Route path="/loan/add">
+                                <AddVault />
+                            </Route>
+                            <Route path="/loan">
+                                <>
+                                    <VaultInfo data={mockCurrentVault} />
+                                    <Box paddingTop={7} />
+                                    <VaultPanel asset={2} />
+                                    <Box paddingTop={7} />
+                                    <TransactionHistory data={mockTransactionHistoryData} />
+                                </>
+                            </Route>
+                        </Switch>
+                    </Router>
                 </Grid>
                 <Grid item xs={4}>
                     <FeedPrices data={feedData} />

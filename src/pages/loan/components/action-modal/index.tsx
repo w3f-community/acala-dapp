@@ -11,7 +11,6 @@ import {
     ListItemText,
     makeStyles,
     createStyles,
-    Theme,
     Box,
     Grid,
     IconButton,
@@ -19,7 +18,7 @@ import {
 import { useTranslate } from '@/hooks/i18n';
 import { createTypography } from '@/theme';
 import closeSVG from '@/assets/close.svg';
-import Formatter, { formatBalance, formatPrice } from '@/components/formatter';
+import Formatter, { formatPrice } from '@/components/formatter';
 
 export type ActionType = 'any' | 'payback' | 'generate' | 'deposit' | 'withdraw';
 

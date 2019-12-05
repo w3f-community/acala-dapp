@@ -1,5 +1,5 @@
-import React, { ReactNode } from 'react';
-import { Numerical, Price } from '@/types/numerical';
+import React from 'react';
+import { Numerical } from '@/types/numerical';
 
 export function formatBalance(num: number, suffix = ''): string {
     suffix = suffix ? ' ' + suffix : '';
