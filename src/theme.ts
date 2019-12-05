@@ -58,6 +58,12 @@ const createTheme = (options: ThemeOptions) =>
                     height: 48,
                     borderRadius: 0, // clear default button border radius
                 },
+                containedPrimary: {
+                    backgroundColor: '#0055ff',
+                },
+                containedSecondary: {
+                    backgroundColor: '#bdbdbd',
+                }
             },
             MuiDialogContent: {
                 root: {

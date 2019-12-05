@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Grid, Typography, List, ListItem, ListItemText, Button } from '@material-ui/core';
+import { Grid, Typography, List, ListItem, ListItemText, Button, Box } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
 
 import Card from '@/components/card';
@@ -7,24 +7,14 @@ import { useTranslate } from '@/hooks/i18n';
 import { getAssetName } from '@/utils';
 import ActionModal, { ActionModalProps } from '../action-modal';
 
-const useButtonStyle = makeStyles((theme: Theme) =>
-    createStyles({
-        root: {
-            background: theme.palette.primary.light,
-        },
-    }),
-);
-
 interface Props {
     asset: number;
 }
 
 const VaultPanel: React.FC<Props> = ({ asset }) => {
     const { t } = useTranslate();
-    const buttonClasses = useButtonStyle();
 
     const [modalProps, setModalProps] = useState<ActionModalProps>({ open: false, action: 'any' });
-
     const handleCloseModal = () => setModalProps({ open: false, action: 'any' });
     const handleShowPayBack = () => setModalProps({ open: true, action: 'payback' });
     const handleShowGenerate = () => setModalProps({ open: true, action: 'generate' });
@@ -38,16 +28,16 @@ const VaultPanel: React.FC<Props> = ({ asset }) => {
                 <Card
                     size="large"
                     elevation={1}
+                    contentPadding={4}
                     header={<Typography variant="subtitle1">{t('Borrowed aUSD')}</Typography>}
                 >
-                    <List>
+                    <List disablePadding>
                         <ListItem disableGutters>
                             <ListItemText
                                 primary={t('Can Pay Back')}
                                 secondary={t('{{number}} {{asset}}', { number: 100, asset: 'aUSD' })}
                             />
                             <Button
-                                classes={buttonClasses}
                                 variant="contained"
                                 color="primary"
                                 onClick={handleShowPayBack}
@@ -61,7 +51,6 @@ const VaultPanel: React.FC<Props> = ({ asset }) => {
                                 secondary={t('{{number}} {{asset}}', { number: 100, asset: 'aUSD' })}
                             />
                             <Button
-                                classes={buttonClasses}
                                 variant="contained"
                                 color="primary"
                                 onClick={handleShowGenerate}
@@ -76,20 +65,20 @@ const VaultPanel: React.FC<Props> = ({ asset }) => {
                 <Card
                     size="large"
                     elevation={1}
+                    contentPadding={4}
                     header={
                         <Typography variant="subtitle1">
                             {t('Collateral {{asset}}', { asset: getAssetName(asset) })}
                         </Typography>
                     }
                 >
-                    <List>
+                    <List disablePadding>
                         <ListItem disableGutters>
                             <ListItemText
                                 primary={t('Required for Safety')}
                                 secondary={t('{{number}} {{asset}}', { number: 100, asset: 'ETH' })}
                             />
                             <Button
-                                classes={buttonClasses}
                                 variant="contained"
                                 color="primary"
                                 onClick={handleShowDeposit}
@@ -103,7 +92,6 @@ const VaultPanel: React.FC<Props> = ({ asset }) => {
                                 secondary={t('{{number}} {{asset}}', { number: 100, asset: 'ETH' })}
                             />
                             <Button
-                                classes={buttonClasses}
                                 variant="contained"
                                 color="primary"
                                 onClick={handleShowWithdraw}

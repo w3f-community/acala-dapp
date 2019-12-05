@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 import PropTypes from 'prop-types';
-import { Paper, Grid } from '@material-ui/core';
+import { Paper, Grid, Box } from '@material-ui/core';
 import clsx from 'clsx';
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
 
@@ -28,6 +28,7 @@ interface Props {
     elevation: number;
     header: ReactNode;
     children: ReactNode;
+    contentPadding?: number;
     headerClassName?: string;
     contentClassName?: string;
     divider?: boolean;
@@ -38,11 +39,12 @@ const Card: React.FC<Props> = ({
     children,
     size = 'normal',
     elevation = 1,
-    contentClassName,
     headerClassName,
+    contentPadding = 2,
     divider = true,
 }) => {
     const classes = useStyles();
+
     return (
         <Paper
             square={true}
@@ -60,7 +62,7 @@ const Card: React.FC<Props> = ({
                 >
                     {header}
                 </div>
-                <div className={clsx(contentClassName)}>{children}</div>
+                <Box paddingTop={contentPadding}>{children}</Box>
             </Grid>
         </Paper>
     );
