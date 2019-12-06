@@ -1,9 +1,12 @@
 import React, { useState, ReactNode } from 'react';
-import { Typography } from '@material-ui/core';
+import { Box } from '@material-ui/core';
 import { useTranslate } from '@/hooks/i18n';
 
-import Step, { AddStep } from './step';
+import { AddStep } from './index.types';
+import StepBar from './step-bar';
 import SelectCollateral, { Vault } from './select-collateral';
+import GenerateStableCoin from './generate-stable-coin';
+import Confirm from './confirm';
 
 const mockVault: Vault[] = [
     {
@@ -22,18 +25,31 @@ const mockVault: Vault[] = [
     },
 ];
 
-const AddVault: React.FC = () => {
+interface Props {
+    onCancel: () => void;
+}
+const AddVault: React.FC<Props> = ({ onCancel }) => {
     const { t } = useTranslate();
-    const [step, SetStep] = useState<AddStep>('select');
+    const [step, setStep] = useState<AddStep>('select');
+
+    const changeStep = (target: AddStep) => () => setStep(target);
+
     const renderCurrentStep = (step: AddStep): ReactNode => {
         if (step === 'select') {
-            return <SelectCollateral data={mockVault} />;
+            return <SelectCollateral data={mockVault} onNext={changeStep('generate')} onCancel={onCancel} />;
         }
+        if (step === 'generate') {
+            return (
+                <GenerateStableCoin onNext={changeStep('confirm')} onPrev={changeStep('select')} onCancel={onCancel} />
+            );
+        }
+        return <Confirm onNext={changeStep('confirm')} onPrev={changeStep('generate')} onCancel={onCancel} />;
     };
+
     return (
         <div>
-            <Step />
-            <Typography>{t('Each collateral type has its own unique risk profiles.')}</Typography>
+            <StepBar current={step} />
+            <Box paddingTop={4} />
             {renderCurrentStep(step)}
         </div>
     );

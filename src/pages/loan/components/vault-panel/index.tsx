@@ -37,11 +37,7 @@ const VaultPanel: React.FC<Props> = ({ asset }) => {
                                 primary={t('Can Pay Back')}
                                 secondary={t('{{number}} {{asset}}', { number: 100, asset: 'aUSD' })}
                             />
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                onClick={handleShowPayBack}
-                            >
+                            <Button variant="contained" color="primary" onClick={handleShowPayBack}>
                                 {t('Payback')}
                             </Button>
                         </ListItem>
@@ -50,11 +46,7 @@ const VaultPanel: React.FC<Props> = ({ asset }) => {
                                 primary={t('Can Generate')}
                                 secondary={t('{{number}} {{asset}}', { number: 100, asset: 'aUSD' })}
                             />
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                onClick={handleShowGenerate}
-                            >
+                            <Button variant="contained" color="primary" onClick={handleShowGenerate}>
                                 {t('Generate')}
                             </Button>
                         </ListItem>
@@ -78,11 +70,7 @@ const VaultPanel: React.FC<Props> = ({ asset }) => {
                                 primary={t('Required for Safety')}
                                 secondary={t('{{number}} {{asset}}', { number: 100, asset: 'ETH' })}
                             />
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                onClick={handleShowDeposit}
-                            >
+                            <Button variant="contained" color="primary" onClick={handleShowDeposit}>
                                 {t('Deposit')}
                             </Button>
                         </ListItem>
@@ -91,11 +79,7 @@ const VaultPanel: React.FC<Props> = ({ asset }) => {
                                 primary={t('Able to Withdraw')}
                                 secondary={t('{{number}} {{asset}}', { number: 100, asset: 'ETH' })}
                             />
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                onClick={handleShowWithdraw}
-                            >
+                            <Button variant="contained" color="primary" onClick={handleShowWithdraw}>
                                 {t('Withdraw')}
                             </Button>
                         </ListItem>

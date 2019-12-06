@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, ReactNode } from 'react';
 import { isEmpty, get, template } from 'lodash';
 
 type Language = 'zh' | 'en';
@@ -9,11 +9,10 @@ interface Options {
     i18n: object;
 }
 
-const context = React.createContext<Translator>({} as Translator);
-const Provider = context.Provider;
+const Context = React.createContext<Translator>({} as Translator);
 
 class Translator {
-    private language: Language;
+    public language: Language;
     private feedback: Language;
     private i18n: object;
 
@@ -24,6 +23,7 @@ class Translator {
 
         this.getTranslateResult = this.getTranslateResult.bind(this);
         this.translate = this.translate.bind(this);
+        this.setLanguage = this.setLanguage.bind(this);
     }
 
     private getTranslateResult(name: string): string {
@@ -58,13 +58,26 @@ class Translator {
         const formatter = template(result, { interpolate: /{{([\s\S]+?)}}/g });
         return formatter(options);
     }
+
+    public setLanguage(language: Language) {
+        this.language = language;
+    }
 }
 
 const useTranslate = () => {
-    const translator = useContext(context);
+    const translator = useContext(Context);
     return {
         t: translator && translator.translate,
     };
+};
+
+interface ProviderProps {
+    value: Translator;
+    children: ReactNode;
+}
+
+const Provider: React.FC<ProviderProps> = ({ value, children }) => {
+    return <Context.Provider value={value}>{children}</Context.Provider>;
 };
 
 export { useTranslate, Translator, Provider };

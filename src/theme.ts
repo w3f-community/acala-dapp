@@ -27,7 +27,7 @@ const createTheme = (options: ThemeOptions) =>
             },
             primary: {
                 main: '#01279c',
-                light: '#0055ff',
+                light: '#0132cc',
             },
             secondary: {
                 main: BODY_GRAY_COLOR,
@@ -57,13 +57,14 @@ const createTheme = (options: ThemeOptions) =>
                     minWidth: 114,
                     height: 48,
                     borderRadius: 0, // clear default button border radius
+                    textTransform: 'inherit', // clear default uppercase
                 },
                 containedPrimary: {
                     backgroundColor: '#0055ff',
                 },
                 containedSecondary: {
                     backgroundColor: '#bdbdbd',
-                }
+                },
             },
             MuiDialogContent: {
                 root: {

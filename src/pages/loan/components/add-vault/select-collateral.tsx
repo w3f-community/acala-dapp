@@ -1,20 +1,57 @@
-import React from 'react';
-import { Table, TableHead, TableRow, TableCell, TableBody, Paper, Grid, Button, Radio } from '@material-ui/core';
+import React, { useState, ReactEventHandler } from 'react';
+import {
+    Table,
+    TableHead,
+    TableRow,
+    TableCell,
+    TableBody,
+    Paper,
+    Grid,
+    Button,
+    Radio,
+    makeStyles,
+    createStyles,
+    Theme,
+} from '@material-ui/core';
 import { useTranslate } from '@/hooks/i18n';
 import { Vault as OriginVault } from '../../index.types';
 import { getAssetName } from '@/utils';
 import Formatter from '@/components/formatter';
+import { BaseStepCard } from './index.types';
 
 export type Vault = Required<Omit<OriginVault, 'liquidationPrice'>>;
 
-interface Props {
-    data: Required<Vault>[];
+interface Props extends Omit<BaseStepCard, 'onPrev'> {
+    data: Vault[];
 }
 
-const Component: React.FC<Props> = ({ data }) => {
+const useCardStyles = makeStyles((theme: Theme) =>
+    createStyles({
+        root: { padding: '66px 35px 60px 29px' },
+        bottom: {
+            paddingTop: 73,
+            '& .MuiButton-root': {
+                marginLeft: theme.spacing(2),
+            },
+        },
+    }),
+);
+
+const Component: React.FC<Props> = ({ data, onNext, onCancel }) => {
     const { t } = useTranslate();
+    const [selectAsset, setSelectAsset] = useState();
+    const cardClasses = useCardStyles();
+
+    const handleNextBtnClick = () => {
+        onNext();
+    };
+
+    const handleAssetRadioSelect: ReactEventHandler = ele => {
+        console.log(ele);
+    };
+
     return (
-        <Paper elevation={1}>
+        <Paper square={true} elevation={1} className={cardClasses.root}>
             <Table>
                 <TableHead>
                     <TableRow>
@@ -26,27 +63,27 @@ const Component: React.FC<Props> = ({ data }) => {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {data.map(item => (
-                        <TableRow>
+                    {data.map(({ asset, stabilityFee }) => (
+                        <TableRow key={`select-collateral-asset-${asset}`}>
                             <TableCell>
-                                <Radio />
-                                {getAssetName(item.asset)}
+                                <Radio onSelect={handleAssetRadioSelect} />
+                                {getAssetName(asset)}
                             </TableCell>
                             <TableCell>
-                                <Formatter data={item.stabilityFee} type="ratio" />
+                                <Formatter data={stabilityFee} type="ratio" />
                             </TableCell>
-                            <TableCell>{getAssetName(item.asset)}</TableCell>
-                            <TableCell>{getAssetName(item.asset)}</TableCell>
-                            <TableCell>{getAssetName(item.asset)}</TableCell>
+                            <TableCell>{getAssetName(asset)}</TableCell>
+                            <TableCell>{getAssetName(asset)}</TableCell>
+                            <TableCell>{getAssetName(asset)}</TableCell>
                         </TableRow>
                     ))}
                 </TableBody>
             </Table>
-            <Grid container justify="flex-end">
-                <Button variant="contained" color="secondary">
+            <Grid container justify="flex-end" className={cardClasses.bottom}>
+                <Button variant="contained" color="secondary" onClick={onCancel}>
                     {t('Cancel')}
                 </Button>
-                <Button variant="contained" color="primary">
+                <Button variant="contained" color="primary" onClick={handleNextBtnClick}>
                     {t('Next')}
                 </Button>
             </Grid>

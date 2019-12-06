@@ -31,10 +31,10 @@ const useStyle = makeStyles((theme: Theme) =>
     }),
 );
 
-const AddVault: React.FC = () => {
+const AddVault: React.FC<Pick<Props, 'onAdd'>> = ({ onAdd }) => {
     const classes = useStyle();
     return (
-        <Grid item>
+        <Grid item onClick={onAdd}>
             <Paper elevation={2} className={classes.cardRoot} square={true}>
                 <Grid
                     container
@@ -53,9 +53,10 @@ const AddVault: React.FC = () => {
 
 interface Props {
     vaults: Vault[];
+    onAdd: () => void;
 }
 
-const VaultsList: React.FC<Props> = ({ vaults }) => {
+const VaultsList: React.FC<Props> = ({ vaults, onAdd }) => {
     const classes = useStyle();
     return (
         <Grid container spacing={3}>
@@ -69,7 +70,7 @@ const VaultsList: React.FC<Props> = ({ vaults }) => {
                     </Paper>
                 </Grid>
             ))}
-            <AddVault />
+            <AddVault onAdd={onAdd} />
         </Grid>
     );
 };

@@ -1,3 +1,5 @@
+/* eslint-disabled */
+
 export default {
     BTC: 'BTC',
     ETH: 'ETH',
@@ -25,8 +27,28 @@ export default {
     Token: 'Token',
     Action: 'Action',
     When: 'When',
+    cancel: 'cancel',
+    'aUSD Balance': 'aUSD Balance',
+    'New Liquidation Ratio': 'New Liquidation Ratio',
+    'New Liquidation Price': 'New Liquidation Price',
     'Tx Hash': 'Tx Hash',
     From: 'From',
+    'Payback aUSD': 'Payback aUSD',
     'Liquidation Price': 'Liquidation Price',
     'Liquidation Penalty': 'Liquidation Penalty',
+    ADD_VAULT_GENERATE_STABLE_COIN_NOTE:
+        'Note: the amount you borrowed / total collateral (your collateral ratio) should be safely above liquidation ratio',
+    // add vault
+    'Select Collateral': 'Select Collateral',
+    'Each collateral type has its own unique risk profiles.': 'Each collateral type has its own unique risk profiles.',
+    'Generate aUSD': 'Generate aUSD',
+    'Deposit ETH as collateral to genearte aUSD': 'Deposit ETH as collateral to genearte aUSD',
+    Confirmation: 'Confirmation',
+    'Confirm creating a collateralized loan for aUSD': 'Confirm creating a collateralized loan for aUSD',
+    'Collateral Type': 'Collateral Type',
+    'LIQ Ratio': 'LIQ Ratio',
+    'LIQ Fee': 'LIQ Fee',
+    'Avail. Balance': 'Avail. Balance',
+    Cancel: 'Cancel',
+    Next: 'Next',
 };
