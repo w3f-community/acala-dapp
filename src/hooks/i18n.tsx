@@ -1,4 +1,4 @@
-import React, { useContext, ReactNode } from 'react';
+import React, { useContext, ReactNode, useState } from 'react';
 import { isEmpty, get, template } from 'lodash';
 
 type Language = 'zh' | 'en';
@@ -9,12 +9,10 @@ interface Options {
     i18n: object;
 }
 
-const Context = React.createContext<Translator>({} as Translator);
-
 class Translator {
     public language: Language;
-    private feedback: Language;
-    private i18n: object;
+    public feedback: Language;
+    public i18n: object;
 
     constructor({ language, feedback = 'en', i18n }: Options) {
         this.language = language ? language : (navigator.language as Language);
@@ -23,7 +21,6 @@ class Translator {
 
         this.getTranslateResult = this.getTranslateResult.bind(this);
         this.translate = this.translate.bind(this);
-        this.setLanguage = this.setLanguage.bind(this);
     }
 
     private getTranslateResult(name: string): string {
@@ -36,14 +33,14 @@ class Translator {
         };
 
         // try use this.language
-        let result = get(this.i18n, `${this.language}.${name}`);
+        let result = get(this.i18n, [this.language, name]);
         if (!isEmpty(result)) {
             return result;
         }
 
         // try use this.feedback
         warn(name, this.language, 'current');
-        result = get(this.i18n, `${this.feedback}.${name}`);
+        result = get(this.i18n, [this.feedback, name]);
         if (!isEmpty(result)) {
             return result;
         }
@@ -58,26 +55,32 @@ class Translator {
         const formatter = template(result, { interpolate: /{{([\s\S]+?)}}/g });
         return formatter(options);
     }
-
-    public setLanguage(language: Language) {
-        this.language = language;
-    }
 }
 
-const useTranslate = () => {
-    const translator = useContext(Context);
-    return {
-        t: translator && translator.translate,
-    };
-};
+interface ContextProps {
+    t: (name: string, options?: object) => string;
+    change: (language: Language) => void;
+}
+const Context = React.createContext<ContextProps>({} as ContextProps);
 
 interface ProviderProps {
-    value: Translator;
+    translator: Translator;
     children: ReactNode;
 }
-
-const Provider: React.FC<ProviderProps> = ({ value, children }) => {
+const Provider: React.FC<ProviderProps> = ({ translator, children }) => {
+    const [_translator, setTranslator] = useState<Translator>(translator);
+    const value = {
+        t: _translator.translate,
+        change: (language: Language) => {
+            setTranslator(new Translator({ language, feedback: _translator.feedback, i18n: _translator.i18n }));
+        },
+    };
     return <Context.Provider value={value}>{children}</Context.Provider>;
+};
+
+const useTranslate = (): ContextProps => {
+    const translator = useContext(Context);
+    return translator;
 };
 
 export { useTranslate, Translator, Provider };

@@ -19,7 +19,7 @@ const translator = new Translator({
 const App: React.FC = function() {
     return (
         <StoreProvider store={store}>
-            <I18nProvider value={translator}>
+            <I18nProvider translator={translator}>
                 <ThemeProvider theme={theme}>
                     <CssBaseline />
                     {router}

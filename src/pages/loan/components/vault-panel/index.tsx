@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Grid, Typography, List, ListItem, ListItemText, Button, Box } from '@material-ui/core';
-import { createStyles, makeStyles, Theme } from '@material-ui/core';
 
 import Card from '@/components/card';
 import { useTranslate } from '@/hooks/i18n';
@@ -12,8 +11,7 @@ interface Props {
 }
 
 const VaultPanel: React.FC<Props> = ({ asset }) => {
-    const { t } = useTranslate();
-
+    const { t, change } = useTranslate();
     const [modalProps, setModalProps] = useState<ActionModalProps>({ open: false, action: 'any' });
     const handleCloseModal = () => setModalProps({ open: false, action: 'any' });
     const handleShowPayBack = () => setModalProps({ open: true, action: 'payback' });

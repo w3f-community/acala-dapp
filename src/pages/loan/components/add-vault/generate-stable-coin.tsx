@@ -102,10 +102,10 @@ const Component: React.FC<Props> = ({ onNext, onPrev }) => {
                     <TextField
                         className={inputClasses.root}
                         helperText={
-                            <p>
+                            <>
                                 <span style={{ marginRight: 30 }}>{t('Max to Lock')}</span>
                                 <span>{t('{{number}} {{asset}}', { number: 120, asset: 'ETH' })}</span>
-                            </p>
+                            </>
                         }
                         InputProps={{
                             endAdornment: <InputAdornment position="end">ETH</InputAdornment>,
@@ -120,10 +120,10 @@ const Component: React.FC<Props> = ({ onNext, onPrev }) => {
                     <TextField
                         className={inputClasses.root}
                         helperText={
-                            <p>
+                            <>
                                 <span style={{ marginRight: 30 }}>{t('Max available to borrow')}</span>
                                 <span>{t('{{number}} {{asset}}', { number: 120, asset: 'aUSD' })}</span>
-                            </p>
+                            </>
                         }
                         InputProps={{
                             endAdornment: <InputAdornment position="end">ETH</InputAdornment>,
