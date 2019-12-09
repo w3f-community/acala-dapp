@@ -1,7 +1,11 @@
-import React, { useState } from 'react';
-import { Box, Typography, Drawer, List, ListItem, ListItemText } from '@material-ui/core';
+import React from 'react';
+import { Typography, Drawer, List, Grid } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
 import AcalaLogo from '@/assets/acala-logo.svg';
+import { SideBarConfig } from '@/types/sidebar';
+
+import ConnectStatus from './connect-status';
+import Item from './item';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -15,47 +19,43 @@ const useStyles = makeStyles((theme: Theme) =>
                 color: theme.palette.common.white,
             },
         },
-        container: {
+        paper: {
             width: theme.sidebar.width,
             background: theme.palette.primary.main,
         },
-        header: {
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            padding: '70px 0 62px 0',
-        },
-        icon: {
-            marginRight: 16,
-        },
-        listItem: {
-            height: 60,
-            padding: '0 0 0 50px',
-            color: theme.palette.common.white,
+        header: { padding: '70px 0 62px 0' },
+        icon: { marginRight: 16 },
+        products: { flex: 1 },
+        connectBar: {
+            marginBottom: 90,
         },
     }),
 );
 
-const Sidebar: React.FC = () => {
+interface Props {
+    config: SideBarConfig;
+}
+
+const Sidebar: React.FC<Props> = ({ config }) => {
     const classes = useStyles();
+
     return (
-        <Drawer
-            variant="permanent"
-            open={true}
-            className={classes.root}
-            classes={{
-                paper: classes.container,
-            }}
-        >
-            <Box className={classes.header}>
+        <Drawer variant="permanent" open={true} classes={{ root: classes.root, paper: classes.paper }}>
+            <Grid className={classes.header} container justify="center" alignItems="center">
                 <img src={AcalaLogo} width={40} height={34} className={classes.icon} />
                 <Typography variant="h1">Acala Network</Typography>
-            </Box>
+            </Grid>
             <List>
-                <ListItem button key="Dashboard" className={classes.listItem}>
-                    <ListItemText primary={'Dashboard'} primaryTypographyProps={{ variant: 'h2' }}></ListItemText>
-                </ListItem>
+                <Item data={{ name: 'Dashboard', path: '' }} />
             </List>
+            <List className={classes.products}>
+                {config.products.map(data => (
+                    <Item data={data} key={`products-${data.name}`} />
+                ))}
+            </List>
+            <Grid container justify="center" className={classes.connectBar}>
+                <ConnectStatus />
+            </Grid>
         </Drawer>
     );
 };

@@ -11,8 +11,9 @@ interface Props {
 }
 
 const VaultPanel: React.FC<Props> = ({ asset }) => {
-    const { t, change } = useTranslate();
+    const { t } = useTranslate();
     const [modalProps, setModalProps] = useState<ActionModalProps>({ open: false, action: 'any' });
+
     const handleCloseModal = () => setModalProps({ open: false, action: 'any' });
     const handleShowPayBack = () => setModalProps({ open: true, action: 'payback' });
     const handleShowGenerate = () => setModalProps({ open: true, action: 'generate' });

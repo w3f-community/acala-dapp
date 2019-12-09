@@ -1,13 +1,15 @@
 import { ChainState } from './types';
-import { fromJS } from 'immutable';
 import { createReducer } from 'typesafe-actions';
 import * as actions from './actions';
 
 const initialState: ChainState = {
     app: null,
-    version: '',
+    connected: false,
 };
 
-export default createReducer(fromJS(initialState)).handleAction(actions.connectAsync.success, (state, action) => {
-    return state.set('app', action.payload);
+export default createReducer(initialState).handleAction(actions.connectAsync.success, (state, action) => {
+    return Object.assign(state, {
+        app: action.payload,
+        connected: true,
+    });
 });
