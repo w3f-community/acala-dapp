@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Grid, Box } from '@material-ui/core';
 import { Vault, SystemInfoData, CollateralInfoData, TransactionHistoryData, CurrentVault } from './index.types';
 
-import FeedPrices from './components/feed-prices';
+import PricesFeed from './components/prices-feed';
 import VaultsList from './components/vaults-list';
 import SystemInfo from './components/system-info';
 import CollateralInfo from './components/collateral-info';
@@ -16,16 +16,6 @@ const vaults: Vault[] = [
         asset: 2,
         liquidationRatio: 150,
         stabilityFee: 5,
-    },
-];
-const feedData = [
-    {
-        asset: 1,
-        price: 285.44,
-    },
-    {
-        asset: 2,
-        price: 8010.44,
     },
 ];
 const systemInfo: SystemInfoData = {
@@ -83,7 +73,7 @@ const Loan: React.FC = () => {
                     )}
                 </Grid>
                 <Grid item xs={4}>
-                    <FeedPrices data={feedData} />
+                    <PricesFeed />
                     <Box paddingTop={3} />
                     <SystemInfo data={systemInfo} />
                     <Box paddingTop={3} />

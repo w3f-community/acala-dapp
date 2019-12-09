@@ -7,7 +7,7 @@ import clsx from 'clsx';
 const checkActive = (target: string, current: string): boolean => {
     // for root path
     if (!target) {
-        return target == current || current === '/';
+        return target === current || current === '/';
     }
     return current.startsWith('/' + target);
 };

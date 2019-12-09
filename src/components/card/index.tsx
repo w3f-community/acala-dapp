@@ -1,5 +1,4 @@
 import React, { ReactNode } from 'react';
-import PropTypes from 'prop-types';
 import { Paper, Grid, Box } from '@material-ui/core';
 import clsx from 'clsx';
 import { createStyles, makeStyles, Theme } from '@material-ui/core';

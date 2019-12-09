@@ -46,10 +46,7 @@ const MainLayout: React.FC<Props> = props => {
     useEffect(() => {
         dispatch(
             // connect to blockchain
-            rootActions.chain.connectAsync.request({
-                endpoint: getEndPoint(),
-                ...acalaTypes,
-            }),
+            rootActions.chain.connectAsync.request({ endpoint: getEndPoint(), ...acalaTypes }),
         );
     }, [dispatch]);
 

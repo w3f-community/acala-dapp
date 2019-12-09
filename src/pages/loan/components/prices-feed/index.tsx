@@ -1,20 +1,23 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Typography, List, ListItem, Grid } from '@material-ui/core';
+
 import { useTranslate } from '@/hooks/i18n';
 import Card from '@/components/card';
 import { getAssetName } from '@/utils';
+import rootActions from '@/store/actions';
+import { pricesFeedSelector } from '@/store/chain/selectors';
+import { assets } from '@/config';
 
-export interface Price {
-    asset: number;
-    price: number;
-}
-
-interface Props {
-    data: Price[];
-}
-
-const FeedPrice: React.FC<Props> = ({ data }) => {
+const PricesFeed: React.FC = () => {
     const { t } = useTranslate();
+    const dispatch = useDispatch();
+    const data = useSelector(pricesFeedSelector);
+
+    useEffect(() => {
+        dispatch(rootActions.chain.fetchPricesFeed.request({ data: Array.from(assets.keys()) }));
+    }, [dispatch]);
+
     return (
         <Card size="normal" elevation={1} header={<Typography variant="subtitle1">{t('Price Feed')}</Typography>}>
             <List>
@@ -33,4 +36,4 @@ const FeedPrice: React.FC<Props> = ({ data }) => {
     );
 };
 
-export default FeedPrice;
+export default PricesFeed;
