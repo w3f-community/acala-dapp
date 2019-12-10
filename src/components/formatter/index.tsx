@@ -1,17 +1,29 @@
 import React from 'react';
 import { Numerical } from '@/types/numerical';
 
+function correct(source: number, base = 12): number {
+    return parseFloat(source.toPrecision(base));
+}
+
+function format(source: number): number {
+    source = correct(source);
+    return correct(Math.floor(source * 100) / 100);
+}
+
 export function formatBalance(num: number, suffix = ''): string {
     suffix = suffix ? ' ' + suffix : '';
-    return `${num.toString().replace(/(?=(\B\d{3})+(\.\d+)?$)/g, ',')}${suffix}`;
+    return `${format(num / 10 ** 15)
+        .toString()
+        .replace(/(?=(\B\d{3})+(\.\d+)?$)/g, ',')}${suffix}`;
 }
 
 export function formatRatio(num: number): string {
-    return num * 100 + '%';
+    // num / 10**18 * 100
+    return format(num / 10 ** 16) + '%';
 }
 
 export function formatPrice(num: number, prefix = ''): string {
-    return `${prefix}${num}`;
+    return `${prefix}${format(num / 10 ** 18)}`;
 }
 
 export type FormatterType = 'balance' | 'ratio' | 'price';
