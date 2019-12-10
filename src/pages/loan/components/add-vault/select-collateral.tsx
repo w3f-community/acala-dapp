@@ -1,4 +1,4 @@
-import React, { useState, ReactEventHandler } from 'react';
+import React, { ReactEventHandler, FormEvent } from 'react';
 import {
     Table,
     TableHead,
@@ -12,18 +12,18 @@ import {
     makeStyles,
     createStyles,
     Theme,
+    withStyles,
 } from '@material-ui/core';
 import { useTranslate } from '@/hooks/i18n';
-import { Vault as OriginVault } from '../../index.types';
 import { getAssetName } from '@/utils';
 import Formatter from '@/components/formatter';
-import { BaseStepCard } from './index.types';
-
-export type Vault = Required<Omit<OriginVault, 'liquidationPrice'>>;
-
-interface Props extends Omit<BaseStepCard, 'onPrev'> {
-    data: Vault[];
-}
+import { useSelector } from 'react-redux';
+import { vaultsSelector } from '@/store/chain/selectors';
+import { balancesSelector } from '@/store/user/selectors';
+import { BaseVaultData } from '@/store/types';
+import { createTypography } from '@/theme';
+import { useForm } from '@/hooks/form';
+import { formContext } from './context';
 
 const useCardStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -37,17 +37,51 @@ const useCardStyles = makeStyles((theme: Theme) =>
     }),
 );
 
-const Component: React.FC<Props> = ({ data, onNext, onCancel }) => {
+const StyledBodyCell = withStyles((theme: Theme) => ({
+    root: {
+        borderBottom: 'none',
+        color: theme.palette.text.secondary,
+    },
+}))(TableCell);
+
+const StyledHeaderCell = withStyles((theme: Theme) => ({
+    root: {
+        color: theme.palette.common.black,
+        ...createTypography(15, 22, 600, 'Roboto'),
+    },
+}))(TableCell);
+
+const filterEmptyVault = (source: BaseVaultData[]): BaseVaultData[] => {
+    return source.filter(
+        item =>
+            (item.debitExchangeRate ||
+                item.liquidationPenalty ||
+                item.liquidationRatio ||
+                item.maximumTotalDebitValue ||
+                item.requiredCollateralRatio ||
+                item.stabilityFee) !== 0,
+    );
+};
+
+interface Props {
+    onNext: () => void;
+    onCancel: () => void;
+}
+
+const Component: React.FC<Props> = ({ onNext, onCancel }) => {
     const { t } = useTranslate();
-    const [selectAsset, setSelectAsset] = useState();
+    // set default value
     const cardClasses = useCardStyles();
+    const { data, setValue } = useForm(formContext);
+    const selectedAsset = data.asset.value;
+    const vaults = filterEmptyVault(useSelector(vaultsSelector));
+    const balances = useSelector(balancesSelector);
 
-    const handleNextBtnClick = () => {
-        onNext();
-    };
+    const handleNextBtnClick = () => onNext();
 
-    const handleAssetRadioSelect: ReactEventHandler = ele => {
-        console.log(ele);
+    const handleAssetRadioSelect: ReactEventHandler<HTMLInputElement> = e => {
+        const asset = Number(e.currentTarget.value);
+        setValue('asset', asset);
     };
 
     return (
@@ -55,26 +89,42 @@ const Component: React.FC<Props> = ({ data, onNext, onCancel }) => {
             <Table>
                 <TableHead>
                     <TableRow>
-                        <TableCell>{t('Collateral Type')}</TableCell>
-                        <TableCell>{t('Interest Rate')}</TableCell>
-                        <TableCell>{t('LIQ Ratio')}</TableCell>
-                        <TableCell>{t('LIQ Fee')}</TableCell>
-                        <TableCell>{t('Avail. Balance')}</TableCell>
+                        <StyledHeaderCell>{t('Collateral Type')}</StyledHeaderCell>
+                        <StyledHeaderCell>{t('Interest Rate')}</StyledHeaderCell>
+                        <StyledHeaderCell>{t('LIQ Ratio')}</StyledHeaderCell>
+                        <StyledHeaderCell>{t('LIQ Fee')}</StyledHeaderCell>
+                        <StyledHeaderCell>{t('Avail. Balance')}</StyledHeaderCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {data.map(({ asset, stabilityFee }) => (
-                        <TableRow key={`select-collateral-asset-${asset}`}>
-                            <TableCell>
-                                <Radio onSelect={handleAssetRadioSelect} />
-                                {getAssetName(asset)}
-                            </TableCell>
-                            <TableCell>
-                                <Formatter data={stabilityFee} type="ratio" />
-                            </TableCell>
-                            <TableCell>{getAssetName(asset)}</TableCell>
-                            <TableCell>{getAssetName(asset)}</TableCell>
-                            <TableCell>{getAssetName(asset)}</TableCell>
+                    {vaults.map(item => (
+                        <TableRow key={`select-collateral-asset-${item.asset}`}>
+                            <StyledBodyCell>
+                                <Radio
+                                    value={item.asset}
+                                    onChange={handleAssetRadioSelect}
+                                    checked={selectedAsset === item.asset}
+                                />
+                                {getAssetName(item.asset)}
+                            </StyledBodyCell>
+                            <StyledBodyCell>
+                                <Formatter data={item.stabilityFee} type="ratio" />
+                            </StyledBodyCell>
+                            <StyledBodyCell>
+                                <Formatter data={item.liquidationRatio} type="ratio" />
+                            </StyledBodyCell>
+                            <StyledBodyCell>
+                                <Formatter data={item.liquidationPenalty} type="ratio" />
+                            </StyledBodyCell>
+                            <StyledBodyCell>
+                                {balances[item.asset] && (
+                                    <Formatter
+                                        data={balances[item.asset].balance}
+                                        type="balance"
+                                        suffix={getAssetName(item.asset)}
+                                    />
+                                )}
+                            </StyledBodyCell>
                         </TableRow>
                     ))}
                 </TableBody>

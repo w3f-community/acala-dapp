@@ -49,10 +49,10 @@ const mockCurrentVault: CurrentVault = {
 };
 
 const Loan: React.FC = () => {
-    const [addVaultStatus, setAddValutStatus] = useState<boolean>(false);
+    const [addVaultStatus, setAddVaultstatus] = useState<boolean>(true);
 
-    const showAddVault = () => setAddValutStatus(true);
-    const hideAddVault = () => setAddValutStatus(false);
+    const showAddVault = () => setAddVaultstatus(true);
+    const hideAddVault = () => setAddVaultstatus(false);
 
     return (
         <div>

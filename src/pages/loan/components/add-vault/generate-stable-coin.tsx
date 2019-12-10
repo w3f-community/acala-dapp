@@ -1,4 +1,5 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useContext, useState, ChangeEvent } from 'react';
+import { curryRight } from 'lodash';
 import {
     Grid,
     Button,
@@ -14,10 +15,12 @@ import {
 } from '@material-ui/core';
 import { useTranslate } from '@/hooks/i18n';
 import { createTypography } from '@/theme';
-import { formatRatio } from '@/components/formatter';
-import { BaseStepCard } from './index.types';
-
-type Props = BaseStepCard;
+import { formatRatio, formatPrice } from '@/components/formatter';
+import { formContext } from './context';
+import { getAssetName } from '@/utils';
+import { useSelector } from 'react-redux';
+import { specVaultSelector } from '@/store/chain/selectors';
+import { useForm } from '@/hooks/form';
 
 const useCardStyles = makeStyles(() =>
     createStyles({
@@ -71,25 +74,56 @@ const useBottomStyles = makeStyles(() =>
     }),
 );
 
+const InfoListItem: React.FC<{ name: string; value: string; className: string }> = ({ name, value, className }) => {
+    return (
+        <ListItem classes={{ root: className }}>
+            <Grid container justify="space-between">
+                <span>{name}</span>
+                <span>{value}</span>
+            </Grid>
+        </ListItem>
+    );
+};
+
+interface Props {
+    onNext: () => void;
+    onPrev: () => void;
+    onCancel: () => void;
+}
+
 const Component: React.FC<Props> = ({ onNext, onPrev }) => {
     const { t } = useTranslate();
     const cardClasses = useCardStyles();
     const inputClasses = useInputStyles();
     const listClasses = useListStyles();
     const bottomClasses = useBottomStyles();
+    const { data, setValue, setError, clearError } = useForm(formContext);
+    const selectedAsset = data.asset.value || '';
+    const collateral = data.collateral.value || '';
+    const borrow = data.borrow.value || '';
+    const vault = useSelector(curryRight(specVaultSelector)({ asset: selectedAsset }));
+    const assetName = getAssetName(selectedAsset);
+
     const handleNextBtnClick = () => {
+        if (!collateral) {
+            // TODO: error status
+            setError('collateral', 'collateral should not be zero');
+            return false;
+        }
         onNext();
     };
 
-    const renderListItem = (key: string, value: string): ReactNode => {
-        return (
-            <ListItem classes={{ root: listClasses.item }}>
-                <Grid container justify="space-between">
-                    <span>{key}</span>
-                    <span>{value}</span>
-                </Grid>
-            </ListItem>
-        );
+    const handleCollateralInput = (e: ChangeEvent<HTMLInputElement>) => {
+        const value = Number(e.currentTarget.value);
+        if (value) {
+            clearError('collateral');
+        }
+        setValue('collateral', value);
+    };
+
+    const handleBorrowInput = (e: ChangeEvent<HTMLInputElement>) => {
+        const value = Number(e.currentTarget.value);
+        setValue('borrow', value);
     };
 
     return (
@@ -97,18 +131,24 @@ const Component: React.FC<Props> = ({ onNext, onPrev }) => {
             <Grid container>
                 <Grid item xs={8}>
                     <Typography className={inputClasses.label}>
-                        {t('How much ETH would you deposit as collateral?')}
+                        {t('How much {{asset}} would you deposit as collateral?', {
+                            asset: assetName,
+                        })}
                     </Typography>
                     <TextField
+                        type="number"
                         className={inputClasses.root}
+                        error={!!data.collateral.error}
                         helperText={
                             <>
                                 <span style={{ marginRight: 30 }}>{t('Max to Lock')}</span>
-                                <span>{t('{{number}} {{asset}}', { number: 120, asset: 'ETH' })}</span>
+                                <span>{t('{{number}} {{asset}}', { number: 120, asset: assetName })}</span>
                             </>
                         }
                         InputProps={{
-                            endAdornment: <InputAdornment position="end">ETH</InputAdornment>,
+                            value: collateral,
+                            endAdornment: <InputAdornment position="end">{assetName}</InputAdornment>,
+                            onChange: handleCollateralInput,
                         }}
                         FormHelperTextProps={{
                             classes: { root: inputClasses.helper },
@@ -118,6 +158,7 @@ const Component: React.FC<Props> = ({ onNext, onPrev }) => {
                         {t('How much aUSD would you like to borrow?')}
                     </Typography>
                     <TextField
+                        type="number"
                         className={inputClasses.root}
                         helperText={
                             <>
@@ -126,7 +167,9 @@ const Component: React.FC<Props> = ({ onNext, onPrev }) => {
                             </>
                         }
                         InputProps={{
-                            endAdornment: <InputAdornment position="end">ETH</InputAdornment>,
+                            value: borrow,
+                            endAdornment: <InputAdornment position="end">{'aUSD'}</InputAdornment>,
+                            onChange: handleBorrowInput,
                         }}
                         FormHelperTextProps={{
                             classes: { root: inputClasses.helper },
@@ -134,14 +177,40 @@ const Component: React.FC<Props> = ({ onNext, onPrev }) => {
                     />
                 </Grid>
                 <Grid item xs={4}>
-                    <List classes={{ root: listClasses.root }} disablePadding>
-                        {renderListItem(t('Collateralization'), formatRatio(1.75))}
-                        {renderListItem(t('Liquidation Ratio'), formatRatio(1.75))}
-                        {renderListItem(t('ETH Price'), formatRatio(1.75))}
-                        {renderListItem(t('Interest Rate'), formatRatio(1.75))}
-                        {renderListItem(t('Liquidation Fee'), formatRatio(1.75))}
-                        {renderListItem(t('Liquidation Price'), formatRatio(1.75))}
-                    </List>
+                    {vault && (
+                        <List classes={{ root: listClasses.root }} disablePadding>
+                            <InfoListItem
+                                name={t('Collateralization')}
+                                value={formatRatio(vault.asset)}
+                                className={listClasses.item}
+                            />
+                            <InfoListItem
+                                name={t('Collateral Ratio')}
+                                value={formatRatio(vault.liquidationRatio)}
+                                className={listClasses.item}
+                            />
+                            <InfoListItem
+                                name={t('{{asset}} Price', { asset: assetName })}
+                                value={formatRatio(vault.asset)}
+                                className={listClasses.item}
+                            />
+                            <InfoListItem
+                                name={t('Interest Rate')}
+                                value={formatRatio(vault.stabilityFee)}
+                                className={listClasses.item}
+                            />
+                            <InfoListItem
+                                name={t('Liquidation Ratio')}
+                                value={formatRatio(vault.liquidationRatio)}
+                                className={listClasses.item}
+                            />
+                            <InfoListItem
+                                name={t('Liquidation Penalty')}
+                                value={formatRatio(vault.liquidationPenalty)}
+                                className={listClasses.item}
+                            />
+                        </List>
+                    )}
                 </Grid>
             </Grid>
             <Grid container className={bottomClasses.root} justify="space-between">

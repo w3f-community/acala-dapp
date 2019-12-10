@@ -6,9 +6,11 @@ export const assets: Map<number, string> = new Map([
     [3, 'DOT'],
 ]);
 
-export const getEndPoint = (): string => {
-    return 'wss://testnet-node-1.acala.laminar.one/ws';
-};
+export const collateral: number[] = [2, 3];
+
+export const stableCoin = 1;
+
+export const getEndPoint = (): string => 'wss://testnet-node-1.acala.laminar.one/ws';
 
 export const sideBarConfig: SideBarConfig = {
     products: [

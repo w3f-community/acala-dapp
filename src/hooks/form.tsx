@@ -50,7 +50,7 @@ export const Provider: React.FC<ProviderProps> = ({ context, data, children }) =
         },
         clearError: (key: string) => {
             setValue(Object.assign({}, set(data, [key, 'error'], '')));
-        }
+        },
     };
 
     return <context.Provider value={contextValue}>{children}</context.Provider>;

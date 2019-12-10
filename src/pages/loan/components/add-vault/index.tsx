@@ -1,42 +1,34 @@
-import React, { useState, ReactNode } from 'react';
+import React, { useState, ReactNode, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import { Box } from '@material-ui/core';
-import { useTranslate } from '@/hooks/i18n';
-
+import { collateral, assets } from '@/config';
+import rootActions from '@/store/actions';
 import { AddStep } from './index.types';
 import StepBar from './step-bar';
-import SelectCollateral, { Vault } from './select-collateral';
+import SelectCollateral from './select-collateral';
 import GenerateStableCoin from './generate-stable-coin';
 import Confirm from './confirm';
-
-const mockVault: Vault[] = [
-    {
-        asset: 2,
-        stabilityFee: 5,
-        liquidationRatio: 150,
-        liquidationPenalty: 150,
-        availableBalance: 10,
-    },
-    {
-        asset: 3,
-        stabilityFee: 5,
-        liquidationRatio: 150,
-        liquidationPenalty: 150,
-        availableBalance: 10,
-    },
-];
+import { formContext } from './context';
+import { Provider as FormProvider } from '@/hooks/form';
 
 interface Props {
     onCancel: () => void;
 }
+
 const AddVault: React.FC<Props> = ({ onCancel }) => {
-    const { t } = useTranslate();
+    const dispatch = useDispatch();
     const [step, setStep] = useState<AddStep>('select');
+    const initFormData = {
+        asset: { value: collateral[0] },
+        collateral: { value: undefined },
+        borrow: { value: undefined },
+        agree: { value: undefined },
+    };
 
     const changeStep = (target: AddStep) => () => setStep(target);
-
     const renderCurrentStep = (step: AddStep): ReactNode => {
         if (step === 'select') {
-            return <SelectCollateral data={mockVault} onNext={changeStep('generate')} onCancel={onCancel} />;
+            return <SelectCollateral onNext={changeStep('generate')} onCancel={onCancel} />;
         }
         if (step === 'generate') {
             return (
@@ -46,12 +38,18 @@ const AddVault: React.FC<Props> = ({ onCancel }) => {
         return <Confirm onNext={changeStep('confirm')} onPrev={changeStep('generate')} onCancel={onCancel} />;
     };
 
+    useEffect(() => {
+        // fetch balances and valuts info
+        dispatch(rootActions.chain.fetchVaults.request({ data: collateral }));
+        dispatch(rootActions.user.fetchAssetsBalance.request(Array.from(assets.keys())));
+    }, [dispatch]);
+
     return (
-        <div>
+        <FormProvider context={formContext} data={initFormData}>
             <StepBar current={step} />
             <Box paddingTop={4} />
             {renderCurrentStep(step)}
-        </div>
+        </FormProvider>
     );
 };
 

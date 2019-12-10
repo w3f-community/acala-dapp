@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Grid, Paper, Typography, Box } from '@material-ui/core';
 import { makeStyles, createStyles } from '@material-ui/styles';
 import { Theme } from '@material-ui/core/styles';
@@ -7,6 +7,7 @@ import clsx from 'clsx';
 import add from '@/assets/add.svg';
 import { Vault } from '../../index.types';
 import { getAssetName } from '@/utils';
+import { useDispatch } from 'react-redux';
 
 const useStyle = makeStyles((theme: Theme) =>
     createStyles({
@@ -58,6 +59,7 @@ interface Props {
 
 const VaultsList: React.FC<Props> = ({ vaults, onAdd }) => {
     const classes = useStyle();
+    const dispatch = useDispatch();
     return (
         <Grid container spacing={3}>
             {vaults.map((item: Vault) => (

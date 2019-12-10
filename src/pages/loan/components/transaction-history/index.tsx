@@ -1,49 +1,32 @@
 import React from 'react';
 import Card from '@/components/card';
-import {
-    Typography,
-    Table,
-    TableCell,
-    TableBody,
-    TableHead,
-    TableRow,
-    makeStyles,
-    Theme,
-    createStyles,
-} from '@material-ui/core';
+import { Typography, Table, TableBody, TableHead, TableRow, TableCell, Theme, withStyles } from '@material-ui/core';
 import { useTranslate } from '@/hooks/i18n';
 import { getAssetName } from '@/utils';
 import { createTypography } from '@/theme';
 import { TransactionHistoryData } from '../../index.types';
 
-const useBodyCellStyle = makeStyles((theme: Theme) =>
-    createStyles({
-        root: {
-            borderBottom: 'none',
-            color: theme.palette.text.secondary,
-        },
-    }),
-);
+const StyledBodyCell = withStyles((theme: Theme) => ({
+    root: {
+        borderBottom: 'none',
+        color: theme.palette.text.secondary,
+    },
+}))(TableCell);
 
-const useHeaderCellStyle = makeStyles((theme: Theme) =>
-    createStyles({
-        root: {
-            color: theme.palette.common.black,
-            ...createTypography(15, 22, 600, 'Roboto'),
-        },
-    }),
-);
+const StyledHeaderCell = withStyles((theme: Theme) => ({
+    root: {
+        color: theme.palette.common.black,
+        ...createTypography(15, 22, 600, 'Roboto'),
+    },
+}))(TableCell);
 
 interface Props {
     data: TransactionHistoryData[];
 }
 
-const a: any = 'hello';
-
 const TransactionHistory: React.FC<Props> = ({ data }) => {
     const { t } = useTranslate();
-    const bodyCellClasses = useBodyCellStyle();
-    const headerCellClasses = useHeaderCellStyle();
+
     return (
         <Card
             size="large"
@@ -54,21 +37,21 @@ const TransactionHistory: React.FC<Props> = ({ data }) => {
             <Table>
                 <TableHead>
                     <TableRow>
-                        <TableCell classes={headerCellClasses}>{t('Token')}</TableCell>
-                        <TableCell classes={headerCellClasses}>{t('Action')}</TableCell>
-                        <TableCell classes={headerCellClasses}>{t('When')}</TableCell>
-                        <TableCell classes={headerCellClasses}>{t('From')}</TableCell>
-                        <TableCell classes={headerCellClasses}>{t('Tx Hash')}</TableCell>
+                        <StyledHeaderCell>{t('Token')}</StyledHeaderCell>
+                        <StyledHeaderCell>{t('Action')}</StyledHeaderCell>
+                        <StyledHeaderCell>{t('When')}</StyledHeaderCell>
+                        <StyledHeaderCell>{t('From')}</StyledHeaderCell>
+                        <StyledHeaderCell>{t('Tx Hash')}</StyledHeaderCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
                     {data.map(({ asset, action, when, from, tx }) => (
                         <TableRow key={`transaction-history-${asset}-${tx}`}>
-                            <TableCell classes={bodyCellClasses}>{getAssetName(asset)}</TableCell>
-                            <TableCell classes={bodyCellClasses}>{action}</TableCell>
-                            <TableCell classes={bodyCellClasses}>{when}</TableCell>
-                            <TableCell classes={bodyCellClasses}>{from}</TableCell>
-                            <TableCell classes={bodyCellClasses}>{tx}</TableCell>
+                            <StyledBodyCell>{getAssetName(asset)}</StyledBodyCell>
+                            <StyledBodyCell>{action}</StyledBodyCell>
+                            <StyledBodyCell>{when}</StyledBodyCell>
+                            <StyledBodyCell>{from}</StyledBodyCell>
+                            <StyledBodyCell>{tx}</StyledBodyCell>
                         </TableRow>
                     ))}
                 </TableBody>

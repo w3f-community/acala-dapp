@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Grid, Typography, Theme, makeStyles, createStyles } from '@material-ui/core';
 import clsx from 'clsx';
 
@@ -6,6 +6,9 @@ import { useTranslate } from '@/hooks/i18n';
 import { AddStep } from './index.types';
 import RightArrow from '@/assets/right-arrow.svg';
 import { createTypography } from '@/theme';
+import { formContext } from './context';
+import { getAssetName } from '@/utils';
+import { useForm } from '@/hooks/form';
 
 interface StepData {
     key: AddStep;
@@ -38,6 +41,8 @@ const useStepStyles = makeStyles((theme: Theme) =>
 const Component: React.FC<Props> = ({ current }) => {
     const { t } = useTranslate();
     const classes = useStepStyles();
+    const { data } = useForm(formContext);
+
     const steps: Array<StepData> = [
         {
             key: 'select',
@@ -47,7 +52,9 @@ const Component: React.FC<Props> = ({ current }) => {
         {
             key: 'generate',
             title: t('Generate aUSD'),
-            desc: t('Deposit ETH as collateral to genearte aUSD'),
+            desc: t('Deposit {{asset}} as collateral to genearte aUSD', {
+                asset: getAssetName(data.asset.value),
+            }),
         },
         {
             key: 'confirm',
@@ -55,6 +62,7 @@ const Component: React.FC<Props> = ({ current }) => {
             desc: t('Confirm creating a collateralized loan for aUSD'),
         },
     ];
+
     const currentStepData = steps.filter(({ key }) => current === key);
 
     return (
