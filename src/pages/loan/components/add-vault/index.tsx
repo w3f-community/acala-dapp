@@ -3,11 +3,12 @@ import { useDispatch } from 'react-redux';
 import { Box } from '@material-ui/core';
 import { collateral, assets } from '@/config';
 import rootActions from '@/store/actions';
-import { AddStep } from './index.types';
+import { AddStep } from './types';
 import StepBar from './step-bar';
 import SelectCollateral from './select-collateral';
 import GenerateStableCoin from './generate-stable-coin';
 import Confirm from './confirm';
+import Success from './success';
 import { formContext } from './context';
 import { Provider as FormProvider } from '@/hooks/form';
 
@@ -27,6 +28,7 @@ const AddVault: React.FC<Props> = ({ onCancel }) => {
     };
 
     const changeStep = (target: AddStep) => () => setStep(target);
+
     const renderCurrentStep = (step: AddStep): ReactNode => {
         if (step === 'select') {
             return <SelectCollateral onNext={changeStep('generate')} onCancel={onCancel} />;
@@ -36,7 +38,13 @@ const AddVault: React.FC<Props> = ({ onCancel }) => {
                 <GenerateStableCoin onNext={changeStep('confirm')} onPrev={changeStep('select')} onCancel={onCancel} />
             );
         }
-        return <Confirm onNext={changeStep('confirm')} onPrev={changeStep('generate')} onCancel={onCancel} />;
+        if (step === 'confirm') {
+            return <Confirm onNext={changeStep('success')} onPrev={changeStep('generate')} onCancel={onCancel} />;
+        }
+        if (step === 'success') {
+            return <Success onCancel={onCancel} />;
+        }
+        return null;
     };
 
     useEffect(() => {

@@ -3,7 +3,7 @@ import { Grid, Typography, Theme, makeStyles, createStyles } from '@material-ui/
 import clsx from 'clsx';
 
 import { useTranslate } from '@/hooks/i18n';
-import { AddStep } from './index.types';
+import { AddStep } from './types';
 import RightArrow from '@/assets/right-arrow.svg';
 import { createTypography } from '@/theme';
 import { formContext } from './context';
@@ -64,6 +64,11 @@ const Component: React.FC<Props> = ({ current }) => {
     ];
 
     const currentStepData = steps.filter(({ key }) => current === key);
+
+    // when step is succes, don't show step-bar
+    if (current === 'success') {
+        return null;
+    }
 
     return (
         <>

@@ -12,7 +12,7 @@ import rootActions from '@/store/actions';
 import { formContext } from './context';
 import { statusSelector } from '@/store/vault/selectors';
 
-const StyledCard = withStyles(() => ({
+const Card = withStyles(() => ({
     root: { padding: '66px 35px 60px 29px' },
 }))(Paper);
 
@@ -106,7 +106,7 @@ const Component: React.FC<Props> = ({ onNext, onPrev }) => {
     }, [updateVaultStatus]);
 
     return (
-        <StyledCard square={true} elevation={1}>
+        <Card square={true} elevation={1}>
             <Grid container justify="center">
                 <Grid item xs={6}>
                     <List disablePadding>
@@ -161,7 +161,7 @@ const Component: React.FC<Props> = ({ onNext, onPrev }) => {
                     </Grid>
                 </Grid>
             </Grid>
-        </StyledCard>
+        </Card>
     );
 };
 

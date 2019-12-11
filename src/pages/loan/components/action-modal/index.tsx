@@ -17,7 +17,7 @@ import {
 } from '@material-ui/core';
 import { useTranslate } from '@/hooks/i18n';
 import { createTypography } from '@/theme';
-import closeSVG from '@/assets/close.svg';
+import CloseIcon from '@/components/svgs/close';
 import Formatter, { formatPrice } from '@/components/formatter';
 
 export type ActionType = 'any' | 'payback' | 'generate' | 'deposit' | 'withdraw';
@@ -75,7 +75,7 @@ const ActionModal: React.FC<ActionModalProps> = ({ action, open, onClose }) => {
                 <Grid container justify="space-between" alignItems="center">
                     <p>{t('Payback aUSD')}</p>
                     <IconButton onClick={onClose}>
-                        <img src={closeSVG} />
+                        <CloseIcon />
                     </IconButton>
                 </Grid>
             </DialogTitle>
