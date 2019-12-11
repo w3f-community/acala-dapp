@@ -98,7 +98,7 @@ const Component: React.FC<Props> = ({ onNext, onPrev }) => {
     const listClasses = useListStyles();
     const bottomClasses = useBottomStyles();
     const { data, setValue, setError, clearError } = useForm(formContext);
-    const selectedAsset = data.asset.value || '';
+    const selectedAsset = data.asset.value;
     const collateral = data.collateral.value || '';
     const borrow = data.borrow.value || '';
     const vault = useSelector(curryRight(specVaultSelector)({ asset: selectedAsset }));
@@ -106,7 +106,6 @@ const Component: React.FC<Props> = ({ onNext, onPrev }) => {
 
     const handleNextBtnClick = () => {
         if (!collateral) {
-            // TODO: error status
             setError('collateral', 'collateral should not be zero');
             return false;
         }

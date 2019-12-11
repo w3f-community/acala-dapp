@@ -18,7 +18,8 @@ interface Props {
 const AddVault: React.FC<Props> = ({ onCancel }) => {
     const dispatch = useDispatch();
     const [step, setStep] = useState<AddStep>('select');
-    const initFormData = {
+
+    const initFormValues = {
         asset: { value: collateral[0] },
         collateral: { value: undefined },
         borrow: { value: undefined },
@@ -45,7 +46,7 @@ const AddVault: React.FC<Props> = ({ onCancel }) => {
     }, [dispatch]);
 
     return (
-        <FormProvider context={formContext} data={initFormData}>
+        <FormProvider context={formContext} data={initFormValues}>
             <StepBar current={step} />
             <Box paddingTop={4} />
             {renderCurrentStep(step)}

@@ -1,5 +1,5 @@
 import React, { Context, useContext, useState, ReactNode } from 'react';
-import { set, map } from 'lodash';
+import { set } from 'lodash';
 
 type Error = string;
 
@@ -9,49 +9,50 @@ interface FormDataItem {
     validator?: (value: any) => Error; // return '' when no erros
 }
 
-export interface FormData {
+interface FormData {
     [k: string]: FormDataItem;
 }
 
-interface StringMap {
-    [k: string]: any;
-}
-
-export const useForm = (context: Context<ProviderData>): ProviderData => {
-    const result = useContext<ProviderData>(context);
-    return result;
-};
-
 interface ProviderProps {
-    context: Context<ProviderData>;
+    context: Context<ProviderData<any>>;
     data: FormData;
     children: ReactNode;
 }
 
-export interface ProviderData {
-    data: FormData;
-    setValue: (key: string, value: any) => void;
-    setError: (key: string, error: any) => void;
-    clearError: (key: string) => void;
-}
+type Combine<Origin, Base> = {
+    [T in keyof Origin]: Base & Origin[T];
+};
+
+export type ProviderData<T> = {
+    data: Combine<T, FormData>;
+    setValue: (key: keyof T, value: any) => void;
+    setError: (key: keyof T, error: any) => void;
+    clearError: (key: keyof T) => void;
+};
 
 export const Provider: React.FC<ProviderProps> = ({ context, data, children }) => {
+    type Combined = Combine<typeof data, FormData>;
+
     const _inner = Object.assign({}, data);
 
-    const [value, setValue] = useState<FormData>(_inner);
+    const [value, setValue] = useState<Combined>((_inner as any) as Combined);
 
-    const contextValue: ProviderData = {
+    const contextValue: ProviderData<Combined> = {
         data: value,
-        setValue: (key: string, value: any) => {
-            setValue(Object.assign({}, set(data, [key, 'value'], value)));
+        setValue: (key: keyof Combined, value: any) => {
+            setValue(Object.assign({}, set(data as object, [key, 'value'], value)));
         },
-        setError: (key: string, error: any) => {
-            setValue(Object.assign({}, set(data, [key, 'error'], error)));
+        setError: (key: keyof Combined, error: any) => {
+            setValue(Object.assign({}, set(data as object, [key, 'error'], error)));
         },
-        clearError: (key: string) => {
-            setValue(Object.assign({}, set(data, [key, 'error'], '')));
+        clearError: (key: keyof Combined) => {
+            setValue(Object.assign({}, set(data as object, [key, 'error'], '')));
         },
     };
 
     return <context.Provider value={contextValue}>{children}</context.Provider>;
 };
+
+export function useForm<T>(context: Context<ProviderData<T>>): ProviderData<T> {
+    return useContext<ProviderData<T>>(context);
+}
