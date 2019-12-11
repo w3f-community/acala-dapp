@@ -1,7 +1,7 @@
 import { createAsyncAction } from 'typesafe-actions';
 import { RegistryTypes } from '@polkadot/types/types';
 import { ApiRx } from '@polkadot/api';
-import { PriceData, BaseVaultData } from '../types';
+import { PriceData, BaseVaultData, AssetList } from '../types';
 
 interface ConnectParam {
     endpoint: string;
@@ -14,22 +14,16 @@ export const connectAsync = createAsyncAction(CONNECT_ASYNC, '@chain/connect/suc
     string
 >();
 
-export interface FetchPricesFeedParams {
-    data: number[];
-}
 export const FETCH_PRICES_FEED = '@chain/fetch_prices_feed';
 export const fetchPricesFeed = createAsyncAction(
     FETCH_PRICES_FEED,
     '@chain/fetch_prices_feed/success',
     '@chain/fetch_prices_feed/failure',
-)<FetchPricesFeedParams, PriceData[], string>();
+)<AssetList, PriceData[], string>();
 
-export interface FetchVaultsParams {
-    data: number[];
-}
 export const FETCH_VAULTS = '@chain/fetch_vaults';
 export const fetchVaults = createAsyncAction(
     FETCH_VAULTS,
     '@chain/fetch_vaults/success',
     '@chain/fetch_vaults/failure',
-)<FetchVaultsParams, BaseVaultData[], string>();
+)<AssetList, BaseVaultData[], string>();

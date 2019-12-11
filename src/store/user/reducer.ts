@@ -5,6 +5,7 @@ import * as actions from './actions';
 const initialState: UserState = {
     account: null,
     balancas: [],
+    vaults: [],
 };
 
 export default createReducer(initialState)
@@ -15,4 +16,8 @@ export default createReducer(initialState)
     .handleAction(actions.importAccount.success, (state, action) => ({
         ...state,
         account: action.payload,
+    }))
+    .handleAction(actions.fetchVaults.success, (state, action) => ({
+        ...state,
+        vaults: action.payload,
     }));

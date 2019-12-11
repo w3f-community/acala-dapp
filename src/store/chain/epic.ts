@@ -40,11 +40,11 @@ export const fetchPricesFeedEpic: Epic<RootAction, RootAction, RootState> = (act
                 withLatestFrom(state$),
                 filter(([_, state]) => state.chain.app !== null), // ensure has app entity,
                 switchMap(([_, state]) => {
-                    const payload = action.payload as actions.FetchPricesFeedParams;
+                    const assetList = action.payload;
                     const app = state.chain.app;
-                    return combineLatest<Array<any>>(payload.data.map(asset => app!.query.oracle.values(asset))).pipe(
+                    return combineLatest<Array<any>>(assetList.map(asset => app!.query.oracle.values(asset))).pipe(
                         map(result =>
-                            payload.data.map((asset, index) => ({
+                            assetList.map((asset, index) => ({
                                 asset,
                                 price: Number(result[index].toString()),
                             })),
@@ -65,18 +65,18 @@ export const fetchVaultsEpic: Epic<RootAction, RootAction, RootState> = (action$
                 withLatestFrom(state$),
                 filter(([_, state]) => state.chain.app !== null),
                 switchMap(([_, state]) => {
-                    const payload = action.payload as actions.FetchVaultsParams;
+                    const assetList = action.payload;
                     const app = state.chain.app;
                     return combineLatest([
-                        combineLatest(payload.data.map(asset => app!.query.cdpEngine.debitExchangeRate(asset))),
-                        combineLatest(payload.data.map(asset => app!.query.cdpEngine.liquidationPenalty(asset))),
-                        combineLatest(payload.data.map(asset => app!.query.cdpEngine.liquidationRatio(asset))),
-                        combineLatest(payload.data.map(asset => app!.query.cdpEngine.maximumTotalDebitValue(asset))),
-                        combineLatest(payload.data.map(asset => app!.query.cdpEngine.requiredCollateralRatio(asset))),
-                        combineLatest(payload.data.map(asset => app!.query.cdpEngine.stabilityFee(asset))),
+                        combineLatest(assetList.map(asset => app!.query.cdpEngine.debitExchangeRate(asset))),
+                        combineLatest(assetList.map(asset => app!.query.cdpEngine.liquidationPenalty(asset))),
+                        combineLatest(assetList.map(asset => app!.query.cdpEngine.liquidationRatio(asset))),
+                        combineLatest(assetList.map(asset => app!.query.cdpEngine.maximumTotalDebitValue(asset))),
+                        combineLatest(assetList.map(asset => app!.query.cdpEngine.requiredCollateralRatio(asset))),
+                        combineLatest(assetList.map(asset => app!.query.cdpEngine.stabilityFee(asset))),
                     ]).pipe(
                         map(result => {
-                            return payload.data.map((asset, index) => ({
+                            return assetList.map((asset, index) => ({
                                 asset,
                                 debitExchangeRate: u8aToNumber(result[0][index]),
                                 liquidationPenalty: u8aToNumber(result[1][index]),

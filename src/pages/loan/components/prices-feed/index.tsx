@@ -5,7 +5,7 @@ import { Typography, List, ListItem, Grid } from '@material-ui/core';
 import { useTranslate } from '@/hooks/i18n';
 import Card from '@/components/card';
 import { getAssetName } from '@/utils';
-import rootActions from '@/store/actions';
+import actions from '@/store/actions';
 import { pricesFeedSelector } from '@/store/chain/selectors';
 import { assets } from '@/config';
 
@@ -15,7 +15,7 @@ const PricesFeed: React.FC = () => {
     const data = useSelector(pricesFeedSelector);
 
     useEffect(() => {
-        dispatch(rootActions.chain.fetchPricesFeed.request({ data: Array.from(assets.keys()) }));
+        dispatch(actions.chain.fetchPricesFeed.request(Array.from(assets.keys())));
     }, [dispatch]);
 
     return (

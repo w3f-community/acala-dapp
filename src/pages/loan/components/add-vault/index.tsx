@@ -2,7 +2,7 @@ import React, { useState, ReactNode, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { Box } from '@material-ui/core';
 import { collateral, assets } from '@/config';
-import rootActions from '@/store/actions';
+import actions from '@/store/actions';
 import { AddStep } from './types';
 import StepBar from './step-bar';
 import SelectCollateral from './select-collateral';
@@ -49,8 +49,8 @@ const AddVault: React.FC<Props> = ({ onCancel }) => {
 
     useEffect(() => {
         // fetch balances and valuts info
-        dispatch(rootActions.chain.fetchVaults.request({ data: collateral }));
-        dispatch(rootActions.user.fetchAssetsBalance.request(Array.from(assets.keys())));
+        dispatch(actions.chain.fetchVaults.request(collateral));
+        dispatch(actions.user.fetchAssetsBalance.request(Array.from(assets.keys())));
     }, [dispatch]);
 
     return (

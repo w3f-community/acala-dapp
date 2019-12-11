@@ -23,6 +23,12 @@ export interface BaseVaultData {
     stabilityFee: number;
 }
 
+export interface UserVaultData {
+    asset: number;
+    collateral: number;
+    debit: number;
+}
+
 export interface Tx {
     type: 'updateVault';
 }
@@ -30,9 +36,9 @@ export interface Tx {
 export type TxStatus = 'pending' | 'success' | 'failure' | 'none';
 
 export interface UpdateVaultData {
+    asset: number;
     collateral: number;
     borrow: number;
-    asset: number;
 }
 
 // store state
@@ -47,6 +53,7 @@ export interface ChainState {
 export interface UserState {
     account: KeyringPair | null;
     balancas: BalanceData[];
+    vaults: UserVaultData[];
 }
 
 export interface VaultState {

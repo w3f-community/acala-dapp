@@ -1,5 +1,5 @@
 import { Selector } from '@/types/store';
-import { BalanceData } from '../types';
+import { BalanceData, UserVaultData } from '../types';
 
 export const balancesSelector: Selector<BalanceData[]> = state => state.user.balancas;
 
@@ -13,3 +13,6 @@ export const specBalanceSelector: (asset: number) => Selector<number> = asset =>
         return result[0].balance;
     };
 };
+
+// add user prefix for avoid conflict
+export const userVaultsSelector: Selector<UserVaultData[]> = state => state.user.vaults;

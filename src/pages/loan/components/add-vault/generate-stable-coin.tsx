@@ -91,7 +91,7 @@ interface Props {
     onCancel: () => void;
 }
 
-const Component: React.FC<Props> = ({ onNext, onPrev }) => {
+const Component: React.FC<Props> = ({ onNext, onPrev, onCancel }) => {
     const { t } = useTranslate();
     const cardClasses = useCardStyles();
     const inputClasses = useInputStyles();
@@ -227,7 +227,9 @@ const Component: React.FC<Props> = ({ onNext, onPrev }) => {
                 <Grid item>
                     <Grid container spacing={2}>
                         <Grid item>
-                            <Button className={bottomClasses.linkBtn}>{t('Cancel')}</Button>
+                            <Button className={bottomClasses.linkBtn} onClick={onCancel}>
+                                {t('Cancel')}
+                            </Button>
                         </Grid>
                         <Grid item>
                             <Button variant="contained" color="secondary" onClick={onPrev}>

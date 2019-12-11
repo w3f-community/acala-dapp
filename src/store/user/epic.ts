@@ -49,3 +49,43 @@ export const importAccmountEpic: Epic<RootAction, RootAction, RootState> = actio
         ),
         map(actions.importAccount.success),
     );
+
+export const fetchVaultsEpic: Epic<RootAction, RootAction, RootState> = (action$, state$) =>
+    action$.pipe(
+        filter(isActionOf(actions.fetchVaults.request)),
+        switchMap(action =>
+            interval(60 * 1000).pipe(
+                startWith(0),
+                withLatestFrom(state$),
+                filter(([_, state]) => state.chain.app !== null),
+                filter(([_, state]) => state.user.account !== null),
+                switchMap(([_, state]) => {
+                    const app = state.chain.app!;
+                    const account = state.user.account!;
+                    const assetList = action.payload;
+                    return combineLatest(
+                        assetList.map(asset =>
+                            combineLatest([
+                                app.query.vaults.collaterals(account.address, asset),
+                                app.query.vaults.debits(account.address, asset),
+                            ]),
+                        ),
+                    ).pipe(
+                        map(result => {
+                            return assetList
+                                .map((asset, index) => ({
+                                    asset: asset,
+                                    collateral: u8aToNumber(result[index][0]),
+                                    debit: u8aToNumber(result[index][1]),
+                                }))
+                                .filter(item => {
+                                    // filter empty vaults
+                                    return item.collateral !== 0 || item.debit !== 0;
+                                });
+                        }),
+                        map(actions.fetchVaults.success),
+                    );
+                }),
+            ),
+        ),
+    );

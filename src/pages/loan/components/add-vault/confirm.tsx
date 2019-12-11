@@ -8,7 +8,7 @@ import { useForm } from '@/hooks/form';
 import { specVaultSelector } from '@/store/chain/selectors';
 import { specBalanceSelector } from '@/store/user/selectors';
 import { getAssetName, getBalance } from '@/utils';
-import rootActions from '@/store/actions';
+import actions from '@/store/actions';
 import { formContext } from './context';
 import { statusSelector } from '@/store/vault/selectors';
 
@@ -91,7 +91,7 @@ const Component: React.FC<Props> = ({ onNext, onPrev }) => {
     const updateVaultStatus = useSelector(statusSelector('updateVault'));
     const handleNextBtnClick = useCallback(() => {
         dispatch(
-            rootActions.vault.updateVault.request({
+            actions.vault.updateVault.request({
                 collateral,
                 borrow,
                 asset: selectedAsset,
