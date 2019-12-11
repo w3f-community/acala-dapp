@@ -10,6 +10,7 @@ import Loading from '@/components/loading';
 import Sidebar from './components/side-bar';
 import rootActions from '@/store/actions';
 import { getEndPoint, sideBarConfig } from '@/config';
+import { connectedSelector } from '@/store/chain/selectors';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -41,17 +42,29 @@ const MainLayout: React.FC<Props> = props => {
     const { children } = props;
     const dispatch = useDispatch();
     const classes = useStyles();
-    const loadingStatus = useSelector(loadingSelector(rootActions.chain.CONNECT_ASYNC));
+    const connectLoading = useSelector(loadingSelector(rootActions.chain.CONNECT_ASYNC));
+    const importAccountLoading = useSelector(loadingSelector(rootActions.user.IMPORT_ACCOUNT));
+    const connectStatus = useSelector(connectedSelector);
 
     useEffect(() => {
         dispatch(
             // connect to blockchain
             rootActions.chain.connectAsync.request({ endpoint: getEndPoint(), ...acalaTypes }),
         );
+        // TODO: need remove
+        dispatch(
+            rootActions.user.importAccount.request(
+                'kitten leopard case library chair warm shy board trouble regular seat divorce',
+            ),
+        );
     }, [dispatch]);
 
-    if (loadingStatus) {
+    if (connectLoading || importAccountLoading) {
         return <Loading />;
+    }
+
+    if (!connectStatus) {
+        return null;
     }
 
     return (

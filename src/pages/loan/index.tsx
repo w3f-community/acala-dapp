@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import { Grid, Box } from '@material-ui/core';
 import { Vault, SystemInfoData, CollateralInfoData, TransactionHistoryData, CurrentVault } from './index.types';
 
@@ -10,6 +11,7 @@ import VaultPanel from './components/vault-panel';
 import TransactionHistory from './components/transaction-history';
 import VaultInfo from './components/vault-info';
 import AddVault from './components/add-vault';
+import rootActions from '@/store/actions';
 
 const vaults: Vault[] = [
     {

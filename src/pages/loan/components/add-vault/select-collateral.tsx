@@ -19,7 +19,7 @@ import { getAssetName } from '@/utils';
 import Formatter from '@/components/formatter';
 import { useSelector } from 'react-redux';
 import { vaultsSelector } from '@/store/chain/selectors';
-import { balancesSelector } from '@/store/user/selectors';
+import { specBalanceSelector } from '@/store/user/selectors';
 import { BaseVaultData } from '@/store/types';
 import { createTypography } from '@/theme';
 import { useForm } from '@/hooks/form';
@@ -75,7 +75,7 @@ const Component: React.FC<Props> = ({ onNext, onCancel }) => {
     const { data, setValue } = useForm(formContext);
     const selectedAsset = data.asset.value;
     const vaults = filterEmptyVault(useSelector(vaultsSelector));
-    const balances = useSelector(balancesSelector);
+    const balances = useSelector(specBalanceSelector(selectedAsset));
 
     const handleNextBtnClick = () => onNext();
 
@@ -117,13 +117,7 @@ const Component: React.FC<Props> = ({ onNext, onCancel }) => {
                                 <Formatter data={item.liquidationPenalty} type="ratio" />
                             </StyledBodyCell>
                             <StyledBodyCell>
-                                {balances[item.asset] && (
-                                    <Formatter
-                                        data={balances[item.asset].balance}
-                                        type="balance"
-                                        suffix={getAssetName(item.asset)}
-                                    />
-                                )}
+                                <Formatter data={balances} type="balance" suffix={getAssetName(item.asset)} />
                             </StyledBodyCell>
                         </TableRow>
                     ))}

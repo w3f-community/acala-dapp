@@ -1,5 +1,4 @@
-import React, { ReactNode, useContext, useState, ChangeEvent } from 'react';
-import { curryRight } from 'lodash';
+import React, { ChangeEvent } from 'react';
 import {
     Grid,
     Button,
@@ -15,12 +14,13 @@ import {
 } from '@material-ui/core';
 import { useTranslate } from '@/hooks/i18n';
 import { createTypography } from '@/theme';
-import { formatRatio, formatPrice } from '@/components/formatter';
+import { formatRatio, formatPrice, formatBalance } from '@/components/formatter';
 import { formContext } from './context';
-import { getAssetName } from '@/utils';
+import { getAssetName, getBalance } from '@/utils';
 import { useSelector } from 'react-redux';
 import { specVaultSelector } from '@/store/chain/selectors';
 import { useForm } from '@/hooks/form';
+import { specBalanceSelector } from '@/store/user/selectors';
 
 const useCardStyles = makeStyles(() =>
     createStyles({
@@ -101,7 +101,8 @@ const Component: React.FC<Props> = ({ onNext, onPrev }) => {
     const selectedAsset = data.asset.value;
     const collateral = data.collateral.value || '';
     const borrow = data.borrow.value || '';
-    const vault = useSelector(curryRight(specVaultSelector)({ asset: selectedAsset }));
+    const vault = useSelector(specVaultSelector(selectedAsset));
+    const balance = useSelector(specBalanceSelector(selectedAsset));
     const assetName = getAssetName(selectedAsset);
 
     const handleNextBtnClick = () => {
@@ -114,9 +115,18 @@ const Component: React.FC<Props> = ({ onNext, onPrev }) => {
 
     const handleCollateralInput = (e: ChangeEvent<HTMLInputElement>) => {
         const value = Number(e.currentTarget.value);
-        if (value) {
-            clearError('collateral');
+
+        if (value < 0) {
+            setError('collateral', 'zero');
+            return false;
         }
+
+        if (getBalance(value) > balance) {
+            setError('collateral', 'larger');
+            return false;
+        }
+
+        clearError('collateral');
         setValue('collateral', value);
     };
 
@@ -141,7 +151,7 @@ const Component: React.FC<Props> = ({ onNext, onPrev }) => {
                         helperText={
                             <>
                                 <span style={{ marginRight: 30 }}>{t('Max to Lock')}</span>
-                                <span>{t('{{number}} {{asset}}', { number: 120, asset: assetName })}</span>
+                                <span>{formatBalance(balance, assetName)}</span>
                             </>
                         }
                         InputProps={{

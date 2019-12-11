@@ -1,4 +1,5 @@
 import { ApiRx } from '@polkadot/api';
+import { KeyringPair } from '@polkadot/keyring/types';
 
 export type AssetList = number[];
 
@@ -22,6 +23,18 @@ export interface BaseVaultData {
     stabilityFee: number;
 }
 
+export interface Tx {
+    type: 'updateVault';
+}
+
+export type TxStatus = 'pending' | 'success' | 'failure' | 'none';
+
+export interface UpdateVaultData {
+    collateral: number;
+    borrow: number;
+    asset: number;
+}
+
 // store state
 export interface ChainState {
     app: ApiRx | null;
@@ -32,6 +45,11 @@ export interface ChainState {
 }
 
 export interface UserState {
-    account: string;
+    account: KeyringPair | null;
     balancas: BalanceData[];
+}
+
+export interface VaultState {
+    updateVaultStatus: TxStatus;
+    [T: string]: any;
 }
