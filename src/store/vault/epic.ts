@@ -14,7 +14,9 @@ export const createValutEpic: Epic<RootAction, RootAction, RootState> = (action$
             const data = action.payload;
             const app = state.chain.app!;
             const account = state.user.account!;
-            const tx = app.tx.honzon.updateVault(data.asset, data.collateral, data.borrow);
+            const collateral = BigInt(data.collateral).toString();
+            const debit = BigInt(data.debit).toString();
+            const tx = app.tx.honzon.updateVault(data.asset, collateral, debit);
             return tx.signAndSend(account).pipe(
                 map(result => {
                     console.log('finally? ', result.isFinalized);
@@ -22,7 +24,9 @@ export const createValutEpic: Epic<RootAction, RootAction, RootState> = (action$
                     result.events.forEach(({ phase, event: { data, method, section } }: any) => {
                         console.log(`\t' ${phase}: ${section}.${method}:: ${data}`);
                     });
+                    return result;
                 }),
+                filter((result: any) => result.isFinalized),
                 map(actions.updateVault.success),
             );
         }),

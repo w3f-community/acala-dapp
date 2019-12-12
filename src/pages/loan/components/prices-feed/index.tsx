@@ -8,6 +8,7 @@ import { getAssetName } from '@/utils';
 import actions from '@/store/actions';
 import { pricesFeedSelector } from '@/store/chain/selectors';
 import { assets } from '@/config';
+import { formatPrice } from '@/components/formatter';
 
 const PricesFeed: React.FC = () => {
     const { t } = useTranslate();
@@ -27,7 +28,7 @@ const PricesFeed: React.FC = () => {
                             <Typography variant="body2">
                                 {t('{{asset}} in USD', { asset: getAssetName(asset) })}
                             </Typography>
-                            <Typography variant="body2">${price}</Typography>
+                            <Typography variant="body2">{formatPrice(price, '$')}</Typography>
                         </Grid>
                     </ListItem>
                 ))}

@@ -12,12 +12,8 @@ import TransactionHistory from './components/transaction-history';
 import VaultInfo from './components/vault-info';
 import AddVault from './components/add-vault';
 import actions from '@/store/actions';
-import { collateral } from '@/config';
+import { collateral, STABLE_COIN, assets } from '@/config';
 import { userVaultsSelector } from '@/store/user/selectors';
-
-const systemInfo: SystemInfoData = {
-    aUSDSupply: 12312313,
-};
 
 const collateralInfo: { [k: number]: CollateralInfoData } = {
     2: {
@@ -39,23 +35,28 @@ const mockTransactionHistoryData: TransactionHistoryData[] = [
 const Loan: React.FC = () => {
     const dispatch = useDispatch();
     const [currentVault, setCurrentVault] = useState<number>(0);
-    const [addVaultStatus, setAddVaultstatus] = useState<boolean>(false);
+    const [addVaultStatus, setAddVaultstatus] = useState<boolean>();
     const userVaults = useSelector(userVaultsSelector);
 
     const showAddVault = () => setAddVaultstatus(true);
     const hideAddVault = () => setAddVaultstatus(false);
 
     useEffect(() => {
-        // fetch system vaults info
-        dispatch(actions.chain.fetchVaults.request(collateral));
         // fetch user vaults info
         dispatch(actions.user.fetchVaults.request(collateral));
-    }, [dispatch]);
+        // fetch tokens total issuance
+        dispatch(actions.chain.fetchTotalIssuance.request([STABLE_COIN]));
+        // fetch system vaults info
+        dispatch(actions.chain.fetchVaults.request(collateral));
+        // fetch user asset balance
+        dispatch(actions.user.fetchAssetsBalance.request(Array.from(assets.keys())));
+    }, []);
 
     useEffect(() => {
-        console.log(userVaults, !userVaults.length);
         // if user vaults is empty then show add vault view
-        setAddVaultstatus(!userVaults.length);
+        if (addVaultStatus === false && userVaults.length === 0) {
+            setAddVaultstatus(true);
+        }
         // set default current vault
         if (userVaults.length) {
             setCurrentVault(userVaults[0].asset);
@@ -79,7 +80,7 @@ const Loan: React.FC = () => {
                         <>
                             <VaultInfo current={currentVault} />
                             <Box paddingTop={7} />
-                            <VaultPanel asset={2} />
+                            <VaultPanel current={currentVault} />
                             <Box paddingTop={7} />
                             <TransactionHistory data={mockTransactionHistoryData} />
                         </>
@@ -88,7 +89,7 @@ const Loan: React.FC = () => {
                 <Grid item xs={4}>
                     <PricesFeed />
                     <Box paddingTop={3} />
-                    <SystemInfo data={systemInfo} />
+                    <SystemInfo />
                     <Box paddingTop={3} />
                     <CollateralInfo current={2} data={collateralInfo} />
                 </Grid>

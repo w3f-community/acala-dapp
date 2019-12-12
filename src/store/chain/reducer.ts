@@ -7,6 +7,7 @@ const initialState: ChainState = {
     connected: false,
     pricesFeed: [],
     vaults: [],
+    totalIssuance: [],
 };
 
 export default createReducer(initialState)
@@ -22,4 +23,8 @@ export default createReducer(initialState)
     .handleAction(actions.fetchVaults.success, (state, action) => ({
         ...state,
         vaults: action.payload,
+    }))
+    .handleAction(actions.fetchTotalIssuance.success, (state, action) => ({
+        ...state,
+        totalIssuance: action.payload,
     }));

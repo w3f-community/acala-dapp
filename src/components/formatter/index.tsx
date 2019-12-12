@@ -12,7 +12,7 @@ function format(source: number): number {
 
 export function formatBalance(num: number, suffix = ''): string {
     suffix = suffix ? ' ' + suffix : '';
-    return `${format(num / 10 ** 15)
+    return `${format(num / 10 ** 18)
         .toString()
         .replace(/(?=(\B\d{3})+(\.\d+)?$)/g, ',')}${suffix}`;
 }

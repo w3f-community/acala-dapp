@@ -1,5 +1,5 @@
 import { Epic } from 'redux-observable';
-import { filter, map, switchMap, startWith, withLatestFrom } from 'rxjs/operators';
+import { filter, map, switchMap, startWith, withLatestFrom, endWith } from 'rxjs/operators';
 import { combineLatest, interval, defer } from 'rxjs';
 import { isActionOf, RootAction, RootState } from 'typesafe-actions';
 
@@ -8,6 +8,7 @@ import { AssetList } from '../types';
 import { u8aToNumber } from '@/utils';
 import { Keyring } from '@polkadot/api';
 import { cryptoWaitReady } from '@polkadot/util-crypto';
+import { startLoading, endLoading } from '../loading/reducer';
 
 export const fetchAssetBalanceEpic: Epic<RootAction, RootAction, RootState> = (action$, state$) =>
     action$.pipe(
@@ -84,6 +85,8 @@ export const fetchVaultsEpic: Epic<RootAction, RootAction, RootState> = (action$
                                 });
                         }),
                         map(actions.fetchVaults.success),
+                        startWith(startLoading(actions.FETCH_VAULTS)),
+                        endWith(endLoading(actions.FETCH_VAULTS)),
                     );
                 }),
             ),

@@ -8,6 +8,11 @@ export interface BalanceData {
     balance: number;
 }
 
+export interface IssuanceData {
+    asset: number;
+    issuance: number;
+}
+
 export interface PriceData {
     asset: number;
     price: number;
@@ -38,7 +43,7 @@ export type TxStatus = 'pending' | 'success' | 'failure' | 'none';
 export interface UpdateVaultData {
     asset: number;
     collateral: number;
-    borrow: number;
+    debit: number;
 }
 
 // store state
@@ -48,6 +53,7 @@ export interface ChainState {
 
     pricesFeed: PriceData[];
     vaults: BaseVaultData[];
+    totalIssuance: IssuanceData[];
 }
 
 export interface UserState {

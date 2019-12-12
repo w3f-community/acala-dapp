@@ -4,7 +4,9 @@ import { useTranslate } from '@/hooks/i18n';
 import Formatter, { FormatterProps } from '@/components/formatter';
 import { CurrentVault } from '../../index.types';
 import { useSelector } from 'react-redux';
-import { vaultsSelector } from '@/store/chain/selectors';
+import { vaultsSelector, specVaultSelector, specPriceSelector } from '@/store/chain/selectors';
+import { STABLE_COIN } from '@/config';
+import { specUserVaultSelector, userVaultsSelector } from '@/store/user/selectors';
 
 const StyledPaper = withStyles(() => ({
     root: {
@@ -45,29 +47,41 @@ interface Props {
 
 const VaultInfo: React.FC<Props> = ({ current }) => {
     const { t } = useTranslate();
-    const systemVaults = useSelector(vaultsSelector);
-    const currentVault = systemVaults.filter(item => item.asset === current);
-    if (!currentVault.length) {
+    const currentVault = useSelector(specVaultSelector(current));
+    const userVault = useSelector(specUserVaultSelector(current));
+    const collateralPrice = useSelector(specPriceSelector(current));
+    const stableCoinPrice = useSelector(specPriceSelector(STABLE_COIN));
+
+    if (!currentVault || !userVault) {
         return null;
     }
-    const data = currentVault[0];
+
+    const currentCollateralRatio =
+        ((userVault.collateral * collateralPrice) /
+            (userVault.debit * currentVault.debitExchangeRate * stableCoinPrice)) *
+        10 ** 36;
+
     return (
         <Grid container spacing={3}>
-            <Card header={t('Interest Rate')} content={data.stabilityFee} formatterProps={{ type: 'ratio' }} />
+            <Card header={t('Interest Rate')} content={currentVault.stabilityFee} formatterProps={{ type: 'ratio' }} />
             <Card
                 header={t('Current Collateral Ratio')}
-                content={data.stabilityFee}
+                content={currentCollateralRatio}
                 formatterProps={{ type: 'ratio' }}
             />
-            <Card header={t('Liquidation Ratio')} content={data.liquidationRatio} formatterProps={{ type: 'ratio' }} />
+            <Card
+                header={t('Liquidation Ratio')}
+                content={currentVault.liquidationRatio}
+                formatterProps={{ type: 'ratio' }}
+            />
             <Card
                 header={t('Liquidation Price')}
-                content={data.liquidationPenalty}
+                content={currentVault.liquidationPenalty}
                 formatterProps={{ type: 'price', prefix: '$' }}
             />
             <Card
                 header={t('Liquidation Penalty')}
-                content={data.liquidationPenalty}
+                content={currentVault.liquidationPenalty}
                 formatterProps={{ type: 'ratio' }}
             />
         </Grid>

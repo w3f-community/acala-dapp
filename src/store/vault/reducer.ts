@@ -14,4 +14,8 @@ export default createReducer(initialState)
     .handleAction(actions.updateVault.success, () => ({
         ...initialState,
         updateVaultStatus: 'success',
+    }))
+    .handleAction(actions.reset, state => ({
+        ...state,
+        updateVaultStatus: 'none',
     }));

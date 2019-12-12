@@ -47,12 +47,6 @@ const AddVault: React.FC<Props> = ({ onCancel }) => {
         return null;
     };
 
-    useEffect(() => {
-        // fetch balances and valuts info
-        dispatch(actions.chain.fetchVaults.request(collateral));
-        dispatch(actions.user.fetchAssetsBalance.request(Array.from(assets.keys())));
-    }, [dispatch]);
-
     return (
         <FormProvider context={formContext} data={initFormValues}>
             <StepBar current={step} />

@@ -89,18 +89,19 @@ const Component: React.FC<Props> = ({ onNext, onPrev }) => {
     const vault = useSelector(specVaultSelector(selectedAsset));
     const balance = useSelector(specBalanceSelector(selectedAsset));
     const updateVaultStatus = useSelector(statusSelector('updateVault'));
-    const handleNextBtnClick = useCallback(() => {
+    const handleNextBtnClick = () => {
         dispatch(
             actions.vault.updateVault.request({
                 collateral,
-                borrow,
+                debit: borrow,
                 asset: selectedAsset,
             }),
         );
-    }, [dispatch]);
+    };
 
     useEffect(() => {
         if (updateVaultStatus === 'success') {
+            dispatch(actions.vault.reset());
             onNext();
         }
     }, [updateVaultStatus]);

@@ -8,7 +8,7 @@ export const assets: Map<number, string> = new Map([
 
 export const collateral: number[] = [2, 3];
 
-export const stableCoin = 1;
+export const STABLE_COIN = 1;
 
 export const getEndPoint = (): string => 'wss://testnet-node-1.acala.laminar.one/ws';
 
