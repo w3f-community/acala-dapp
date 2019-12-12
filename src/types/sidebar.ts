@@ -1,8 +1,10 @@
-export interface SideBarData {
+export interface SideBarItem {
     name: string;
     path: string;
+    icon?: string;
 }
 
 export interface SideBarConfig {
-    products: SideBarData[];
+    products: SideBarItem[];
+    socialMedia: SideBarItem[];
 }

@@ -24,6 +24,7 @@ import { STABLE_COIN } from '@/config';
 import { useDispatch, useSelector } from 'react-redux';
 import actions from '@/store/actions';
 import { statusSelector } from '@/store/vault/selectors';
+import { specPriceSelector, specVaultSelector } from '@/store/chain/selectors';
 
 export type ActionType = 'any' | 'payback' | 'generate' | 'deposit' | 'withdraw';
 
@@ -76,6 +77,8 @@ const ActionModal: React.FC<ActionModalProps> = ({ current, action, open, onClos
     const titleClasses = useTitleStyles();
     const inputClasses = useInputStyles();
     const updateVaultStatus = useSelector(statusSelector('updateVault'));
+    const stableCoinPrice = useSelector(specPriceSelector(STABLE_COIN));
+    const currentVault = useSelector(specVaultSelector(current));
     const stableCoinAssetName = getAssetName(STABLE_COIN);
     const currentAssetName = getAssetName(current);
     const [amount, setAmount] = useState<number>(0);
@@ -112,26 +115,29 @@ const ActionModal: React.FC<ActionModalProps> = ({ current, action, open, onClos
     useEffect(() => {
         if (updateVaultStatus === 'success') {
             dispatch(actions.vault.reset());
+            setAmount(0);
             onClose && onClose();
         }
     }, [updateVaultStatus]);
 
     const handleApplyBtnClick: ReactEventHandler<HTMLButtonElement> = () => {
         if (action === 'payback') {
+            const debitAmount = (getBalance(amount) / stableCoinPrice / currentVault!.debitExchangeRate) * 10 ** 18;
             dispatch(
                 actions.vault.updateVault.request({
                     asset: current,
                     collateral: 0,
-                    debit: getBalance(-amount),
+                    debit: getBalance(-debitAmount),
                 }),
             );
         }
         if (action === 'generate') {
+            const debitAmount = (getBalance(amount) / stableCoinPrice / currentVault!.debitExchangeRate) * 10 ** 18;
             dispatch(
                 actions.vault.updateVault.request({
                     asset: current,
                     collateral: 0,
-                    debit: getBalance(amount),
+                    debit: getBalance(debitAmount),
                 }),
             );
         }
@@ -155,6 +161,10 @@ const ActionModal: React.FC<ActionModalProps> = ({ current, action, open, onClos
         }
     };
 
+    if (!currentVault) {
+        return null;
+    }
+
     return (
         <Dialog open={open} onClose={onClose} classes={dialogClasses}>
             <DialogTitle classes={titleClasses} disableTypography>
@@ -171,7 +181,7 @@ const ActionModal: React.FC<ActionModalProps> = ({ current, action, open, onClos
                     classes={{ root: inputClasses.root }}
                     inputProps={{ classes: inputClasses }}
                     InputProps={{
-                        value: amount,
+                        value: !amount ? '' : amount,
                         onChange: handleInput,
                         startAdornment: <InputAdornment position="start">$</InputAdornment>,
                     }}

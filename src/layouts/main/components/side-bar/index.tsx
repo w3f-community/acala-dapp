@@ -4,6 +4,7 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core';
 import AcalaLogo from '@/assets/acala-logo.svg';
 import { SideBarConfig } from '@/types/sidebar';
 
+import DashboardIcon from '@/assets/dashboard.svg';
 import ConnectStatus from './connect-status';
 import Item from './item';
 
@@ -25,9 +26,11 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         header: { padding: '70px 0 62px 0' },
         icon: { marginRight: 16 },
-        products: { flex: 1 },
         connectBar: {
             marginBottom: 90,
+        },
+        products: {
+            margin: '50px 0 112px 0',
         },
     }),
 );
@@ -46,13 +49,20 @@ const Sidebar: React.FC<Props> = ({ config }) => {
                 <Typography variant="h1">Acala Network</Typography>
             </Grid>
             <List>
-                <Item data={{ name: 'Dashboard', path: '' }} />
+                <Item data={{ name: 'Dashboard', path: '', icon: DashboardIcon }} />
             </List>
-            <List className={classes.products}>
-                {config.products.map(data => (
-                    <Item data={data} key={`products-${data.name}`} />
-                ))}
-            </List>
+            <div style={{ flex: 1 }}>
+                <List className={classes.products}>
+                    {config.products.map(data => (
+                        <Item data={data} key={`products-${data.name}`} />
+                    ))}
+                </List>
+                <List>
+                    {config.socialMedia.map(data => (
+                        <Item data={data} key={`products-${data.name}`} />
+                    ))}
+                </List>
+            </div>
             <Grid container justify="center" className={classes.connectBar}>
                 <ConnectStatus />
             </Grid>
