@@ -7,7 +7,7 @@ export const importAccount = createAsyncAction(
     IMPORT_ACCOUNT,
     '@user/import_account/success',
     '@user/import_account/failure',
-)<string, KeyringPair, string>();
+)<string, { address: string }, string>();
 
 export const FETCH_ASSETS_BALANCE = '@user/fetch_assets_balance';
 export const fetchAssetsBalance = createAsyncAction(

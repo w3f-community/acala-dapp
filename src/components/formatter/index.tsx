@@ -1,5 +1,5 @@
 import React from 'react';
-import { Numerical } from '@/types/numerical';
+import FixedU128 from '@/utils/fixed_u128';
 
 function correct(source: number, base = 12): number {
     return parseFloat(source.toPrecision(base));
@@ -10,26 +10,41 @@ function format(source: number): number {
     return correct(Math.floor(source * 100) / 100);
 }
 
-export function formatBalance(num: number, suffix = ''): string {
-    suffix = suffix ? ' ' + suffix : '';
-    return `${format(num / 10 ** 18)
-        .toString()
-        .replace(/(?=(\B\d{3})+(\.\d+)?$)/g, ',')}${suffix}`;
+export function formatBalance(num: FixedU128, suffix = ''): string {
+    const result = format(num.toNumber());
+
+    if (Number.isNaN(result)) {
+        return '0';
+    }
+
+    if (!Number.isFinite(result)) {
+        return 'Infinity';
+    }
+
+    return `${result} ${suffix}`;
 }
 
-export function formatRatio(num: number): string {
-    // num / 10**18 * 100
-    return format(num / 10 ** 16) + '%';
+export function formatRatio(num: FixedU128): string {
+    const result = format(num.mul(FixedU128.fromNatural(100)).toNumber());
+
+    if (Number.isNaN(result)) {
+        return '0';
+    }
+    if (!Number.isFinite(result)) {
+        return 'Infinity';
+    }
+
+    return result + '%';
 }
 
-export function formatPrice(num: number, prefix = ''): string {
-    return `${prefix}${format(num / 10 ** 18)}`;
+export function formatPrice(num: FixedU128, prefix = ''): string {
+    return `${prefix}${format(num.toNumber())}`;
 }
 
 export type FormatterType = 'balance' | 'ratio' | 'price';
 
 export interface FormatterProps {
-    data: Numerical;
+    data: FixedU128;
     type: FormatterType;
     prefix?: string;
     suffix?: string;

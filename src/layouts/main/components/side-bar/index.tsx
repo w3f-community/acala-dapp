@@ -5,8 +5,11 @@ import AcalaLogo from '@/assets/acala-logo.svg';
 import { SideBarConfig } from '@/types/sidebar';
 
 import DashboardIcon from '@/assets/dashboard.svg';
+import WalletIcon from '@/assets/wallet.svg';
 import ConnectStatus from './connect-status';
 import Item from './item';
+import { useSelector } from 'react-redux';
+import { accountSelector } from '@/store/user/selectors';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -41,6 +44,7 @@ interface Props {
 
 const Sidebar: React.FC<Props> = ({ config }) => {
     const classes = useStyles();
+    const account = useSelector(accountSelector);
 
     return (
         <Drawer variant="permanent" open={true} classes={{ root: classes.root, paper: classes.paper }}>
@@ -49,7 +53,8 @@ const Sidebar: React.FC<Props> = ({ config }) => {
                 <Typography variant="h1">Acala Network</Typography>
             </Grid>
             <List>
-                <Item data={{ name: 'Dashboard', path: '', icon: DashboardIcon }} />
+                <Item data={{ name: account.address.slice(0, 8) + '...', path: '/user', icon: WalletIcon }} />
+                <Item data={{ name: 'Dashboard', path: '/', icon: DashboardIcon }} />
             </List>
             <div style={{ flex: 1 }}>
                 <List className={classes.products}>

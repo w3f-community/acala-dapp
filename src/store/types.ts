@@ -1,37 +1,42 @@
 import { ApiRx } from '@polkadot/api';
 import { KeyringPair } from '@polkadot/keyring/types';
+import FixedU128 from '@/utils/fixed_u128';
 
 export type AssetList = number[];
 
 export interface BalanceData {
     asset: number;
-    balance: number;
+    balance: FixedU128;
 }
 
 export interface IssuanceData {
     asset: number;
-    issuance: number;
+    issuance: FixedU128;
 }
 
 export interface PriceData {
     asset: number;
-    price: number;
+    price: FixedU128;
+}
+
+export interface Account {
+    address: string;
 }
 
 export interface BaseVaultData {
     asset: number;
-    debitExchangeRate: number;
-    liquidationPenalty: number;
-    liquidationRatio: number;
-    maximumTotalDebitValue: number;
-    requiredCollateralRatio: number;
-    stabilityFee: number;
+    debitExchangeRate: FixedU128;
+    liquidationPenalty: FixedU128;
+    liquidationRatio: FixedU128;
+    maximumTotalDebitValue: FixedU128;
+    requiredCollateralRatio: FixedU128;
+    stabilityFee: FixedU128;
 }
 
 export interface UserVaultData {
     asset: number;
-    collateral: number;
-    debit: number;
+    collateral: FixedU128;
+    debit: FixedU128;
 }
 
 export interface Tx {
@@ -42,8 +47,8 @@ export type TxStatus = 'pending' | 'success' | 'failure' | 'none';
 
 export interface UpdateVaultData {
     asset: number;
-    collateral: number;
-    debit: number;
+    collateral: string;
+    debit: string;
 }
 
 // store state
@@ -57,7 +62,8 @@ export interface ChainState {
 }
 
 export interface UserState {
-    account: KeyringPair | null;
+    // account: KeyringPair | null;
+    account: Account;
     balancas: BalanceData[];
     vaults: UserVaultData[];
 }

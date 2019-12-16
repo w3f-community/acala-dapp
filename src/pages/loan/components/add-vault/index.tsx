@@ -16,16 +16,15 @@ interface Props {
     onCancel: () => void;
 }
 
-const AddVault: React.FC<Props> = ({ onCancel }) => {
-    const dispatch = useDispatch();
-    const [step, setStep] = useState<AddStep>('select');
+const initFormValues = {
+    asset: { value: undefined },
+    collateral: { value: undefined },
+    borrow: { value: undefined },
+    agree: { value: undefined },
+};
 
-    const initFormValues = {
-        asset: { value: collateral[0] },
-        collateral: { value: undefined },
-        borrow: { value: undefined },
-        agree: { value: undefined },
-    };
+const AddVault: React.FC<Props> = ({ onCancel }) => {
+    const [step, setStep] = useState<AddStep>('select');
 
     const changeStep = (target: AddStep) => () => setStep(target);
 

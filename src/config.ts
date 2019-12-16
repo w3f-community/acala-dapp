@@ -2,11 +2,15 @@ import { SideBarConfig } from './types/sidebar';
 import LoanIcon from '@/assets/loan.svg';
 import TwitterIcon from '@/assets/twitter.svg';
 import EmailIcon from '@/assets/email.svg';
+import ExchangeIcon from '@/assets/exchange.svg';
+import GovernaceIcon from '@/assets/governace.svg';
+import StatesIcon from '@/assets/states.svg';
 
 export const assets: Map<number, string> = new Map([
+    [0, 'ACA'],
     [1, 'aUSD'],
-    [2, 'XBTC'],
-    [3, 'DOT'],
+    [2, 'DOT'],
+    [3, 'XBTC'],
 ]);
 
 export const collateral: number[] = [2, 3];
@@ -22,17 +26,33 @@ export const sideBarConfig: SideBarConfig = {
             path: 'loan',
             icon: LoanIcon,
         },
+        {
+            name: 'Exchange',
+            path: 'exchange',
+            icon: ExchangeIcon,
+        },
+        {
+            name: 'Governance',
+            path: 'governace',
+            icon: GovernaceIcon,
+        },
+        {
+            name: 'Acala Stats',
+            path: 'states',
+            icon: StatesIcon,
+        },
     ],
     socialMedia: [
         {
             name: 'Email',
             icon: EmailIcon,
-            path: '',
+            href: 'mailto:hello@acala.network',
         },
         {
             name: 'Twitter',
             icon: TwitterIcon,
-            path: '',
+            href: 'https://twitter.com/AcalaNetwork',
+            target: '_blank',
         },
     ],
 };

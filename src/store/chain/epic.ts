@@ -8,6 +8,7 @@ import { isActionOf, RootAction, RootState } from 'typesafe-actions';
 import { u8aToNumber } from '@/utils';
 import { startLoading, endLoading } from '../loading/reducer';
 import * as actions from './actions';
+import FixedU128 from '@/utils/fixed_u128';
 
 export const connectEpic: Epic<RootAction, RootAction, RootState> = action$ =>
     action$.pipe(
@@ -47,7 +48,7 @@ export const fetchPricesFeedEpic: Epic<RootAction, RootAction, RootState> = (act
                         const price = get(result, [index, 'value', 'value'], { isNone: true });
                         return {
                             asset,
-                            price: u8aToNumber(price),
+                            price: FixedU128.fromParts(u8aToNumber(price)),
                         };
                     }),
                 ),
@@ -79,12 +80,12 @@ export const fetchVaultsEpic: Epic<RootAction, RootAction, RootState> = (action$
                 map(result => {
                     return assetList.map((asset, index) => ({
                         asset,
-                        debitExchangeRate: u8aToNumber(result[index][0]),
-                        liquidationPenalty: u8aToNumber(result[index][1]),
-                        liquidationRatio: u8aToNumber(result[index][2]),
-                        maximumTotalDebitValue: u8aToNumber(result[index][3]),
-                        requiredCollateralRatio: u8aToNumber(result[index][4]),
-                        stabilityFee: u8aToNumber(result[index][5]),
+                        debitExchangeRate: FixedU128.fromParts(u8aToNumber(result[index][0])),
+                        liquidationPenalty: FixedU128.fromParts(u8aToNumber(result[index][1])),
+                        liquidationRatio: FixedU128.fromParts(u8aToNumber(result[index][2])),
+                        maximumTotalDebitValue: FixedU128.fromParts(u8aToNumber(result[index][3])),
+                        requiredCollateralRatio: FixedU128.fromParts(u8aToNumber(result[index][4])),
+                        stabilityFee: FixedU128.fromParts(u8aToNumber(result[index][5])),
                     }));
                 }),
                 map(actions.fetchVaults.success),
@@ -105,7 +106,7 @@ export const fetchTotalIssuance: Epic<RootAction, RootAction, RootState> = (acti
                     assetList.map((asset, index) => {
                         return {
                             asset,
-                            issuance: u8aToNumber(result[index]),
+                            issuance: FixedU128.fromParts(u8aToNumber(result[index])),
                         };
                     }),
                 ),

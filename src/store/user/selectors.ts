@@ -1,14 +1,15 @@
 import { Selector } from '@/types/store';
-import { BalanceData, UserVaultData } from '../types';
+import { BalanceData, UserVaultData, Account } from '../types';
+import FixedU128 from '@/utils/fixed_u128';
 
 export const balancesSelector: Selector<BalanceData[]> = state => state.user.balancas;
 
-export const specBalanceSelector: (asset: number) => Selector<number> = asset => {
+export const specBalanceSelector: (asset: number) => Selector<FixedU128> = asset => {
     return state => {
         const balances = state.user.balancas;
         const result = balances.filter(item => item.asset === asset);
 
-        return result.length ? result[0].balance : 0;
+        return result.length ? result[0].balance : FixedU128.fromNatural(0);
     };
 };
 
@@ -23,3 +24,5 @@ export const specUserVaultSelector: (asset: number) => Selector<UserVaultData | 
         return result.length ? result[0] : null;
     };
 };
+
+export const accountSelector: Selector<Account> = state => state.user.account;

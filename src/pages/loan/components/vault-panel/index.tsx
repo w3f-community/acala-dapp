@@ -1,18 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Grid, Typography, List, ListItem, ListItemText, Button, Box, Theme } from '@material-ui/core';
-import { isEmpty } from 'lodash';
 
 import Card from '@/components/card';
 import { useTranslate } from '@/hooks/i18n';
 import { getAssetName } from '@/utils';
 import ActionModal, { ActionModalProps } from '../action-modal';
 import { useSelector } from 'react-redux';
-import { specUserVaultSelector, userVaultsSelector } from '@/store/user/selectors';
+import { specUserVaultSelector } from '@/store/user/selectors';
 import Formatter, { formatBalance } from '@/components/formatter';
-import { specVaultSelector, pricesFeedSelector, specPriceSelector } from '@/store/chain/selectors';
+import { specVaultSelector, specPriceSelector } from '@/store/chain/selectors';
 import { STABLE_COIN } from '@/config';
 import { withStyles } from '@material-ui/styles';
 import { createTypography } from '@/theme';
+import { calcRequiredCollateral, debitToStableCoin, calcCanGenerater } from '@/utils/vault';
 
 interface Props {
     current: number;
@@ -27,7 +27,7 @@ const Asset = withStyles((theme: Theme) => ({
 const VaultPanel: React.FC<Props> = ({ current }) => {
     const { t } = useTranslate();
     const userVault = useSelector(specUserVaultSelector(current));
-    const currentVault = useSelector(specVaultSelector(current));
+    const vault = useSelector(specVaultSelector(current));
     const collateralPrice = useSelector(specPriceSelector(current));
     const stableCoinPrice = useSelector(specPriceSelector(STABLE_COIN));
     const collateralAssetName = getAssetName(current);
@@ -40,14 +40,9 @@ const VaultPanel: React.FC<Props> = ({ current }) => {
     const handleShowDeposit = () => setModalProps({ open: true, action: 'deposit' });
     const handleShowWithdraw = () => setModalProps({ open: true, action: 'withdraw' });
 
-    if (isEmpty(currentVault) || isEmpty(userVault)) {
+    if (!vault || !userVault) {
         return null;
     }
-
-    const requiredCollateral = (userVault!.collateral / currentVault!.requiredCollateralRatio) * 10 ** 18;
-    const canPayback = (currentVault!.debitExchangeRate * userVault!.debit) / 10 ** 18;
-    const canGenerate = (requiredCollateral * collateralPrice - canPayback * stableCoinPrice) / stableCoinPrice;
-    const ableToWithdraw = userVault!.collateral - requiredCollateral;
 
     return (
         <Grid container spacing={5}>
@@ -61,7 +56,11 @@ const VaultPanel: React.FC<Props> = ({ current }) => {
                         <Grid container justify="space-between" alignItems="center">
                             <Typography variant="subtitle1">{t('Borrowed aUSD')}</Typography>
                             <Asset>
-                                <Formatter type="price" data={(canPayback * stableCoinPrice) / 10 ** 18} prefix="$" />
+                                <Formatter
+                                    type="price"
+                                    data={debitToStableCoin(userVault.debit, vault.debitExchangeRate, stableCoinPrice)}
+                                    prefix="$"
+                                />
                             </Asset>
                         </Grid>
                     }
@@ -71,7 +70,9 @@ const VaultPanel: React.FC<Props> = ({ current }) => {
                             <ListItemText
                                 primary={t('Can Pay Back')}
                                 secondary={t('{{number}} {{asset}}', {
-                                    number: formatBalance(canPayback),
+                                    number: formatBalance(
+                                        debitToStableCoin(userVault.debit, vault.debitExchangeRate, stableCoinPrice),
+                                    ),
                                     asset: stableCoinAssetName,
                                 })}
                             />
@@ -83,7 +84,16 @@ const VaultPanel: React.FC<Props> = ({ current }) => {
                             <ListItemText
                                 primary={t('Can Generate')}
                                 secondary={t('{{number}} {{asset}}', {
-                                    number: formatBalance(canGenerate),
+                                    number: formatBalance(
+                                        calcCanGenerater(
+                                            userVault.collateral,
+                                            userVault.debit,
+                                            vault.requiredCollateralRatio,
+                                            vault.debitExchangeRate,
+                                            collateralPrice,
+                                            stableCoinPrice,
+                                        ),
+                                    ),
                                     asset: stableCoinAssetName,
                                 })}
                             />
@@ -105,7 +115,7 @@ const VaultPanel: React.FC<Props> = ({ current }) => {
                                 {t('Collateral {{asset}}', { asset: collateralAssetName })}
                             </Typography>
                             <Asset>
-                                <Formatter type="balance" data={userVault!.collateral} suffix={getAssetName(current)} />
+                                <Formatter type="balance" data={userVault.collateral} suffix={getAssetName(current)} />
                             </Asset>
                         </Grid>
                     }
@@ -115,7 +125,9 @@ const VaultPanel: React.FC<Props> = ({ current }) => {
                             <ListItemText
                                 primary={t('Required for Safety')}
                                 secondary={t('{{number}} {{asset}}', {
-                                    number: formatBalance(requiredCollateral),
+                                    number: formatBalance(
+                                        calcRequiredCollateral(userVault.collateral, vault.requiredCollateralRatio),
+                                    ),
                                     asset: collateralAssetName,
                                 })}
                             />
@@ -127,7 +139,11 @@ const VaultPanel: React.FC<Props> = ({ current }) => {
                             <ListItemText
                                 primary={t('Able to Withdraw')}
                                 secondary={t('{{number}} {{asset}}', {
-                                    number: formatBalance(ableToWithdraw),
+                                    number: formatBalance(
+                                        userVault.collateral.sub(
+                                            calcRequiredCollateral(userVault.collateral, vault.requiredCollateralRatio),
+                                        ),
+                                    ),
                                     asset: collateralAssetName,
                                 })}
                             />

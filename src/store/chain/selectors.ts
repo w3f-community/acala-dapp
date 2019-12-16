@@ -1,5 +1,6 @@
 import { Selector } from '@/types/store';
 import { PriceData, BaseVaultData, IssuanceData } from '../types';
+import FixedU128 from '@/utils/fixed_u128';
 
 export const connectedSelector: Selector<boolean> = state => state.chain.connected;
 
@@ -14,18 +15,18 @@ export const specVaultSelector: (asset: number) => Selector<BaseVaultData | null
     };
 };
 
-export const specPriceSelector: (asset: number) => Selector<number> = asset => {
+export const specPriceSelector: (asset: number) => Selector<FixedU128> = asset => {
     return state => {
         const result = state.chain.pricesFeed.filter(item => item.asset === asset);
-        return result.length ? result[0].price : 0;
+        return result.length ? result[0].price : FixedU128.fromNatural(0);
     };
 };
 
 export const totalIssuanceSelector: Selector<IssuanceData[]> = state => state.chain.totalIssuance;
 
-export const specIssuanceSelector: (asset: number) => Selector<number> = asset => {
+export const specIssuanceSelector: (asset: number) => Selector<FixedU128> = asset => {
     return state => {
         const result = state.chain.totalIssuance.filter(item => item.asset === asset);
-        return result.length ? result[0].issuance : 0;
+        return result.length ? result[0].issuance : FixedU128.fromNatural(0);
     };
 };

@@ -9,6 +9,7 @@ import actions from '@/store/actions';
 import { pricesFeedSelector } from '@/store/chain/selectors';
 import { assets } from '@/config';
 import { formatPrice } from '@/components/formatter';
+import FixedU128 from '@/utils/fixed_u128';
 
 const PricesFeed: React.FC = () => {
     const { t } = useTranslate();

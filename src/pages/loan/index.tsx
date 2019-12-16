@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Grid, Box } from '@material-ui/core';
-import { Vault, SystemInfoData, CollateralInfoData, TransactionHistoryData, CurrentVault } from './index.types';
-
 import PricesFeed from './components/prices-feed';
 import VaultsList from './components/vaults-list';
 import SystemInfo from './components/system-info';
@@ -14,23 +12,6 @@ import AddVault from './components/add-vault';
 import actions from '@/store/actions';
 import { collateral, STABLE_COIN, assets } from '@/config';
 import { userVaultsSelector } from '@/store/user/selectors';
-
-const collateralInfo: { [k: number]: CollateralInfoData } = {
-    2: {
-        liquidationRatio: 150,
-        stabilityFee: 5,
-    },
-};
-
-const mockTransactionHistoryData: TransactionHistoryData[] = [
-    {
-        asset: 2,
-        action: 'Create CDP',
-        when: 112312312,
-        from: 'sdfsdfsdfsd',
-        tx: 'xxxxxxxxxxxx',
-    },
-];
 
 const Loan: React.FC = () => {
     const dispatch = useDispatch();
@@ -82,7 +63,7 @@ const Loan: React.FC = () => {
                             <Box paddingTop={7} />
                             <VaultPanel current={currentVault} />
                             <Box paddingTop={7} />
-                            <TransactionHistory data={mockTransactionHistoryData} />
+                            <TransactionHistory current={currentVault} />
                         </>
                     )}
                 </Grid>
@@ -91,7 +72,7 @@ const Loan: React.FC = () => {
                     <Box paddingTop={3} />
                     <SystemInfo />
                     <Box paddingTop={3} />
-                    <CollateralInfo current={2} data={collateralInfo} />
+                    <CollateralInfo current={2} />
                 </Grid>
             </Grid>
         </div>

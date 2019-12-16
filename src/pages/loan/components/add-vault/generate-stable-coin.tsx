@@ -16,11 +16,14 @@ import { useTranslate } from '@/hooks/i18n';
 import { createTypography } from '@/theme';
 import { formatRatio, formatPrice, formatBalance } from '@/components/formatter';
 import { formContext } from './context';
-import { getAssetName, getBalance } from '@/utils';
+import { getAssetName } from '@/utils';
 import { useSelector } from 'react-redux';
-import { specVaultSelector } from '@/store/chain/selectors';
+import { specVaultSelector, specPriceSelector } from '@/store/chain/selectors';
 import { useForm } from '@/hooks/form';
 import { specBalanceSelector } from '@/store/user/selectors';
+import FixedU128 from '@/utils/fixed_u128';
+import { calcCollateralRatio, calcStableFee, calcCanGenerater } from '@/utils/vault';
+import { STABLE_COIN } from '@/config';
 
 const useCardStyles = makeStyles(() =>
     createStyles({
@@ -74,7 +77,11 @@ const useBottomStyles = makeStyles(() =>
     }),
 );
 
-const InfoListItem: React.FC<{ name: string; value: string; className: string }> = ({ name, value, className }) => {
+const InfoListItem: React.FC<{ name: string; value: string | number; className: string }> = ({
+    name,
+    value,
+    className,
+}) => {
     return (
         <ListItem classes={{ root: className }}>
             <Grid container justify="space-between">
@@ -97,13 +104,19 @@ const Component: React.FC<Props> = ({ onNext, onPrev, onCancel }) => {
     const inputClasses = useInputStyles();
     const listClasses = useListStyles();
     const bottomClasses = useBottomStyles();
+
+    // form data
     const { data, setValue, setError, clearError } = useForm(formContext);
     const selectedAsset = data.asset.value;
-    const collateral = data.collateral.value || '';
-    const borrow = data.borrow.value || '';
+    const collateral = FixedU128.fromNatural(data.collateral.value);
+    const borrow = FixedU128.fromNatural(data.borrow.value);
+
+    const assetName = getAssetName(selectedAsset);
+    const stableCoinAssetName = getAssetName(STABLE_COIN);
     const vault = useSelector(specVaultSelector(selectedAsset));
     const balance = useSelector(specBalanceSelector(selectedAsset));
-    const assetName = getAssetName(selectedAsset);
+    const collateralPrice = useSelector(specPriceSelector(selectedAsset));
+    const stableCoinPrice = useSelector(specPriceSelector(STABLE_COIN));
 
     const handleNextBtnClick = () => {
         if (!collateral) {
@@ -121,7 +134,7 @@ const Component: React.FC<Props> = ({ onNext, onPrev, onCancel }) => {
             return false;
         }
 
-        if (getBalance(value) > balance) {
+        if (FixedU128.fromNatural(value).isGreaterThan(balance)) {
             setError('collateral', 'larger');
             return false;
         }
@@ -135,6 +148,11 @@ const Component: React.FC<Props> = ({ onNext, onPrev, onCancel }) => {
         setValue('borrow', value);
     };
 
+    if (!vault) {
+        return null;
+    }
+
+    const debit = FixedU128.fromNatural(data.borrow.value).div(vault.debitExchangeRate);
     return (
         <Paper square={true} elevation={1} classes={cardClasses}>
             <Grid container>
@@ -172,7 +190,19 @@ const Component: React.FC<Props> = ({ onNext, onPrev, onCancel }) => {
                         helperText={
                             <>
                                 <span style={{ marginRight: 30 }}>{t('Max available to borrow')}</span>
-                                <span>{t('{{number}} {{asset}}', { number: 120, asset: 'aUSD' })}</span>
+                                <span>
+                                    {formatBalance(
+                                        calcCanGenerater(
+                                            FixedU128.fromNatural(data.collateral.value),
+                                            FixedU128.fromNatural(0),
+                                            vault.requiredCollateralRatio,
+                                            vault.debitExchangeRate,
+                                            collateralPrice,
+                                            stableCoinPrice,
+                                        ),
+                                        stableCoinAssetName,
+                                    )}
+                                </span>
                             </>
                         }
                         InputProps={{
@@ -190,22 +220,30 @@ const Component: React.FC<Props> = ({ onNext, onPrev, onCancel }) => {
                         <List classes={{ root: listClasses.root }} disablePadding>
                             <InfoListItem
                                 name={t('Collateralization')}
-                                value={formatRatio(vault.asset)}
+                                value={data.collateral.value}
                                 className={listClasses.item}
                             />
                             <InfoListItem
                                 name={t('Collateral Ratio')}
-                                value={formatRatio(vault.liquidationRatio)}
+                                value={formatRatio(
+                                    calcCollateralRatio(
+                                        collateral,
+                                        borrow,
+                                        vault.debitExchangeRate,
+                                        collateralPrice,
+                                        stableCoinPrice,
+                                    ),
+                                )}
                                 className={listClasses.item}
                             />
                             <InfoListItem
                                 name={t('{{asset}} Price', { asset: assetName })}
-                                value={formatRatio(vault.asset)}
+                                value={formatPrice(collateralPrice, '$')}
                                 className={listClasses.item}
                             />
                             <InfoListItem
                                 name={t('Interest Rate')}
-                                value={formatRatio(vault.stabilityFee)}
+                                value={formatRatio(calcStableFee(vault.stabilityFee))}
                                 className={listClasses.item}
                             />
                             <InfoListItem

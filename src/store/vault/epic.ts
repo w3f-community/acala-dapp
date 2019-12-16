@@ -13,11 +13,9 @@ export const createValutEpic: Epic<RootAction, RootAction, RootState> = (action$
         switchMap(([action, state]) => {
             const data = action.payload;
             const app = state.chain.app!;
-            const account = state.user.account!;
-            const collateral = BigInt(data.collateral).toString();
-            const debit = BigInt(data.debit).toString();
-            const tx = app.tx.honzon.updateVault(data.asset, collateral, debit);
-            return tx.signAndSend(account).pipe(
+            const address = state.user.account.address;
+            const tx = app.tx.honzon.updateVault(data.asset, data.collateral, data.debit);
+            return tx.signAndSend(address).pipe(
                 map(result => {
                     console.log('finally? ', result.isFinalized);
                     // Loop through Vec<EventRecord> to display all events

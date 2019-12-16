@@ -19,12 +19,14 @@ import { useTranslate } from '@/hooks/i18n';
 import { createTypography } from '@/theme';
 import CloseIcon from '@/components/svgs/close';
 import Formatter, { formatPrice } from '@/components/formatter';
-import { getAssetName, getBalance } from '@/utils';
+import { getAssetName } from '@/utils';
 import { STABLE_COIN } from '@/config';
 import { useDispatch, useSelector } from 'react-redux';
 import actions from '@/store/actions';
 import { statusSelector } from '@/store/vault/selectors';
 import { specPriceSelector, specVaultSelector } from '@/store/chain/selectors';
+import FixedU128 from '@/utils/fixed_u128';
+import { stableCoinToDebit } from '@/utils/vault';
 
 export type ActionType = 'any' | 'payback' | 'generate' | 'deposit' | 'withdraw';
 
@@ -121,23 +123,35 @@ const ActionModal: React.FC<ActionModalProps> = ({ current, action, open, onClos
     }, [updateVaultStatus]);
 
     const handleApplyBtnClick: ReactEventHandler<HTMLButtonElement> = () => {
+        if (!currentVault) {
+            return false;
+        }
+
         if (action === 'payback') {
-            const debitAmount = (getBalance(amount) / stableCoinPrice / currentVault!.debitExchangeRate) * 10 ** 18;
+            const debitAmount = stableCoinToDebit(
+                FixedU128.fromNatural(amount),
+                currentVault.debitExchangeRate,
+                stableCoinPrice,
+            );
             dispatch(
                 actions.vault.updateVault.request({
                     asset: current,
-                    collateral: 0,
-                    debit: getBalance(-debitAmount),
+                    collateral: '0',
+                    debit: debitAmount.negated().innerToString(),
                 }),
             );
         }
         if (action === 'generate') {
-            const debitAmount = (getBalance(amount) / stableCoinPrice / currentVault!.debitExchangeRate) * 10 ** 18;
+            const debitAmount = stableCoinToDebit(
+                FixedU128.fromNatural(amount),
+                currentVault.debitExchangeRate,
+                stableCoinPrice,
+            );
             dispatch(
                 actions.vault.updateVault.request({
                     asset: current,
-                    collateral: 0,
-                    debit: getBalance(debitAmount),
+                    collateral: '0',
+                    debit: debitAmount.innerToString(),
                 }),
             );
         }
@@ -145,8 +159,10 @@ const ActionModal: React.FC<ActionModalProps> = ({ current, action, open, onClos
             dispatch(
                 actions.vault.updateVault.request({
                     asset: current,
-                    collateral: getBalance(-amount),
-                    debit: 0,
+                    collateral: FixedU128.fromNatural(amount)
+                        .negated()
+                        .innerToString(),
+                    debit: '0',
                 }),
             );
         }
@@ -154,8 +170,8 @@ const ActionModal: React.FC<ActionModalProps> = ({ current, action, open, onClos
             dispatch(
                 actions.vault.updateVault.request({
                     asset: current,
-                    collateral: getBalance(amount),
-                    debit: 0,
+                    collateral: FixedU128.fromNatural(amount).innerToString(),
+                    debit: '0',
                 }),
             );
         }
@@ -196,6 +212,7 @@ const ActionModal: React.FC<ActionModalProps> = ({ current, action, open, onClos
                     </Button>
                 </Grid>
                 <Box paddingTop={6} />
+                {/*
                 <List disablePadding>
                     <ListItem disableGutters>
                         <ListItemText
@@ -225,6 +242,7 @@ const ActionModal: React.FC<ActionModalProps> = ({ current, action, open, onClos
                         />
                     </ListItem>
                 </List>
+*/}
             </DialogContent>
         </Dialog>
     );

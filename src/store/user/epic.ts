@@ -1,14 +1,15 @@
 import { Epic } from 'redux-observable';
 import { filter, map, switchMap, startWith, withLatestFrom, endWith } from 'rxjs/operators';
-import { combineLatest, interval, defer } from 'rxjs';
+import { combineLatest, defer } from 'rxjs';
 import { isActionOf, RootAction, RootState } from 'typesafe-actions';
+import { web3Enable, web3Accounts, web3FromAddress } from '@polkadot/extension-dapp';
 
+import * as chainActions from '../chain/actions';
 import * as actions from './actions';
 import { AssetList } from '../types';
 import { u8aToNumber } from '@/utils';
-import { Keyring } from '@polkadot/api';
-import { cryptoWaitReady } from '@polkadot/util-crypto';
 import { startLoading, endLoading } from '../loading/reducer';
+import FixedU128 from '@/utils/fixed_u128';
 
 export const fetchAssetBalanceEpic: Epic<RootAction, RootAction, RootState> = (action$, state$) =>
     action$.pipe(
@@ -24,7 +25,7 @@ export const fetchAssetBalanceEpic: Epic<RootAction, RootAction, RootState> = (a
                 map(result => {
                     return data.map((asset, index) => ({
                         asset,
-                        balance: u8aToNumber(result[index]),
+                        balance: FixedU128.fromParts(u8aToNumber(result[index])),
                     }));
                 }),
                 map(actions.fetchAssetsBalance.success),
@@ -32,18 +33,35 @@ export const fetchAssetBalanceEpic: Epic<RootAction, RootAction, RootState> = (a
         }),
     );
 
-export const importAccmountEpic: Epic<RootAction, RootAction, RootState> = action$ =>
+export const importAccmountEpic: Epic<RootAction, RootAction, RootState> = (action$, state$) =>
     action$.pipe(
         filter(isActionOf(actions.importAccount.request)),
-        switchMap(action =>
+        switchMap(savedAction => {
+            return action$.pipe(
+                filter(isActionOf(chainActions.connectAsync.success)),
+                map(() => savedAction),
+            );
+        }),
+        withLatestFrom(state$),
+        switchMap(([action, state]) =>
             defer(async () => {
+                console.log(action, state);
+                const app = state.chain.app!;
+                const allInjected = await web3Enable('Acala Honzon Platform');
+                console.log(allInjected);
+                const allAccounts = await web3Accounts();
+                const injector = await web3FromAddress(allAccounts[0].address);
+
+                // sets the signer for the address on the @polkadot/api
+                app.setSigner(injector.signer);
                 // wait for the promise to resolve, async WASM
-                await cryptoWaitReady();
-                const keyring = new Keyring({ type: 'sr25519' });
-                return keyring.addFromUri(action.payload);
-            }),
+                return { address: allAccounts[0].address };
+            }).pipe(
+                map(actions.importAccount.success),
+                startWith(startLoading(actions.IMPORT_ACCOUNT)),
+                endWith(endLoading(actions.IMPORT_ACCOUNT)),
+            ),
         ),
-        map(actions.importAccount.success),
     );
 
 export const fetchVaultsEpic: Epic<RootAction, RootAction, RootState> = (action$, state$) =>
@@ -65,16 +83,11 @@ export const fetchVaultsEpic: Epic<RootAction, RootAction, RootState> = (action$
                 ),
             ).pipe(
                 map(result => {
-                    return assetList
-                        .map((asset, index) => ({
-                            asset: asset,
-                            collateral: u8aToNumber(result[index][0]),
-                            debit: u8aToNumber(result[index][1]),
-                        }))
-                        .filter(item => {
-                            // filter empty vaults
-                            return item.collateral !== 0 || item.debit !== 0;
-                        });
+                    return assetList.map((asset, index) => ({
+                        asset: asset,
+                        collateral: FixedU128.fromParts(u8aToNumber(result[index][0])),
+                        debit: FixedU128.fromParts(u8aToNumber(result[index][1])),
+                    }));
                 }),
                 map(actions.fetchVaults.success),
                 startWith(startLoading(actions.FETCH_VAULTS)),

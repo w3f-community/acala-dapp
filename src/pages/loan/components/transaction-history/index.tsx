@@ -4,7 +4,6 @@ import { Typography, Table, TableBody, TableHead, TableRow, TableCell, Theme, wi
 import { useTranslate } from '@/hooks/i18n';
 import { getAssetName } from '@/utils';
 import { createTypography } from '@/theme';
-import { TransactionHistoryData } from '../../index.types';
 
 const StyledBodyCell = withStyles((theme: Theme) => ({
     root: {
@@ -21,12 +20,14 @@ const StyledHeaderCell = withStyles((theme: Theme) => ({
 }))(TableCell);
 
 interface Props {
-    data: TransactionHistoryData[];
+    current: number;
 }
 
-const TransactionHistory: React.FC<Props> = ({ data }) => {
+const TransactionHistory: React.FC<Props> = ({ current }) => {
     const { t } = useTranslate();
-
+    if (!current) {
+        return null;
+    }
     return (
         <Card
             size="large"
@@ -45,7 +46,8 @@ const TransactionHistory: React.FC<Props> = ({ data }) => {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {data.map(({ asset, action, when, from, tx }) => (
+                    {/*
+                        data.map(({ asset, action, when, from, tx }) => (
                         <TableRow key={`transaction-history-${asset}-${tx}`}>
                             <StyledBodyCell>{getAssetName(asset)}</StyledBodyCell>
                             <StyledBodyCell>{action}</StyledBodyCell>
@@ -53,7 +55,7 @@ const TransactionHistory: React.FC<Props> = ({ data }) => {
                             <StyledBodyCell>{from}</StyledBodyCell>
                             <StyledBodyCell>{tx}</StyledBodyCell>
                         </TableRow>
-                    ))}
+                    ))*/}
                 </TableBody>
             </Table>
         </Card>

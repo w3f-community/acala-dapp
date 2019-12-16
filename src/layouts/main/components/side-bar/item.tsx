@@ -30,33 +30,45 @@ const useStyles = makeStyles((theme: Theme) =>
             background: 'rgba(255, 255, 255, 0.1)',
         },
         image: {
-            width: 25,
-            height: 25,
             marginRight: 20,
         },
     }),
 );
 
-const Item: React.FC<Props> = ({ data: { name, path, icon } }) => {
+const Item: React.FC<Props> = ({ data: { name, path, icon, href, target } }) => {
     const history = useHistory();
     const classes = useStyles();
-    const isActive = checkActive(path, history.location.pathname);
-    const handleItemClick = () => {
-        history.push(path);
-    };
-    return (
-        <ListItem
-            button
-            className={clsx(classes.root, {
-                [classes.active]: isActive,
-            })}
-            key={`product-${name}`}
-            onClick={handleItemClick}
-        >
-            <img src={icon} className={classes.image} />
-            <ListItemText primary={name} primaryTypographyProps={{ variant: 'h2' }} />
-        </ListItem>
-    );
+    if (path) {
+        const isActive = checkActive(path, history.location.pathname);
+        const handleItemClick = () => {
+            history.push(path);
+        };
+        return (
+            <ListItem
+                button
+                className={clsx(classes.root, {
+                    [classes.active]: isActive,
+                })}
+                key={`product-${name}`}
+                onClick={handleItemClick}
+            >
+                <img src={icon} className={classes.image} />
+                <ListItemText primary={name} primaryTypographyProps={{ variant: 'h2' }} />
+            </ListItem>
+        );
+    }
+    if (href) {
+        const handleItemClick = () => {
+            window.open(href);
+        };
+        return (
+            <ListItem button className={clsx(classes.root)} key={`product-${name}`} onClick={handleItemClick}>
+                <img src={icon} className={classes.image} />
+                <ListItemText primary={name} primaryTypographyProps={{ variant: 'h2' }} />
+            </ListItem>
+        );
+    }
+    return null;
 };
 
 export default Item;

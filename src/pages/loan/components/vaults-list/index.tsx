@@ -1,19 +1,16 @@
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Grid, Paper, Typography, Box } from '@material-ui/core';
 import { makeStyles, createStyles } from '@material-ui/styles';
 import { Theme } from '@material-ui/core/styles';
 import clsx from 'clsx';
 
 import add from '@/assets/add.svg';
-import { Vault } from '../../index.types';
 import { getAssetName } from '@/utils';
-import actions from '@/store/actions';
-import { collateral } from '@/config';
 import { vaultsSelector } from '@/store/chain/selectors';
 import { userVaultsSelector } from '@/store/user/selectors';
-import { BaseVaultData } from '@/store/types';
 import Formatter from '@/components/formatter';
+import FixedU128 from '@/utils/fixed_u128';
 
 const useStyle = makeStyles((theme: Theme) =>
     createStyles({
@@ -67,12 +64,9 @@ const VaultsList: React.FC<Props> = ({ onAdd, onSelect }) => {
     const classes = useStyle();
     const systemVaults = useSelector(vaultsSelector);
     const userVaults = useSelector(userVaultsSelector);
-    const getRequiredCollateralRatio = (asset: number): number => {
+    const getRequiredCollateralRatio = (asset: number): FixedU128 => {
         const result = systemVaults.filter(item => item.asset === asset);
-        if (result.length) {
-            return result[0].requiredCollateralRatio;
-        }
-        return 0;
+        return result.length ? result[0].requiredCollateralRatio : FixedU128.fromNatural(0);
     };
 
     return (

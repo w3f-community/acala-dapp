@@ -3,7 +3,7 @@ import { UserState } from '../types';
 import * as actions from './actions';
 
 const initialState: UserState = {
-    account: null,
+    account: { address: '' },
     balancas: [],
     vaults: [],
 };

@@ -1,4 +1,4 @@
-import React, { Context, useContext, useState, ReactNode } from 'react';
+import React, { Context, useContext, useState, ReactNode, useEffect } from 'react';
 import { set } from 'lodash';
 
 type Error = string;
@@ -30,17 +30,17 @@ export type ProviderData<T> = {
     clearError: (key: keyof T) => void;
 };
 
-export const Provider: React.FC<ProviderProps> = ({ context, data, children }) => {
+export const Provider: React.FC<ProviderProps> = React.memo(({ context, data, children }) => {
     type Combined = Combine<typeof data, FormData>;
-
     const _inner = Object.assign({}, data);
-
-    const [value, setValue] = useState<Combined>((_inner as any) as Combined);
+    const [value, setValue] = useState<Combined>(_inner as Combined);
 
     const contextValue: ProviderData<Combined> = {
         data: value,
         setValue: (key: keyof Combined, value: any) => {
-            setValue(Object.assign({}, set(data as object, [key, 'value'], value)));
+            console.log(key, value);
+            const result = set(data, [key, 'value'], value);
+            setValue({ ...result } as Combined);
         },
         setError: (key: keyof Combined, error: any) => {
             setValue(Object.assign({}, set(data as object, [key, 'error'], error)));
@@ -51,7 +51,7 @@ export const Provider: React.FC<ProviderProps> = ({ context, data, children }) =
     };
 
     return <context.Provider value={contextValue}>{children}</context.Provider>;
-};
+});
 
 export function useForm<T>(context: Context<ProviderData<T>>): ProviderData<T> {
     return useContext<ProviderData<T>>(context);

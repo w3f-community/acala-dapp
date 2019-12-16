@@ -1,16 +1,30 @@
-import React, { useCallback, useEffect } from 'react';
-import { Grid, Button, Paper, List, ListItem, makeStyles, createStyles, Radio, withStyles } from '@material-ui/core';
+import React, { ChangeEventHandler, useEffect } from 'react';
+import {
+    Grid,
+    Button,
+    Paper,
+    List,
+    ListItem,
+    makeStyles,
+    createStyles,
+    Checkbox,
+    withStyles,
+    FormControl,
+} from '@material-ui/core';
 import { useSelector, useDispatch } from 'react-redux';
 import { useTranslate } from '@/hooks/i18n';
 import { createTypography } from '@/theme';
 import { formatRatio, formatBalance } from '@/components/formatter';
 import { useForm } from '@/hooks/form';
-import { specVaultSelector } from '@/store/chain/selectors';
+import { specVaultSelector, specPriceSelector } from '@/store/chain/selectors';
 import { specBalanceSelector } from '@/store/user/selectors';
-import { getAssetName, getBalance } from '@/utils';
+import { getAssetName } from '@/utils';
 import actions from '@/store/actions';
 import { formContext } from './context';
 import { statusSelector } from '@/store/vault/selectors';
+import FixedU128 from '@/utils/fixed_u128';
+import { calcCollateralRatio, calcStableFee } from '@/utils/vault';
+import { STABLE_COIN } from '@/config';
 
 const Card = withStyles(() => ({
     root: { padding: '66px 35px 60px 29px' },
@@ -80,20 +94,29 @@ const Component: React.FC<Props> = ({ onNext, onPrev }) => {
     const { t } = useTranslate();
     const listClasses = useListStyles();
     const bottomClasses = useBottomStyles();
-    const { data } = useForm(formContext);
+    const { data, setValue, setError, clearError } = useForm(formContext);
     const dispatch = useDispatch();
+
     const selectedAsset = data.asset.value;
-    const collateral = getBalance(data.collateral.value);
-    const borrow = getBalance(data.borrow.value);
+    const collateral = FixedU128.fromNatural(data.collateral.value);
+    const borrow = FixedU128.fromNatural(data.borrow.value);
+
     const assetName = getAssetName(selectedAsset);
     const vault = useSelector(specVaultSelector(selectedAsset));
     const balance = useSelector(specBalanceSelector(selectedAsset));
+    const collateralPrice = useSelector(specPriceSelector(selectedAsset));
+    const stableCoinPrice = useSelector(specPriceSelector(STABLE_COIN));
     const updateVaultStatus = useSelector(statusSelector('updateVault'));
+
     const handleNextBtnClick = () => {
+        if (!data.agree.value) {
+            setError('agree', 'need agree');
+            return false;
+        }
         dispatch(
             actions.vault.updateVault.request({
-                collateral,
-                debit: borrow,
+                collateral: collateral.innerToString(),
+                debit: borrow.innerToString(),
                 asset: selectedAsset,
             }),
         );
@@ -106,6 +129,18 @@ const Component: React.FC<Props> = ({ onNext, onPrev }) => {
         }
     }, [updateVaultStatus]);
 
+    const handleAgree: ChangeEventHandler<HTMLInputElement> = e => {
+        const result = e.target.checked;
+        setValue('agree', result);
+        if (result) {
+            clearError('agree');
+        }
+    };
+
+    if (!vault) {
+        return null;
+    }
+
     return (
         <Card square={true} elevation={1}>
             <Grid container justify="center">
@@ -115,7 +150,18 @@ const Component: React.FC<Props> = ({ onNext, onPrev }) => {
                             <>
                                 <VaultInfoItem name={t('Depositing')} value={formatBalance(collateral, assetName)} />
                                 <VaultInfoItem name={t('Borrowing/Generating')} value={formatBalance(borrow, 'aUSD')} />
-                                <VaultInfoItem name={t('Collateralization Ratio')} value={formatRatio(1.75)} />
+                                <VaultInfoItem
+                                    name={t('Collateralization Ratio')}
+                                    value={formatRatio(
+                                        calcCollateralRatio(
+                                            collateral,
+                                            borrow,
+                                            vault.debitExchangeRate,
+                                            collateralPrice,
+                                            stableCoinPrice,
+                                        ),
+                                    )}
+                                />
                                 <VaultInfoItem
                                     name={t('Liquidation Ratio')}
                                     value={formatRatio(vault.liquidationRatio)}
@@ -126,13 +172,13 @@ const Component: React.FC<Props> = ({ onNext, onPrev }) => {
                                 />
                                 <VaultInfoItem
                                     name={t('Stability Fee/Interest Rate')}
-                                    value={formatRatio(vault.stabilityFee)}
+                                    value={formatRatio(calcStableFee(vault.stabilityFee))}
                                 />
                             </>
                         )}
                     </List>
                     <Grid container className={listClasses.protocol} alignItems="center">
-                        <Radio />
+                        <Checkbox value={data.agree.value} onChange={handleAgree} />
                         <span>{t('I have read and accepted the ')}</span>
                         <a className={'underline'}>{t('Terms and Conditions')}</a>
                     </Grid>
