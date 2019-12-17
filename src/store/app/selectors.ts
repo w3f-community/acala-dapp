@@ -1,6 +1,6 @@
-import { Menu } from './types';
 import { RootState } from 'typesafe-actions';
+import { Tx } from '../types';
 
-export function menuSelector(state: RootState): Menu[] {
-    return state.app.menu;
+export function txRecordSelector(state: RootState): Tx[] {
+    return state.app.txRecord;
 }

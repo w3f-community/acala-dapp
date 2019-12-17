@@ -1,8 +1,13 @@
 import { assets } from '@/config';
-import BN from 'bn.js';
 
 export function getAssetName(id: number): string {
-    return assets.get(id) || '';
+    const result = assets.get(id);
+    return result ? result.name : '';
+}
+
+export function getAssetIcon(id: number): string {
+    const result = assets.get(id);
+    return result && result.icon ? result.icon : '';
 }
 
 export function getMaxBorrow(): number {

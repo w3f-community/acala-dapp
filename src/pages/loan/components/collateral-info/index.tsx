@@ -1,5 +1,5 @@
 import React, { useState, ChangeEvent } from 'react';
-import { Typography, List, ListItem, Grid, Select, MenuItem } from '@material-ui/core';
+import { Typography, List, ListItem, Grid, Select, MenuItem, Theme } from '@material-ui/core';
 import { useTranslate } from '@/hooks/i18n';
 import Card from '@/components/card';
 import { useSelector } from 'react-redux';
@@ -8,6 +8,15 @@ import { getAssetName } from '@/utils';
 import Formatter from '@/components/formatter';
 import FixedU128 from '@/utils/fixed_u128';
 import { calcStableFee } from '@/utils/vault';
+import { withStyles } from '@material-ui/styles';
+import { createTypography } from '@/theme';
+
+const SMenuItem = withStyles((theme: Theme) => ({
+    root: {
+        marginBottom: 8,
+        ...createTypography(18, 22, 600, 'Roboto', theme.palette.common.black),
+    },
+}))(MenuItem);
 
 interface Props {
     current: number;
@@ -30,11 +39,11 @@ const FeedPrice: React.FC<Props> = ({ current }) => {
             header={
                 <Grid container justify="space-between" alignItems="center">
                     <Typography variant="subtitle1">{t('Collateral')}</Typography>
-                    <Select value={selected} onChange={handleChange}>
+                    <Select value={selected} onChange={handleChange} disableUnderline>
                         {vaults.map(item => (
-                            <MenuItem value={item.asset} key={`colateral-${item.asset}`}>
+                            <SMenuItem value={item.asset} key={`colateral-${item.asset}`}>
                                 {getAssetName(item.asset)}
-                            </MenuItem>
+                            </SMenuItem>
                         ))}
                     </Select>
                 </Grid>

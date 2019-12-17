@@ -21,7 +21,7 @@ class FixedU128 {
     }
 
     public innerToString(): string {
-        return this.inner.toFixed();
+        return this.inner.toFixed().split('.')[0];
     }
 
     public toNumber(): number {

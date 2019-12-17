@@ -2,7 +2,7 @@ import { WsProvider, ApiRx } from '@polkadot/api';
 import { get } from 'lodash';
 import { Epic } from 'redux-observable';
 import { filter, map, switchMap, startWith, endWith, withLatestFrom } from 'rxjs/operators';
-import { combineLatest, interval, of } from 'rxjs';
+import { combineLatest } from 'rxjs';
 import { isActionOf, RootAction, RootState } from 'typesafe-actions';
 
 import { u8aToNumber } from '@/utils';
@@ -61,7 +61,7 @@ export const fetchVaultsEpic: Epic<RootAction, RootAction, RootState> = (action$
     action$.pipe(
         filter(isActionOf(actions.fetchVaults.request)),
         withLatestFrom(state$),
-        filter(([action, state]) => state.chain.app !== null),
+        filter(([_, state]) => state.chain.app !== null),
         switchMap(([action, state]) => {
             const assetList = action.payload;
             const app = state.chain.app;

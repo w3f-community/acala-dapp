@@ -40,9 +40,14 @@ export interface UserVaultData {
 }
 
 export interface Tx {
-    type: 'updateVault';
+    hash: string;
+    type: TxType;
+    status: TxStatus;
+    time: number;
+    data: UpdateVaultData | any; // pls modify, if there is new tx type
 }
 
+export type TxType = 'updateVault';
 export type TxStatus = 'pending' | 'success' | 'failure' | 'none';
 
 export interface UpdateVaultData {
@@ -52,6 +57,9 @@ export interface UpdateVaultData {
 }
 
 // store state
+export interface AppState {
+    txRecord: Tx[];
+}
 export interface ChainState {
     app: ApiRx | null;
     connected: boolean;

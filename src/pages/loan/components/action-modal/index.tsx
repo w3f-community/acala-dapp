@@ -33,7 +33,6 @@ const useDialogStyles = makeStyles(() =>
     createStyles({
         paper: {
             width: 356,
-            borderRadius: 0,
             padding: '50px 34px 38px',
         },
     }),

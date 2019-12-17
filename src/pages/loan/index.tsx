@@ -12,6 +12,7 @@ import AddVault from './components/add-vault';
 import actions from '@/store/actions';
 import { collateral, STABLE_COIN, assets } from '@/config';
 import { userVaultsSelector } from '@/store/user/selectors';
+import Page from '@/components/page';
 
 const Loan: React.FC = () => {
     const dispatch = useDispatch();
@@ -25,12 +26,14 @@ const Loan: React.FC = () => {
     useEffect(() => {
         // fetch user vaults info
         dispatch(actions.user.fetchVaults.request(collateral));
+        // fetch user asset balance
+        dispatch(actions.user.fetchAssetsBalance.request(Array.from(assets.keys())));
         // fetch tokens total issuance
         dispatch(actions.chain.fetchTotalIssuance.request([STABLE_COIN]));
         // fetch system vaults info
         dispatch(actions.chain.fetchVaults.request(collateral));
-        // fetch user asset balance
-        dispatch(actions.user.fetchAssetsBalance.request(Array.from(assets.keys())));
+        // fetch tx record
+        dispatch(actions.app.fetchTxRecord());
     }, []);
 
     useEffect(() => {
@@ -50,7 +53,7 @@ const Loan: React.FC = () => {
     };
 
     return (
-        <div>
+        <Page padding="46px 55px">
             <VaultsList onAdd={showAddVault} onSelect={handleVaultSelect} />
             <Box paddingTop={7} />
             <Grid container spacing={6}>
@@ -75,7 +78,7 @@ const Loan: React.FC = () => {
                     <CollateralInfo current={2} />
                 </Grid>
             </Grid>
-        </div>
+        </Page>
     );
 };
 

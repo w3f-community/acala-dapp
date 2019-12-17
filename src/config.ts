@@ -1,19 +1,34 @@
 import { SideBarConfig } from './types/sidebar';
-import LoanIcon from '@/assets/loan.svg';
-import TwitterIcon from '@/assets/twitter.svg';
-import EmailIcon from '@/assets/email.svg';
-import ExchangeIcon from '@/assets/exchange.svg';
-import GovernaceIcon from '@/assets/governace.svg';
-import StatesIcon from '@/assets/states.svg';
+import loanIcon from '@/assets/loan.svg';
+import twitterIcon from '@/assets/twitter.svg';
+import emailIcon from '@/assets/email.svg';
+import exchangeIcon from '@/assets/exchange.svg';
+import governaceIcon from '@/assets/governace.svg';
+import statesIcon from '@/assets/states.svg';
+import aUSDIcon from '@/assets/coin/aUSD.svg';
+import btcIcon from '@/assets/coin/btc.svg';
 
-export const assets: Map<number, string> = new Map([
-    [0, 'ACA'],
-    [1, 'aUSD'],
-    [2, 'DOT'],
-    [3, 'XBTC'],
+/* TODO: will support?
+import ethIcon from '@/assets/coin/eth.svg';
+import ltcIcon from '@/assets/coin/ltc.svg';
+*/
+
+export interface Asset {
+    name: string;
+    fullName: string;
+    icon?: string;
+}
+
+export const assets: Map<number, Asset> = new Map([
+    [0, { name: 'ACA', fullName: 'Acalc' }],
+    [1, { name: 'aUSD', icon: aUSDIcon, fullName: 'aUSD' }],
+    [2, { name: 'DOT', fullName: 'PolkaDOT' }],
+    [3, { name: 'XBTC', icon: btcIcon, fullName: 'Bitcoin' }],
 ]);
 
 export const collateral: number[] = [2, 3];
+
+export const DEX_TOKENS: number[] = [1, 2, 3];
 
 export const STABLE_COIN = 1;
 
@@ -24,33 +39,33 @@ export const sideBarConfig: SideBarConfig = {
         {
             name: 'Self Serviced Loan',
             path: 'loan',
-            icon: LoanIcon,
+            icon: loanIcon,
         },
         {
             name: 'Exchange',
             path: 'exchange',
-            icon: ExchangeIcon,
+            icon: exchangeIcon,
         },
         {
             name: 'Governance',
             path: 'governace',
-            icon: GovernaceIcon,
+            icon: governaceIcon,
         },
         {
             name: 'Acala Stats',
             path: 'states',
-            icon: StatesIcon,
+            icon: statesIcon,
         },
     ],
     socialMedia: [
         {
             name: 'Email',
-            icon: EmailIcon,
+            icon: emailIcon,
             href: 'mailto:hello@acala.network',
         },
         {
             name: 'Twitter',
-            icon: TwitterIcon,
+            icon: twitterIcon,
             href: 'https://twitter.com/AcalaNetwork',
             target: '_blank',
         },

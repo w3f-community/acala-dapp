@@ -5,9 +5,9 @@ function correct(source: number, base = 12): number {
     return parseFloat(source.toPrecision(base));
 }
 
-function format(source: number): number {
+function format(source: number, precision = 10000): number {
     source = correct(source);
-    return correct(Math.floor(source * 1000000) / 1000000);
+    return correct(Math.floor(source * precision) / precision);
 }
 
 export function formatBalance(num: FixedU128, suffix = ''): string {
@@ -25,7 +25,7 @@ export function formatBalance(num: FixedU128, suffix = ''): string {
 }
 
 export function formatRatio(num: FixedU128): string {
-    const result = format(num.mul(FixedU128.fromNatural(100)).toNumber());
+    const result = format(num.mul(FixedU128.fromNatural(100)).toNumber(), 100);
 
     if (Number.isNaN(result)) {
         return '0';

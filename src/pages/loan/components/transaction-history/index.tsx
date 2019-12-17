@@ -4,6 +4,9 @@ import { Typography, Table, TableBody, TableHead, TableRow, TableCell, Theme, wi
 import { useTranslate } from '@/hooks/i18n';
 import { getAssetName } from '@/utils';
 import { createTypography } from '@/theme';
+import { useSelector } from 'react-redux';
+import { txRecordSelector } from '@/store/app/selectors';
+import Moment from 'dayjs';
 
 const StyledBodyCell = withStyles((theme: Theme) => ({
     root: {
@@ -25,7 +28,9 @@ interface Props {
 
 const TransactionHistory: React.FC<Props> = ({ current }) => {
     const { t } = useTranslate();
-    if (!current) {
+    const txRecord = useSelector(txRecordSelector);
+
+    if (!current || !txRecord.length) {
         return null;
     }
     return (
@@ -46,16 +51,15 @@ const TransactionHistory: React.FC<Props> = ({ current }) => {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {/*
-                        data.map(({ asset, action, when, from, tx }) => (
-                        <TableRow key={`transaction-history-${asset}-${tx}`}>
-                            <StyledBodyCell>{getAssetName(asset)}</StyledBodyCell>
-                            <StyledBodyCell>{action}</StyledBodyCell>
-                            <StyledBodyCell>{when}</StyledBodyCell>
-                            <StyledBodyCell>{from}</StyledBodyCell>
-                            <StyledBodyCell>{tx}</StyledBodyCell>
+                    {txRecord.map(({ data, time, type, hash }) => (
+                        <TableRow key={`transaction-history-${hash}`}>
+                            <StyledBodyCell>{getAssetName(data.asset)}</StyledBodyCell>
+                            <StyledBodyCell>{type}</StyledBodyCell>
+                            <StyledBodyCell>{Moment(time).format('YYYY/MM/DD HH:mm')}</StyledBodyCell>
+                            <StyledBodyCell>{''}</StyledBodyCell>
+                            <StyledBodyCell>{hash.slice(0, 10) + '...'}</StyledBodyCell>
                         </TableRow>
-                    ))*/}
+                    ))}
                 </TableBody>
             </Table>
         </Card>

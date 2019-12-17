@@ -1,4 +1,4 @@
-import { createAsyncAction, createAction } from 'typesafe-actions';
+import { createAsyncAction } from 'typesafe-actions';
 import { RegistryTypes } from '@polkadot/types/types';
 import { ApiRx } from '@polkadot/api';
 import { PriceData, BaseVaultData, AssetList, IssuanceData } from '../types';

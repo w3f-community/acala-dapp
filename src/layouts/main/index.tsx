@@ -22,7 +22,6 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         content: {
             flexGrow: 1,
-            padding: '46px 46px 46px 55px',
         },
         toolbar: {
             display: 'flex',

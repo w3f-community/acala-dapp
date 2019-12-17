@@ -52,6 +52,13 @@ const createTheme = (options: ThemeOptions) =>
             button: createTypography(15, 20, 600, 'Roboto'),
         },
         overrides: {
+            MuiSelect: {
+                root: {
+                    '&:after': {
+                        content: '',
+                    },
+                },
+            },
             MuiButton: {
                 root: {
                     minWidth: 114,
@@ -64,6 +71,11 @@ const createTheme = (options: ThemeOptions) =>
                 },
                 containedSecondary: {
                     backgroundColor: '#bdbdbd',
+                },
+            },
+            MuiDialog: {
+                paper: {
+                    borderRadius: 0,
                 },
             },
             MuiDialogContent: {
