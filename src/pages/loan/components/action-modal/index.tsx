@@ -18,7 +18,6 @@ import {
 import { useTranslate } from '@/hooks/i18n';
 import { createTypography } from '@/theme';
 import CloseIcon from '@/components/svgs/close';
-import Formatter, { formatPrice } from '@/components/formatter';
 import { getAssetName } from '@/utils';
 import { STABLE_COIN } from '@/config';
 import { useDispatch, useSelector } from 'react-redux';

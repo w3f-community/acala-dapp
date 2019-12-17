@@ -7,7 +7,7 @@ function correct(source: number, base = 12): number {
 
 function format(source: number): number {
     source = correct(source);
-    return correct(Math.floor(source * 100) / 100);
+    return correct(Math.floor(source * 1000000) / 1000000);
 }
 
 export function formatBalance(num: FixedU128, suffix = ''): string {

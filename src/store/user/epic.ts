@@ -45,10 +45,8 @@ export const importAccmountEpic: Epic<RootAction, RootAction, RootState> = (acti
         withLatestFrom(state$),
         switchMap(([action, state]) =>
             defer(async () => {
-                console.log(action, state);
                 const app = state.chain.app!;
                 const allInjected = await web3Enable('Acala Honzon Platform');
-                console.log(allInjected);
                 const allAccounts = await web3Accounts();
                 const injector = await web3FromAddress(allAccounts[0].address);
 
@@ -90,8 +88,6 @@ export const fetchVaultsEpic: Epic<RootAction, RootAction, RootState> = (action$
                     }));
                 }),
                 map(actions.fetchVaults.success),
-                startWith(startLoading(actions.FETCH_VAULTS)),
-                endWith(endLoading(actions.FETCH_VAULTS)),
             );
         }),
     );

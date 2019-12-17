@@ -51,12 +51,7 @@ const MainLayout: React.FC<Props> = props => {
             // connect to blockchain
             actions.chain.connectAsync.request({ endpoint: getEndPoint(), ...acalaTypes }),
         );
-        // TODO: need remove
-        dispatch(
-            actions.user.importAccount.request(
-                'kitten leopard case library chair warm shy board trouble regular seat divorce',
-            ),
-        );
+        dispatch(actions.user.importAccount.request(''));
     }, [dispatch]);
 
     if (connectLoading || importAccountLoading) {

@@ -44,6 +44,14 @@ const VaultPanel: React.FC<Props> = ({ current }) => {
         return null;
     }
 
+    const requiredCollateral = calcRequiredCollateral(
+        userVault.debit,
+        vault.debitExchangeRate,
+        vault.requiredCollateralRatio,
+        collateralPrice,
+        stableCoinPrice,
+    );
+
     return (
         <Grid container spacing={5}>
             <ActionModal {...modalProps} onClose={handleCloseModal} current={current} />
@@ -125,9 +133,7 @@ const VaultPanel: React.FC<Props> = ({ current }) => {
                             <ListItemText
                                 primary={t('Required for Safety')}
                                 secondary={t('{{number}} {{asset}}', {
-                                    number: formatBalance(
-                                        calcRequiredCollateral(userVault.collateral, vault.requiredCollateralRatio),
-                                    ),
+                                    number: formatBalance(requiredCollateral),
                                     asset: collateralAssetName,
                                 })}
                             />
@@ -139,11 +145,7 @@ const VaultPanel: React.FC<Props> = ({ current }) => {
                             <ListItemText
                                 primary={t('Able to Withdraw')}
                                 secondary={t('{{number}} {{asset}}', {
-                                    number: formatBalance(
-                                        userVault.collateral.sub(
-                                            calcRequiredCollateral(userVault.collateral, vault.requiredCollateralRatio),
-                                        ),
-                                    ),
+                                    number: formatBalance(userVault.collateral.sub(requiredCollateral)),
                                     asset: collateralAssetName,
                                 })}
                             />

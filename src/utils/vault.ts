@@ -32,8 +32,18 @@ export function calcStableFee(stableFee: FixedU128): FixedU128 {
     return FixedU128.fromNatural((1 + stableFee.toNumber()) ** ((356 * 24 * 60 * 60) / 4) - 1);
 }
 
-export function calcRequiredCollateral(collateral: FixedU128, requiredCollateralRatio: FixedU128): FixedU128 {
-    return collateral.div(requiredCollateralRatio);
+export function calcRequiredCollateral(
+    debit: FixedU128,
+    debitExchangeRate: FixedU128,
+    requiredCollateralRatio: FixedU128,
+    collateralPrice: FixedU128,
+    stableCoinPrice: FixedU128,
+): FixedU128 {
+    return debit
+        .mul(debitExchangeRate)
+        .mul(stableCoinPrice)
+        .mul(requiredCollateralRatio)
+        .div(collateralPrice);
 }
 
 export function calcCanGenerater(
@@ -45,7 +55,7 @@ export function calcCanGenerater(
     stableCoinPrice: FixedU128,
 ): FixedU128 {
     return collateral
-        .sub(calcRequiredCollateral(collateral, requiredCollateralRatio))
+        .div(requiredCollateralRatio)
         .mul(collateralPrice)
         .sub(debitToStableCoin(debit, debitExchangeRate, stableCoinPrice));
 }

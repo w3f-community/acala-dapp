@@ -17,7 +17,7 @@ class FixedU128 {
     }
 
     public toString(): string {
-        return this.inner.div(FixedU128.PRECISION).toFixed();
+        return this.inner.div(FixedU128.PRECISION).toString();
     }
 
     public innerToString(): string {

@@ -38,7 +38,6 @@ export const Provider: React.FC<ProviderProps> = React.memo(({ context, data, ch
     const contextValue: ProviderData<Combined> = {
         data: value,
         setValue: (key: keyof Combined, value: any) => {
-            console.log(key, value);
             const result = set(data, [key, 'value'], value);
             setValue({ ...result } as Combined);
         },
