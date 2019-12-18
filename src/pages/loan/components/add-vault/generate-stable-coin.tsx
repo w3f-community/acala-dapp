@@ -22,8 +22,15 @@ import { specVaultSelector, specPriceSelector } from '@/store/chain/selectors';
 import { useForm } from '@/hooks/form';
 import { specBalanceSelector } from '@/store/user/selectors';
 import FixedU128 from '@/utils/fixed_u128';
-import { calcCollateralRatio, calcStableFee, calcCanGenerater } from '@/utils/vault';
+import {
+    calcCollateralRatio,
+    calcStableFee,
+    calcCanGenerater,
+    calcLiquidationPrice,
+    collateralToStableCoin,
+} from '@/utils/vault';
 import { STABLE_COIN } from '@/config';
+import { withStyles } from '@material-ui/styles';
 
 const useCardStyles = makeStyles(() =>
     createStyles({
@@ -51,11 +58,14 @@ const useListStyles = makeStyles(() =>
             padding: '39px 32px 37px 21px',
             background: 'rgba(161, 161, 161, 0.11)',
         },
-        item: {
-            ...createTypography(15, 22, 600, 'Roboto', '#424242'),
-        },
     }),
 );
+
+const SListItem = withStyles(() => ({
+    root: {
+        ...createTypography(15, 22, 600, 'Roboto', '#424242'),
+    },
+}))(ListItem);
 
 const useBottomStyles = makeStyles(() =>
     createStyles({
@@ -77,18 +87,14 @@ const useBottomStyles = makeStyles(() =>
     }),
 );
 
-const InfoListItem: React.FC<{ name: string; value: string | number; className: string }> = ({
-    name,
-    value,
-    className,
-}) => {
+const InfoListItem: React.FC<{ name: string; value: string | number }> = ({ name, value }) => {
     return (
-        <ListItem classes={{ root: className }}>
+        <SListItem button>
             <Grid container justify="space-between">
                 <span>{name}</span>
                 <span>{value}</span>
             </Grid>
-        </ListItem>
+        </SListItem>
     );
 };
 
@@ -116,13 +122,31 @@ const Component: React.FC<Props> = ({ onNext, onPrev, onCancel }) => {
     const vault = useSelector(specVaultSelector(selectedAsset));
     const balance = useSelector(specBalanceSelector(selectedAsset));
     const collateralPrice = useSelector(specPriceSelector(selectedAsset));
-    const stableCoinPrice = useSelector(specPriceSelector(STABLE_COIN));
+
+    if (!vault) {
+        return null;
+    }
+
+    const maxBorrowd = calcCanGenerater(
+        collateralToStableCoin(collateral, collateralPrice),
+        FixedU128.fromNatural(0),
+        vault.requiredCollateralRatio,
+    );
+
+    const collateralRatio = calcCollateralRatio(collateralToStableCoin(collateral, collateralPrice), borrow);
 
     const handleNextBtnClick = () => {
+        // ensure collateral is not empty
         if (!collateral) {
             setError('collateral', 'collateral should not be zero');
             return false;
         }
+
+        // ensure required collateral ratio
+        if (vault.requiredCollateralRatio.isGreaterThan(collateralRatio)) {
+            return false;
+        }
+
         onNext();
     };
 
@@ -130,7 +154,7 @@ const Component: React.FC<Props> = ({ onNext, onPrev, onCancel }) => {
         const value = Number(e.currentTarget.value);
 
         if (value < 0) {
-            setError('collateral', 'zero');
+            setError('collateral', 'can not be zero');
             return false;
         }
 
@@ -145,14 +169,16 @@ const Component: React.FC<Props> = ({ onNext, onPrev, onCancel }) => {
 
     const handleBorrowInput = (e: ChangeEvent<HTMLInputElement>) => {
         const value = Number(e.currentTarget.value);
+        if (value < 0) {
+            setError('borrow', 'can not be zero');
+            return false;
+        }
+        if (FixedU128.fromNatural(value).isGreaterThan(maxBorrowd)) {
+            setError('borrow', 'larger than maxto borrow');
+        }
         setValue('borrow', value);
     };
 
-    if (!vault) {
-        return null;
-    }
-
-    const debit = FixedU128.fromNatural(data.borrow.value).div(vault.debitExchangeRate);
     return (
         <Paper square={true} elevation={1} classes={cardClasses}>
             <Grid container>
@@ -187,22 +213,11 @@ const Component: React.FC<Props> = ({ onNext, onPrev, onCancel }) => {
                     <TextField
                         type="number"
                         className={inputClasses.root}
+                        error={!!data.borrow.erro}
                         helperText={
                             <>
                                 <span style={{ marginRight: 30 }}>{t('Max available to borrow')}</span>
-                                <span>
-                                    {formatBalance(
-                                        calcCanGenerater(
-                                            FixedU128.fromNatural(data.collateral.value),
-                                            FixedU128.fromNatural(0),
-                                            vault.requiredCollateralRatio,
-                                            vault.debitExchangeRate,
-                                            collateralPrice,
-                                            stableCoinPrice,
-                                        ),
-                                        stableCoinAssetName,
-                                    )}
-                                </span>
+                                <span>{formatBalance(maxBorrowd, stableCoinAssetName)}</span>
                             </>
                         }
                         InputProps={{
@@ -218,43 +233,27 @@ const Component: React.FC<Props> = ({ onNext, onPrev, onCancel }) => {
                 <Grid item xs={4}>
                     {vault && (
                         <List classes={{ root: listClasses.root }} disablePadding>
-                            <InfoListItem
-                                name={t('Collateralization')}
-                                value={data.collateral.value}
-                                className={listClasses.item}
-                            />
-                            <InfoListItem
-                                name={t('Collateral Ratio')}
-                                value={formatRatio(
-                                    calcCollateralRatio(
-                                        collateral,
-                                        borrow,
-                                        vault.debitExchangeRate,
-                                        collateralPrice,
-                                        stableCoinPrice,
-                                    ),
-                                )}
-                                className={listClasses.item}
-                            />
+                            <InfoListItem name={t('Collateralization')} value={assetName} />
+                            <InfoListItem name={t('Collateralization Ratio')} value={formatRatio(collateralRatio)} />
                             <InfoListItem
                                 name={t('{{asset}} Price', { asset: assetName })}
                                 value={formatPrice(collateralPrice, '$')}
-                                className={listClasses.item}
                             />
                             <InfoListItem
                                 name={t('Interest Rate')}
                                 value={formatRatio(calcStableFee(vault.stabilityFee))}
-                                className={listClasses.item}
                             />
                             <InfoListItem
-                                name={t('Liquidation Ratio')}
-                                value={formatRatio(vault.liquidationRatio)}
-                                className={listClasses.item}
+                                name={t('Liquidation Price')}
+                                value={formatPrice(
+                                    calcLiquidationPrice(borrow, vault.requiredCollateralRatio, collateral),
+                                    '$',
+                                )}
                             />
+                            <InfoListItem name={t('Liquidation Ratio')} value={formatRatio(vault.liquidationRatio)} />
                             <InfoListItem
                                 name={t('Liquidation Penalty')}
                                 value={formatRatio(vault.liquidationPenalty)}
-                                className={listClasses.item}
                             />
                         </List>
                     )}

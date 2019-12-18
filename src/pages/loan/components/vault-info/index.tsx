@@ -4,9 +4,15 @@ import { useTranslate } from '@/hooks/i18n';
 import Formatter, { FormatterProps } from '@/components/formatter';
 import { useSelector } from 'react-redux';
 import { vaultsSelector, specVaultSelector, specPriceSelector } from '@/store/chain/selectors';
-import { STABLE_COIN } from '@/config';
+import { STABLE_COIN, collateral } from '@/config';
 import { specUserVaultSelector, userVaultsSelector } from '@/store/user/selectors';
-import { calcCollateralRatio, calcStableFee } from '@/utils/vault';
+import {
+    calcCollateralRatio,
+    calcStableFee,
+    collateralToStableCoin,
+    debitToStableCoin,
+    calcLiquidationPrice,
+} from '@/utils/vault';
 import FixedU128 from '@/utils/fixed_u128';
 
 const StyledPaper = withStyles(() => ({
@@ -49,12 +55,12 @@ interface Props {
 const VaultInfo: React.FC<Props> = ({ current }) => {
     const { t } = useTranslate();
 
-    const currentVault = useSelector(specVaultSelector(current));
+    const vault = useSelector(specVaultSelector(current));
     const userVault = useSelector(specUserVaultSelector(current));
     const collateralPrice = useSelector(specPriceSelector(current));
     const stableCoinPrice = useSelector(specPriceSelector(STABLE_COIN));
 
-    if (!currentVault || !userVault) {
+    if (!vault || !userVault) {
         return null;
     }
 
@@ -62,35 +68,32 @@ const VaultInfo: React.FC<Props> = ({ current }) => {
         <Grid container spacing={3}>
             <Card
                 header={t('Interest Rate')}
-                content={calcStableFee(currentVault.stabilityFee)}
+                content={calcStableFee(vault.stabilityFee)}
                 formatterProps={{ type: 'ratio' }}
             />
             <Card
                 header={t('Current Collateral Ratio')}
                 content={calcCollateralRatio(
-                    userVault.collateral,
-                    userVault.debit,
-                    currentVault.debitExchangeRate,
-                    collateralPrice,
-                    stableCoinPrice,
+                    collateralToStableCoin(userVault.collateral, collateralPrice),
+                    debitToStableCoin(userVault.debit, vault.debitExchangeRate, stableCoinPrice),
                 )}
                 formatterProps={{ type: 'ratio' }}
             />
-            <Card
-                header={t('Liquidation Ratio')}
-                content={currentVault.liquidationRatio}
-                formatterProps={{ type: 'ratio' }}
-            />
+            <Card header={t('Liquidation Ratio')} content={vault.liquidationRatio} formatterProps={{ type: 'ratio' }} />
             {
-                // <Card
-                //     header={t('Liquidation Price')}
-                //     content={currentVault.liquidationPenalty}
-                //     formatterProps={{ type: 'price', prefix: '$' }}
-                // />
+                <Card
+                    header={t('Liquidation Price')}
+                    content={calcLiquidationPrice(
+                        debitToStableCoin(userVault.debit, vault.debitExchangeRate, stableCoinPrice),
+                        vault.requiredCollateralRatio,
+                        userVault.collateral,
+                    )}
+                    formatterProps={{ type: 'price', prefix: '$' }}
+                />
             }
             <Card
                 header={t('Liquidation Penalty')}
-                content={currentVault.liquidationPenalty}
+                content={vault.liquidationPenalty}
                 formatterProps={{ type: 'ratio' }}
             />
         </Grid>

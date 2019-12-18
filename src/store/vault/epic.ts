@@ -18,9 +18,13 @@ export const createValutEpic: Epic<RootAction, RootAction, RootState> = (action$
             const address = state.user.account.address;
             const tx = app.tx.honzon.updateVault(data.asset, data.collateral, data.debit);
             const hash = tx.hash.toString();
+            const txRecord = {
+                signer: address,
+            }
             return concat(
                 of(
                     appActions.updateTxRecord({
+                        signer: address,
                         hash: hash,
                         status: 'pending',
                         time: new Date().getTime(),
@@ -43,6 +47,7 @@ export const createValutEpic: Epic<RootAction, RootAction, RootState> = (action$
                 ),
                 of(
                     appActions.updateTxRecord({
+                        signer: address,
                         hash: hash,
                         status: 'success',
                         time: new Date().getTime(),

@@ -64,4 +64,12 @@ export default {
     'I have read and accepted the ': 'I have read and accepted the ',
     'Terms and Conditions': 'Terms and Conditions',
     'Collateral Ratio': 'Collateral Ratio',
+    'Payback {{asset}}': 'Payback {{asset}}',
+    // exchange
+    'Exchange': 'Exchange',
+    'Pay with': 'Pay with',
+    'Receive': 'Receive',
+    'Enter Amount': 'Enter Amount',
+    'Select Token': 'Select Token',
+    'Select': 'Select',
 };

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { makeStyles, createStyles } from '@material-ui/styles';
 import { Theme } from '@material-ui/core/styles';
-import acalaTypes from '@acala-network/types/interfaces/runtime/definitions';
+import acalaTypes from '@acala-network/types/src/interfaces/runtime/definitions';
 
 import { loadingSelector } from '@/store/loading/reducer';
 import Loading from '@/components/loading';
@@ -53,18 +53,17 @@ const MainLayout: React.FC<Props> = props => {
         dispatch(actions.user.importAccount.request(''));
     }, [dispatch]);
 
-    if (connectLoading || importAccountLoading) {
-        return <Loading />;
-    }
-
-    if (!connectStatus) {
-        return null;
-    }
+    const renderContent = () => {
+        if (connectLoading || importAccountLoading) {
+            return <Loading />;
+        }
+        return <div className={classes.content}>{children}</div>;
+    };
 
     return (
         <div className={classes.root}>
             <Sidebar config={sideBarConfig} />
-            <div className={classes.content}>{children}</div>
+            {renderContent()}
         </div>
     );
 };

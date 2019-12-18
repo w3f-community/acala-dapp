@@ -4,6 +4,7 @@ import MainLayout from '@/layouts/main';
 import Dashboard from '@/pages/dashboard';
 import Loan from '@/pages/loan';
 import Exchange from '@/pages/exchange';
+import Governance from '@/pages/governance';
 
 interface RouteConfig {
     path: string;
@@ -23,6 +24,10 @@ const routesConfig: RouteConfig[] = [
             {
                 path: 'exchange',
                 Component: Exchange,
+            },
+            {
+                path: 'governance',
+                Component: Governance,
             },
             {
                 path: '',

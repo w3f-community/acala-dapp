@@ -24,6 +24,7 @@ export const connectEpic: Epic<RootAction, RootAction, RootState> = action$ =>
                 TimestampedValueOf: 'TimestampedValue',
                 FixedU128: 'u128',
                 Price: 'FixedU128',
+                'sp_std::marker::PhantomData': 'u128',
             });
             const wsProvider = new WsProvider(endpoint);
             return ApiRx.create({ provider: wsProvider, types: types }).pipe(

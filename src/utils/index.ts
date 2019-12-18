@@ -10,16 +10,14 @@ export function getAssetIcon(id: number): string {
     return result && result.icon ? result.icon : '';
 }
 
-export function getMaxBorrow(): number {
-    return 0;
-}
-
 export function u8aToNumber(value: any, radix = 10): number {
-    // None -> 0
+
+    // None -> 0,
     if (value.isNone) {
         return 0;
     }
 
+    // should not use bn.js toNumber method, because toNumber return a JS Number limited 2^53-1;
     const result = parseInt(value.toString(), radix);
 
     // NaN -> 0

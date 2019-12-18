@@ -1,5 +1,9 @@
 import FixedU128 from './fixed_u128';
 
+/**
+ * requiredCollateralRatio = collateral * collateralPrice / debit * debitExchangeRate * stableCoinPrice
+ */
+
 // convert debit to stable coin amount
 export function debitToStableCoin(
     debit: FixedU128,
@@ -18,14 +22,13 @@ export function stableCoinToDebit(
     return stableVaule.div(stableCoinPrice).div(debitExchangeRate);
 }
 
-export function calcCollateralRatio(
-    collateral: FixedU128,
-    debit: FixedU128,
-    debitExchangeRate: FixedU128,
-    collateralPrice: FixedU128,
-    stableCoinPrice: FixedU128,
-): FixedU128 {
-    return collateral.mul(collateralPrice).div(debitToStableCoin(debit, debitExchangeRate, stableCoinPrice));
+// convert collateral to stable coin amount
+export function collateralToStableCoin(collateral: FixedU128, collateralPrice: FixedU128): FixedU128 {
+    return collateral.mul(collateralPrice);
+}
+
+export function calcCollateralRatio(collateralVaule: FixedU128, debitVaule: FixedU128): FixedU128 {
+    return collateralVaule.div(debitVaule);
 }
 
 export function calcStableFee(stableFee: FixedU128): FixedU128 {
@@ -33,29 +36,25 @@ export function calcStableFee(stableFee: FixedU128): FixedU128 {
 }
 
 export function calcRequiredCollateral(
-    debit: FixedU128,
-    debitExchangeRate: FixedU128,
+    debitValue: FixedU128,
     requiredCollateralRatio: FixedU128,
     collateralPrice: FixedU128,
-    stableCoinPrice: FixedU128,
 ): FixedU128 {
-    return debit
-        .mul(debitExchangeRate)
-        .mul(stableCoinPrice)
-        .mul(requiredCollateralRatio)
-        .div(collateralPrice);
+    return debitValue.mul(requiredCollateralRatio).div(collateralPrice);
 }
 
 export function calcCanGenerater(
-    collateral: FixedU128,
-    debit: FixedU128,
+    collateralValue: FixedU128,
+    debitValue: FixedU128,
     requiredCollateralRatio: FixedU128,
-    debitExchangeRate: FixedU128,
-    collateralPrice: FixedU128,
-    stableCoinPrice: FixedU128,
 ): FixedU128 {
-    return collateral
-        .div(requiredCollateralRatio)
-        .mul(collateralPrice)
-        .sub(debitToStableCoin(debit, debitExchangeRate, stableCoinPrice));
+    return collateralValue.div(requiredCollateralRatio).sub(debitValue);
+}
+
+export function calcLiquidationPrice(
+    debitValue: FixedU128,
+    requiredCollateralRatio: FixedU128,
+    collateral: FixedU128,
+): FixedU128 {
+    return debitValue.mul(requiredCollateralRatio).div(collateral);
 }

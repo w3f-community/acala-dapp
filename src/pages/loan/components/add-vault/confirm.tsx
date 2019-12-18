@@ -23,7 +23,7 @@ import actions from '@/store/actions';
 import { formContext } from './context';
 import { statusSelector } from '@/store/vault/selectors';
 import FixedU128 from '@/utils/fixed_u128';
-import { calcCollateralRatio, calcStableFee } from '@/utils/vault';
+import { calcCollateralRatio, calcStableFee, stableCoinToDebit, collateralToStableCoin } from '@/utils/vault';
 import { STABLE_COIN } from '@/config';
 
 const Card = withStyles(() => ({
@@ -113,10 +113,13 @@ const Component: React.FC<Props> = ({ onNext, onPrev }) => {
             setError('agree', 'need agree');
             return false;
         }
+        if (!vault) {
+            return false;
+        }
         dispatch(
             actions.vault.updateVault.request({
                 collateral: collateral.innerToString(),
-                debit: borrow.innerToString(),
+                debit: stableCoinToDebit(borrow, vault.debitExchangeRate, stableCoinPrice).innerToString(),
                 asset: selectedAsset,
             }),
         );
@@ -152,15 +155,7 @@ const Component: React.FC<Props> = ({ onNext, onPrev }) => {
                                 <VaultInfoItem name={t('Borrowing/Generating')} value={formatBalance(borrow, 'aUSD')} />
                                 <VaultInfoItem
                                     name={t('Collateralization Ratio')}
-                                    value={formatRatio(
-                                        calcCollateralRatio(
-                                            collateral,
-                                            borrow,
-                                            vault.debitExchangeRate,
-                                            collateralPrice,
-                                            stableCoinPrice,
-                                        ),
-                                    )}
+                                    value={formatRatio(calcCollateralRatio(collateralToStableCoin(collateral, collateralPrice), borrow))}
                                 />
                                 <VaultInfoItem
                                     name={t('Liquidation Ratio')}

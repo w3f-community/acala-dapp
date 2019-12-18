@@ -38,6 +38,13 @@ export function formatRatio(num: FixedU128): string {
 }
 
 export function formatPrice(num: FixedU128, prefix = ''): string {
+    const result = num.toNumber();
+    if (Number.isNaN(result)) {
+        return '~';
+    }
+    if (!Number.isFinite(result)) {
+        return '~';
+    }
     return `${prefix}${format(num.toNumber())}`;
 }
 

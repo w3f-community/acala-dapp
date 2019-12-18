@@ -3,7 +3,7 @@ import loanIcon from '@/assets/loan.svg';
 import twitterIcon from '@/assets/twitter.svg';
 import emailIcon from '@/assets/email.svg';
 import exchangeIcon from '@/assets/exchange.svg';
-import governaceIcon from '@/assets/governace.svg';
+import governanceIcon from '@/assets/governance.svg';
 import statesIcon from '@/assets/states.svg';
 import aUSDIcon from '@/assets/coin/aUSD.svg';
 import btcIcon from '@/assets/coin/btc.svg';
@@ -48,8 +48,8 @@ export const sideBarConfig: SideBarConfig = {
         },
         {
             name: 'Governance',
-            path: 'governace',
-            icon: governaceIcon,
+            path: 'governance',
+            icon: governanceIcon,
         },
         {
             name: 'Acala Stats',

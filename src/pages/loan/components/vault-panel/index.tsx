@@ -12,7 +12,7 @@ import { specVaultSelector, specPriceSelector } from '@/store/chain/selectors';
 import { STABLE_COIN } from '@/config';
 import { withStyles } from '@material-ui/styles';
 import { createTypography } from '@/theme';
-import { calcRequiredCollateral, debitToStableCoin, calcCanGenerater } from '@/utils/vault';
+import { calcRequiredCollateral, debitToStableCoin, calcCanGenerater, collateralToStableCoin } from '@/utils/vault';
 
 interface Props {
     current: number;
@@ -45,11 +45,9 @@ const VaultPanel: React.FC<Props> = ({ current }) => {
     }
 
     const requiredCollateral = calcRequiredCollateral(
-        userVault.debit,
-        vault.debitExchangeRate,
+        debitToStableCoin(userVault.debit, vault.debitExchangeRate, stableCoinPrice),
         vault.requiredCollateralRatio,
         collateralPrice,
-        stableCoinPrice,
     );
 
     return (
@@ -94,12 +92,13 @@ const VaultPanel: React.FC<Props> = ({ current }) => {
                                 secondary={t('{{number}} {{asset}}', {
                                     number: formatBalance(
                                         calcCanGenerater(
-                                            userVault.collateral,
-                                            userVault.debit,
+                                            collateralToStableCoin(userVault.collateral, collateralPrice),
+                                            debitToStableCoin(
+                                                userVault.debit,
+                                                vault.debitExchangeRate,
+                                                stableCoinPrice,
+                                            ),
                                             vault.requiredCollateralRatio,
-                                            vault.debitExchangeRate,
-                                            collateralPrice,
-                                            stableCoinPrice,
                                         ),
                                     ),
                                     asset: stableCoinAssetName,

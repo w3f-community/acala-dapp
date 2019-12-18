@@ -14,7 +14,14 @@ export const specBalanceSelector: (asset: number) => Selector<FixedU128> = asset
 };
 
 // add user prefix for avoid conflict
-export const userVaultsSelector: Selector<UserVaultData[]> = state => state.user.vaults;
+export const userVaultsSelector: Selector<UserVaultData[]> = state => {
+    const vaults = state.user.vaults;
+
+    // filter empty vault
+    return vaults.filter(item => {
+        return !item.collateral.isZero() || !item.debit.isZero();
+    })
+}
 
 export const specUserVaultSelector: (asset: number) => Selector<UserVaultData | null> = asset => {
     return state => {

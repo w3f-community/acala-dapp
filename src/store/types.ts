@@ -40,6 +40,7 @@ export interface UserVaultData {
 }
 
 export interface Tx {
+    signer: string; // account
     hash: string;
     type: TxType;
     status: TxStatus;
