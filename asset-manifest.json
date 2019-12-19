@@ -1,0 +1,37 @@
+{
+  "files": {
+    "main.css": "/static/css/main.2a13c321.chunk.css",
+    "main.js": "/static/js/main.19fbb176.chunk.js",
+    "main.js.map": "/static/js/main.19fbb176.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.75b8fe9b.js",
+    "runtime-main.js.map": "/static/js/runtime-main.75b8fe9b.js.map",
+    "static/js/2.a0918408.chunk.js": "/static/js/2.a0918408.chunk.js",
+    "static/js/2.a0918408.chunk.js.map": "/static/js/2.a0918408.chunk.js.map",
+    "index.html": "/index.html",
+    "precache-manifest.e349c625ab081227c811bfb275b02326.js": "/precache-manifest.e349c625ab081227c811bfb275b02326.js",
+    "service-worker.js": "/service-worker.js",
+    "static/css/main.2a13c321.chunk.css.map": "/static/css/main.2a13c321.chunk.css.map",
+    "static/media/aUSD.svg": "/static/media/aUSD.18dfb053.svg",
+    "static/media/acala-logo.svg": "/static/media/acala-logo.20c64337.svg",
+    "static/media/add.svg": "/static/media/add.0b1f51fe.svg",
+    "static/media/btc.svg": "/static/media/btc.7a8ff0cc.svg",
+    "static/media/chevron-down.svg": "/static/media/chevron-down.579c1821.svg",
+    "static/media/dashboard.svg": "/static/media/dashboard.0f0823c5.svg",
+    "static/media/email.svg": "/static/media/email.ded54eb9.svg",
+    "static/media/eth.svg": "/static/media/eth.c8d4f53d.svg",
+    "static/media/exchange-arrows.svg": "/static/media/exchange-arrows.bcc9601d.svg",
+    "static/media/exchange.svg": "/static/media/exchange.d62f7fb4.svg",
+    "static/media/governance.svg": "/static/media/governance.ed6a5384.svg",
+    "static/media/loan.svg": "/static/media/loan.c049e20b.svg",
+    "static/media/right-arrow.svg": "/static/media/right-arrow.6700244f.svg",
+    "static/media/states.svg": "/static/media/states.1633c408.svg",
+    "static/media/twitter.svg": "/static/media/twitter.b53a2c3e.svg",
+    "static/media/wallet.svg": "/static/media/wallet.4dcf8143.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.75b8fe9b.js",
+    "static/js/2.a0918408.chunk.js",
+    "static/css/main.2a13c321.chunk.css",
+    "static/js/main.19fbb176.chunk.js"
+  ]
+}
