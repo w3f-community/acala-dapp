@@ -19,7 +19,7 @@ import { getAssetName } from '@/utils';
 import Formatter from '@/components/formatter';
 import { useSelector } from 'react-redux';
 import { vaultsSelector } from '@/store/chain/selectors';
-import { balancesSelector } from '@/store/user/selectors';
+import { balancesSelector } from '@/store/account/selectors';
 import { BaseVaultData } from '@/store/types';
 import { createTypography } from '@/theme';
 import { useForm } from '@/hooks/form';

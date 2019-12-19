@@ -1,23 +1,12 @@
 import React, { ChangeEventHandler, useEffect } from 'react';
-import {
-    Grid,
-    Button,
-    Paper,
-    List,
-    ListItem,
-    makeStyles,
-    createStyles,
-    Checkbox,
-    withStyles,
-    FormControl,
-} from '@material-ui/core';
+import { Grid, Button, Paper, List, ListItem, makeStyles, createStyles, Checkbox, withStyles } from '@material-ui/core';
 import { useSelector, useDispatch } from 'react-redux';
 import { useTranslate } from '@/hooks/i18n';
 import { createTypography } from '@/theme';
 import { formatRatio, formatBalance } from '@/components/formatter';
 import { useForm } from '@/hooks/form';
 import { specVaultSelector, specPriceSelector } from '@/store/chain/selectors';
-import { specBalanceSelector } from '@/store/user/selectors';
+import { specBalanceSelector } from '@/store/account/selectors';
 import { getAssetName } from '@/utils';
 import actions from '@/store/actions';
 import { formContext } from './context';
@@ -113,14 +102,16 @@ const Component: React.FC<Props> = ({ onNext, onPrev }) => {
             setError('agree', 'need agree');
             return false;
         }
+
         if (!vault) {
             return false;
         }
+
         dispatch(
             actions.vault.updateVault.request({
-                collateral: collateral.innerToString(),
-                debit: stableCoinToDebit(borrow, vault.debitExchangeRate, stableCoinPrice).innerToString(),
                 asset: selectedAsset,
+                collateral: collateral,
+                debit: stableCoinToDebit(borrow, vault.debitExchangeRate, stableCoinPrice),
             }),
         );
     };
@@ -130,7 +121,7 @@ const Component: React.FC<Props> = ({ onNext, onPrev }) => {
             dispatch(actions.vault.reset());
             onNext();
         }
-    }, [updateVaultStatus]);
+    }, [updateVaultStatus, dispatch, onNext]);
 
     const handleAgree: ChangeEventHandler<HTMLInputElement> = e => {
         const result = e.target.checked;
@@ -155,7 +146,12 @@ const Component: React.FC<Props> = ({ onNext, onPrev }) => {
                                 <VaultInfoItem name={t('Borrowing/Generating')} value={formatBalance(borrow, 'aUSD')} />
                                 <VaultInfoItem
                                     name={t('Collateralization Ratio')}
-                                    value={formatRatio(calcCollateralRatio(collateralToStableCoin(collateral, collateralPrice), borrow))}
+                                    value={formatRatio(
+                                        calcCollateralRatio(
+                                            collateralToStableCoin(collateral, collateralPrice),
+                                            borrow,
+                                        ),
+                                    )}
                                 />
                                 <VaultInfoItem
                                     name={t('Liquidation Ratio')}

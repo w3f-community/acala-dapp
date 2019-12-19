@@ -1,4 +1,6 @@
 export default {
+    'No polkadot{.js} extension found, please install it first !':
+        'No polkadot{.js} extension found, please install it first !',
     BTC: 'BTC',
     ETH: '{{asset}}',
     'Interest Rate': 'Interest Rate',
@@ -66,10 +68,10 @@ export default {
     'Collateral Ratio': 'Collateral Ratio',
     'Payback {{asset}}': 'Payback {{asset}}',
     // exchange
-    'Exchange': 'Exchange',
+    Exchange: 'Exchange',
     'Pay with': 'Pay with',
-    'Receive': 'Receive',
+    Receive: 'Receive',
     'Enter Amount': 'Enter Amount',
     'Select Token': 'Select Token',
-    'Select': 'Select',
+    Select: 'Select',
 };

@@ -2,6 +2,8 @@ import { ApiRx } from '@polkadot/api';
 import { KeyringPair } from '@polkadot/keyring/types';
 import FixedU128 from '@/utils/fixed_u128';
 
+export type Status = 'none' | 'success' | 'failure' | 'pending';
+
 export type AssetList = number[];
 
 export interface BalanceData {
@@ -39,6 +41,7 @@ export interface UserVaultData {
     debit: FixedU128;
 }
 
+// tx
 export interface Tx {
     signer: string; // account
     hash: string;
@@ -48,13 +51,19 @@ export interface Tx {
     data: UpdateVaultData | any; // pls modify, if there is new tx type
 }
 
-export type TxType = 'updateVault';
+export type TxType = 'updateVault' | 'swapCurrency';
 export type TxStatus = 'pending' | 'success' | 'failure' | 'none';
+
+// dex
+export interface DexLiquidityPoolData {
+    asset: number;
+    pool: FixedU128[];
+}
 
 export interface UpdateVaultData {
     asset: number;
-    collateral: string;
-    debit: string;
+    collateral: FixedU128;
+    debit: FixedU128;
 }
 
 // store state
@@ -70,14 +79,21 @@ export interface ChainState {
     totalIssuance: IssuanceData[];
 }
 
-export interface UserState {
+export interface AccountState {
     // account: KeyringPair | null;
     account: Account;
     balancas: BalanceData[];
     vaults: UserVaultData[];
+    extensionStatus: Status;
 }
 
 export interface VaultState {
     updateVaultStatus: TxStatus;
+    [T: string]: any;
+}
+
+export interface DexState {
+    dexLiquidityPool: DexLiquidityPoolData[];
+    swapCurrencyStatus: TxStatus;
     [T: string]: any;
 }

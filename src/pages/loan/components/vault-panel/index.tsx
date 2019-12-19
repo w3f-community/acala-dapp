@@ -6,7 +6,7 @@ import { useTranslate } from '@/hooks/i18n';
 import { getAssetName } from '@/utils';
 import ActionModal, { ActionModalProps } from '../action-modal';
 import { useSelector } from 'react-redux';
-import { specUserVaultSelector } from '@/store/user/selectors';
+import { specUserVaultSelector } from '@/store/account/selectors';
 import Formatter, { formatBalance } from '@/components/formatter';
 import { specVaultSelector, specPriceSelector } from '@/store/chain/selectors';
 import { STABLE_COIN } from '@/config';

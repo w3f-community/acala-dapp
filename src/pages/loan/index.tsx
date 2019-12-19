@@ -10,28 +10,28 @@ import TransactionHistory from './components/transaction-history';
 import VaultInfo from './components/vault-info';
 import AddVault from './components/add-vault';
 import actions from '@/store/actions';
-import { collateral, STABLE_COIN, assets } from '@/config';
-import { userVaultsSelector } from '@/store/user/selectors';
+import { COLLATERAL, STABLE_COIN, assets } from '@/config';
+import { accountVaultsSelector } from '@/store/account/selectors';
 import Page from '@/components/page';
 
 const Loan: React.FC = () => {
     const dispatch = useDispatch();
     const [currentVault, setCurrentVault] = useState<number>(0);
     const [addVaultStatus, setAddVaultstatus] = useState<boolean>();
-    const userVaults = useSelector(userVaultsSelector);
+    const userVaults = useSelector(accountVaultsSelector);
 
     const showAddVault = () => setAddVaultstatus(true);
     const hideAddVault = () => setAddVaultstatus(false);
 
     useEffect(() => {
         // fetch user vaults info
-        dispatch(actions.user.fetchVaults.request(collateral));
+        dispatch(actions.account.fetchVaults.request(COLLATERAL));
         // fetch user asset balance
-        dispatch(actions.user.fetchAssetsBalance.request(Array.from(assets.keys())));
+        dispatch(actions.account.fetchAssetsBalance.request(Array.from(assets.keys())));
         // fetch tokens total issuance
         dispatch(actions.chain.fetchTotalIssuance.request([STABLE_COIN]));
         // fetch system vaults info
-        dispatch(actions.chain.fetchVaults.request(collateral));
+        dispatch(actions.chain.fetchVaults.request(COLLATERAL));
         // fetch tx record
         dispatch(actions.app.fetchTxRecord());
     }, []);

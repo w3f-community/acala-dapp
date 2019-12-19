@@ -1,6 +1,6 @@
 import { Epic } from 'redux-observable';
-import { filter, map, switchMap, startWith, withLatestFrom, endWith } from 'rxjs/operators';
-import { combineLatest, defer } from 'rxjs';
+import { filter, map, switchMap, startWith, withLatestFrom, endWith, catchError } from 'rxjs/operators';
+import { combineLatest, defer, of } from 'rxjs';
 import { isActionOf, RootAction, RootState } from 'typesafe-actions';
 import { web3Enable, web3Accounts, web3FromAddress } from '@polkadot/extension-dapp';
 
@@ -16,11 +16,11 @@ export const fetchAssetBalanceEpic: Epic<RootAction, RootAction, RootState> = (a
         filter(isActionOf(actions.fetchAssetsBalance.request)),
         withLatestFrom(state$),
         filter(([_, state]) => state.chain.app !== null),
-        filter(([_, state]) => state.user.account !== null),
+        filter(([_, state]) => state.account.account !== null),
         switchMap(([action, state]) => {
             const data = action.payload as AssetList;
             const app = state.chain.app;
-            const account = state.user.account!.address;
+            const account = state.account.account!.address;
             return combineLatest(data.map(asset => app!.query.tokens.balance(asset, account))).pipe(
                 map(result => {
                     return data.map((asset, index) => ({
@@ -46,7 +46,12 @@ export const importAccmountEpic: Epic<RootAction, RootAction, RootState> = (acti
         switchMap(([action, state]) =>
             defer(async () => {
                 const app = state.chain.app!;
-                const allInjected = await web3Enable('Acala Honzon Platform');
+                const injected = await web3Enable('Acala Honzon Platform');
+
+                if (!injected.length) {
+                    throw new Error('no extends found');
+                }
+
                 const allAccounts = await web3Accounts();
                 const injector = await web3FromAddress(allAccounts[0].address);
 
@@ -56,6 +61,9 @@ export const importAccmountEpic: Epic<RootAction, RootAction, RootState> = (acti
                 return { address: allAccounts[0].address };
             }).pipe(
                 map(actions.importAccount.success),
+                catchError((err: Error) => {
+                    return of(actions.importAccount.failure(err.message as any));
+                }),
                 startWith(startLoading(actions.IMPORT_ACCOUNT)),
                 endWith(endLoading(actions.IMPORT_ACCOUNT)),
             ),
@@ -67,10 +75,10 @@ export const fetchVaultsEpic: Epic<RootAction, RootAction, RootState> = (action$
         filter(isActionOf(actions.fetchVaults.request)),
         withLatestFrom(state$),
         filter(([_, state]) => state.chain.app !== null),
-        filter(([_, state]) => state.user.account !== null),
+        filter(([_, state]) => state.account.account !== null),
         switchMap(([action, state]) => {
             const app = state.chain.app!;
-            const account = state.user.account!;
+            const account = state.account.account!;
             const assetList = action.payload;
             return combineLatest(
                 assetList.map(asset =>

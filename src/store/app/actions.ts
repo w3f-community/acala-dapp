@@ -1,6 +1,4 @@
-import { createAsyncAction, createAction } from 'typesafe-actions';
-import { RegistryTypes } from '@polkadot/types/types';
-import { ApiRx } from '@polkadot/api';
+import { createAction } from 'typesafe-actions';
 import { Tx } from '../types';
 
 export const UPDATE_TX_RECORD = '@app/update_tx_record';

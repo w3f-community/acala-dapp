@@ -20,7 +20,7 @@ export default createReducer(initialState)
         } else {
             txRecord.push(data);
         }
-        
+
         window.localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(txRecord));
 
         return Object.assign({}, state, { txRecord });

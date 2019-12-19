@@ -124,7 +124,7 @@ const ActionModal: React.FC<ActionModalProps> = ({ current, action, open, onClos
         if (!currentVault) {
             return false;
         }
-
+        const ZERO = FixedU128.fromNatural(0);
         if (action === 'payback') {
             const debitAmount = stableCoinToDebit(
                 FixedU128.fromNatural(amount),
@@ -134,8 +134,8 @@ const ActionModal: React.FC<ActionModalProps> = ({ current, action, open, onClos
             dispatch(
                 actions.vault.updateVault.request({
                     asset: current,
-                    collateral: '0',
-                    debit: debitAmount.negated().innerToString(),
+                    collateral: ZERO,
+                    debit: debitAmount.negated(),
                 }),
             );
         }
@@ -148,8 +148,8 @@ const ActionModal: React.FC<ActionModalProps> = ({ current, action, open, onClos
             dispatch(
                 actions.vault.updateVault.request({
                     asset: current,
-                    collateral: '0',
-                    debit: debitAmount.innerToString(),
+                    collateral: ZERO,
+                    debit: debitAmount,
                 }),
             );
         }
@@ -157,10 +157,8 @@ const ActionModal: React.FC<ActionModalProps> = ({ current, action, open, onClos
             dispatch(
                 actions.vault.updateVault.request({
                     asset: current,
-                    collateral: FixedU128.fromNatural(amount)
-                        .negated()
-                        .innerToString(),
-                    debit: '0',
+                    collateral: FixedU128.fromNatural(amount).negated(),
+                    debit: ZERO,
                 }),
             );
         }
@@ -168,8 +166,8 @@ const ActionModal: React.FC<ActionModalProps> = ({ current, action, open, onClos
             dispatch(
                 actions.vault.updateVault.request({
                     asset: current,
-                    collateral: FixedU128.fromNatural(amount).innerToString(),
-                    debit: '0',
+                    collateral: FixedU128.fromNatural(amount),
+                    debit: ZERO,
                 }),
             );
         }

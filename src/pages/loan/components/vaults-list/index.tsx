@@ -8,7 +8,7 @@ import clsx from 'clsx';
 import add from '@/assets/add.svg';
 import { getAssetName } from '@/utils';
 import { vaultsSelector } from '@/store/chain/selectors';
-import { userVaultsSelector } from '@/store/user/selectors';
+import { accountVaultsSelector } from '@/store/account/selectors';
 import Formatter from '@/components/formatter';
 import FixedU128 from '@/utils/fixed_u128';
 
@@ -63,7 +63,7 @@ interface Props {
 const VaultsList: React.FC<Props> = ({ onAdd, onSelect }) => {
     const classes = useStyle();
     const systemVaults = useSelector(vaultsSelector);
-    const userVaults = useSelector(userVaultsSelector);
+    const userVaults = useSelector(accountVaultsSelector);
     const getRequiredCollateralRatio = (asset: number): FixedU128 => {
         const result = systemVaults.filter(item => item.asset === asset);
         return result.length ? result[0].requiredCollateralRatio : FixedU128.fromNatural(0);

@@ -58,3 +58,25 @@ export function calcLiquidationPrice(
 ): FixedU128 {
     return debitValue.mul(requiredCollateralRatio).div(collateral);
 }
+
+//TODO: need
+const EXCHANGE_FEE = FixedU128.fromRational(2, 1000);
+
+export function calcReceive(supply: FixedU128, currentSupply: FixedU128, currentTarget: FixedU128): FixedU128 {
+    if (supply.isZero()) {
+        return FixedU128.fromNatural(0);
+    }
+    return currentTarget
+        .sub(currentSupply.mul(currentTarget).div(currentSupply.add(supply)))
+        .mul(FixedU128.fromNatural(1).sub(EXCHANGE_FEE));
+}
+
+export function calcPay(target: FixedU128, currentSupply: FixedU128, currentTarget: FixedU128): FixedU128 {
+    if (target.isZero()) {
+        return FixedU128.fromNatural(0);
+    }
+    return currentSupply
+        .mul(currentTarget)
+        .div(currentTarget.sub(target.mul(FixedU128.fromNatural(1).sub(EXCHANGE_FEE))))
+        .sub(currentSupply);
+}

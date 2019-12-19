@@ -9,7 +9,7 @@ import WalletIcon from '@/assets/wallet.svg';
 import ConnectStatus from './connect-status';
 import Item from './item';
 import { useSelector } from 'react-redux';
-import { accountSelector } from '@/store/user/selectors';
+import { accountSelector } from '@/store/account/selectors';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({

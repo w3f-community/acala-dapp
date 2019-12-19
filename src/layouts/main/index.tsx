@@ -1,7 +1,16 @@
 import React, { ReactNode, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
-import { makeStyles, createStyles } from '@material-ui/styles';
+import {
+    makeStyles,
+    createStyles,
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogContentText,
+    DialogActions,
+    Button,
+} from '@material-ui/core';
 import { Theme } from '@material-ui/core/styles';
 import acalaTypes from '@acala-network/types/src/interfaces/runtime/definitions';
 
@@ -11,6 +20,8 @@ import Sidebar from './components/side-bar';
 import actions from '@/store/actions';
 import { getEndPoint, sideBarConfig } from '@/config';
 import { connectedSelector } from '@/store/chain/selectors';
+import { extensionStatusSelector } from '@/store/account/selectors';
+import NoExtension from './components/no-extension';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -42,21 +53,27 @@ const MainLayout: React.FC<Props> = props => {
     const dispatch = useDispatch();
     const classes = useStyles();
     const connectLoading = useSelector(loadingSelector(actions.chain.CONNECT_ASYNC));
-    const importAccountLoading = useSelector(loadingSelector(actions.user.IMPORT_ACCOUNT));
-    const connectStatus = useSelector(connectedSelector);
+    const importAccountLoading = useSelector(loadingSelector(actions.account.IMPORT_ACCOUNT));
+    const extensionStatus = useSelector(extensionStatusSelector);
+    // const connectStatus = useSelector(connectedSelector);
 
     useEffect(() => {
         dispatch(
             // connect to blockchain
             actions.chain.connectAsync.request({ endpoint: getEndPoint(), ...acalaTypes }),
         );
-        dispatch(actions.user.importAccount.request(''));
+        dispatch(actions.account.importAccount.request(''));
     }, [dispatch]);
 
     const renderContent = () => {
         if (connectLoading || importAccountLoading) {
             return <Loading />;
         }
+
+        if (extensionStatus === 'none' || extensionStatus === 'failure') {
+            return null;
+        }
+
         return <div className={classes.content}>{children}</div>;
     };
 
@@ -64,6 +81,7 @@ const MainLayout: React.FC<Props> = props => {
         <div className={classes.root}>
             <Sidebar config={sideBarConfig} />
             {renderContent()}
+            <NoExtension open={extensionStatus === 'failure'} />
         </div>
     );
 };

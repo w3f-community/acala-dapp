@@ -4,8 +4,8 @@ import { useTranslate } from '@/hooks/i18n';
 import Formatter, { FormatterProps } from '@/components/formatter';
 import { useSelector } from 'react-redux';
 import { vaultsSelector, specVaultSelector, specPriceSelector } from '@/store/chain/selectors';
-import { STABLE_COIN, collateral } from '@/config';
-import { specUserVaultSelector, userVaultsSelector } from '@/store/user/selectors';
+import { STABLE_COIN } from '@/config';
+import { specUserVaultSelector, accountVaultsSelector } from '@/store/account/selectors';
 import {
     calcCollateralRatio,
     calcStableFee,

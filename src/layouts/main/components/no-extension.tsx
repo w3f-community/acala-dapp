@@ -1,0 +1,37 @@
+import React from 'react';
+import { Dialog, DialogTitle, DialogContent, Button, DialogActions, Slide, withStyles, Theme } from '@material-ui/core';
+import { TransitionProps } from '@material-ui/core/transitions';
+import { useTranslate } from '@/hooks/i18n';
+import { POLKADOT_EXTENSIONS_ADDRESS } from '@/config';
+
+const Transition = React.forwardRef<unknown, TransitionProps>(function Transition(props, ref) {
+    return <Slide direction="up" ref={ref} {...props} />;
+});
+
+const SDialogContent = withStyles((theme: Theme) => ({
+    root: {
+        padding: theme.spacing(4),
+    },
+}))(DialogContent);
+
+interface Props {
+    open: boolean;
+}
+const NoExtension: React.FC<Props> = ({ open }) => {
+    const { t } = useTranslate();
+    const handleGetExtensionBtnClick = () => {
+        window.open(POLKADOT_EXTENSIONS_ADDRESS);
+    };
+    return (
+        <Dialog open={open} TransitionComponent={Transition}>
+            <SDialogContent>{t('No polkadot{.js} extension found, please install it first !')}</SDialogContent>
+            <DialogActions>
+                <Button onClick={handleGetExtensionBtnClick} color="primary">
+                    GET IT
+                </Button>
+            </DialogActions>
+        </Dialog>
+    );
+};
+
+export default NoExtension;

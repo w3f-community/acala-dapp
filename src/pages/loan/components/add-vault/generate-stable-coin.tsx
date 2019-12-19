@@ -20,7 +20,7 @@ import { getAssetName } from '@/utils';
 import { useSelector } from 'react-redux';
 import { specVaultSelector, specPriceSelector } from '@/store/chain/selectors';
 import { useForm } from '@/hooks/form';
-import { specBalanceSelector } from '@/store/user/selectors';
+import { specBalanceSelector } from '@/store/account/selectors';
 import FixedU128 from '@/utils/fixed_u128';
 import {
     calcCollateralRatio,

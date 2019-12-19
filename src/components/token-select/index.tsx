@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useState, useEffect, useRef } from 'react';
 import { getAssetIcon, getAssetName } from '@/utils';
 import {
     Grid,
@@ -24,8 +24,8 @@ import CloseIcon from '@/components/svgs/close';
 
 const AssetName = withStyles((theme: Theme) => ({
     root: {
+        minWidth: theme.spacing(6),
         marginLeft: 14,
-        marginRight: 4,
         ...createTypography(18, 22, 600, 'Roboto', theme.palette.common.black),
     },
 }))(Typography);
@@ -88,15 +88,17 @@ const useStyles = makeStyles(() =>
 );
 
 interface Props {
-    asset: number;
+    defaultToken: number;
     data: number[];
     onChange: (token: number) => void;
 }
 
-const TokenSelect: FC<Props> = ({ asset, data, onChange }) => {
+const TokenSelect: FC<Props> = ({ defaultToken, data, onChange }) => {
     const classes = useStyles();
     const [open, setOpen] = useState<boolean>(false);
-    const [selected, setSelected] = useState<number | undefined>(asset);
+    const [asset, setAsset] = useState<number>(defaultToken);
+    const [selected, setSelected] = useState<number>(defaultToken);
+
     const { t } = useTranslate();
 
     const ASSETS = data.map(key => Object.assign({}, { asset: key }, assets.get(key)));
@@ -104,20 +106,26 @@ const TokenSelect: FC<Props> = ({ asset, data, onChange }) => {
     const openDialogHandler = () => setOpen(true);
     const closeDialogHandler = () => setOpen(false);
     const selectItemHandlerGen = (asset: number) => () => setSelected(asset);
+
     const selectBtnHandler = () => {
         setOpen(false);
         if (!selected) {
             return false;
         }
-        onChange(selected);
+        setAsset(selected);
     };
+
+    // notify asset changed
+    useEffect(() => {
+        onChange(asset);
+    }, [asset]);
 
     return (
         <>
             <Grid container alignItems="center" className={classes.root} onClick={openDialogHandler}>
-                <img src={getAssetIcon(asset)} className={classes.icon} />
+                <img src={getAssetIcon(asset)} className={classes.icon} alt={`token-${asset}`} />
                 <AssetName>{getAssetName(asset)}</AssetName>
-                <img src={downIcon} />
+                <img src={downIcon} alt={'down-icon'} />
             </Grid>
 
             <Dialog
@@ -143,7 +151,7 @@ const TokenSelect: FC<Props> = ({ asset, data, onChange }) => {
                                 key={`token-selected-${item.asset}`}
                             >
                                 <SListItemAvatar>
-                                    <img src={item.icon} className="icon" />
+                                    <img src={item.icon} className="icon" alt={item.name} />
                                 </SListItemAvatar>
                                 <SListItemText primary={item.name} secondary={item.fullName} />
                             </SListItem>

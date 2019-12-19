@@ -1,8 +1,5 @@
-import React, { useState, ReactNode, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useState, ReactNode, useCallback } from 'react';
 import { Box } from '@material-ui/core';
-import { collateral, assets } from '@/config';
-import actions from '@/store/actions';
 import { AddStep } from './types';
 import StepBar from './step-bar';
 import SelectCollateral from './select-collateral';
@@ -10,7 +7,7 @@ import GenerateStableCoin from './generate-stable-coin';
 import Confirm from './confirm';
 import Success from './success';
 import { formContext } from './context';
-import { Provider as FormProvider } from '@/hooks/form';
+import { Form } from '@/hooks/form';
 
 interface Props {
     onCancel: () => void;
@@ -26,19 +23,23 @@ const initFormValues = {
 const AddVault: React.FC<Props> = ({ onCancel }) => {
     const [step, setStep] = useState<AddStep>('select');
 
-    const changeStep = (target: AddStep) => () => setStep(target);
+    const changeStepGen = (target: AddStep) => () => setStep(target);
 
     const renderCurrentStep = (step: AddStep): ReactNode => {
         if (step === 'select') {
-            return <SelectCollateral onNext={changeStep('generate')} onCancel={onCancel} />;
+            return <SelectCollateral onNext={changeStepGen('generate')} onCancel={onCancel} />;
         }
         if (step === 'generate') {
             return (
-                <GenerateStableCoin onNext={changeStep('confirm')} onPrev={changeStep('select')} onCancel={onCancel} />
+                <GenerateStableCoin
+                    onNext={changeStepGen('confirm')}
+                    onPrev={changeStepGen('select')}
+                    onCancel={onCancel}
+                />
             );
         }
         if (step === 'confirm') {
-            return <Confirm onNext={changeStep('success')} onPrev={changeStep('generate')} onCancel={onCancel} />;
+            return <Confirm onNext={changeStepGen('success')} onPrev={changeStepGen('generate')} onCancel={onCancel} />;
         }
         if (step === 'success') {
             return <Success onCancel={onCancel} />;
@@ -47,11 +48,11 @@ const AddVault: React.FC<Props> = ({ onCancel }) => {
     };
 
     return (
-        <FormProvider context={formContext} data={initFormValues}>
+        <Form context={formContext} data={initFormValues}>
             <StepBar current={step} />
             <Box paddingTop={4} />
             {renderCurrentStep(step)}
-        </FormProvider>
+        </Form>
     );
 };
 

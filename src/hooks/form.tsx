@@ -30,21 +30,23 @@ export type ProviderData<T> = {
     clearError: (key: keyof T) => void;
 };
 
-export const Provider: React.FC<ProviderProps> = React.memo(({ context, data, children }) => {
-    type Combined = Combine<typeof data, FormData>;
-    const _inner = Object.assign({}, data);
-    const [value, setValue] = useState<Combined>(_inner as Combined);
+export const Form: React.FC<ProviderProps> = React.memo(({ context, data, children }) => {
+    data = Object.assign({}, data);
 
-    const contextValue: ProviderData<Combined> = {
+    type CombinedFormData = Combine<typeof data, FormData>;
+
+    const [value, setValue] = useState<CombinedFormData>(data as CombinedFormData);
+
+    const contextValue: ProviderData<CombinedFormData> = {
         data: value,
-        setValue: (key: keyof Combined, value: any) => {
+        setValue: (key: keyof CombinedFormData, value: any) => {
             const result = set(data, [key, 'value'], value);
-            setValue({ ...result } as Combined);
+            setValue({ ...result } as CombinedFormData);
         },
-        setError: (key: keyof Combined, error: any) => {
+        setError: (key: keyof CombinedFormData, error: any) => {
             setValue(Object.assign({}, set(data as object, [key, 'error'], error)));
         },
-        clearError: (key: keyof Combined) => {
+        clearError: (key: keyof CombinedFormData) => {
             setValue(Object.assign({}, set(data as object, [key, 'error'], '')));
         },
     };

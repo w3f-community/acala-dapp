@@ -39,7 +39,7 @@ export const fetchPricesFeedEpic: Epic<RootAction, RootAction, RootState> = (act
     action$.pipe(
         filter(isActionOf(actions.fetchPricesFeed.request)),
         withLatestFrom(state$),
-        filter(([action, state]) => state.chain.app !== null), // ensure has app entity,
+        filter(([_, state]) => state.chain.app !== null), // ensure has app entity,
         switchMap(([action, state]) => {
             const assetList = action.payload;
             const app = state.chain.app;
@@ -98,7 +98,7 @@ export const fetchTotalIssuance: Epic<RootAction, RootAction, RootState> = (acti
     action$.pipe(
         filter(isActionOf(actions.fetchTotalIssuance.request)),
         withLatestFrom(state$),
-        filter(([action, state]) => state.chain.app !== null), // ensure has app entity,
+        filter(([_, state]) => state.chain.app !== null), // ensure has app entity,
         switchMap(([action, state]) => {
             const assetList = action.payload;
             const app = state.chain.app;

@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Grid, Typography, Theme, makeStyles, createStyles } from '@material-ui/core';
 import clsx from 'clsx';
 
@@ -85,7 +85,7 @@ const Component: React.FC<Props> = ({ current }) => {
                             <Typography variant="inherit">{title}</Typography>
                         </Grid>,
                         <Grid item className={classes.arrow} key={`add-vault-step-title-${key}`}>
-                            {index < steps.length - 1 && <img src={RightArrow} />}
+                            {index < steps.length - 1 && <img src={RightArrow} alt="right-arrow" />}
                         </Grid>,
                     ];
                 })}

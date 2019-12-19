@@ -11,7 +11,6 @@ export function getAssetIcon(id: number): string {
 }
 
 export function u8aToNumber(value: any, radix = 10): number {
-
     // None -> 0,
     if (value.isNone) {
         return 0;
