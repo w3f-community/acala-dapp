@@ -14,6 +14,7 @@
     "bignumber.js": "^9.0.0",
     "clsx": "^1.0.4",
     "dayjs": "^1.8.17",
+    "gh-pages": "^2.1.1",
     "lodash": "^4.17.15",
     "proptypes": "^1.1.0",
     "react": "^16.12.0",
@@ -52,7 +53,8 @@
   },
   "scripts": {
     "start": "react-app-rewired start",
-    "build": "react-app-rewired build",
+    "predeploy": "react-app-rewired build",
+    "deploy": "gh-pages -d build",
     "test": "react-app-rewired test",
     "lint": "tsc --noEmit && eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
     "eject": "react-scripts eject"

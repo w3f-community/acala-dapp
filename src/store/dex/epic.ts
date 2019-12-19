@@ -1,5 +1,5 @@
 import { Epic } from 'redux-observable';
-import { filter, map, switchMap, withLatestFrom, take } from 'rxjs/operators';
+import { filter, map, switchMap, withLatestFrom, take, catchError } from 'rxjs/operators';
 import { isActionOf, RootAction, RootState } from 'typesafe-actions';
 import * as actions from './actions';
 import { concat, combineLatest, of } from 'rxjs';
@@ -35,6 +35,9 @@ export const createValutEpic: Epic<RootAction, RootAction, RootState> = (action$
                     }),
                     filter((result: any) => result.isFinalized),
                     map(actions.swapCurrency.success),
+                    catchError((error: Error) => {
+                        return of(actions.swapCurrency.failure(error.message));
+                    }),
                     take(1),
                 ),
                 of(endLoading(actions.SWAP_CURRENCY)),

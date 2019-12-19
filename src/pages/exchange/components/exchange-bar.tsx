@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Paper, withStyles, Grid, Button } from '@material-ui/core';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import Skeleton from '@material-ui/lab/Skeleton';
 import ExchangeArrows from '@/assets/exchange-arrows.svg';
 import { useTranslate } from '@/hooks/i18n';
@@ -68,8 +69,6 @@ const ExchangeBar: React.FC = () => {
         );
     };
 
-    console.log(loading);
-
     return (
         <SPaper square={true} elevation={1}>
             <Grid container alignItems="center" justify="space-between" wrap="nowrap">
@@ -87,6 +86,7 @@ const ExchangeBar: React.FC = () => {
                     onChange={handleReceiveChange}
                 />
                 <SButton variant="contained" color="primary" onClick={handleExchangeBtcClick}>
+                    {loading && <CircularProgress size={15} style={{ marginRight: 8, color: '#fff' }} />}
                     Exchange
                 </SButton>
             </Grid>

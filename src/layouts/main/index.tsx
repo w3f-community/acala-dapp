@@ -10,17 +10,19 @@ import {
     DialogContentText,
     DialogActions,
     Button,
+    useMediaQuery,
 } from '@material-ui/core';
-import { Theme } from '@material-ui/core/styles';
+import { Theme, useTheme } from '@material-ui/core/styles';
 import acalaTypes from '@acala-network/types/src/interfaces/runtime/definitions';
 
 import { loadingSelector } from '@/store/loading/reducer';
 import Loading from '@/components/loading';
-import Sidebar from './components/side-bar';
 import actions from '@/store/actions';
 import { getEndPoint, sideBarConfig } from '@/config';
 import { connectedSelector } from '@/store/chain/selectors';
 import { extensionStatusSelector } from '@/store/account/selectors';
+import Header from './components/header';
+import Sidebar from './components/side-bar';
 import NoExtension from './components/no-extension';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -30,6 +32,9 @@ const useStyles = makeStyles((theme: Theme) =>
             height: '100vh',
             width: '100vw',
             background: theme.palette.background.default,
+            [theme.breakpoints.down('sm')]: {
+                flexDirection: 'column'
+            }
         },
         content: {
             flexGrow: 1,
@@ -56,6 +61,8 @@ const MainLayout: React.FC<Props> = props => {
     const importAccountLoading = useSelector(loadingSelector(actions.account.IMPORT_ACCOUNT));
     const extensionStatus = useSelector(extensionStatusSelector);
     // const connectStatus = useSelector(connectedSelector);
+    const theme = useTheme();
+    const match = useMediaQuery(theme.breakpoints.down('sm'));
 
     useEffect(() => {
         dispatch(
@@ -79,7 +86,9 @@ const MainLayout: React.FC<Props> = props => {
 
     return (
         <div className={classes.root}>
-            <Sidebar config={sideBarConfig} />
+        {
+            match ? <Header/> : <Sidebar config={sideBarConfig} />
+        }
             {renderContent()}
             <NoExtension open={extensionStatus === 'failure'} />
         </div>
