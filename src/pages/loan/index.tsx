@@ -13,12 +13,14 @@ import actions from '@/store/actions';
 import { COLLATERAL, STABLE_COIN, assets } from '@/config';
 import { accountVaultsSelector } from '@/store/account/selectors';
 import Page from '@/components/page';
+import useMobileMatch from '@/hooks/mobile-match';
 
 const Loan: React.FC = () => {
     const dispatch = useDispatch();
     const [currentVault, setCurrentVault] = useState<number>(0);
     const [addVaultStatus, setAddVaultstatus] = useState<boolean>();
     const userVaults = useSelector(accountVaultsSelector);
+    const match = useMobileMatch('sm');
 
     const showAddVault = () => setAddVaultstatus(true);
     const hideAddVault = () => setAddVaultstatus(false);
@@ -53,7 +55,7 @@ const Loan: React.FC = () => {
     };
 
     return (
-        <Page padding="46px 55px">
+        <Page padding={match ? '20px' : '46px 55px'}>
             <VaultsList onAdd={showAddVault} onSelect={handleVaultSelect} />
             <Box paddingTop={7} />
             <Grid container spacing={6}>

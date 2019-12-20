@@ -1,17 +1,7 @@
 import React, { ReactNode, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-    makeStyles,
-    createStyles,
-    Dialog,
-    DialogTitle,
-    DialogContent,
-    DialogContentText,
-    DialogActions,
-    Button,
-    useMediaQuery,
-} from '@material-ui/core';
+import { makeStyles, createStyles, useMediaQuery } from '@material-ui/core';
 import { Theme, useTheme } from '@material-ui/core/styles';
 import acalaTypes from '@acala-network/types/src/interfaces/runtime/definitions';
 
@@ -32,13 +22,14 @@ import Sidebar from './components/side-bar';
 import NoExtension from './components/no-extension';
 import NoAccount from './components/no-account';
 import SelectAccount from './components/select-account';
+import useMobileMatch from '@/hooks/mobile-match';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         root: {
             display: 'flex',
-            height: '100vh',
-            width: '100vw',
+            height: '100%',
+            width: '100%',
             background: theme.palette.background.default,
             [theme.breakpoints.down('sm')]: {
                 flexDirection: 'column',
@@ -74,9 +65,8 @@ const MainLayout: React.FC<Props> = props => {
     const account = useSelector(accountSelector);
     const accountError = useSelector(accountErrorSelector);
 
+    const match = useMobileMatch('sm');
     // const connectStatus = useSelector(connectedSelector);
-    const theme = useTheme();
-    const match = useMediaQuery(theme.breakpoints.down('sm'));
 
     useEffect(() => {
         // connect to blockchain

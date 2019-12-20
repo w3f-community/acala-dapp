@@ -6,8 +6,6 @@ import {
     Button,
     DialogActions,
     Slide,
-    withStyles,
-    Theme,
     List,
     ListItem,
     ListItemText,
@@ -55,7 +53,12 @@ const NoExtension: React.FC<Props> = ({ open }) => {
             <DialogContent>
                 <List>
                     {accountList.map((account, index) => (
-                        <ListItem button onClick={selectHandlerGen(index)} selected={index === selected} key={`account-${account.address}`}>
+                        <ListItem
+                            button
+                            onClick={selectHandlerGen(index)}
+                            selected={index === selected}
+                            key={`account-${account.address}`}
+                        >
                             <ListItemText secondary={formatAddress(account)} />
                         </ListItem>
                     ))}
