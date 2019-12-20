@@ -10,6 +10,7 @@ import ConnectStatus from './connect-status';
 import Item from './item';
 import { useSelector } from 'react-redux';
 import { accountSelector } from '@/store/account/selectors';
+import { formatAddress } from '@/utils';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -53,7 +54,7 @@ const Sidebar: React.FC<Props> = ({ config }) => {
                 <Typography variant="h1">Acala Network</Typography>
             </Grid>
             <List>
-                <Item data={{ name: account.address.slice(0, 8) + '...', path: '/user', icon: WalletIcon }} />
+                <Item data={{ name: formatAddress(account), path: '/user', icon: WalletIcon }} />
                 <Item data={{ name: 'Dashboard', path: '/', icon: DashboardIcon }} />
             </List>
             <div style={{ flex: 1 }}>

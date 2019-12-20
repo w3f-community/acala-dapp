@@ -15,7 +15,7 @@ export const createValutEpic: Epic<RootAction, RootAction, RootState> = (action$
         switchMap(([action, state]) => {
             const data = action.payload;
             const app = state.chain.app!;
-            const address = state.account.account.address;
+            const address = state.account.account!.address;
             const tx = app.tx.honzon.updateVault(
                 data.asset,
                 data.collateral.innerToString(),

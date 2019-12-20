@@ -16,7 +16,7 @@ export const createValutEpic: Epic<RootAction, RootAction, RootState> = (action$
         switchMap(([action, state]) => {
             const data = action.payload;
             const app = state.chain.app!;
-            const address = state.account.account.address;
+            const address = state.account.account!.address;
             const tx = app.tx.dex.swapCurrency(
                 [data.supply.asset, data.supply.balance.innerToString()],
                 [data.target.asset, data.target.balance.innerToString()],

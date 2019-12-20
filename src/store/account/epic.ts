@@ -4,12 +4,13 @@ import { combineLatest, defer, of } from 'rxjs';
 import { isActionOf, RootAction, RootState } from 'typesafe-actions';
 import { web3Enable, web3Accounts, web3FromAddress } from '@polkadot/extension-dapp';
 
+import { u8aToNumber } from '@/utils';
+import FixedU128 from '@/utils/fixed_u128';
+
+import { startLoading, endLoading } from '../loading/reducer';
 import * as chainActions from '../chain/actions';
 import * as actions from './actions';
 import { AssetList } from '../types';
-import { u8aToNumber } from '@/utils';
-import { startLoading, endLoading } from '../loading/reducer';
-import FixedU128 from '@/utils/fixed_u128';
 
 export const fetchAssetBalanceEpic: Epic<RootAction, RootAction, RootState> = (action$, state$) =>
     action$.pipe(
@@ -36,29 +37,21 @@ export const fetchAssetBalanceEpic: Epic<RootAction, RootAction, RootState> = (a
 export const importAccmountEpic: Epic<RootAction, RootAction, RootState> = (action$, state$) =>
     action$.pipe(
         filter(isActionOf(actions.importAccount.request)),
-        switchMap(savedAction => {
-            return action$.pipe(
-                filter(isActionOf(chainActions.connectAsync.success)),
-                map(() => savedAction),
-            );
-        }),
-        withLatestFrom(state$),
-        switchMap(([action, state]) =>
+        switchMap(() =>
             defer(async () => {
-                const app = state.chain.app!;
                 const injected = await web3Enable('Acala Honzon Platform');
 
                 if (!injected.length) {
                     throw new Error('no extends found');
                 }
 
-                const allAccounts = await web3Accounts();
-                const injector = await web3FromAddress(allAccounts[0].address);
+                const accounts = await web3Accounts();
 
-                // sets the signer for the address on the @polkadot/api
-                app.setSigner(injector.signer);
-                // wait for the promise to resolve, async WASM
-                return { address: allAccounts[0].address };
+                if (accounts.length === 0) {
+                    throw new Error('no accounts found');
+                }
+
+                return accounts;
             }).pipe(
                 map(actions.importAccount.success),
                 catchError((err: Error) => {
@@ -68,6 +61,35 @@ export const importAccmountEpic: Epic<RootAction, RootAction, RootState> = (acti
                 endWith(endLoading(actions.IMPORT_ACCOUNT)),
             ),
         ),
+    );
+
+export const selectAccountEpic: Epic<RootAction, RootAction, RootState> = (action$, state$) =>
+    action$.pipe(
+        filter(isActionOf(actions.selectAccount.request)),
+        withLatestFrom(state$),
+        switchMap(([action, state]) => {
+            return defer(async () => {
+                const app = state.chain.app!;
+                const accounts = state.account.accountList;
+                const index = action.payload;
+                // get current account
+                const result = accounts.find((_, i) => index === i);
+                if (!result) {
+                    throw new Error('no account found');
+                }
+
+                // set the signer address into @polkadot/api
+                const injector = await web3FromAddress(result.address);
+                app.setSigner(injector.signer);
+
+                return result;
+            }).pipe(
+                map(actions.selectAccount.success),
+                catchError((err: Error) => of(actions.selectAccount.failure(err.message as any))),
+                startWith(startLoading(actions.SELECT_ACCOUNT)),
+                endWith(endLoading(actions.SELECT_ACCOUNT)),
+            );
+        }),
     );
 
 export const fetchVaultsEpic: Epic<RootAction, RootAction, RootState> = (action$, state$) =>

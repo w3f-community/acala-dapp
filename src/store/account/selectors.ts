@@ -1,6 +1,7 @@
 import { Selector } from '@/types/store';
 import { BalanceData, UserVaultData, Account, Status } from '../types';
 import FixedU128 from '@/utils/fixed_u128';
+import { AccountError } from './reducer';
 
 export const balancesSelector: Selector<BalanceData[]> = state => state.account.balancas;
 
@@ -30,6 +31,12 @@ export const specUserVaultSelector: (asset: number) => Selector<UserVaultData | 
     };
 };
 
-export const accountSelector: Selector<Account> = state => state.account.account;
+export const accountListSelector: Selector<Account[]> = state => state.account.accountList;
+
+export const accountSelector: Selector<Account | null> = state => state.account.account;
 
 export const extensionStatusSelector: Selector<Status> = state => state.account.extensionStatus;
+
+export const accountStatusSelector: Selector<Status> = state => state.account.accountStatus;
+
+export const accountErrorSelector: Selector<AccountError> = state => state.account.error;

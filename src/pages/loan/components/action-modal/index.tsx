@@ -54,15 +54,6 @@ const useInputStyles = makeStyles(() =>
     }),
 );
 
-const useTitleStyles = makeStyles(() =>
-    createStyles({
-        root: {
-            padding: 0,
-            ...createTypography(21, 22, 600, 'Roboto'),
-        },
-    }),
-);
-
 export interface ActionModalProps {
     current: number;
     open: boolean;
@@ -74,7 +65,6 @@ const ActionModal: React.FC<ActionModalProps> = ({ current, action, open, onClos
     const { t } = useTranslate();
     const dispatch = useDispatch();
     const dialogClasses = useDialogStyles();
-    const titleClasses = useTitleStyles();
     const inputClasses = useInputStyles();
     const updateVaultStatus = useSelector(statusSelector('updateVault'));
     const stableCoinPrice = useSelector(specPriceSelector(STABLE_COIN));
@@ -179,7 +169,7 @@ const ActionModal: React.FC<ActionModalProps> = ({ current, action, open, onClos
 
     return (
         <Dialog open={open} onClose={onClose} classes={dialogClasses}>
-            <DialogTitle classes={titleClasses} disableTypography>
+            <DialogTitle disableTypography>
                 <Grid container justify="space-between" alignItems="center">
                     <p>{getTitle(action)}</p>
                     <IconButton onClick={onClose}>
@@ -207,7 +197,6 @@ const ActionModal: React.FC<ActionModalProps> = ({ current, action, open, onClos
                         {t('cancel')}
                     </Button>
                 </Grid>
-                <Box paddingTop={6} />
                 {/*
                 <List disablePadding>
                     <ListItem disableGutters>

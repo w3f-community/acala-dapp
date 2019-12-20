@@ -23,6 +23,7 @@ export interface PriceData {
 
 export interface Account {
     address: string;
+    [other: string]: any;
 }
 
 export interface BaseVaultData {
@@ -80,11 +81,17 @@ export interface ChainState {
 }
 
 export interface AccountState {
-    // account: KeyringPair | null;
-    account: Account;
+    // extension status
+    extensionStatus: Status;
+
+    // account import status
+    account: Account | null;
+    accountStatus: Status;
+    accountList: Account[];
+
+    // account information
     balancas: BalanceData[];
     vaults: UserVaultData[];
-    extensionStatus: Status;
 }
 
 export interface VaultState {

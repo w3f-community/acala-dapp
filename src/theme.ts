@@ -16,21 +16,22 @@ export const createTypography = (
     color,
 });
 
-const BODY_GRAY_COLOR = '#6a6a6a';
-const BODY_BLACK_COLOR = '#1a1a1a';
+const COLOR_GRAY = '#6a6a6a';
+const COLOR_BLACK = '#1a1a1a';
+
 // custom thme
 const createTheme = (options: ThemeOptions) =>
     createMuiTheme({
         palette: {
             common: {
-                black: BODY_BLACK_COLOR,
+                black: COLOR_BLACK,
             },
             primary: {
                 main: '#01279c',
                 light: '#0132cc',
             },
             secondary: {
-                main: BODY_GRAY_COLOR,
+                main: COLOR_GRAY,
             },
             text: {
                 secondary: '#4d4d4d',
@@ -76,18 +77,35 @@ const createTheme = (options: ThemeOptions) =>
             MuiDialog: {
                 paper: {
                     borderRadius: 0,
+                    padding: '50px 34px 37px 34px', // override default dialog content padding
+                    minWidth: 355,
+                },
+            },
+            MuiDialogTitle: {
+                root: {
+                    padding: 0,
+                    marginBottom: 35,
+                    '& .MuiTypography-h6': {
+                        ...createTypography(22, 22, 600, 'Roboto', 'COLOR_BLACK'),
+                    },
                 },
             },
             MuiDialogContent: {
                 root: {
-                    padding: '35px 0 0 0', // override default dialog content padding
+                    padding: 0,
+                    marginBottom: 35,
+                },
+            },
+            MuiDialogActions: {
+                root: {
+                    padding: 0,
                 },
             },
             MuiListItem: {
                 root: {
-                    paddingTop: 0, // clear default list item padding
-                    paddingBottom: 0, // clear default list item padding
-                    marginBottom: 20,
+                    paddingTop: 10, // clear default list item padding
+                    paddingBottom: 10, // clear default list item padding
+                    marginBottom: 0,
                     '&:last-child': {
                         marginBottom: 0,
                     },
@@ -96,11 +114,11 @@ const createTheme = (options: ThemeOptions) =>
             MuiListItemText: {
                 primary: {
                     ...createTypography(15, 22, 600),
-                    color: BODY_GRAY_COLOR,
+                    color: COLOR_GRAY,
                 },
                 secondary: {
                     ...createTypography(22, 32, 600),
-                    color: BODY_BLACK_COLOR,
+                    color: COLOR_BLACK,
                 },
                 multiline: {
                     marginTop: 0,

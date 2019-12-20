@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dialog, DialogTitle, DialogContent, Button, DialogActions, Slide, withStyles, Theme } from '@material-ui/core';
+import { Dialog, DialogContent, Button, DialogActions, Slide, withStyles, Theme } from '@material-ui/core';
 import { TransitionProps } from '@material-ui/core/transitions';
 import { useTranslate } from '@/hooks/i18n';
 import { POLKADOT_EXTENSIONS_ADDRESS } from '@/config';
@@ -11,21 +11,19 @@ const Transition = React.forwardRef<unknown, TransitionProps>(function Transitio
 interface Props {
     open: boolean;
 }
-const NoExtension: React.FC<Props> = ({ open }) => {
+const NoAccount: React.FC<Props> = ({ open }) => {
     const { t } = useTranslate();
-    const handleGetExtensionBtnClick = () => {
-        window.open(POLKADOT_EXTENSIONS_ADDRESS);
-    };
+
     return (
         <Dialog open={open} TransitionComponent={Transition}>
-            <DialogContent>{t('No polkadot{.js} extension found, please install it first !')}</DialogContent>
+            <DialogContent>
+                {t('No account found, please add account in your wallet extension or unlock it !')}
+            </DialogContent>
             <DialogActions>
-                <Button variant="contained" onClick={handleGetExtensionBtnClick} color="primary">
-                    GET IT
-                </Button>
+                <Button color="primary">Retry</Button>
             </DialogActions>
         </Dialog>
     );
 };
 
-export default NoExtension;
+export default NoAccount;

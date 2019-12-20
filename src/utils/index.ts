@@ -1,4 +1,5 @@
 import { assets } from '@/config';
+import { Account } from '@/store/types';
 
 export function getAssetName(id: number): string {
     const result = assets.get(id);
@@ -25,4 +26,11 @@ export function u8aToNumber(value: any, radix = 10): number {
     }
 
     return result;
+}
+
+export function formatAddress(account: Account | null, length = 8, suffix = '...'): string {
+    if (!(account && account.address)) {
+        return '';
+    }
+    return account.address.slice(0, length) + suffix;
 }

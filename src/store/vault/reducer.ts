@@ -1,5 +1,5 @@
 import { createReducer } from 'typesafe-actions';
-import { AccountState, VaultState } from '../types';
+import { VaultState } from '../types';
 import * as actions from './actions';
 
 const initialState: VaultState = {

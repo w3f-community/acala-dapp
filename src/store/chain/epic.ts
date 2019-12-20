@@ -1,8 +1,8 @@
 import { WsProvider, ApiRx } from '@polkadot/api';
 import { get } from 'lodash';
 import { Epic } from 'redux-observable';
-import { filter, map, switchMap, startWith, endWith, withLatestFrom } from 'rxjs/operators';
-import { combineLatest } from 'rxjs';
+import { filter, map, switchMap, startWith, endWith, withLatestFrom, take } from 'rxjs/operators';
+import { combineLatest, concat, of } from 'rxjs';
 import { isActionOf, RootAction, RootState } from 'typesafe-actions';
 
 import { u8aToNumber } from '@/utils';
@@ -27,10 +27,10 @@ export const connectEpic: Epic<RootAction, RootAction, RootState> = action$ =>
                 'sp_std::marker::PhantomData': 'u128',
             });
             const wsProvider = new WsProvider(endpoint);
-            return ApiRx.create({ provider: wsProvider, types: types }).pipe(
-                map(actions.connectAsync.success),
-                startWith(startLoading(actions.CONNECT_ASYNC)),
-                endWith(endLoading(actions.CONNECT_ASYNC)),
+            return concat(
+                of(startLoading(actions.CONNECT_ASYNC)),
+                ApiRx.create({ provider: wsProvider, types: types }).pipe(map(actions.connectAsync.success), take(1)),
+                of(endLoading(actions.CONNECT_ASYNC)),
             );
         }),
     );

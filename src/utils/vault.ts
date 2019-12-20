@@ -79,6 +79,5 @@ export function calcPay(target: FixedU128, currentSupply: FixedU128, currentTarg
         .mul(currentTarget)
         .div(currentTarget.sub(target.mul(FixedU128.fromNatural(1).add(EXCHANGE_FEE))))
         .sub(currentSupply)
-        .add(FixedU128.fromNatural(0.0005))
-        ;
+        .add(FixedU128.fromNatural(0.0005));
 }

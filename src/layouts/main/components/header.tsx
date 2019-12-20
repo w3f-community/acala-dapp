@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme: Theme) =>
             padding: '0 20px',
         },
         colorPrimary: {
-            background: theme.palette.primary.main
+            background: theme.palette.primary.main,
         },
         icon: {},
     }),
@@ -30,7 +30,7 @@ export default function ButtonAppBar() {
         <AppBar position="static" classes={classes}>
             <img src={AcalaLogo} width={40} height={34} className={classes.icon} />
             <IconButton>
-                <img src={MenuLogo} width={25}/>
+                <img src={MenuLogo} width={25} />
             </IconButton>
         </AppBar>
     );

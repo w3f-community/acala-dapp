@@ -1,14 +1,20 @@
 import { createAsyncAction } from 'typesafe-actions';
-import { AssetList, BalanceData, UserVaultData } from '../types';
-import { KeyringPair } from '@polkadot/keyring/types';
+import { AssetList, BalanceData, UserVaultData, Account } from '../types';
+import { AccountError } from './reducer';
 
-type ImportAccountError = 'no extends found';
 export const IMPORT_ACCOUNT = '@account/import_account';
 export const importAccount = createAsyncAction(
     IMPORT_ACCOUNT,
     '@account/import_account/success',
     '@account/import_account/failure',
-)<string, { address: string }, ImportAccountError>();
+)<string, Account[], AccountError>();
+
+export const SELECT_ACCOUNT = '@account/select_account';
+export const selectAccount = createAsyncAction(
+    SELECT_ACCOUNT,
+    '@account/select_account/success',
+    '@account/select_account/failure',
+)<number, Account, AccountError>();
 
 export const FETCH_ASSETS_BALANCE = '@account/fetch_assets_balance';
 export const fetchAssetsBalance = createAsyncAction(

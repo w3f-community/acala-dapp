@@ -20,10 +20,18 @@ import Loading from '@/components/loading';
 import actions from '@/store/actions';
 import { getEndPoint, sideBarConfig } from '@/config';
 import { connectedSelector } from '@/store/chain/selectors';
-import { extensionStatusSelector } from '@/store/account/selectors';
+import {
+    extensionStatusSelector,
+    accountListSelector,
+    accountSelector,
+    accountErrorSelector,
+    accountStatusSelector,
+} from '@/store/account/selectors';
 import Header from './components/header';
 import Sidebar from './components/side-bar';
 import NoExtension from './components/no-extension';
+import NoAccount from './components/no-account';
+import SelectAccount from './components/select-account';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -33,8 +41,8 @@ const useStyles = makeStyles((theme: Theme) =>
             width: '100vw',
             background: theme.palette.background.default,
             [theme.breakpoints.down('sm')]: {
-                flexDirection: 'column'
-            }
+                flexDirection: 'column',
+            },
         },
         content: {
             flexGrow: 1,
@@ -60,37 +68,41 @@ const MainLayout: React.FC<Props> = props => {
     const connectLoading = useSelector(loadingSelector(actions.chain.CONNECT_ASYNC));
     const importAccountLoading = useSelector(loadingSelector(actions.account.IMPORT_ACCOUNT));
     const extensionStatus = useSelector(extensionStatusSelector);
+    const accountStatus = useSelector(accountStatusSelector);
+
+    const accountList = useSelector(accountListSelector);
+    const account = useSelector(accountSelector);
+    const accountError = useSelector(accountErrorSelector);
+
     // const connectStatus = useSelector(connectedSelector);
     const theme = useTheme();
     const match = useMediaQuery(theme.breakpoints.down('sm'));
 
     useEffect(() => {
-        dispatch(
-            // connect to blockchain
-            actions.chain.connectAsync.request({ endpoint: getEndPoint(), ...acalaTypes }),
-        );
+        // connect to blockchain
+        dispatch(actions.chain.connectAsync.request({ endpoint: getEndPoint(), ...acalaTypes }));
         dispatch(actions.account.importAccount.request(''));
     }, [dispatch]);
 
     const renderContent = () => {
-        if (connectLoading || importAccountLoading) {
-            return <Loading />;
+        if (extensionStatus === 'success' && accountStatus === 'success') {
+            return <div className={classes.content}>{children}</div>;
         }
 
-        if (extensionStatus === 'none' || extensionStatus === 'failure') {
-            return null;
-        }
-
-        return <div className={classes.content}>{children}</div>;
+        return null;
     };
+
+    if (connectLoading) {
+        return <Loading />;
+    }
 
     return (
         <div className={classes.root}>
-        {
-            match ? <Header/> : <Sidebar config={sideBarConfig} />
-        }
+            {match ? <Header /> : <Sidebar config={sideBarConfig} />}
             {renderContent()}
-            <NoExtension open={extensionStatus === 'failure'} />
+            <NoExtension open={accountError === 'no extends found'} />
+            <NoAccount open={accountError === 'no accounts found'} />
+            <SelectAccount open={accountList.length !== 0 && accountStatus === 'none'} />
         </div>
     );
 };
