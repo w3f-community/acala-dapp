@@ -82,6 +82,7 @@ const MainLayout: React.FC<Props> = props => {
         return null;
     };
 
+    // pls. don't change this, beacuse we must ensure that DAPP is aleardy connected the chain-net
     if (connectLoading) {
         return <Loading />;
     }

@@ -1,6 +1,5 @@
 import { RootState } from 'typesafe-actions';
 import { Tx } from '../types';
+import { Selector } from '@/types/store';
 
-export function txRecordSelector(state: RootState): Tx[] {
-    return state.app.txRecord;
-}
+export const transitionsSelector: Selector<Tx[]> = state => state.app.transitions;

@@ -25,11 +25,11 @@ type Size = 'normal' | 'large' | 'small';
 interface Props {
     size: Size;
     elevation: number;
-    header: ReactNode;
     children: ReactNode;
     contentPadding?: number;
     headerClassName?: string;
     contentClassName?: string;
+    header?: ReactNode;
     divider?: boolean;
 }
 
@@ -54,13 +54,15 @@ const Card: React.FC<Props> = ({
             })}
         >
             <Grid container direction="column">
-                <div
-                    className={clsx(classes.header, headerClassName, {
-                        [classes.headerDivider]: divider,
-                    })}
-                >
-                    {header}
-                </div>
+                {header && (
+                    <div
+                        className={clsx(classes.header, headerClassName, {
+                            [classes.headerDivider]: divider,
+                        })}
+                    >
+                        {header}
+                    </div>
+                )}
                 <Box paddingTop={contentPadding}>{children}</Box>
             </Grid>
         </Paper>

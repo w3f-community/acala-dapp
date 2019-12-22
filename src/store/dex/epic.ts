@@ -6,6 +6,8 @@ import { concat, combineLatest, of } from 'rxjs';
 import FixedU128 from '@/utils/fixed_u128';
 import { u8aToNumber } from '@/utils';
 import { startLoading, endLoading } from '../loading/reducer';
+import * as appActions from '../app/actions';
+import { Tx } from '../types';
 
 export const createValutEpic: Epic<RootAction, RootAction, RootState> = (action$, state$) =>
     action$.pipe(
@@ -22,8 +24,18 @@ export const createValutEpic: Epic<RootAction, RootAction, RootState> = (action$
                 [data.target.asset, data.target.balance.innerToString()],
             );
             const hash = tx.hash.toString();
+            const txRecord: Tx = {
+                signer: address,
+                hash: hash,
+                status: 'pending',
+                time: new Date().getTime(),
+                type: 'swapCurrency',
+                data: data,
+            };
+
             return concat(
                 of(startLoading(actions.SWAP_CURRENCY)),
+                of(appActions.updateTransition(txRecord)),
                 tx.signAndSend(address).pipe(
                     map(result => {
                         console.log('finally? ', result.isFinalized);
@@ -41,6 +53,7 @@ export const createValutEpic: Epic<RootAction, RootAction, RootState> = (action$
                     take(1),
                 ),
                 of(endLoading(actions.SWAP_CURRENCY)),
+                of(appActions.updateTransition({ ...txRecord, time: new Date().getTime(), status: 'success' })),
             );
         }),
     );

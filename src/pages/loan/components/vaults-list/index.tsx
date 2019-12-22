@@ -2,7 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { Grid, Paper, Typography } from '@material-ui/core';
 import { makeStyles, createStyles } from '@material-ui/styles';
-import { Theme, useTheme } from '@material-ui/core/styles';
+import { Theme } from '@material-ui/core/styles';
 
 import add from '@/assets/add.svg';
 import { getAssetName, getAssetIcon } from '@/utils';

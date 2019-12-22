@@ -34,3 +34,7 @@ export function formatAddress(account: Account | null, length = 8, suffix = '...
     }
     return account.address.slice(0, length) + suffix;
 }
+
+export function formatHash(hash: string): string {
+    return hash.replace(/^(.{6}).*?(.{4})$/, '$1.....$2');
+}

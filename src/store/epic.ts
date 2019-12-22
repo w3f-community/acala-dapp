@@ -6,7 +6,7 @@ import * as vaultEpics from './vault/epic';
 import * as dexEpics from './dex/epic';
 
 export default combineEpics(
-    // ...Object.values(appEpics),
+    ...Object.values(appEpics),
     ...Object.values(chainEpics),
     ...Object.values(accountEpics),
     ...Object.values(vaultEpics),

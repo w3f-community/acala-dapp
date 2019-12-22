@@ -1,37 +1,40 @@
 import { createReducer } from 'typesafe-actions';
-import { findIndex } from 'lodash';
-import { AppState } from '../types';
 import * as actions from './actions';
+import { Tx } from '../types';
+
+export interface AppState {
+    transitions: Tx[];
+}
 
 const initialState: AppState = {
-    txRecord: [],
+    transitions: [],
 };
 
-const LOCAL_STORAGE_KEY = 'acala_tx_record';
-
 export default createReducer(initialState)
-    .handleAction(actions.updateTxRecord, (state, action) => {
+    .handleAction(actions.updateTransition, (state, action) => {
         const data = action.payload;
-        const txRecord = state.txRecord.slice();
-        const result = txRecord.find(item => item.hash === data.hash);
+        const transitions = state.transitions.slice();
+        const result = transitions.find(item => item.hash === data.hash);
 
         if (result) {
             Object.assign(result, data);
         } else {
-            txRecord.push(data);
+            transitions.push(data);
         }
 
-        window.localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(txRecord));
-
-        return Object.assign({}, state, { txRecord });
+        return Object.assign({}, state, { transitions });
     })
-    .handleAction(actions.fetchTxRecord, state => {
-        let txRecord = [];
-        const value = window.localStorage.getItem(LOCAL_STORAGE_KEY);
+    .handleAction(actions.removeTransition, (state, action) => {
+        const hash = action.payload;
+        const transitions = state.transitions.slice();
+        const index = transitions.findIndex(item => item.hash === hash);
 
-        if (value) {
-            txRecord = JSON.parse(value);
+        if (index !== -1) {
+            transitions.splice(index, 1);
         }
 
-        return { ...state, txRecord };
+        return {
+            ...state,
+            transitions,
+        };
     });

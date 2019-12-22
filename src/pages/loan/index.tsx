@@ -1,19 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Grid, Box } from '@material-ui/core';
-import PricesFeed from './components/prices-feed';
-import VaultsList from './components/vaults-list';
-import SystemInfo from './components/system-info';
-import CollateralInfo from './components/collateral-info';
-import VaultPanel from './components/vault-panel';
-import TransactionHistory from './components/transaction-history';
-import VaultInfo from './components/vault-info';
-import AddVault from './components/add-vault';
+
 import actions from '@/store/actions';
 import { COLLATERAL, STABLE_COIN, assets } from '@/config';
 import { accountVaultsSelector } from '@/store/account/selectors';
 import Page from '@/components/page';
 import useMobileMatch from '@/hooks/mobile-match';
+
+import PricesFeed from './components/prices-feed';
+import VaultsList from './components/vaults-list';
+import SystemInfo from './components/system-info';
+import CollateralInfo from './components/collateral-info';
+import VaultPanel from './components/vault-panel';
+import TransactionHistory from './components/transitions-history';
+import VaultInfo from './components/vault-info';
+import AddVault from './components/add-vault';
+import TxStatus from '@/components/tx-status';
 
 const Loan: React.FC = () => {
     const dispatch = useDispatch();
@@ -35,7 +38,7 @@ const Loan: React.FC = () => {
         // fetch system vaults info
         dispatch(actions.chain.fetchVaults.request(COLLATERAL));
         // fetch tx record
-        dispatch(actions.app.fetchTxRecord());
+        dispatch(actions.vault.loadTxRecord());
     }, []);
 
     useEffect(() => {
@@ -43,7 +46,7 @@ const Loan: React.FC = () => {
         if (addVaultStatus === false && userVaults.length === 0) {
             setAddVaultstatus(true);
         }
-        // set default current vault
+        // set default vault
         if (userVaults.length) {
             setCurrentVault(userVaults[0].asset);
         }
@@ -56,7 +59,14 @@ const Loan: React.FC = () => {
 
     return (
         <Page padding={match ? '20px' : '46px 55px'}>
-            <VaultsList onAdd={showAddVault} onSelect={handleVaultSelect} />
+            <Grid container spacing={6}>
+                <Grid item xs={8}>
+                    <VaultsList onAdd={showAddVault} onSelect={handleVaultSelect} />
+                </Grid>
+                <Grid item xs={4}>
+                    <TxStatus />
+                </Grid>
+            </Grid>
             <Box paddingTop={7} />
             <Grid container spacing={6}>
                 <Grid item xs={8}>
@@ -77,7 +87,7 @@ const Loan: React.FC = () => {
                     <Box paddingTop={3} />
                     <SystemInfo />
                     <Box paddingTop={3} />
-                    <CollateralInfo current={2} />
+                    <CollateralInfo current={currentVault} />
                 </Grid>
             </Grid>
         </Page>

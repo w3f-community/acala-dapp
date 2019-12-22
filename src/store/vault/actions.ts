@@ -9,3 +9,6 @@ export const updateVault = createAsyncAction(CREATE_VAULT, '@vault/create/succes
 >();
 
 export const reset = createAction('@vault/reset');
+
+export const LOAD_TX_RECORD = '@vault/load_tx_record';
+export const loadTxRecord = createAction(LOAD_TX_RECORD);

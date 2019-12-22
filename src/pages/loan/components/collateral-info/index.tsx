@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent } from 'react';
+import React, { useEffect, useState, ChangeEvent } from 'react';
 import { Typography, List, ListItem, Grid, Select, MenuItem, Theme } from '@material-ui/core';
 import { useTranslate } from '@/hooks/i18n';
 import Card from '@/components/card';
@@ -10,6 +10,7 @@ import FixedU128 from '@/utils/fixed_u128';
 import { calcStableFee } from '@/utils/vault';
 import { withStyles } from '@material-ui/styles';
 import { createTypography } from '@/theme';
+import Skeleton from '@material-ui/lab/Skeleton';
 
 const SMenuItem = withStyles((theme: Theme) => ({
     root: {
@@ -22,16 +23,24 @@ interface Props {
     current: number;
 }
 
-const FeedPrice: React.FC<Props> = ({ current }) => {
+const CollateralInfo: React.FC<Props> = ({ current }) => {
     const { t } = useTranslate();
     const vaults = useSelector(vaultsSelector);
     const [selected, setSelected] = useState<number>(current);
     const selectedVaults = useSelector(specVaultSelector(selected));
 
+    useEffect(() => {
+        setSelected(current);
+    }, [current]);
+
     const handleChange = (e: ChangeEvent<{ value: unknown }>) => {
         const result = Number(e.target.value);
         setSelected(result);
     };
+
+    if (!vaults.length) {
+        return <Skeleton variant="rect" height={240} />;
+    }
     return (
         <Card
             size="normal"
@@ -71,4 +80,4 @@ const FeedPrice: React.FC<Props> = ({ current }) => {
     );
 };
 
-export default FeedPrice;
+export default CollateralInfo;

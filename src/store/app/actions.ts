@@ -1,10 +1,12 @@
 import { createAction } from 'typesafe-actions';
 import { Tx } from '../types';
 
-export const UPDATE_TX_RECORD = '@app/update_tx_record';
-export const updateTxRecord = createAction(UPDATE_TX_RECORD, action => {
+export const UPDATE_TRANSITION = '@app/update_transition';
+export const updateTransition = createAction(UPDATE_TRANSITION, action => {
     return (tx: Tx) => action(tx);
 });
 
-export const FETCH_TX_RECORD = '@app/fetch_tx_record';
-export const fetchTxRecord = createAction(FETCH_TX_RECORD);
+export const REMOVE_TRANSITION = '@/app/remove_transition';
+export const removeTransition = createAction(REMOVE_TRANSITION, action => {
+    return (hash: string) => action(hash);
+});

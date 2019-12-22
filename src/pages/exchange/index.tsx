@@ -1,15 +1,18 @@
 import React, { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { Grid } from '@material-ui/core';
+
 import Title from '@/components/page/title';
 import { useTranslate } from '@/hooks/i18n';
 import Page from '@/components/page';
-import ExchangeBar from './components/exchange-bar';
-import { useDispatch } from 'react-redux';
-
+import TxStatus from '@/components/tx-status';
 import actions from '@/store/actions';
 import { DEX_TOKENS, STABLE_COIN } from '@/config';
 import FixedU128 from '@/utils/fixed_u128';
 import { Form } from '@/hooks/form';
+
 import { formContext } from './components/context';
+import ExchangeBar from './components/exchange-bar';
 
 const defaultFormData = {
     payAsset: {
@@ -41,7 +44,14 @@ const Exchange: React.FC = () => {
         <Form context={formContext} data={defaultFormData}>
             <Page padding="0 55px">
                 <Title>{t('Exchange')}</Title>
-                <ExchangeBar />
+                <Grid container spacing={6}>
+                    <Grid item xs={8}>
+                        <ExchangeBar />
+                    </Grid>
+                    <Grid item xs={4}>
+                        <TxStatus />
+                    </Grid>
+                </Grid>
             </Page>
         </Form>
     );

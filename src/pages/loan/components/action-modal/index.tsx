@@ -190,7 +190,12 @@ const ActionModal: React.FC<ActionModalProps> = ({ current, action, open, onClos
                 />
                 <Box paddingTop={4} />
                 <Grid container justify="space-between">
-                    <Button variant="contained" color="primary" onClick={handleApplyBtnClick}>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={handleApplyBtnClick}
+                        disabled={updateVaultStatus !== 'none'}
+                    >
                         {renderApplyBtnText(action)}
                     </Button>
                     <Button variant="contained" color="secondary" onClick={onClose}>

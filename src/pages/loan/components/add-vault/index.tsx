@@ -1,4 +1,4 @@
-import React, { useState, ReactNode, useCallback } from 'react';
+import React, { useState, ReactNode } from 'react';
 import { Box } from '@material-ui/core';
 import { AddStep } from './types';
 import StepBar from './step-bar';

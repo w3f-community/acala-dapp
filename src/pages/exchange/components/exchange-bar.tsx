@@ -85,8 +85,7 @@ const ExchangeBar: React.FC = () => {
                     defaultAsset={receiveAsset.value}
                     onChange={handleReceiveChange}
                 />
-                <SButton variant="contained" color="primary" onClick={handleExchangeBtcClick}>
-                    {loading && <CircularProgress size={15} style={{ marginRight: 8, color: '#fff' }} />}
+                <SButton variant="contained" color="primary" onClick={handleExchangeBtcClick} disabled={loading}>
                     Exchange
                 </SButton>
             </Grid>

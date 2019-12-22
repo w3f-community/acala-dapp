@@ -5,8 +5,8 @@ import { useTranslate } from '@/hooks/i18n';
 import { getAssetName } from '@/utils';
 import { createTypography } from '@/theme';
 import { useSelector } from 'react-redux';
-import { txRecordSelector } from '@/store/app/selectors';
 import Moment from 'dayjs';
+import { vaultTxRecordSelector } from '@/store/vault/selectors';
 
 const StyledBodyCell = withStyles((theme: Theme) => ({
     root: {
@@ -28,7 +28,7 @@ interface Props {
 
 const TransactionHistory: React.FC<Props> = ({ current }) => {
     const { t } = useTranslate();
-    const txRecord = useSelector(txRecordSelector);
+    const txRecord = useSelector(vaultTxRecordSelector);
 
     if (!current || !txRecord.length) {
         return null;

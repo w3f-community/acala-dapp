@@ -5,6 +5,7 @@ import { isActionOf, RootAction, RootState } from 'typesafe-actions';
 import * as actions from './actions';
 import * as appActions from '../app/actions';
 import { of, concat } from 'rxjs';
+import { Tx } from '../types';
 
 export const createValutEpic: Epic<RootAction, RootAction, RootState> = (action$, state$) =>
     action$.pipe(
@@ -22,20 +23,17 @@ export const createValutEpic: Epic<RootAction, RootAction, RootState> = (action$
                 data.debit.innerToString(),
             );
             const hash = tx.hash.toString();
-            const txRecord = {
+            const txRecord: Tx = {
                 signer: address,
+                hash: hash,
+                status: 'pending',
+                time: new Date().getTime(),
+                type: 'updateVault',
+                data: data,
             };
+
             return concat(
-                of(
-                    appActions.updateTxRecord({
-                        signer: address,
-                        hash: hash,
-                        status: 'pending',
-                        time: new Date().getTime(),
-                        type: 'updateVault',
-                        data: data,
-                    }),
-                ),
+                of(appActions.updateTransition(txRecord)),
                 tx.signAndSend(address).pipe(
                     map(result => {
                         console.log('finally? ', result.isFinalized);
@@ -49,16 +47,7 @@ export const createValutEpic: Epic<RootAction, RootAction, RootState> = (action$
                     map(actions.updateVault.success),
                     take(1),
                 ),
-                of(
-                    appActions.updateTxRecord({
-                        signer: address,
-                        hash: hash,
-                        status: 'success',
-                        time: new Date().getTime(),
-                        type: 'updateVault',
-                        data: data,
-                    }),
-                ),
+                of(appActions.updateTransition({ ...txRecord, time: new Date().getTime(), status: 'success' })),
             );
         }),
     );
