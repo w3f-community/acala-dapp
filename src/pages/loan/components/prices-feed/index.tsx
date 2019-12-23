@@ -9,6 +9,7 @@ import actions from '@/store/actions';
 import { pricesFeedSelector } from '@/store/chain/selectors';
 import { assets } from '@/config';
 import { formatPrice } from '@/components/formatter';
+import Skeleton from '@material-ui/lab/Skeleton';
 
 const PricesFeed: React.FC = () => {
     const { t } = useTranslate();
@@ -18,6 +19,10 @@ const PricesFeed: React.FC = () => {
     useEffect(() => {
         dispatch(actions.chain.fetchPricesFeed.request(Array.from(assets.keys())));
     }, [dispatch]);
+
+    if (!data.length) {
+        return <Skeleton variant="rect" height={240} />;
+    }
 
     return (
         <Card size="normal" elevation={1} header={<Typography variant="subtitle1">{t('Price Feed')}</Typography>}>

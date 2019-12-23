@@ -89,6 +89,7 @@ interface Props {
 }
 
 const ZERO = FixedU128.fromNatural(0);
+
 const VaultsList: React.FC<Props> = ({ onAdd, onSelect }) => {
     const classes = useStyle();
     const systemVaults = useSelector(vaultsSelector);

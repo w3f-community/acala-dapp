@@ -6,6 +6,7 @@ import * as actions from './actions';
 import * as appActions from '../app/actions';
 import { of, concat } from 'rxjs';
 import { Tx } from '../types';
+import { startLoading, endLoading } from '../loading/reducer';
 
 export const createValutEpic: Epic<RootAction, RootAction, RootState> = (action$, state$) =>
     action$.pipe(
@@ -33,6 +34,7 @@ export const createValutEpic: Epic<RootAction, RootAction, RootState> = (action$
             };
 
             return concat(
+                of(startLoading(actions.UPDATE_VAULT)),
                 of(appActions.updateTransition(txRecord)),
                 tx.signAndSend(address).pipe(
                     map(result => {
@@ -47,6 +49,7 @@ export const createValutEpic: Epic<RootAction, RootAction, RootState> = (action$
                     map(actions.updateVault.success),
                     take(1),
                 ),
+                of(endLoading(actions.UPDATE_VAULT)),
                 of(appActions.updateTransition({ ...txRecord, time: new Date().getTime(), status: 'success' })),
             );
         }),

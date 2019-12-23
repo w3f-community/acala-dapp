@@ -7,6 +7,7 @@ import { createTypography } from '@/theme';
 import { useSelector } from 'react-redux';
 import Moment from 'dayjs';
 import { vaultTxRecordSelector } from '@/store/vault/selectors';
+import Skeleton from '@material-ui/lab/Skeleton';
 
 const StyledBodyCell = withStyles((theme: Theme) => ({
     root: {
@@ -31,8 +32,9 @@ const TransactionHistory: React.FC<Props> = ({ current }) => {
     const txRecord = useSelector(vaultTxRecordSelector);
 
     if (!current || !txRecord.length) {
-        return null;
+        return <Skeleton variant="rect" height={240} />;
     }
+
     return (
         <Card
             size="large"

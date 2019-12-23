@@ -14,6 +14,8 @@ import { statusSelector } from '@/store/vault/selectors';
 import FixedU128 from '@/utils/fixed_u128';
 import { calcCollateralRatio, calcStableFee, stableCoinToDebit, collateralToStableCoin } from '@/utils/vault';
 import { STABLE_COIN } from '@/config';
+import { loadingSelector } from '@/store/loading/reducer';
+import rootActions from '@/store/actions';
 
 const Card = withStyles(() => ({
     root: { padding: '66px 35px 60px 29px' },
@@ -96,6 +98,7 @@ const Component: React.FC<Props> = ({ onNext, onPrev }) => {
     const collateralPrice = useSelector(specPriceSelector(selectedAsset));
     const stableCoinPrice = useSelector(specPriceSelector(STABLE_COIN));
     const updateVaultStatus = useSelector(statusSelector('updateVault'));
+    const loading = useSelector(loadingSelector(rootActions.vault.UPDATE_VAULT));
 
     const handleNextBtnClick = () => {
         if (!data.agree.value) {
@@ -182,7 +185,7 @@ const Component: React.FC<Props> = ({ onNext, onPrev }) => {
                             <Button className={bottomClasses.linkBtn}>{t('Cancel')}</Button>
                         </Grid>
                         <Grid item>
-                            <Button variant="contained" color="secondary" onClick={onPrev}>
+                            <Button variant="contained" color="secondary" onClick={onPrev} disabled={loading}>
                                 {t('Previous')}
                             </Button>
                         </Grid>

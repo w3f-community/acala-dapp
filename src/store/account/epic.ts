@@ -1,5 +1,5 @@
 import { Epic } from 'redux-observable';
-import { filter, map, switchMap, startWith, withLatestFrom, endWith, catchError } from 'rxjs/operators';
+import { filter, map, switchMap, startWith, withLatestFrom, endWith, catchError, delay } from 'rxjs/operators';
 import { combineLatest, defer, of } from 'rxjs';
 import { isActionOf, RootAction, RootState } from 'typesafe-actions';
 import { web3Enable, web3Accounts, web3FromAddress } from '@polkadot/extension-dapp';
@@ -37,6 +37,7 @@ export const fetchAssetBalanceEpic: Epic<RootAction, RootAction, RootState> = (a
 export const importAccmountEpic: Epic<RootAction, RootAction, RootState> = (action$, state$) =>
     action$.pipe(
         filter(isActionOf(actions.importAccount.request)),
+        delay(1000), // don't remove this, await 1000ms for load extends
         switchMap(() =>
             defer(async () => {
                 const injected = await web3Enable('Acala Honzon Platform');

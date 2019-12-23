@@ -13,6 +13,7 @@ import { STABLE_COIN } from '@/config';
 import { withStyles } from '@material-ui/styles';
 import { createTypography } from '@/theme';
 import { calcRequiredCollateral, debitToStableCoin, calcCanGenerater, collateralToStableCoin } from '@/utils/vault';
+import Skeleton from '@material-ui/lab/Skeleton';
 
 interface Props {
     current: number;
@@ -41,7 +42,7 @@ const VaultPanel: React.FC<Props> = ({ current }) => {
     const handleShowWithdraw = () => setModalProps({ open: true, action: 'withdraw' });
 
     if (!vault || !userVault) {
-        return null;
+        return <Skeleton variant="rect" height={300} />;
     }
 
     const requiredCollateral = calcRequiredCollateral(

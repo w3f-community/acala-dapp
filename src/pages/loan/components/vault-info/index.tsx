@@ -14,6 +14,7 @@ import {
     calcLiquidationPrice,
 } from '@/utils/vault';
 import FixedU128 from '@/utils/fixed_u128';
+import Skeleton from '@material-ui/lab/Skeleton';
 
 const StyledPaper = withStyles(() => ({
     root: {
@@ -61,7 +62,7 @@ const VaultInfo: React.FC<Props> = ({ current }) => {
     const stableCoinPrice = useSelector(specPriceSelector(STABLE_COIN));
 
     if (!vault || !userVault) {
-        return null;
+        return <Skeleton variant="rect" height={240} />;
     }
 
     return (

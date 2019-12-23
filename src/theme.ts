@@ -86,7 +86,7 @@ const createTheme = (options: ThemeOptions) =>
                     padding: 0,
                     marginBottom: 35,
                     '& .MuiTypography-h6': {
-                        ...createTypography(22, 22, 600, 'Roboto', 'COLOR_BLACK'),
+                        ...createTypography(22, 22, 600, 'Roboto', COLOR_BLACK),
                     },
                 },
             },

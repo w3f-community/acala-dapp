@@ -12,6 +12,9 @@ const SPaper = withStyles((theme: Theme) => ({
     root: {
         padding: theme.spacing(3),
         marginBottom: theme.spacing(2),
+        '&:first-child': {
+            marginBottom: 0,
+        },
     },
 }))(Paper);
 
