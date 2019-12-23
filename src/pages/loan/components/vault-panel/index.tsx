@@ -14,6 +14,7 @@ import { withStyles } from '@material-ui/styles';
 import { createTypography } from '@/theme';
 import { calcRequiredCollateral, debitToStableCoin, calcCanGenerater, collateralToStableCoin } from '@/utils/vault';
 import Skeleton from '@material-ui/lab/Skeleton';
+import useMobileMatch from '@/hooks/mobile-match';
 
 interface Props {
     current: number;
@@ -34,6 +35,7 @@ const VaultPanel: React.FC<Props> = ({ current }) => {
     const collateralAssetName = getAssetName(current);
     const stableCoinAssetName = getAssetName(STABLE_COIN);
     const [modalProps, setModalProps] = useState<Omit<ActionModalProps, 'current'>>({ open: false, action: 'any' });
+    const match = useMobileMatch('sm');
 
     const handleCloseModal = () => setModalProps({ open: false, action: 'any' });
     const handleShowPayBack = () => setModalProps({ open: true, action: 'payback' });
@@ -52,9 +54,9 @@ const VaultPanel: React.FC<Props> = ({ current }) => {
     );
 
     return (
-        <Grid container spacing={5}>
+        <Grid container spacing={5} direction={match ? 'column' : 'row'}>
             <ActionModal {...modalProps} onClose={handleCloseModal} current={current} />
-            <Grid item xs={6}>
+            <Grid item sm={12} lg={6}>
                 <Card
                     size="large"
                     elevation={1}
@@ -112,7 +114,7 @@ const VaultPanel: React.FC<Props> = ({ current }) => {
                     </List>
                 </Card>
             </Grid>
-            <Grid item xs={6}>
+            <Grid item sm={12} lg={6}>
                 <Card
                     size="large"
                     elevation={1}

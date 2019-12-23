@@ -160,6 +160,9 @@ const ActionModal: React.FC<ActionModalProps> = props => {
                 );
             },
             onConfirm: () => {
+                if (!amount) {
+                    return false;
+                }
                 const debitAmount = stableCoinToDebit(
                     FixedU128.fromNatural(amount),
                     vault.debitExchangeRate,
@@ -196,6 +199,9 @@ const ActionModal: React.FC<ActionModalProps> = props => {
                 );
             },
             onConfirm: () => {
+                if (!amount) {
+                    return false;
+                }
                 const debitAmount = stableCoinToDebit(
                     FixedU128.fromNatural(amount),
                     vault.debitExchangeRate,
@@ -238,6 +244,9 @@ const ActionModal: React.FC<ActionModalProps> = props => {
                 );
             },
             onConfirm: () => {
+                if (!amount) {
+                    return false;
+                }
                 dispatch(
                     actions.vault.updateVault.request({
                         asset: current,
@@ -275,6 +284,9 @@ const ActionModal: React.FC<ActionModalProps> = props => {
                 );
             },
             onConfirm: () => {
+                if (!amount) {
+                    return false;
+                }
                 dispatch(
                     actions.vault.updateVault.request({
                         asset: current,

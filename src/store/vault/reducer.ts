@@ -17,12 +17,12 @@ const initialState: VaultState = {
 const STORAGE_KEY = 'vault-tx-storage';
 
 export default createReducer(initialState)
-    .handleAction(actions.updateVault.request, () => ({
-        ...initialState,
+    .handleAction(actions.updateVault.request, state => ({
+        ...state,
         updateVaultStatus: 'pending',
     }))
-    .handleAction(actions.updateVault.success, () => ({
-        ...initialState,
+    .handleAction(actions.updateVault.success, state => ({
+        ...state,
         updateVaultStatus: 'success',
     }))
     .handleAction(actions.reset, state => ({

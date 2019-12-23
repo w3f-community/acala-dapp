@@ -1,6 +1,8 @@
 export default {
-    'No polkadot{.js} extension found, please install it first !':
-        'No polkadot{.js} extension found, please install it first !',
+    'No polkadot{.js} extension found, please install it first!':
+        'No polkadot{.js} extension found, please install it first!',
+    'No account found, please add account in your wallet extension or unlock it!':
+        'No account found, please add account in your wallet extension or unlock it!',
     BTC: 'BTC',
     ETH: '{{asset}}',
     'Interest Rate': 'Interest Rate',

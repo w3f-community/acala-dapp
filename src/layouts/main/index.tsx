@@ -1,15 +1,14 @@
 import React, { ReactNode, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
-import { makeStyles, createStyles, useMediaQuery } from '@material-ui/core';
-import { Theme, useTheme } from '@material-ui/core/styles';
+import { makeStyles, createStyles } from '@material-ui/core';
+import { Theme } from '@material-ui/core/styles';
 import acalaTypes from '@acala-network/types/src/interfaces/runtime/definitions';
 
 import { loadingSelector } from '@/store/loading/reducer';
 import Loading from '@/components/loading';
 import actions from '@/store/actions';
 import { getEndPoint, sideBarConfig } from '@/config';
-import { connectedSelector } from '@/store/chain/selectors';
 import {
     extensionStatusSelector,
     accountListSelector,
@@ -23,6 +22,7 @@ import NoExtension from './components/no-extension';
 import NoAccount from './components/no-account';
 import SelectAccount from './components/select-account';
 import useMobileMatch from '@/hooks/mobile-match';
+import TxStatus from '@/components/tx-status';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -57,12 +57,10 @@ const MainLayout: React.FC<Props> = props => {
     const dispatch = useDispatch();
     const classes = useStyles();
     const connectLoading = useSelector(loadingSelector(actions.chain.CONNECT_ASYNC));
-    const importAccountLoading = useSelector(loadingSelector(actions.account.IMPORT_ACCOUNT));
     const extensionStatus = useSelector(extensionStatusSelector);
     const accountStatus = useSelector(accountStatusSelector);
 
     const accountList = useSelector(accountListSelector);
-    const account = useSelector(accountSelector);
     const accountError = useSelector(accountErrorSelector);
 
     const match = useMobileMatch('sm');
@@ -82,7 +80,7 @@ const MainLayout: React.FC<Props> = props => {
         return null;
     };
 
-    // pls. don't change this, beacuse we must ensure that DAPP is aleardy connected the chain-net
+    // don't change this, beacuse we must ensure that DAPP connected the blockchain successful
     if (connectLoading) {
         return <Loading />;
     }
@@ -94,6 +92,7 @@ const MainLayout: React.FC<Props> = props => {
             <NoExtension open={accountError === 'no extends found'} />
             <NoAccount open={accountError === 'no accounts found'} />
             <SelectAccount open={accountList.length !== 0 && accountStatus === 'none'} />
+            <TxStatus />
         </div>
     );
 };

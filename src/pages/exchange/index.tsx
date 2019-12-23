@@ -44,14 +44,7 @@ const Exchange: React.FC = () => {
         <Form context={formContext} data={defaultFormData}>
             <Page padding="0 55px">
                 <Title>{t('Exchange')}</Title>
-                <Grid container spacing={6}>
-                    <Grid item xs={8}>
-                        <ExchangeBar />
-                    </Grid>
-                    <Grid item xs={4}>
-                        <TxStatus />
-                    </Grid>
-                </Grid>
+                <ExchangeBar />
             </Page>
         </Form>
     );

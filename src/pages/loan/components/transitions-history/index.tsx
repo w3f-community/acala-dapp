@@ -1,13 +1,17 @@
 import React from 'react';
 import Card from '@/components/card';
 import { Typography, Table, TableBody, TableHead, TableRow, TableCell, Theme, withStyles } from '@material-ui/core';
-import { useTranslate } from '@/hooks/i18n';
-import { getAssetName } from '@/utils';
-import { createTypography } from '@/theme';
-import { useSelector } from 'react-redux';
 import Moment from 'dayjs';
+import { useSelector } from 'react-redux';
+
+import { useTranslate } from '@/hooks/i18n';
+import { getAssetName, formatHash } from '@/utils';
+import { createTypography } from '@/theme';
 import { vaultTxRecordSelector } from '@/store/vault/selectors';
 import Skeleton from '@material-ui/lab/Skeleton';
+import useMobileMatch from '@/hooks/mobile-match';
+
+import Mobile from './mobile';
 
 const StyledBodyCell = withStyles((theme: Theme) => ({
     root: {
@@ -30,9 +34,14 @@ interface Props {
 const TransactionHistory: React.FC<Props> = ({ current }) => {
     const { t } = useTranslate();
     const txRecord = useSelector(vaultTxRecordSelector);
+    const match = useMobileMatch('sm');
 
     if (!current || !txRecord.length) {
         return <Skeleton variant="rect" height={240} />;
+    }
+
+    if (match) {
+        return <Mobile current={current} />;
     }
 
     return (
@@ -48,7 +57,6 @@ const TransactionHistory: React.FC<Props> = ({ current }) => {
                         <StyledHeaderCell>{t('Token')}</StyledHeaderCell>
                         <StyledHeaderCell>{t('Action')}</StyledHeaderCell>
                         <StyledHeaderCell>{t('When')}</StyledHeaderCell>
-                        <StyledHeaderCell>{t('From')}</StyledHeaderCell>
                         <StyledHeaderCell>{t('Tx Hash')}</StyledHeaderCell>
                     </TableRow>
                 </TableHead>
@@ -58,8 +66,7 @@ const TransactionHistory: React.FC<Props> = ({ current }) => {
                             <StyledBodyCell>{getAssetName(data.asset)}</StyledBodyCell>
                             <StyledBodyCell>{type}</StyledBodyCell>
                             <StyledBodyCell>{Moment(time).format('YYYY/MM/DD HH:mm')}</StyledBodyCell>
-                            <StyledBodyCell>{''}</StyledBodyCell>
-                            <StyledBodyCell>{hash.slice(0, 10) + '...'}</StyledBodyCell>
+                            <StyledBodyCell>{formatHash(hash)}</StyledBodyCell>
                         </TableRow>
                     ))}
                 </TableBody>

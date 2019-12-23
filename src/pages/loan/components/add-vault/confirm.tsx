@@ -16,19 +16,20 @@ import { calcCollateralRatio, calcStableFee, stableCoinToDebit, collateralToStab
 import { STABLE_COIN } from '@/config';
 import { loadingSelector } from '@/store/loading/reducer';
 import rootActions from '@/store/actions';
+import clsx from 'clsx';
 
-const Card = withStyles(() => ({
+const SPaper = withStyles(() => ({
     root: { padding: '66px 35px 60px 29px' },
 }))(Paper);
 
-const StyledListItem = withStyles(() => ({
+const SListItem = withStyles(() => ({
     root: {
         marginBottom: 24,
         ...createTypography(21, 28, 600, 'Roboto', '#424242'),
     },
 }))(ListItem);
 
-const useListStyles = makeStyles(() =>
+const useStyles = makeStyles(() =>
     createStyles({
         item: {
             marginBottom: 24,
@@ -40,6 +41,9 @@ const useListStyles = makeStyles(() =>
                 textDecoration: 'underline',
                 cursor: 'pointer',
             },
+        },
+        error: {
+            color: 'red',
         },
     }),
 );
@@ -66,12 +70,12 @@ const useBottomStyles = makeStyles(() =>
 
 const VaultInfoItem: React.FC<{ name: string; value: string }> = ({ name, value }) => {
     return (
-        <StyledListItem button>
+        <SListItem button>
             <Grid container justify="space-between">
                 <span>{name}</span>
                 <span>{value}</span>
             </Grid>
-        </StyledListItem>
+        </SListItem>
     );
 };
 
@@ -83,7 +87,7 @@ interface Props {
 
 const Component: React.FC<Props> = ({ onNext, onPrev }) => {
     const { t } = useTranslate();
-    const listClasses = useListStyles();
+    const classes = useStyles();
     const bottomClasses = useBottomStyles();
     const { data, setValue, setError, clearError } = useForm(formContext);
     const dispatch = useDispatch();
@@ -139,7 +143,7 @@ const Component: React.FC<Props> = ({ onNext, onPrev }) => {
     }
 
     return (
-        <Card square={true} elevation={1}>
+        <SPaper square={true} elevation={1}>
             <Grid container justify="center">
                 <Grid item xs={6}>
                     <List disablePadding>
@@ -171,10 +175,18 @@ const Component: React.FC<Props> = ({ onNext, onPrev }) => {
                             </>
                         )}
                     </List>
-                    <Grid container className={listClasses.protocol} alignItems="center">
+                    <Grid
+                        container
+                        className={clsx(classes.protocol, {
+                            [classes.error]: data.agree.error,
+                        })}
+                        alignItems="center"
+                    >
                         <Checkbox value={data.agree.value} onChange={handleAgree} />
-                        <span>{t('I have read and accepted the ')}</span>
-                        <a className={'underline'}>{t('Terms and Conditions')}</a>
+                        <span>
+                            {t('I have read and accepted the ')}
+                            <a className={'underline'}>{t('Terms and Conditions')}</a>
+                        </span>
                     </Grid>
                 </Grid>
             </Grid>
@@ -202,7 +214,7 @@ const Component: React.FC<Props> = ({ onNext, onPrev }) => {
                     </Grid>
                 </Grid>
             </Grid>
-        </Card>
+        </SPaper>
     );
 };
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dialog, DialogTitle, DialogContent, Button, DialogActions, Slide, withStyles, Theme } from '@material-ui/core';
+import { Dialog, DialogContent, Button, DialogActions, Slide, withStyles, Theme } from '@material-ui/core';
 import { TransitionProps } from '@material-ui/core/transitions';
 import { useTranslate } from '@/hooks/i18n';
 import { POLKADOT_EXTENSIONS_ADDRESS } from '@/config';
@@ -18,7 +18,7 @@ const NoExtension: React.FC<Props> = ({ open }) => {
     };
     return (
         <Dialog open={open} TransitionComponent={Transition}>
-            <DialogContent>{t('No polkadot{.js} extension found, please install it first !')}</DialogContent>
+            <DialogContent>{t('No polkadot{.js} extension found, please install it first!')}</DialogContent>
             <DialogActions>
                 <Button variant="contained" onClick={handleGetExtensionBtnClick} color="primary">
                     GET IT

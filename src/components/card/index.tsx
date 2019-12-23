@@ -7,9 +7,15 @@ const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         root: {
             padding: '28px 24px',
+            [theme.breakpoints.down('sm')]: {
+                padding: '36px 33px',
+            },
         },
         rootLarge: {
             padding: '36px 46px',
+            [theme.breakpoints.down('sm')]: {
+                padding: '36px 33px',
+            },
         },
         header: {
             paddingBottom: theme.spacing(2),

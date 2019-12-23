@@ -8,7 +8,6 @@ import { u8aToNumber } from '@/utils';
 import FixedU128 from '@/utils/fixed_u128';
 
 import { startLoading, endLoading } from '../loading/reducer';
-import * as chainActions from '../chain/actions';
 import * as actions from './actions';
 import { AssetList } from '../types';
 
@@ -37,7 +36,7 @@ export const fetchAssetBalanceEpic: Epic<RootAction, RootAction, RootState> = (a
 export const importAccmountEpic: Epic<RootAction, RootAction, RootState> = (action$, state$) =>
     action$.pipe(
         filter(isActionOf(actions.importAccount.request)),
-        delay(1000), // don't remove this, await 1000ms for load extends
+        delay(1000), // don't remove this, await 1000ms for loading chrome extends
         switchMap(() =>
             defer(async () => {
                 const injected = await web3Enable('Acala Honzon Platform');
@@ -97,8 +96,6 @@ export const fetchVaultsEpic: Epic<RootAction, RootAction, RootState> = (action$
     action$.pipe(
         filter(isActionOf(actions.fetchVaults.request)),
         withLatestFrom(state$),
-        filter(([_, state]) => state.chain.app !== null),
-        filter(([_, state]) => state.account.account !== null),
         switchMap(([action, state]) => {
             const app = state.chain.app!;
             const account = state.account.account!;
