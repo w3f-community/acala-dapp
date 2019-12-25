@@ -12,7 +12,13 @@ import { specVaultSelector, specPriceSelector } from '@/store/chain/selectors';
 import { STABLE_COIN } from '@/config';
 import { withStyles } from '@material-ui/styles';
 import { createTypography } from '@/theme';
-import { calcRequiredCollateral, debitToStableCoin, calcCanGenerater, collateralToStableCoin } from '@/utils/vault';
+import {
+    calcRequiredCollateral,
+    debitToUSD,
+    debitToStableCoin,
+    calcCanGenerater,
+    collateralToUSD,
+} from '@/utils/vault';
 import Skeleton from '@material-ui/lab/Skeleton';
 import useMobileMatch from '@/hooks/mobile-match';
 
@@ -38,17 +44,17 @@ const VaultPanel: React.FC<Props> = ({ current }) => {
     const match = useMobileMatch('sm');
 
     const handleCloseModal = useCallback(() => setModalProps({ open: false, action: 'any' }), []);
-    const handleShowPayBack = () => setModalProps({ open: true, action: 'payback' });
-    const handleShowGenerate = () => setModalProps({ open: true, action: 'generate' });
-    const handleShowDeposit = () => setModalProps({ open: true, action: 'deposit' });
-    const handleShowWithdraw = () => setModalProps({ open: true, action: 'withdraw' });
+    const handleShowPayBack = useCallback(() => setModalProps({ open: true, action: 'payback' }), []);
+    const handleShowGenerate = useCallback(() => setModalProps({ open: true, action: 'generate' }), []);
+    const handleShowDeposit = useCallback(() => setModalProps({ open: true, action: 'deposit' }), []);
+    const handleShowWithdraw = useCallback(() => setModalProps({ open: true, action: 'withdraw' }), []);
 
     if (!vault || !userVault) {
         return <Skeleton variant="rect" height={300} />;
     }
 
     const requiredCollateral = calcRequiredCollateral(
-        debitToStableCoin(userVault.debit, vault.debitExchangeRate, stableCoinPrice),
+        debitToUSD(userVault.debit, vault.debitExchangeRate, stableCoinPrice),
         vault.requiredCollateralRatio,
         collateralPrice,
     );
@@ -67,7 +73,7 @@ const VaultPanel: React.FC<Props> = ({ current }) => {
                             <Asset>
                                 <Formatter
                                     type="price"
-                                    data={debitToStableCoin(userVault.debit, vault.debitExchangeRate, stableCoinPrice)}
+                                    data={debitToUSD(userVault.debit, vault.debitExchangeRate, stableCoinPrice)}
                                     prefix="$"
                                 />
                             </Asset>
@@ -79,9 +85,7 @@ const VaultPanel: React.FC<Props> = ({ current }) => {
                             <ListItemText
                                 primary={t('Can Pay Back')}
                                 secondary={t('{{number}} {{asset}}', {
-                                    number: formatBalance(
-                                        debitToStableCoin(userVault.debit, vault.debitExchangeRate, stableCoinPrice),
-                                    ),
+                                    number: formatBalance(debitToStableCoin(userVault.debit, vault.debitExchangeRate)),
                                     asset: stableCoinAssetName,
                                 })}
                             />
@@ -95,12 +99,8 @@ const VaultPanel: React.FC<Props> = ({ current }) => {
                                 secondary={t('{{number}} {{asset}}', {
                                     number: formatBalance(
                                         calcCanGenerater(
-                                            collateralToStableCoin(userVault.collateral, collateralPrice),
-                                            debitToStableCoin(
-                                                userVault.debit,
-                                                vault.debitExchangeRate,
-                                                stableCoinPrice,
-                                            ),
+                                            collateralToUSD(userVault.collateral, collateralPrice),
+                                            debitToUSD(userVault.debit, vault.debitExchangeRate, stableCoinPrice),
                                             vault.requiredCollateralRatio,
                                         ),
                                     ),

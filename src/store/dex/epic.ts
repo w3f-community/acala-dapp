@@ -1,5 +1,5 @@
 import { Epic } from 'redux-observable';
-import { filter, map, switchMap, withLatestFrom, take, catchError } from 'rxjs/operators';
+import { filter, map, switchMap, withLatestFrom, catchError, flatMap, takeUntil } from 'rxjs/operators';
 import { isActionOf, RootAction, RootState } from 'typesafe-actions';
 import * as actions from './actions';
 import { concat, combineLatest, of } from 'rxjs';
@@ -8,6 +8,7 @@ import { u8aToNumber } from '@/utils';
 import { startLoading, endLoading } from '../loading/reducer';
 import * as appActions from '../app/actions';
 import { Tx } from '../types';
+import { txLog$, txResultHandler$ } from '@/utils/epic';
 
 export const createValutEpic: Epic<RootAction, RootAction, RootState> = (action$, state$) =>
     action$.pipe(
@@ -37,23 +38,23 @@ export const createValutEpic: Epic<RootAction, RootAction, RootState> = (action$
                 of(startLoading(actions.SWAP_CURRENCY)),
                 of(appActions.updateTransition(txRecord)),
                 tx.signAndSend(address).pipe(
-                    map(result => {
-                        console.log('finally? ', result.isFinalized);
-                        // Loop through Vec<EventRecord> to display all events
-                        result.events.forEach(({ phase, event: { data, method, section } }: any) => {
-                            console.log(`\t' ${phase}: ${section}.${method}:: ${data}`);
-                        });
-                        return result;
-                    }),
-                    filter((result: any) => result.isFinalized),
-                    map(actions.swapCurrency.success),
-                    catchError((error: Error) => {
-                        return of(actions.swapCurrency.failure(error.message));
-                    }),
-                    take(1),
+                    txLog$,
+                    txResultHandler$,
+                    flatMap(result =>
+                        of(
+                            appActions.updateTransition({ ...txRecord, time: new Date().getTime(), status: 'success' }),
+                            actions.swapCurrency.success(result),
+                        ),
+                    ),
+                    catchError((error: Error) =>
+                        of(
+                            appActions.updateTransition({ ...txRecord, time: new Date().getTime(), status: 'failure' }),
+                            actions.swapCurrency.failure(error.message),
+                        ),
+                    ),
+                    takeUntil(action$.ofType(actions.swapCurrency.success, actions.swapCurrency.failure)),
                 ),
                 of(endLoading(actions.SWAP_CURRENCY)),
-                of(appActions.updateTransition({ ...txRecord, time: new Date().getTime(), status: 'success' })),
             );
         }),
     );

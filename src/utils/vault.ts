@@ -5,17 +5,14 @@ import FixedU128 from './fixed_u128';
  */
 
 const ZERO = FixedU128.fromNatural(0);
+
 // convert debit to stable coin amount
-export function debitToStableCoin(
-    debit: FixedU128,
-    debitExchangeRate: FixedU128,
-    stableCoinPrice: FixedU128,
-): FixedU128 {
+export function debitToUSD(debit: FixedU128, debitExchangeRate: FixedU128, stableCoinPrice: FixedU128): FixedU128 {
     return debit.mul(debitExchangeRate).mul(stableCoinPrice);
 }
 
 // convert stable coin amount to debits
-export function stableCoinToDebit(
+export function USDToDebit(
     stableVaule: FixedU128,
     debitExchangeRate: FixedU128,
     stableCoinPrice: FixedU128,
@@ -26,8 +23,12 @@ export function stableCoinToDebit(
     return stableVaule.div(stableCoinPrice).div(debitExchangeRate);
 }
 
+export function debitToStableCoin(debit: FixedU128, debitExchangeRate: FixedU128): FixedU128 {
+    return debit.mul(debitExchangeRate);
+}
+
 // convert collateral to stable coin amount
-export function collateralToStableCoin(collateral: FixedU128, collateralPrice: FixedU128): FixedU128 {
+export function collateralToUSD(collateral: FixedU128, collateralPrice: FixedU128): FixedU128 {
     return collateral.mul(collateralPrice);
 }
 

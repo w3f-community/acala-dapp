@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 import { useSelector } from 'react-redux';
-import { transitionsSelector } from '@/store/app/selectors';
+import { transactionsSelector } from '@/store/app/selectors';
 import { Grid, Theme, Slide, Typography, makeStyles, createStyles, Snackbar } from '@material-ui/core';
 import { TransitionProps } from '@material-ui/core/transitions';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
@@ -9,6 +9,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import { Tx } from '@/store/types';
 import { formatHash } from '@/utils';
 import { green } from '@material-ui/core/colors';
+import TxDetail from '../tx-detail';
 
 function SlideTransition(props: TransitionProps) {
     return <Slide {...props} direction="left" />;
@@ -34,7 +35,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const TxStatus: React.FC = () => {
     const classes = useStyles();
-    const transitions = useSelector(transitionsSelector);
+    const transactions = useSelector(transactionsSelector);
 
     const renderTransition = (item: Tx): ReactNode => {
         const actionStrMap = {
@@ -44,7 +45,9 @@ const TxStatus: React.FC = () => {
         return (
             <Grid container direction="column" alignItems="flex-start" className={classes.content}>
                 <Grid item>
-                    <Typography variant="h2">{actionStrMap[item.type]}</Typography>
+                    <Typography variant="h2">
+                        <TxDetail data={item} />
+                    </Typography>
                 </Grid>
                 <Grid item>
                     <Typography variant="body2">tx: {formatHash(item.hash)}</Typography>
@@ -67,7 +70,7 @@ const TxStatus: React.FC = () => {
 
     return (
         <div>
-            {transitions.map(item => (
+            {transactions.map(item => (
                 <Snackbar
                     key={`${item.hash}-${item.status}`}
                     ContentProps={{

@@ -1,4 +1,4 @@
-import React, { useState, ChangeEventHandler, useEffect, ReactElement, useRef } from 'react';
+import React, { useState, ChangeEventHandler, useEffect, ReactElement, useRef, useCallback } from 'react';
 import {
     Dialog,
     DialogTitle,
@@ -28,10 +28,10 @@ import { statusSelector } from '@/store/vault/selectors';
 import { specPriceSelector, specVaultSelector } from '@/store/chain/selectors';
 import FixedU128 from '@/utils/fixed_u128';
 import {
-    stableCoinToDebit,
-    debitToStableCoin,
+    USDToDebit,
+    debitToUSD,
     calcCollateralRatio,
-    collateralToStableCoin,
+    collateralToUSD,
     calcCanGenerater,
     calcLiquidationPrice,
     calcRequiredCollateral,
@@ -81,7 +81,7 @@ export type ActionModalProps = {
 
 const ActionModal: React.FC<ActionModalProps> = props => {
     const init = useRef<boolean>(false);
-    const { action, current } = props;
+    const { action, current, onClose } = props;
     const { t } = useTranslate();
     const dispatch = useDispatch();
     const stableCoinPrice = useSelector(specPriceSelector(STABLE_COIN));
@@ -97,21 +97,25 @@ const ActionModal: React.FC<ActionModalProps> = props => {
     const [borrowed, setBorrowed] = useState<FixedU128>(ZERO);
     const [collateralRatio, setCollateralRatio] = useState<FixedU128>(ZERO);
     const [liquidationPrice, setLiquidationPrice] = useState<FixedU128>(ZERO);
+    const _onClose = useCallback(() => {
+        setAmount(0);
+        onClose && onClose();
+    }, [onClose]);
 
     useEffect(() => {
         if (vault && userVault && init.current === false) {
-            const debitValue = debitToStableCoin(userVault.debit, vault.debitExchangeRate, stableCoinPrice);
+            const debitValue = debitToUSD(userVault.debit, vault.debitExchangeRate, stableCoinPrice);
 
             setBorrowed(debitValue);
             setCollateralRatio(
                 calcCollateralRatio(
-                    collateralToStableCoin(userVault.collateral, collateralPrice),
-                    debitToStableCoin(userVault.debit, vault.debitExchangeRate, stableCoinPrice),
+                    collateralToUSD(userVault.collateral, collateralPrice),
+                    debitToUSD(userVault.debit, vault.debitExchangeRate, stableCoinPrice),
                 ),
             );
             setLiquidationPrice(
                 calcLiquidationPrice(
-                    debitToStableCoin(userVault.debit, vault.debitExchangeRate, stableCoinPrice),
+                    debitToUSD(userVault.debit, vault.debitExchangeRate, stableCoinPrice),
                     vault.requiredCollateralRatio,
                     userVault.collateral,
                 ),
@@ -124,29 +128,32 @@ const ActionModal: React.FC<ActionModalProps> = props => {
         return null;
     }
 
-    const debitValue = debitToStableCoin(userVault.debit, vault.debitExchangeRate, stableCoinPrice);
-    const collateralVaule = collateralToStableCoin(userVault.collateral, collateralPrice);
+    // vault info
+    const debitValue = debitToUSD(userVault.debit, vault.debitExchangeRate, stableCoinPrice);
+    const collateralVaule = collateralToUSD(userVault.collateral, collateralPrice);
     const canGenerate = calcCanGenerater(collateralVaule, debitValue, vault.requiredCollateralRatio);
     const requiredCollateral = calcRequiredCollateral(
-        debitToStableCoin(userVault.debit, vault.debitExchangeRate, stableCoinPrice),
+        debitToUSD(userVault.debit, vault.debitExchangeRate, stableCoinPrice),
         vault.requiredCollateralRatio,
         collateralPrice,
     );
     const ableWithdraw = userVault.collateral.sub(requiredCollateral);
 
     const baseProps = {
+        ...props,
         amount,
         borrowed,
         collateralRatio,
         liquidationPrice,
-        ...props,
+        onClose: _onClose,
     };
 
     if (action === 'payback') {
         return createActionModal({
             title: t('Payback {{ asset}}', { asset: stableCoinAssetName }),
             confirmBtnText: t('Payback'),
-            placeholder: `${debitValue.toNumber()} max`,
+            placeholder: `${formatBalance(debitValue)} max`,
+            startAdornment: stableCoinAssetName,
             onChange: value => {
                 if (FixedU128.fromNatural(value).isGreaterThan(debitValue)) {
                     return false;
@@ -164,11 +171,7 @@ const ActionModal: React.FC<ActionModalProps> = props => {
                 if (!amount) {
                     return false;
                 }
-                const debitAmount = stableCoinToDebit(
-                    FixedU128.fromNatural(amount),
-                    vault.debitExchangeRate,
-                    stableCoinPrice,
-                );
+                const debitAmount = USDToDebit(FixedU128.fromNatural(amount), vault.debitExchangeRate, stableCoinPrice);
                 dispatch(
                     actions.vault.updateVault.request({
                         asset: current,
@@ -185,7 +188,8 @@ const ActionModal: React.FC<ActionModalProps> = props => {
         return createActionModal({
             title: t('Generate {{asset}}', { asset: stableCoinAssetName }),
             confirmBtnText: t('Generate'),
-            placeholder: `${canGenerate.toNumber()} max`,
+            placeholder: `${formatBalance(canGenerate)} max`,
+            startAdornment: stableCoinAssetName,
             onChange: value => {
                 if (FixedU128.fromNatural(value).isGreaterThan(canGenerate)) {
                     return false;
@@ -203,11 +207,7 @@ const ActionModal: React.FC<ActionModalProps> = props => {
                 if (!amount) {
                     return false;
                 }
-                const debitAmount = stableCoinToDebit(
-                    FixedU128.fromNatural(amount),
-                    vault.debitExchangeRate,
-                    stableCoinPrice,
-                );
+                const debitAmount = USDToDebit(FixedU128.fromNatural(amount), vault.debitExchangeRate, stableCoinPrice);
                 dispatch(
                     actions.vault.updateVault.request({
                         asset: current,
@@ -224,12 +224,13 @@ const ActionModal: React.FC<ActionModalProps> = props => {
         return createActionModal({
             title: t('Disposit {{asset}}', { asset: currentAssetName }),
             confirmBtnText: t('Deposit'),
-            placeholder: `${collateralbalance} max`,
+            placeholder: `${formatBalance(collateralbalance)} max`,
+            startAdornment: currentAssetName,
             onChange: value => {
                 if (FixedU128.fromNatural(value).isGreaterThan(collateralbalance)) {
                     return false;
                 }
-                const newCollateralVaule = collateralToStableCoin(
+                const newCollateralVaule = collateralToUSD(
                     userVault.collateral.add(FixedU128.fromNatural(value)),
                     collateralPrice,
                 );
@@ -264,12 +265,13 @@ const ActionModal: React.FC<ActionModalProps> = props => {
         return createActionModal({
             title: t('Withdraw {{asset}}', { asset: currentAssetName }),
             confirmBtnText: t('Withdraw'),
-            placeholder: `${ableWithdraw} max`,
+            placeholder: `${formatBalance(ableWithdraw)} max`,
+            startAdornment: currentAssetName,
             onChange: value => {
                 if (FixedU128.fromNatural(value).isGreaterThan(ableWithdraw)) {
                     return false;
                 }
-                const newCollateralVaule = collateralToStableCoin(
+                const newCollateralVaule = collateralToUSD(
                     userVault.collateral.sub(FixedU128.fromNatural(value)),
                     collateralPrice,
                 );
@@ -310,6 +312,7 @@ interface BaseActionModalProps {
     liquidationPrice: FixedU128;
     amount: number;
     placeholder?: string;
+    startAdornment?: string;
     onChange?: (value: number) => void;
     onConfirm?: () => void;
 }
@@ -322,6 +325,7 @@ const BaseActionModal: React.FC<BaseActionModalProps & ActionModalProps> = ({
     liquidationPrice,
     amount,
     placeholder,
+    startAdornment,
     open,
     onChange,
     onConfirm,
@@ -363,7 +367,7 @@ const BaseActionModal: React.FC<BaseActionModalProps & ActionModalProps> = ({
                         placeholder: placeholder,
                         value: !amount ? '' : amount,
                         onChange: handleInput,
-                        startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        endAdornment: <InputAdornment position="start">{startAdornment}</InputAdornment>,
                     }}
                 />
                 <Box paddingTop={4} />

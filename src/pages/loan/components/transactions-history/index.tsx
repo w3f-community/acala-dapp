@@ -12,6 +12,7 @@ import Skeleton from '@material-ui/lab/Skeleton';
 import useMobileMatch from '@/hooks/mobile-match';
 
 import Mobile from './mobile';
+import TxDetail from '@/components/tx-detail';
 
 const StyledBodyCell = withStyles((theme: Theme) => ({
     root: {
@@ -61,12 +62,14 @@ const TransactionHistory: React.FC<Props> = ({ current }) => {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {txRecord.map(({ data, time, type, hash }) => (
-                        <TableRow key={`transaction-history-${hash}`}>
-                            <StyledBodyCell>{getAssetName(data.asset)}</StyledBodyCell>
-                            <StyledBodyCell>{type}</StyledBodyCell>
-                            <StyledBodyCell>{Moment(time).format('YYYY/MM/DD HH:mm')}</StyledBodyCell>
-                            <StyledBodyCell>{formatHash(hash)}</StyledBodyCell>
+                    {txRecord.map(item => (
+                        <TableRow key={`transaction-history-${item.hash}`}>
+                            <StyledBodyCell>{getAssetName(item.data.asset)}</StyledBodyCell>
+                            <StyledBodyCell>
+                                <TxDetail data={item} />
+                            </StyledBodyCell>
+                            <StyledBodyCell>{Moment(item.time).format('YYYY/MM/DD HH:mm')}</StyledBodyCell>
+                            <StyledBodyCell>{formatHash(item.hash)}</StyledBodyCell>
                         </TableRow>
                     ))}
                 </TableBody>

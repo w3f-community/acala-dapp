@@ -6,13 +6,7 @@ import { useSelector } from 'react-redux';
 import { specVaultSelector, specPriceSelector } from '@/store/chain/selectors';
 import { STABLE_COIN } from '@/config';
 import { specUserVaultSelector } from '@/store/account/selectors';
-import {
-    calcCollateralRatio,
-    calcStableFee,
-    collateralToStableCoin,
-    debitToStableCoin,
-    calcLiquidationPrice,
-} from '@/utils/vault';
+import { calcCollateralRatio, calcStableFee, collateralToUSD, debitToUSD, calcLiquidationPrice } from '@/utils/vault';
 import FixedU128 from '@/utils/fixed_u128';
 import Skeleton from '@material-ui/lab/Skeleton';
 import useMobileMatch from '@/hooks/mobile-match';
@@ -76,9 +70,7 @@ const Card: React.FC<CardProps> = ({ header, content, formatterProps }) => {
     return (
         <SPaper elevation={match ? 0 : 2} square={true} className={classes.card}>
             <Grid container direction={match ? 'row' : 'column'} justify="space-between" alignItems="center">
-                <Typography variant="body2" style={{ whiteSpace: 'nowrap' }}>
-                    {header}
-                </Typography>
+                <Typography variant="body2">{header}</Typography>
                 <Typography variant="body1">
                     <Formatter data={content} {...formatterProps} />
                 </Typography>
@@ -116,8 +108,8 @@ const VaultInfo: React.FC<Props> = ({ current }) => {
                 <Card
                     header={t('Current Collateral Ratio')}
                     content={calcCollateralRatio(
-                        collateralToStableCoin(userVault.collateral, collateralPrice),
-                        debitToStableCoin(userVault.debit, vault.debitExchangeRate, stableCoinPrice),
+                        collateralToUSD(userVault.collateral, collateralPrice),
+                        debitToUSD(userVault.debit, vault.debitExchangeRate, stableCoinPrice),
                     )}
                     formatterProps={{ type: 'ratio' }}
                 />
@@ -129,7 +121,7 @@ const VaultInfo: React.FC<Props> = ({ current }) => {
                 <Card
                     header={t('Liquidation Price')}
                     content={calcLiquidationPrice(
-                        debitToStableCoin(userVault.debit, vault.debitExchangeRate, stableCoinPrice),
+                        debitToUSD(userVault.debit, vault.debitExchangeRate, stableCoinPrice),
                         vault.requiredCollateralRatio,
                         userVault.collateral,
                     )}

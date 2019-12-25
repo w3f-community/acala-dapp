@@ -8,4 +8,4 @@ export const statusSelector: (type: StatusType) => Selector<TxStatus> = type => 
     };
 };
 
-export const vaultTxRecordSelector: Selector<Tx[]> = state => state.vault.txRecord;
+export const vaultTxRecordSelector: Selector<Tx[]> = state => state.vault.txRecord.slice().reverse();

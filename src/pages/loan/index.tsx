@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useCallback, useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Grid, Box, makeStyles, createStyles, Theme } from '@material-ui/core';
 
@@ -13,7 +13,7 @@ import VaultsList from './components/vaults-list';
 import SystemInfo from './components/system-info';
 import CollateralInfo from './components/collateral-info';
 import VaultPanel from './components/vault-panel';
-import TransactionHistory from './components/transitions-history';
+import TransactionHistory from './components/transactions-history';
 import VaultInfo from './components/vault-info';
 import AddVault from './components/add-vault';
 
@@ -28,7 +28,8 @@ const useStyle = makeStyles((theme: Theme) =>
         systemInfo: {
             flex: '0 0 349px',
             marginLeft: 48,
-            [theme.breakpoints.down('sm')]: {
+            [theme.breakpoints.down('md')]: {
+                flex: '1 1 100%',
                 marginTop: 32,
                 marginLeft: 0,
             },
@@ -46,12 +47,11 @@ const Loan: React.FC = () => {
     const [currentVault, setCurrentVault] = useState<number>(0);
     const [addVaultStatus, setAddVaultstatus] = useState<boolean>(false);
     const userVaults = useSelector(accountVaultsSelector);
-    const updateCount = useRef<number>(0);
-    const match = useMobileMatch('sm');
     const classes = useStyle();
-
-    const showAddVault = () => setAddVaultstatus(true);
-    const hideAddVault = () => setAddVaultstatus(false);
+    const showAddVault = useCallback(() => setAddVaultstatus(true), []);
+    const hideAddVault = useCallback(() => setAddVaultstatus(false), []);
+    const match = useMobileMatch('sm');
+    const mdMatch = useMobileMatch('md');
 
     useEffect(() => {
         // fetch user vaults info
@@ -67,16 +67,10 @@ const Loan: React.FC = () => {
     }, [dispatch]);
 
     useEffect(() => {
-        // if user vaults is empty, show add vault view
-        if (userVaults.length === 0 && updateCount.current != 0) {
-            setAddVaultstatus(true);
-        }
         // set default vault
         if (userVaults.length) {
             setCurrentVault(userVaults[0].asset);
         }
-
-        updateCount.current += 1;
     }, [userVaults]);
 
     const handleVaultSelect = (vault: number) => {
@@ -92,8 +86,8 @@ const Loan: React.FC = () => {
             <Grid
                 container
                 direction={match ? 'column' : 'row'}
-                wrap="nowrap"
                 justify="space-between"
+                wrap={mdMatch ? 'wrap' : 'nowrap'}
                 className={classes.detail}
             >
                 <Grid item xs={12} className={classes.vaultInfo}>
@@ -109,7 +103,7 @@ const Loan: React.FC = () => {
                         </>
                     )}
                 </Grid>
-                <Grid item xs={12} className={classes.systemInfo}>
+                <Grid item md={12} className={classes.systemInfo}>
                     <PricesFeed />
                     <Box paddingTop={3} />
                     <SystemInfo />

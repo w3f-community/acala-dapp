@@ -36,5 +36,5 @@ export function formatAddress(account: Account | null, length = 8, suffix = '...
 }
 
 export function formatHash(hash: string): string {
-    return hash.replace(/^(.{6}).*?(.{4})$/, '$1.....$2');
+    return hash.replace(/^(.{6}).*?(.{7})$/, '$1.....$2');
 }

@@ -1,5 +1,5 @@
 import { Epic } from 'redux-observable';
-import { filter, map, switchMap, withLatestFrom, take } from 'rxjs/operators';
+import { filter, switchMap, withLatestFrom, catchError, flatMap, takeUntil } from 'rxjs/operators';
 import { isActionOf, RootAction, RootState } from 'typesafe-actions';
 
 import * as actions from './actions';
@@ -7,17 +7,17 @@ import * as appActions from '../app/actions';
 import { of, concat } from 'rxjs';
 import { Tx } from '../types';
 import { startLoading, endLoading } from '../loading/reducer';
+import { txLog$, txResultHandler$ } from '@/utils/epic';
 
 export const createValutEpic: Epic<RootAction, RootAction, RootState> = (action$, state$) =>
     action$.pipe(
         filter(isActionOf(actions.updateVault.request)),
         withLatestFrom(state$),
-        filter(([_, state]) => state.chain.app !== null),
-        filter(([_, state]) => state.account.account !== null),
         switchMap(([action, state]) => {
             const data = action.payload;
             const app = state.chain.app!;
             const address = state.account.account!.address;
+
             const tx = app.tx.honzon.updateVault(
                 data.asset,
                 data.collateral.innerToString(),
@@ -37,20 +37,31 @@ export const createValutEpic: Epic<RootAction, RootAction, RootState> = (action$
                 of(startLoading(actions.UPDATE_VAULT)),
                 of(appActions.updateTransition(txRecord)),
                 tx.signAndSend(address).pipe(
-                    map(result => {
-                        console.log('finally? ', result.isFinalized);
-                        // Loop through Vec<EventRecord> to display all events
-                        result.events.forEach(({ phase, event: { data, method, section } }: any) => {
-                            console.log(`\t' ${phase}: ${section}.${method}:: ${data}`);
-                        });
-                        return result;
-                    }),
-                    filter((result: any) => result.isFinalized),
-                    map(actions.updateVault.success),
-                    take(1),
+                    txLog$,
+                    txResultHandler$,
+                    flatMap(result =>
+                        of(
+                            appActions.updateTransition({
+                                ...txRecord,
+                                time: new Date().getTime(),
+                                status: 'success',
+                            }),
+                            actions.updateVault.success(result),
+                        ),
+                    ),
+                    catchError((error: Error) =>
+                        of(
+                            appActions.updateTransition({
+                                ...txRecord,
+                                time: new Date().getTime(),
+                                status: 'failure',
+                            }),
+                            actions.updateVault.failure(error.message),
+                        ),
+                    ),
+                    takeUntil(action$.ofType(actions.updateVault.success, actions.updateVault.failure)),
                 ),
                 of(endLoading(actions.UPDATE_VAULT)),
-                of(appActions.updateTransition({ ...txRecord, time: new Date().getTime(), status: 'success' })),
             );
         }),
     );

@@ -13,7 +13,7 @@ import actions from '@/store/actions';
 import { formContext } from './context';
 import { statusSelector } from '@/store/vault/selectors';
 import FixedU128 from '@/utils/fixed_u128';
-import { calcCollateralRatio, calcStableFee, stableCoinToDebit, collateralToStableCoin } from '@/utils/vault';
+import { calcCollateralRatio, calcStableFee, USDToDebit, collateralToUSD } from '@/utils/vault';
 import { STABLE_COIN } from '@/config';
 import { loadingSelector } from '@/store/loading/reducer';
 import rootActions from '@/store/actions';
@@ -115,7 +115,7 @@ const Component: React.FC<Props> = ({ onNext, onPrev, onCancel }) => {
             actions.vault.updateVault.request({
                 asset: selectedAsset,
                 collateral: collateral,
-                debit: stableCoinToDebit(borrow, vault.debitExchangeRate, stableCoinPrice),
+                debit: USDToDebit(borrow, vault.debitExchangeRate, stableCoinPrice),
             }),
         );
     };
@@ -151,10 +151,7 @@ const Component: React.FC<Props> = ({ onNext, onPrev, onCancel }) => {
                                 <VaultInfoItem
                                     name={t('Collateralization Ratio')}
                                     value={formatRatio(
-                                        calcCollateralRatio(
-                                            collateralToStableCoin(collateral, collateralPrice),
-                                            borrow,
-                                        ),
+                                        calcCollateralRatio(collateralToUSD(collateral, collateralPrice), borrow),
                                     )}
                                 />
                                 <VaultInfoItem

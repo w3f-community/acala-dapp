@@ -54,6 +54,14 @@ const CollateralInfo: React.FC<Props> = ({ current }) => {
                     </ListItem>
                     <ListItem disableGutters>
                         <Grid container justify="space-between">
+                            <Typography variant="body2">{t('Required Collateral Ratio')}</Typography>
+                            <Typography variant="body2">
+                                <Formatter type="ratio" data={selectedVaults.requiredCollateralRatio} suffix="%" />
+                            </Typography>
+                        </Grid>
+                    </ListItem>
+                    <ListItem disableGutters>
+                        <Grid container justify="space-between">
                             <Typography variant="body2">{t('Stability Fee/Interest')}</Typography>
                             <Formatter type="ratio" data={calcStableFee(selectedVaults.stabilityFee)} suffix="%" />
                         </Grid>

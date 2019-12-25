@@ -3,38 +3,38 @@ import * as actions from './actions';
 import { Tx } from '../types';
 
 export interface AppState {
-    transitions: Tx[];
+    transactions: Tx[];
 }
 
 const initialState: AppState = {
-    transitions: [],
+    transactions: [],
 };
 
 export default createReducer(initialState)
     .handleAction(actions.updateTransition, (state, action) => {
         const data = action.payload;
-        const transitions = state.transitions.slice();
-        const result = transitions.find(item => item.hash === data.hash);
+        const transactions = state.transactions.slice();
+        const result = transactions.find(item => item.hash === data.hash);
 
         if (result) {
             Object.assign(result, data);
         } else {
-            transitions.push(data);
+            transactions.push(data);
         }
 
-        return Object.assign({}, state, { transitions });
+        return Object.assign({}, state, { transactions });
     })
     .handleAction(actions.removeTransition, (state, action) => {
         const hash = action.payload;
-        const transitions = state.transitions.slice();
-        const index = transitions.findIndex(item => item.hash === hash);
+        const transactions = state.transactions.slice();
+        const index = transactions.findIndex(item => item.hash === hash);
 
         if (index !== -1) {
-            transitions.splice(index, 1);
+            transactions.splice(index, 1);
         }
 
         return {
             ...state,
-            transitions,
+            transactions,
         };
     });

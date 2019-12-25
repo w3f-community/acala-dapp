@@ -2,6 +2,7 @@ import { createReducer } from 'typesafe-actions';
 import { TxStatus, Tx } from '../types';
 import * as actions from './actions';
 import * as appActions from '../app/actions';
+import FixedU128 from '@/utils/fixed_u128';
 
 export interface VaultState {
     updateVaultStatus: TxStatus;
@@ -25,6 +26,10 @@ export default createReducer(initialState)
         ...state,
         updateVaultStatus: 'success',
     }))
+    .handleAction(actions.updateVault.failure, state => ({
+        ...state,
+        updateVaultStatus: 'none',
+    }))
     .handleAction(actions.reset, state => ({
         ...state,
         updateVaultStatus: 'none',
@@ -33,7 +38,7 @@ export default createReducer(initialState)
         const record = state.txRecord.slice();
         const data = action.payload;
 
-        if (data.type !== 'updateVault') {
+        if (data.type !== 'updateVault' || data.status !== 'success') {
             return state;
         }
 
@@ -53,10 +58,15 @@ export default createReducer(initialState)
         return { ...state, txRecord: record };
     })
     .handleAction(actions.loadTxRecord, state => {
-        const storageData = window.localStorage.getItem(STORAGE_KEY);
-
+        const storageData = JSON.parse(window.localStorage.getItem(STORAGE_KEY) || '[]');
+        // for FixedU128
+        storageData &&
+            storageData.forEach((item: { data: { collateral: any; debit: any } }) => {
+                item.data.collateral = FixedU128.fromParts(item.data.collateral.inner);
+                item.data.debit = FixedU128.fromParts(item.data.debit.inner);
+            });
         if (storageData) {
-            return { ...state, txRecord: JSON.parse(storageData) };
+            return { ...state, txRecord: storageData };
         }
         return state;
     });

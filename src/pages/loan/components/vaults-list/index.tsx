@@ -10,7 +10,7 @@ import { vaultsSelector, pricesFeedSelector } from '@/store/chain/selectors';
 import { accountVaultsSelector } from '@/store/account/selectors';
 import Formatter from '@/components/formatter';
 import clsx from 'clsx';
-import { collateralToStableCoin, debitToStableCoin, calcCollateralRatio } from '@/utils/vault';
+import { collateralToUSD, debitToUSD, calcCollateralRatio } from '@/utils/vault';
 import { STABLE_COIN } from '@/config';
 import FixedU128 from '@/utils/fixed_u128';
 import useMobileMatch from '@/hooks/mobile-match';
@@ -28,7 +28,7 @@ const useStyle = makeStyles((theme: Theme) =>
             justifyContent: 'space-between',
 
             flexShrink: 0,
-            width: 120,
+            minWidth: 120,
             height: 100,
             padding: '19px 16px 8px',
             cursor: 'pointer',
@@ -118,8 +118,8 @@ const VaultsList: React.FC<Props> = ({ onAdd, onSelect }) => {
                                 <Formatter
                                     type="ratio"
                                     data={calcCollateralRatio(
-                                        collateralToStableCoin(item.collateral, collateralPrice.price),
-                                        debitToStableCoin(item.debit, vault.debitExchangeRate, stableCoinPrice.price),
+                                        collateralToUSD(item.collateral, collateralPrice.price),
+                                        debitToUSD(item.debit, vault.debitExchangeRate, stableCoinPrice.price),
                                     )}
                                 />
                             </Typography>

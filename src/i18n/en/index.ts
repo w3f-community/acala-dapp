@@ -83,4 +83,9 @@ export default {
     'Your loan is created, and aUSD is generated!': 'Your loan is created, and aUSD is generated!',
     'Payback {{ asset}}': 'Payback {{ asset}}',
     'Generate {{asset}}': 'Generate {{asset}}',
+    deposit: 'deposit',
+    generate: 'generate',
+    payback: 'payback',
+    'Required Collateral Ratio': 'Required Collateral Ratio',
+    withdraw: 'withdraw',
 };

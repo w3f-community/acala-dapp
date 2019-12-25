@@ -26,7 +26,7 @@ import {
     calcStableFee,
     calcCanGenerater,
     calcLiquidationPrice,
-    collateralToStableCoin,
+    collateralToUSD,
 } from '@/utils/vault';
 import { STABLE_COIN } from '@/config';
 import { withStyles } from '@material-ui/styles';
@@ -126,12 +126,12 @@ const Component: React.FC<Props> = ({ onNext, onPrev, onCancel }) => {
     }
 
     const maxBorrowd = calcCanGenerater(
-        collateralToStableCoin(collateral, collateralPrice),
+        collateralToUSD(collateral, collateralPrice),
         FixedU128.fromNatural(0),
         vault.requiredCollateralRatio,
     );
 
-    const collateralRatio = calcCollateralRatio(collateralToStableCoin(collateral, collateralPrice), borrow);
+    const collateralRatio = calcCollateralRatio(collateralToUSD(collateral, collateralPrice), borrow);
 
     const handleNextBtnClick = () => {
         // ensure collateral is not empty

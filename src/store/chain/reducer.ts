@@ -11,11 +11,13 @@ const initialState: ChainState = {
 };
 
 export default createReducer(initialState)
-    .handleAction(actions.connectAsync.success, (state, action) => ({
-        ...state,
-        app: action.payload,
-        connected: true,
-    }))
+    .handleAction(actions.connectAsync.success, (state, action) => {
+        return {
+            ...state,
+            app: action.payload,
+            connected: true,
+        };
+    })
     .handleAction(actions.fetchPricesFeed.success, (state, action) => ({
         ...state,
         pricesFeed: action.payload,
