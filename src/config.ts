@@ -8,10 +8,9 @@ import statesIcon from '@/assets/states.svg';
 import aUSDIcon from '@/assets/coin/aUSD.svg';
 import btcIcon from '@/assets/coin/btc.svg';
 
+// TODO: polkadot icon
 import ethIcon from '@/assets/coin/eth.svg';
-/* TODO: will support?
-import ltcIcon from '@/assets/coin/ltc.svg';
-*/
+// import ltcIcon from '@/assets/coin/ltc.svg';
 
 export interface Asset {
     name: string;
@@ -22,7 +21,7 @@ export interface Asset {
 export const assets: Map<number, Asset> = new Map([
     [0, { name: 'ACA', fullName: 'Acalc' }],
     [1, { name: 'aUSD', icon: aUSDIcon, fullName: 'aUSD' }],
-    [2, { name: 'DOT', fullName: 'PolkaDOT', icon: ethIcon }],
+    [2, { name: 'DOT', icon: ethIcon, fullName: 'PolkaDOT' }],
     [3, { name: 'XBTC', icon: btcIcon, fullName: 'Bitcoin' }],
 ]);
 

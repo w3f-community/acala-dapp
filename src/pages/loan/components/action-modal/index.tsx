@@ -1,4 +1,4 @@
-import React, { useState, ReactEventHandler, ChangeEventHandler, useEffect, ReactElement } from 'react';
+import React, { useState, ChangeEventHandler, useEffect, ReactElement, useRef } from 'react';
 import {
     Dialog,
     DialogTitle,
@@ -80,8 +80,8 @@ export type ActionModalProps = {
 };
 
 const ActionModal: React.FC<ActionModalProps> = props => {
+    const init = useRef<boolean>(false);
     const { action, current } = props;
-
     const { t } = useTranslate();
     const dispatch = useDispatch();
     const stableCoinPrice = useSelector(specPriceSelector(STABLE_COIN));
@@ -99,7 +99,7 @@ const ActionModal: React.FC<ActionModalProps> = props => {
     const [liquidationPrice, setLiquidationPrice] = useState<FixedU128>(ZERO);
 
     useEffect(() => {
-        if (vault && userVault) {
+        if (vault && userVault && init.current === false) {
             const debitValue = debitToStableCoin(userVault.debit, vault.debitExchangeRate, stableCoinPrice);
 
             setBorrowed(debitValue);
@@ -116,8 +116,9 @@ const ActionModal: React.FC<ActionModalProps> = props => {
                     userVault.collateral,
                 ),
             );
+            init.current = true;
         }
-    }, []);
+    }, [vault, userVault, stableCoinPrice, collateralPrice]);
 
     if (!vault || !userVault) {
         return null;
@@ -342,7 +343,7 @@ const BaseActionModal: React.FC<BaseActionModalProps & ActionModalProps> = ({
             dispatch(actions.vault.reset());
             onClose && onClose();
         }
-    }, [updateVaultStatus]);
+    }, [updateVaultStatus, dispatch, onClose]);
 
     return (
         <Dialog open={open} onClose={onClose}>

@@ -1,23 +1,13 @@
 import React, { useEffect, useState, ChangeEvent } from 'react';
-import { Typography, List, ListItem, Grid, Select, MenuItem, Theme } from '@material-ui/core';
+import { Typography, List, ListItem, Grid } from '@material-ui/core';
 import { useTranslate } from '@/hooks/i18n';
 import Card from '@/components/card';
 import { useSelector } from 'react-redux';
 import { vaultsSelector, specVaultSelector } from '@/store/chain/selectors';
-import { getAssetName } from '@/utils';
 import Formatter from '@/components/formatter';
-import FixedU128 from '@/utils/fixed_u128';
 import { calcStableFee } from '@/utils/vault';
-import { withStyles } from '@material-ui/styles';
-import { createTypography } from '@/theme';
 import Skeleton from '@material-ui/lab/Skeleton';
-
-const SMenuItem = withStyles((theme: Theme) => ({
-    root: {
-        marginBottom: 8,
-        ...createTypography(18, 22, 600, 'Roboto', theme.palette.common.black),
-    },
-}))(MenuItem);
+import CollateralSelect from '@/components/collateral-select';
 
 interface Props {
     current: number;
@@ -48,13 +38,7 @@ const CollateralInfo: React.FC<Props> = ({ current }) => {
             header={
                 <Grid container justify="space-between" alignItems="center">
                     <Typography variant="subtitle1">{t('Collateral')}</Typography>
-                    <Select value={selected} onChange={handleChange} disableUnderline>
-                        {vaults.map(item => (
-                            <SMenuItem value={item.asset} key={`colateral-${item.asset}`}>
-                                {getAssetName(item.asset)}
-                            </SMenuItem>
-                        ))}
-                    </Select>
+                    <CollateralSelect selected={selected} onChange={handleChange} vaults={vaults} />
                 </Grid>
             }
         >

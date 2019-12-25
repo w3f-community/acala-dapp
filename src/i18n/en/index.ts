@@ -76,4 +76,11 @@ export default {
     'Enter Amount': 'Enter Amount',
     'Select Token': 'Select Token',
     Select: 'Select',
+    Ok: 'Ok',
+    'New Collateral Ratio': 'New Collateral Ratio',
+    'Withdraw {{asset}}': 'Withdraw {{asset}}',
+    'Disposit {{asset}}': 'Disposit {{asset}}',
+    'Your loan is created, and aUSD is generated!': 'Your loan is created, and aUSD is generated!',
+    'Payback {{ asset}}': 'Payback {{ asset}}',
+    'Generate {{asset}}': 'Generate {{asset}}',
 };

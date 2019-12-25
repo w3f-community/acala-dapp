@@ -1,4 +1,4 @@
-import React, { ReactEventHandler, FormEvent } from 'react';
+import React, { ReactEventHandler, useEffect, ChangeEvent } from 'react';
 import {
     Table,
     TableHead,
@@ -26,14 +26,22 @@ import { useForm } from '@/hooks/form';
 import { formContext } from './context';
 import FixedU128 from '@/utils/fixed_u128';
 import { calcStableFee } from '@/utils/vault';
+import useMobileMatch from '@/hooks/mobile-match';
+import SelectCollateralMobile from './select-collateral-mobile';
 
-const useCardStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         root: { padding: '66px 35px 60px 29px' },
         bottom: {
             paddingTop: 73,
             '& .MuiButton-root': {
                 marginLeft: theme.spacing(2),
+            },
+            [theme.breakpoints.down('sm')]: {
+                paddingTop: 32,
+                '& .MuiButton-root': {
+                    marginLeft: 0,
+                },
             },
         },
     }),
@@ -73,17 +81,30 @@ interface Props {
 const Component: React.FC<Props> = ({ onNext, onCancel }) => {
     const { t } = useTranslate();
     // set default value
-    const cardClasses = useCardStyles();
+    const classes = useStyles();
     const { data, setValue } = useForm(formContext);
     const selectedAsset = data.asset.value;
     const vaults = filterEmptyVault(useSelector(vaultsSelector));
     const balances = useSelector(balancesSelector);
+    const match = useMobileMatch('sm');
 
     const handleNextBtnClick = () => onNext();
 
     const handleAssetRadioSelect: ReactEventHandler<HTMLInputElement> = e => {
         const asset = Number(e.currentTarget.value);
         setValue('asset', asset);
+    };
+
+    useEffect(() => {
+        // auto select
+        if (!data.asset.value && vaults.length !== 0) {
+            setValue('asset', vaults[0].asset);
+        }
+    }, [vaults, data.asset.value, setValue]);
+
+    const handleAssetSelect = (e: ChangeEvent<{ value: unknown }>) => {
+        const result = Number(e.target.value);
+        setValue('asset', result);
     };
 
     if (!balances.length) {
@@ -96,8 +117,38 @@ const Component: React.FC<Props> = ({ onNext, onCancel }) => {
         {},
     );
 
+    const renderBottom = () => {
+        return (
+            <Grid container justify={match ? 'space-between' : 'flex-end'} className={classes.bottom}>
+                <Button variant="contained" color="secondary" onClick={onCancel}>
+                    {t('Cancel')}
+                </Button>
+                <Button variant="contained" color="primary" onClick={handleNextBtnClick}>
+                    {t('Next')}
+                </Button>
+            </Grid>
+        );
+    };
+
+    // ensure vaults is not empty
+    if (!vaults.length) {
+        return null;
+    }
+
+    if (match) {
+        return (
+            <SelectCollateralMobile
+                renderBottom={renderBottom}
+                vaults={vaults}
+                balances={balancesMap}
+                onSelect={handleAssetSelect}
+                selected={data.asset.value}
+            />
+        );
+    }
+
     return (
-        <Paper square={true} elevation={1} className={cardClasses.root}>
+        <Paper square={true} elevation={1} className={classes.root}>
             <Table>
                 <TableHead>
                     <TableRow>
@@ -139,14 +190,7 @@ const Component: React.FC<Props> = ({ onNext, onCancel }) => {
                     ))}
                 </TableBody>
             </Table>
-            <Grid container justify="flex-end" className={cardClasses.bottom}>
-                <Button variant="contained" color="secondary" onClick={onCancel}>
-                    {t('Cancel')}
-                </Button>
-                <Button variant="contained" color="primary" onClick={handleNextBtnClick}>
-                    {t('Next')}
-                </Button>
-            </Grid>
+            {renderBottom()}
         </Paper>
     );
 };

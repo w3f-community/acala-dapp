@@ -5,7 +5,7 @@ function correct(source: number, base = 12): number {
     return parseFloat(source.toPrecision(base));
 }
 
-function format(source: number, precision = 10000): number {
+function format(source: number, precision = 100): number {
     source = correct(source);
     return correct(Math.floor(source * precision) / precision);
 }

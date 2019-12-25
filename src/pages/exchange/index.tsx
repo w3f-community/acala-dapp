@@ -1,11 +1,9 @@
 import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { Grid } from '@material-ui/core';
 
 import Title from '@/components/page/title';
 import { useTranslate } from '@/hooks/i18n';
 import Page from '@/components/page';
-import TxStatus from '@/components/tx-status';
 import actions from '@/store/actions';
 import { DEX_TOKENS, STABLE_COIN } from '@/config';
 import FixedU128 from '@/utils/fixed_u128';

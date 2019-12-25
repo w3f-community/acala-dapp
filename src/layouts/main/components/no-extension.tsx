@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dialog, DialogContent, Button, DialogActions, Slide, withStyles, Theme } from '@material-ui/core';
+import { Dialog, DialogContent, Button, DialogActions, Slide } from '@material-ui/core';
 import { TransitionProps } from '@material-ui/core/transitions';
 import { useTranslate } from '@/hooks/i18n';
 import { POLKADOT_EXTENSIONS_ADDRESS } from '@/config';

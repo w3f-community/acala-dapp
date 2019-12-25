@@ -1,11 +1,8 @@
-import { WsProvider, ApiRx } from '@polkadot/api';
 import { Epic } from 'redux-observable';
-import { filter, mergeMap, timeout, map, timeoutWith, concatMap, delay } from 'rxjs/operators';
-import { of, concat } from 'rxjs';
+import { filter, map, delay } from 'rxjs/operators';
 import { isActionOf, RootAction, RootState } from 'typesafe-actions';
 
 import * as actions from './actions';
-import { Tx } from '../types';
 
 export const autoRemoveTransitionEpic: Epic<RootAction, RootAction, RootState> = action$ =>
     action$.pipe(

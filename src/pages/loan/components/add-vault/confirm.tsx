@@ -1,5 +1,6 @@
 import React, { ChangeEventHandler, useEffect } from 'react';
-import { Grid, Button, Paper, List, ListItem, makeStyles, createStyles, Checkbox, withStyles } from '@material-ui/core';
+import clsx from 'clsx';
+import { Grid, Paper, List, ListItem, makeStyles, createStyles, Checkbox, withStyles, Theme } from '@material-ui/core';
 import { useSelector, useDispatch } from 'react-redux';
 import { useTranslate } from '@/hooks/i18n';
 import { createTypography } from '@/theme';
@@ -16,20 +17,30 @@ import { calcCollateralRatio, calcStableFee, stableCoinToDebit, collateralToStab
 import { STABLE_COIN } from '@/config';
 import { loadingSelector } from '@/store/loading/reducer';
 import rootActions from '@/store/actions';
-import clsx from 'clsx';
+import Bottom from './bottom';
 
-const SPaper = withStyles(() => ({
-    root: { padding: '66px 35px 60px 29px' },
+const SPaper = withStyles((theme: Theme) => ({
+    root: {
+        padding: '66px 35px 60px 29px',
+        [theme.breakpoints.down('sm')]: {
+            paddingTop: 40,
+        },
+    },
 }))(Paper);
 
-const SListItem = withStyles(() => ({
+const SListItem = withStyles((theme: Theme) => ({
     root: {
+        padding: 0,
         marginBottom: 24,
         ...createTypography(21, 28, 600, 'Roboto', '#424242'),
+        [theme.breakpoints.down('sm')]: {
+            marginBottom: 24,
+            ...createTypography(15, 22, 600, 'Roboto', theme.palette.common.black),
+        },
     },
 }))(ListItem);
 
-const useStyles = makeStyles(() =>
+const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         item: {
             marginBottom: 24,
@@ -45,24 +56,11 @@ const useStyles = makeStyles(() =>
         error: {
             color: 'red',
         },
-    }),
-);
-
-const useBottomStyles = makeStyles(() =>
-    createStyles({
-        root: {
-            paddingTop: 66,
-        },
-        note: {
-            width: 352,
-            ...createTypography(14, 19, 400, 'Roboto', '#757575'),
-        },
-        linkBtn: {
-            minWidth: 0,
-            textDecoration: 'underline',
-            color: '#757575',
-            '&:hover': {
-                textDecoration: 'underline',
+        bottom: {
+            marginTop: 63,
+            justifyContent: 'flex-end',
+            [theme.breakpoints.down('sm')]: {
+                marginTop: 40,
             },
         },
     }),
@@ -85,10 +83,9 @@ interface Props {
     onPrev: () => void;
 }
 
-const Component: React.FC<Props> = ({ onNext, onPrev }) => {
+const Component: React.FC<Props> = ({ onNext, onPrev, onCancel }) => {
     const { t } = useTranslate();
     const classes = useStyles();
-    const bottomClasses = useBottomStyles();
     const { data, setValue, setError, clearError } = useForm(formContext);
     const dispatch = useDispatch();
 
@@ -145,7 +142,7 @@ const Component: React.FC<Props> = ({ onNext, onPrev }) => {
     return (
         <SPaper square={true} elevation={1}>
             <Grid container justify="center">
-                <Grid item xs={6}>
+                <Grid item xs={12} lg={6}>
                     <List disablePadding>
                         {vault && balance && (
                             <>
@@ -181,39 +178,25 @@ const Component: React.FC<Props> = ({ onNext, onPrev }) => {
                             [classes.error]: data.agree.error,
                         })}
                         alignItems="center"
+                        wrap="nowrap"
                     >
                         <Checkbox value={data.agree.value} onChange={handleAgree} />
                         <span>
                             {t('I have read and accepted the ')}
-                            <a className={'underline'}>{t('Terms and Conditions')}</a>
+                            <a className={'underline'} href="/">
+                                {t('Terms and Conditions')}
+                            </a>
                         </span>
                     </Grid>
                 </Grid>
             </Grid>
-            <Grid container className={bottomClasses.root} justify="flex-end">
-                <Grid item>
-                    <Grid container spacing={2}>
-                        <Grid item>
-                            <Button className={bottomClasses.linkBtn}>{t('Cancel')}</Button>
-                        </Grid>
-                        <Grid item>
-                            <Button variant="contained" color="secondary" onClick={onPrev} disabled={loading}>
-                                {t('Previous')}
-                            </Button>
-                        </Grid>
-                        <Grid item>
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                onClick={handleNextBtnClick}
-                                disabled={updateVaultStatus === 'pending'}
-                            >
-                                {t('Next')}
-                            </Button>
-                        </Grid>
-                    </Grid>
-                </Grid>
-            </Grid>
+            <Bottom
+                nextBtnDisabled={loading}
+                onPrev={onPrev}
+                onNext={handleNextBtnClick}
+                onCancel={onCancel}
+                className={classes.bottom}
+            />
         </SPaper>
     );
 };

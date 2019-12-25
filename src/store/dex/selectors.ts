@@ -1,5 +1,5 @@
 import { Selector } from '@/types/store';
-import { BalanceData, TxStatus, DexLiquidityPoolData } from '../types';
+import { TxStatus, DexLiquidityPoolData } from '../types';
 
 type StatusType = 'swapCurrency';
 

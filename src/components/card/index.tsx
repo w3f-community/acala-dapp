@@ -8,13 +8,13 @@ const useStyles = makeStyles((theme: Theme) =>
         root: {
             padding: '28px 24px',
             [theme.breakpoints.down('sm')]: {
-                padding: '36px 33px',
+                padding: '24px 30px',
             },
         },
         rootLarge: {
             padding: '36px 46px',
             [theme.breakpoints.down('sm')]: {
-                padding: '36px 33px',
+                padding: '32px 30px',
             },
         },
         header: {

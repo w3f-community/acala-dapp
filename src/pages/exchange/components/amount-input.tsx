@@ -1,12 +1,9 @@
-import React, { useState, useEffect, ChangeEvent, useRef } from 'react';
-import { Grid, withStyles, Theme, Typography, Select, TextField } from '@material-ui/core';
+import React, { useState, useEffect, ChangeEvent } from 'react';
+import { Grid, withStyles, Theme, Typography, TextField } from '@material-ui/core';
 import { createTypography } from '@/theme';
 import TokenSelect from '@/components/token-select';
 import { DEX_TOKENS } from '@/config';
 import { useTranslate } from '@/hooks/i18n';
-import { useSelector } from 'react-redux';
-import { specBalanceSelector } from '@/store/account/selectors';
-import FixedU128 from '@/utils/fixed_u128';
 
 const SubTitle = withStyles((theme: Theme) => ({
     root: {
@@ -40,10 +37,12 @@ const AmountInput: React.FC<AmountInputProps> = ({ title, defaultAsset = 1, valu
     const { t } = useTranslate();
     const [asset, setAsset] = useState<number>(defaultAsset);
 
+    /* eslint-disable */
     useEffect(() => {
         // notify assetRef change
         onChange(asset, value);
     }, [asset]);
+    /* eslint-enable */
 
     const handleTokenChange = (assetId: number) => setAsset(assetId);
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {

@@ -1,13 +1,12 @@
 import React from 'react';
 import Card from '@/components/card';
-import { Typography, Grid, Theme, withStyles } from '@material-ui/core';
+import { Typography, Grid } from '@material-ui/core';
 import { useTranslate } from '@/hooks/i18n';
-import { getAssetName, formatHash } from '@/utils';
+import { formatHash } from '@/utils';
 import { useSelector } from 'react-redux';
 import Moment from 'dayjs';
 import { vaultTxRecordSelector } from '@/store/vault/selectors';
 import Skeleton from '@material-ui/lab/Skeleton';
-import useMobileMatch from '@/hooks/mobile-match';
 
 interface Props {
     current: number;
@@ -16,7 +15,6 @@ interface Props {
 const TransactionHistory: React.FC<Props> = ({ current }) => {
     const { t } = useTranslate();
     const txRecord = useSelector(vaultTxRecordSelector);
-    const match = useMobileMatch('sm');
 
     if (!current || !txRecord.length) {
         return <Skeleton variant="rect" height={240} />;

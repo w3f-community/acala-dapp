@@ -3,14 +3,17 @@ import { Grid, Typography, Theme, makeStyles, createStyles } from '@material-ui/
 import clsx from 'clsx';
 
 import { useTranslate } from '@/hooks/i18n';
-import { AddStep } from './types';
 import RightArrow from '@/assets/right-arrow.svg';
 import { createTypography } from '@/theme';
-import { formContext } from './context';
 import { getAssetName } from '@/utils';
 import { useForm } from '@/hooks/form';
+import useMobileMatch from '@/hooks/mobile-match';
 
-interface StepData {
+import { AddStep } from './types';
+import StepBarMobile from './step-bar-mobile';
+import { formContext } from './context';
+
+export interface StepData {
     key: AddStep;
     title: string;
     desc: string;
@@ -22,6 +25,9 @@ interface Props {
 
 const useStepStyles = makeStyles((theme: Theme) =>
     createStyles({
+        root: {
+            marginBottom: 32,
+        },
         item: {
             ...createTypography(21, 28, 600, 'Roboto', '#757575'),
         },
@@ -42,6 +48,7 @@ const Component: React.FC<Props> = ({ current }) => {
     const { t } = useTranslate();
     const classes = useStepStyles();
     const { data } = useForm(formContext);
+    const match = useMobileMatch('sm');
 
     const steps: Array<StepData> = [
         {
@@ -65,13 +72,17 @@ const Component: React.FC<Props> = ({ current }) => {
 
     const currentStepData = steps.filter(({ key }) => current === key);
 
-    // when step is succes, don't show step-bar
+    if (match) {
+        return <StepBarMobile steps={steps} />;
+    }
+
+    // when current step is success, don't show step-bar
     if (current === 'success') {
         return null;
     }
 
     return (
-        <>
+        <div className={classes.root}>
             <Grid container alignItems="center" spacing={2}>
                 {steps.map(({ key, title }, index) => {
                     return [
@@ -82,11 +93,13 @@ const Component: React.FC<Props> = ({ current }) => {
                                 [classes.active]: key === current,
                             })}
                         >
-                            <Typography variant="inherit">{title}</Typography>
+                            {title}
                         </Grid>,
-                        <Grid item className={classes.arrow} key={`add-vault-step-title-${key}`}>
-                            {index < steps.length - 1 && <img src={RightArrow} alt="right-arrow" />}
-                        </Grid>,
+                        index < steps.length - 1 && (
+                            <Grid item className={classes.arrow} key={`add-vault-step-title-${key}`}>
+                                <img src={RightArrow} alt="right-arrow" />
+                            </Grid>
+                        ),
                     ];
                 })}
             </Grid>
@@ -95,7 +108,7 @@ const Component: React.FC<Props> = ({ current }) => {
                     {desc}
                 </Typography>
             ))}
-        </>
+        </div>
     );
 };
 

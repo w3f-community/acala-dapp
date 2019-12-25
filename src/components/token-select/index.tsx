@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect, useRef } from 'react';
+import React, { FC, useState, useEffect } from 'react';
 import { getAssetIcon, getAssetName } from '@/utils';
 import {
     Grid,
@@ -118,7 +118,7 @@ const TokenSelect: FC<Props> = ({ defaultToken, data, onChange }) => {
     // notify asset changed
     useEffect(() => {
         onChange(asset);
-    }, [asset]);
+    }, [asset, onChange]);
 
     return (
         <>

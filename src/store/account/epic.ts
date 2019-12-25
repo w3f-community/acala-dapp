@@ -116,6 +116,8 @@ export const fetchVaultsEpic: Epic<RootAction, RootAction, RootState> = (action$
                     }));
                 }),
                 map(actions.fetchVaults.success),
+                startWith(startLoading(actions.FETCH_VAULTS)),
+                endWith(endLoading(actions.FETCH_VAULTS)),
             );
         }),
     );

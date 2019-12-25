@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Grid, Box, makeStyles, createStyles, Theme } from '@material-ui/core';
 
 import actions from '@/store/actions';
 import { COLLATERAL, STABLE_COIN, assets } from '@/config';
 import { accountVaultsSelector } from '@/store/account/selectors';
-import Page from '@/components/page';
 import useMobileMatch from '@/hooks/mobile-match';
 
+import Page from '@/components/page';
 import PricesFeed from './components/prices-feed';
 import VaultsList from './components/vaults-list';
 import SystemInfo from './components/system-info';
@@ -16,7 +16,6 @@ import VaultPanel from './components/vault-panel';
 import TransactionHistory from './components/transitions-history';
 import VaultInfo from './components/vault-info';
 import AddVault from './components/add-vault';
-import TxStatus from '@/components/tx-status';
 
 const useStyle = makeStyles((theme: Theme) =>
     createStyles({
@@ -26,14 +25,28 @@ const useStyle = makeStyles((theme: Theme) =>
                 marginTop: 0,
             },
         },
+        systemInfo: {
+            flex: '0 0 349px',
+            marginLeft: 48,
+            [theme.breakpoints.down('sm')]: {
+                marginTop: 32,
+                marginLeft: 0,
+            },
+        },
+        vaultInfo: {
+            [theme.breakpoints.down('sm')]: {
+                marginTop: 32,
+            },
+        },
     }),
 );
 
 const Loan: React.FC = () => {
     const dispatch = useDispatch();
     const [currentVault, setCurrentVault] = useState<number>(0);
-    const [addVaultStatus, setAddVaultstatus] = useState<boolean>();
+    const [addVaultStatus, setAddVaultstatus] = useState<boolean>(false);
     const userVaults = useSelector(accountVaultsSelector);
+    const updateCount = useRef<number>(0);
     const match = useMobileMatch('sm');
     const classes = useStyle();
 
@@ -51,17 +64,19 @@ const Loan: React.FC = () => {
         dispatch(actions.chain.fetchVaults.request(COLLATERAL));
         // load tx record
         dispatch(actions.vault.loadTxRecord());
-    }, []);
+    }, [dispatch]);
 
     useEffect(() => {
-        // if user vaults is empty then show add vault view
-        if (addVaultStatus === false && userVaults.length === 0) {
+        // if user vaults is empty, show add vault view
+        if (userVaults.length === 0 && updateCount.current != 0) {
             setAddVaultstatus(true);
         }
         // set default vault
         if (userVaults.length) {
             setCurrentVault(userVaults[0].asset);
         }
+
+        updateCount.current += 1;
     }, [userVaults]);
 
     const handleVaultSelect = (vault: number) => {
@@ -71,11 +86,17 @@ const Loan: React.FC = () => {
 
     return (
         <Page padding={match ? '20px' : '46px 55px'}>
-            <Grid container spacing={match ? 0 : 6} direction={match ? 'column' : 'row'}>
+            <Grid container direction={match ? 'column' : 'row'}>
                 <VaultsList onAdd={showAddVault} onSelect={handleVaultSelect} />
             </Grid>
-            <Grid container spacing={6} direction={match ? 'column' : 'row'} className={classes.detail}>
-                <Grid item xs={12} lg={8}>
+            <Grid
+                container
+                direction={match ? 'column' : 'row'}
+                wrap="nowrap"
+                justify="space-between"
+                className={classes.detail}
+            >
+                <Grid item xs={12} className={classes.vaultInfo}>
                     {addVaultStatus ? (
                         <AddVault onCancel={hideAddVault} />
                     ) : (
@@ -88,7 +109,7 @@ const Loan: React.FC = () => {
                         </>
                     )}
                 </Grid>
-                <Grid item xs={12} lg={4}>
+                <Grid item xs={12} className={classes.systemInfo}>
                     <PricesFeed />
                     <Box paddingTop={3} />
                     <SystemInfo />

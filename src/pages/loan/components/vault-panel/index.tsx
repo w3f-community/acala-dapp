@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Grid, Typography, List, ListItem, ListItemText, Button, Box, Theme } from '@material-ui/core';
+import React, { useState, useCallback } from 'react';
+import { Grid, Typography, List, ListItem, ListItemText, Button, Theme } from '@material-ui/core';
 
 import Card from '@/components/card';
 import { useTranslate } from '@/hooks/i18n';
@@ -37,7 +37,7 @@ const VaultPanel: React.FC<Props> = ({ current }) => {
     const [modalProps, setModalProps] = useState<Omit<ActionModalProps, 'current'>>({ open: false, action: 'any' });
     const match = useMobileMatch('sm');
 
-    const handleCloseModal = () => setModalProps({ open: false, action: 'any' });
+    const handleCloseModal = useCallback(() => setModalProps({ open: false, action: 'any' }), []);
     const handleShowPayBack = () => setModalProps({ open: true, action: 'payback' });
     const handleShowGenerate = () => setModalProps({ open: true, action: 'generate' });
     const handleShowDeposit = () => setModalProps({ open: true, action: 'deposit' });

@@ -1,4 +1,4 @@
-import React, { Context, useContext, useState, ReactNode, useEffect } from 'react';
+import React, { Context, useContext, useState, ReactNode } from 'react';
 import { set } from 'lodash';
 
 type Error = string;

@@ -68,9 +68,6 @@ export interface UpdateVaultData {
 }
 
 // store state
-export interface AppState {
-    txRecord: Tx[];
-}
 export interface ChainState {
     app: ApiRx | null;
     connected: boolean;
@@ -78,25 +75,6 @@ export interface ChainState {
     pricesFeed: PriceData[];
     vaults: BaseVaultData[];
     totalIssuance: IssuanceData[];
-}
-
-export interface AccountState {
-    // extension status
-    extensionStatus: Status;
-
-    // account import status
-    account: Account | null;
-    accountStatus: Status;
-    accountList: Account[];
-
-    // account information
-    balancas: BalanceData[];
-    vaults: UserVaultData[];
-}
-
-export interface VaultState {
-    updateVaultStatus: TxStatus;
-    [T: string]: any;
 }
 
 export interface DexState {

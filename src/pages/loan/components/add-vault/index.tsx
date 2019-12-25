@@ -1,5 +1,4 @@
 import React, { useState, ReactNode } from 'react';
-import { Box } from '@material-ui/core';
 import { AddStep } from './types';
 import StepBar from './step-bar';
 import SelectCollateral from './select-collateral';
@@ -50,7 +49,6 @@ const AddVault: React.FC<Props> = ({ onCancel }) => {
     return (
         <Form context={formContext} data={initFormValues}>
             <StepBar current={step} />
-            <Box paddingTop={4} />
             {renderCurrentStep(step)}
         </Form>
     );

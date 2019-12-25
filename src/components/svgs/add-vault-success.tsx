@@ -1,7 +1,7 @@
 import React from 'react';
 const AddVaultSuccess: React.FC<{ className?: string }> = ({ className }) => {
     return (
-        <svg width="330px" height="261px" viewBox="0 0 330 261" version="1.1" className={className}>
+        <svg viewBox="0 0 330 261" version="1.1" className={className}>
             <g id="Web-App" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
                 <g id="Self-service-loan---4" transform="translate(-588.000000, -412.000000)" fill="#0132CC">
                     <g id="编组" transform="translate(588.000000, 412.000000)">

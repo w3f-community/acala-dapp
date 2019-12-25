@@ -1,11 +1,11 @@
 import React from 'react';
-import { Grid, Box, Paper, Typography, makeStyles, createStyles, Theme, withStyles } from '@material-ui/core';
+import { Grid, Paper, Typography, makeStyles, createStyles, Theme, withStyles } from '@material-ui/core';
 import { useTranslate } from '@/hooks/i18n';
 import Formatter, { FormatterProps } from '@/components/formatter';
 import { useSelector } from 'react-redux';
-import { vaultsSelector, specVaultSelector, specPriceSelector } from '@/store/chain/selectors';
+import { specVaultSelector, specPriceSelector } from '@/store/chain/selectors';
 import { STABLE_COIN } from '@/config';
-import { specUserVaultSelector, accountVaultsSelector } from '@/store/account/selectors';
+import { specUserVaultSelector } from '@/store/account/selectors';
 import {
     calcCollateralRatio,
     calcStableFee,
@@ -19,8 +19,13 @@ import useMobileMatch from '@/hooks/mobile-match';
 
 const SPaper = withStyles((theme: Theme) => ({
     root: {
+        flex: '1 1 auto',
         height: 133,
         padding: '26px 32px',
+
+        '&:last-child': {
+            marginRight: 0,
+        },
 
         [theme.breakpoints.down('sm')]: {
             height: 'auto',
@@ -32,6 +37,33 @@ const SPaper = withStyles((theme: Theme) => ({
     },
 }))(Paper);
 
+const useStyles = makeStyles((theme: Theme) =>
+    createStyles({
+        container: {
+            marginBottom: '-1%',
+        },
+        paper: {
+            [theme.breakpoints.down('sm')]: {
+                paddingTop: 22,
+                paddingBottom: 27,
+            },
+        },
+        card: {
+            minWidth: 154,
+            width: '19%',
+            marginBottom: '1%',
+            flexGrow: 0,
+            flexShrink: 0,
+            '&:last-child': {
+                marginRight: 0,
+            },
+            [theme.breakpoints.down('sm')]: {
+                width: '100%',
+            },
+        },
+    }),
+);
+
 type CardProps = {
     header: string;
     content: FixedU128;
@@ -40,37 +72,24 @@ type CardProps = {
 
 const Card: React.FC<CardProps> = ({ header, content, formatterProps }) => {
     const match = useMobileMatch('sm');
-
+    const classes = useStyles();
     return (
-        <Grid item xs>
-            <SPaper elevation={match ? 0 : 2} square={true}>
-                <Grid container direction={match ? 'row' : 'column'} justify="space-between" alignItems="center">
-                    <Typography variant="body2" style={{ whiteSpace: 'nowrap' }}>
-                        {header}
-                    </Typography>
-                    <Typography variant="body1">
-                        <Formatter data={content} {...formatterProps} />
-                    </Typography>
-                </Grid>
-            </SPaper>
-        </Grid>
+        <SPaper elevation={match ? 0 : 2} square={true} className={classes.card}>
+            <Grid container direction={match ? 'row' : 'column'} justify="space-between" alignItems="center">
+                <Typography variant="body2" style={{ whiteSpace: 'nowrap' }}>
+                    {header}
+                </Typography>
+                <Typography variant="body1">
+                    <Formatter data={content} {...formatterProps} />
+                </Typography>
+            </Grid>
+        </SPaper>
     );
 };
 
 interface Props {
     current: number;
 }
-
-const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-        paper: {
-            [theme.breakpoints.down('sm')]: {
-                paddingTop: 22,
-                paddingBottom: 27,
-            },
-        },
-    }),
-);
 
 const VaultInfo: React.FC<Props> = ({ current }) => {
     const { t } = useTranslate();
@@ -126,7 +145,7 @@ const VaultInfo: React.FC<Props> = ({ current }) => {
     };
 
     return (
-        <Grid container spacing={match ? 0 : 3} direction={match ? 'column' : 'row'}>
+        <Grid container direction={match ? 'column' : 'row'} justify="space-between" className={classes.container}>
             {match ? (
                 <Paper elevation={match ? 2 : 0} square={true} className={classes.paper}>
                     {renderInfo()}

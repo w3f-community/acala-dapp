@@ -1,5 +1,5 @@
 import { Selector } from '@/types/store';
-import { PriceData, BaseVaultData, IssuanceData, DexLiquidityPoolData } from '../types';
+import { PriceData, BaseVaultData, IssuanceData } from '../types';
 import FixedU128 from '@/utils/fixed_u128';
 
 export const connectedSelector: Selector<boolean> = state => state.chain.connected;

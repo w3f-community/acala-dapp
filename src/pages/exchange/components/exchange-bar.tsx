@@ -1,16 +1,14 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Paper, withStyles, Grid, Button } from '@material-ui/core';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import Skeleton from '@material-ui/lab/Skeleton';
 import ExchangeArrows from '@/assets/exchange-arrows.svg';
 import { useTranslate } from '@/hooks/i18n';
 import AmountInput from './amount-input';
 import FixedU128 from '@/utils/fixed_u128';
-import { STABLE_COIN, DEX_TOKENS } from '@/config';
 import { useDispatch, useSelector } from 'react-redux';
 import actions from '@/store/actions';
 import { specDexLiquidatePoolSelector } from '@/store/dex/selectors';
-import { Form, useForm } from '@/hooks/form';
+import { useForm } from '@/hooks/form';
 import { formContext } from './context';
 import { calcReceive, calcPay } from '@/utils/vault';
 import { loadingSelector } from '@/store/loading/reducer';
@@ -31,8 +29,6 @@ const SButton = withStyles(() => ({
 const ExchangeBar: React.FC = () => {
     const { t } = useTranslate();
     const dispatch = useDispatch();
-    // const [pay, setPay] = useState<DexSwapData>({ asset: STABLE_COIN, value: FixedU128.fromNatural(0) });
-    // const [receive, setReceive] = useState<DexSwapData>({ asset: DEX_TOKENS[2], value: FixedU128.fromNatural(0) });
     const {
         data: { payAsset, pay, receiveAsset, receive },
         setValue,
@@ -78,7 +74,7 @@ const ExchangeBar: React.FC = () => {
                     onChange={handlePayChange}
                     value={pay.value.toNumber()}
                 />
-                <img src={ExchangeArrows} />
+                <img src={ExchangeArrows} alt="arrows" />
                 <AmountInput
                     title={t('Receive')}
                     value={receive.value.toNumber()}

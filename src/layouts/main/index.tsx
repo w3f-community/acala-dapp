@@ -12,7 +12,6 @@ import { getEndPoint, sideBarConfig } from '@/config';
 import {
     extensionStatusSelector,
     accountListSelector,
-    accountSelector,
     accountErrorSelector,
     accountStatusSelector,
 } from '@/store/account/selectors';

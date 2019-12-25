@@ -1,4 +1,3 @@
-import { RootState } from 'typesafe-actions';
 import { Tx } from '../types';
 import { Selector } from '@/types/store';
 

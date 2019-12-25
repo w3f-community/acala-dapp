@@ -1,5 +1,5 @@
 import { Epic } from 'redux-observable';
-import { filter, map, switchMap, withLatestFrom, startWith, merge, flatMap, take } from 'rxjs/operators';
+import { filter, map, switchMap, withLatestFrom, take } from 'rxjs/operators';
 import { isActionOf, RootAction, RootState } from 'typesafe-actions';
 
 import * as actions from './actions';

@@ -31,6 +31,8 @@ const useStyles = makeStyles(() =>
         img: {
             marginTop: 68,
             marginBottom: 43,
+            width: '100%',
+            maxWidth: 330,
         },
     }),
 );

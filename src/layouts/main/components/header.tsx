@@ -28,9 +28,9 @@ export default function ButtonAppBar() {
 
     return (
         <AppBar position="static" classes={classes}>
-            <img src={AcalaLogo} width={40} height={34} className={classes.icon} />
+            <img src={AcalaLogo} width={40} height={34} className={classes.icon} alt="acala-logo" />
             <IconButton>
-                <img src={MenuLogo} width={25} />
+                <img src={MenuLogo} width={25} alt="menu" />
             </IconButton>
         </AppBar>
     );

@@ -1,7 +1,7 @@
 import { WsProvider, ApiRx } from '@polkadot/api';
 import { get } from 'lodash';
 import { Epic } from 'redux-observable';
-import { filter, map, switchMap, startWith, endWith, withLatestFrom, take } from 'rxjs/operators';
+import { filter, map, switchMap, withLatestFrom, take } from 'rxjs/operators';
 import { combineLatest, concat, of } from 'rxjs';
 import { isActionOf, RootAction, RootState } from 'typesafe-actions';
 

@@ -52,7 +52,7 @@ const Item: React.FC<Props> = ({ data: { name, path, icon, href, target } }) => 
                 key={`product-${name}`}
                 onClick={handleItemClick}
             >
-                <img src={icon} className={classes.image} />
+                <img src={icon} className={classes.image} alt={name} />
                 <ListItemText primary={name} primaryTypographyProps={{ variant: 'h2' }} />
             </ListItem>
         );
@@ -63,7 +63,7 @@ const Item: React.FC<Props> = ({ data: { name, path, icon, href, target } }) => 
         };
         return (
             <ListItem button className={clsx(classes.root)} key={`product-${name}`} onClick={handleItemClick}>
-                <img src={icon} className={classes.image} />
+                <img src={icon} className={classes.image} alt={name} />
                 <ListItemText primary={name} primaryTypographyProps={{ variant: 'h2' }} />
             </ListItem>
         );

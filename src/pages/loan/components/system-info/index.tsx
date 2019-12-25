@@ -6,7 +6,6 @@ import { useSelector } from 'react-redux';
 import { specIssuanceSelector } from '@/store/chain/selectors';
 import Formatter from '@/components/formatter';
 import { STABLE_COIN } from '@/config';
-import FixedU128 from '@/utils/fixed_u128';
 
 const SystemInfo: React.FC = () => {
     const { t } = useTranslate();

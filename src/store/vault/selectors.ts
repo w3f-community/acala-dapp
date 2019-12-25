@@ -1,5 +1,5 @@
 import { Selector } from '@/types/store';
-import { BalanceData, TxStatus, Tx } from '../types';
+import { TxStatus, Tx } from '../types';
 
 type StatusType = 'updateVault';
 export const statusSelector: (type: StatusType) => Selector<TxStatus> = type => {
