@@ -1,5 +1,5 @@
 import { createAction } from 'typesafe-actions';
-import { Tx } from '../types';
+import { Tx } from '@/types/store';
 
 export const UPDATE_TRANSITION = '@app/update_transaction';
 export const updateTransition = createAction(UPDATE_TRANSITION, action => {

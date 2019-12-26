@@ -1,7 +1,6 @@
-import { Selector } from '@/types/store';
-import { BalanceData, UserVaultData, Account, Status } from '../types';
+import { Selector, BalanceData, UserVaultData, Account, AccountError, Status, AccountState } from '@/types/store';
 import FixedU128 from '@/utils/fixed_u128';
-import { AccountError } from './reducer';
+import { RootState } from 'typesafe-actions';
 
 export const balancesSelector: Selector<BalanceData[]> = state => state.account.balancas;
 
@@ -30,6 +29,11 @@ export const specUserVaultSelector: (asset: number) => Selector<UserVaultData | 
         return vault.find(item => item.asset === asset);
     };
 };
+
+type AccountStateType = keyof AccountState;
+export function accountStoreSelector<Key extends AccountStateType>(keys: Key[]) {
+    return (state: RootState) => keys.map(key => state.account[key]);
+}
 
 export const accountListSelector: Selector<Account[]> = state => state.account.accountList;
 

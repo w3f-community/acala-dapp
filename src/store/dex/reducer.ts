@@ -1,6 +1,8 @@
 import { createReducer } from 'typesafe-actions';
-import { DexState } from '../types';
 import * as actions from './actions';
+import { DexState } from '@/types/store';
+
+
 
 const initialState: DexState = {
     swapCurrencyStatus: 'none',

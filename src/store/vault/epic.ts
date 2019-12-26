@@ -1,13 +1,12 @@
 import { Epic } from 'redux-observable';
 import { filter, switchMap, withLatestFrom, catchError, flatMap, takeUntil } from 'rxjs/operators';
 import { isActionOf, RootAction, RootState } from 'typesafe-actions';
-
+import { of, concat } from 'rxjs';
+import { Tx } from '@/types/store';
+import { txLog$, txResultHandler$ } from '@/utils/epic';
 import * as actions from './actions';
 import * as appActions from '../app/actions';
-import { of, concat } from 'rxjs';
-import { Tx } from '../types';
 import { startLoading, endLoading } from '../loading/reducer';
-import { txLog$, txResultHandler$ } from '@/utils/epic';
 
 export const createValutEpic: Epic<RootAction, RootAction, RootState> = (action$, state$) =>
     action$.pipe(

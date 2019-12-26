@@ -1,6 +1,6 @@
 import { createAsyncAction, createAction } from 'typesafe-actions';
 import FixedU128 from '@/utils/fixed_u128';
-import { AssetList, DexLiquidityPoolData } from '../types';
+import { AssetList, DexLiquidityPoolData } from '@/types/store';
 
 interface SwapCurrencyParam {
     supply: {

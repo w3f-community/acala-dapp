@@ -7,7 +7,7 @@ import FixedU128 from '@/utils/fixed_u128';
 import { u8aToNumber } from '@/utils';
 import { startLoading, endLoading } from '../loading/reducer';
 import * as appActions from '../app/actions';
-import { Tx } from '../types';
+import { Tx } from '@/types/store';
 import { txLog$, txResultHandler$ } from '@/utils/epic';
 
 export const createValutEpic: Epic<RootAction, RootAction, RootState> = (action$, state$) =>

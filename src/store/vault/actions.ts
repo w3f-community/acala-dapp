@@ -1,5 +1,5 @@
 import { createAsyncAction, createAction } from 'typesafe-actions';
-import { UpdateVaultData } from '../types';
+import { UpdateVaultData } from '@/types/store';
 
 export const UPDATE_VAULT = '@vault/update_vault';
 export const updateVault = createAsyncAction(

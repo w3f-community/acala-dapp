@@ -1,25 +1,6 @@
 import { createReducer } from 'typesafe-actions';
 import * as actions from './actions';
-import { Status, Account, BalanceData, UserVaultData } from '../types';
-
-export type AccountError = 'no extends found' | 'no accounts found' | 'set singer failure' | 'none' | string;
-
-export interface AccountState {
-    // extension status
-    extensionStatus: Status;
-
-    // account import status
-    account: Account | null;
-    accountStatus: Status;
-    accountList: Account[];
-
-    // account information
-    balancas: BalanceData[];
-    vaults: UserVaultData[];
-
-    // account error
-    error: AccountError;
-}
+import { AccountState } from '@/types/store';
 
 const initialState: AccountState = {
     extensionStatus: 'none',

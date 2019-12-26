@@ -1,14 +1,8 @@
 import { createReducer } from 'typesafe-actions';
-import { TxStatus, Tx } from '../types';
 import * as actions from './actions';
 import * as appActions from '../app/actions';
 import FixedU128 from '@/utils/fixed_u128';
-
-export interface VaultState {
-    updateVaultStatus: TxStatus;
-    txRecord: Tx[];
-    [T: string]: any;
-}
+import { VaultState } from '@/types/store';
 
 const initialState: VaultState = {
     updateVaultStatus: 'none',

@@ -6,10 +6,10 @@ import { web3Enable, web3Accounts, web3FromAddress } from '@polkadot/extension-d
 
 import { u8aToNumber } from '@/utils';
 import FixedU128 from '@/utils/fixed_u128';
+import { AssetList } from '@/types/store';
 
 import { startLoading, endLoading } from '../loading/reducer';
 import * as actions from './actions';
-import { AssetList } from '../types';
 
 export const fetchAssetBalanceEpic: Epic<RootAction, RootAction, RootState> = (action$, state$) =>
     action$.pipe(

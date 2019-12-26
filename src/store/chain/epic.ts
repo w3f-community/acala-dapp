@@ -9,6 +9,7 @@ import { u8aToNumber } from '@/utils';
 import { startLoading, endLoading } from '../loading/reducer';
 import * as actions from './actions';
 import FixedU128 from '@/utils/fixed_u128';
+import { DEFAULT_DEBIT_EXCHANGE_RATE } from '@/config';
 
 export const connectEpic: Epic<RootAction, RootAction, RootState> = action$ =>
     action$.pipe(
@@ -79,7 +80,9 @@ export const fetchVaultsEpic: Epic<RootAction, RootAction, RootState> = (action$
                 map(result => {
                     return assetList.map((asset, index) => ({
                         asset,
-                        debitExchangeRate: FixedU128.fromParts(u8aToNumber(result[index][0])),
+                        debitExchangeRate: result[index][0].isEmpty
+                            ? DEFAULT_DEBIT_EXCHANGE_RATE
+                            : FixedU128.fromParts(u8aToNumber(result[index][0])),
                         liquidationPenalty: FixedU128.fromParts(u8aToNumber(result[index][1])),
                         liquidationRatio: FixedU128.fromParts(u8aToNumber(result[index][2])),
                         maximumTotalDebitValue: FixedU128.fromParts(u8aToNumber(result[index][3])),

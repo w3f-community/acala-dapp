@@ -1,10 +1,6 @@
 import { createReducer } from 'typesafe-actions';
 import * as actions from './actions';
-import { Tx } from '../types';
-
-export interface AppState {
-    transactions: Tx[];
-}
+import { AppState } from '@/types/store';
 
 const initialState: AppState = {
     transactions: [],

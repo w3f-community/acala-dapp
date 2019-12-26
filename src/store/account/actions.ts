@@ -1,6 +1,5 @@
 import { createAsyncAction } from 'typesafe-actions';
-import { AssetList, BalanceData, UserVaultData, Account } from '../types';
-import { AccountError } from './reducer';
+import { AssetList, BalanceData, UserVaultData, Account, AccountError } from '@/types/store';
 
 export const IMPORT_ACCOUNT = '@account/import_account';
 export const importAccount = createAsyncAction(
