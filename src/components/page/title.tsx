@@ -9,9 +9,15 @@ interface Props {
 
 const STypography = withStyles((theme: Theme) => ({
     root: {
-        paddingTop: 123,
-        paddingBottom: 38,
-        ...createTypography(34, 40, 600, 'Roboto', theme.palette.common.black),
+        marginTop: 123,
+        marginBottom: 38,
+        ...createTypography(34, 40, 500, 'Roboto', theme.palette.common.black),
+        [theme.breakpoints.down('sm')]: {
+            textAlign: 'center',
+            marginBottom: 26,
+            marginTop: 35,
+            ...createTypography(17, 20, 500, 'Roboto', theme.palette.common.black),
+        },
     },
 }))(Typography);
 

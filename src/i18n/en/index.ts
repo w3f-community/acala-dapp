@@ -88,4 +88,7 @@ export default {
     payback: 'payback',
     'Required Collateral Ratio': 'Required Collateral Ratio',
     withdraw: 'withdraw',
+    Governance: 'Governance',
+    'Read more': 'Read more',
+    'Vote for this proposal': 'Vote for this proposal',
 };

@@ -72,10 +72,10 @@ export const fetchDexLiquidityPool: Epic<RootAction, RootAction, RootState> = (a
                     return assetList.map((asset, index) => {
                         return {
                             asset,
-                            pool: [
-                                FixedU128.fromParts(u8aToNumber(result[index][0])),
-                                FixedU128.fromParts(u8aToNumber(result[index][1])),
-                            ],
+                            pool: {
+                                other: FixedU128.fromParts(u8aToNumber(result[index][0])),
+                                base: FixedU128.fromParts(u8aToNumber(result[index][1])),
+                            },
                         };
                     });
                 }),

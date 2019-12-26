@@ -38,10 +38,6 @@ const TxStatus: React.FC = () => {
     const transactions = useSelector(transactionsSelector);
 
     const renderTransition = (item: Tx): ReactNode => {
-        const actionStrMap = {
-            updateVault: 'update vault',
-            swapCurrency: 'swap currency',
-        };
         return (
             <Grid container direction="column" alignItems="flex-start" className={classes.content}>
                 <Grid item>

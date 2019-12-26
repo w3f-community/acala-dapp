@@ -79,23 +79,46 @@ export function calcLiquidationPrice(
 //TODO: need
 const EXCHANGE_FEE = FixedU128.fromRational(2, 1000);
 
-export function calcReceive(supply: FixedU128, currentSupply: FixedU128, currentTarget: FixedU128): FixedU128 {
-    if (currentSupply.add(supply).isZero()) {
+// calc other
+export function swapToOther(
+    baseAmount: FixedU128,
+    otherPool: FixedU128,
+    basePool: FixedU128,
+    isAddExchangeFee: boolean,
+): FixedU128 {
+    if (otherPool.add(baseAmount).isZero()) {
         return ZERO;
     }
 
-    return currentTarget
-        .sub(currentSupply.mul(currentTarget).div(currentSupply.add(supply)))
-        .mul(FixedU128.fromNatural(1).sub(EXCHANGE_FEE));
+    // (otherPool - otherPool * basePool / (basePool + baseAmount)) * (1 - EXCHANGE_FEE)
+    let exchangeFee = FixedU128.fromNatural(1).sub(EXCHANGE_FEE);
+    if (isAddExchangeFee) {
+        exchangeFee = FixedU128.fromNatural(1).add(EXCHANGE_FEE);
+    }
+    return otherPool
+        .sub(otherPool.mul(basePool).div(basePool.add(baseAmount)))
+        .mul(exchangeFee)
+        .sub(FixedU128.fromNatural(0.00005));
 }
 
-export function calcPay(target: FixedU128, currentSupply: FixedU128, currentTarget: FixedU128): FixedU128 {
-    if (target.isZero()) {
-        return FixedU128.fromNatural(0);
+// calc base
+export function swapToBase(
+    otherAmount: FixedU128,
+    otherPool: FixedU128,
+    basePool: FixedU128,
+    isAddExchangeFee: boolean,
+): FixedU128 {
+    if (otherAmount.isZero()) {
+        return ZERO;
     }
-    return currentSupply
-        .mul(currentTarget)
-        .div(currentTarget.sub(target.mul(FixedU128.fromNatural(1).add(EXCHANGE_FEE))))
-        .sub(currentSupply)
-        .add(FixedU128.fromNatural(0.0005));
+    // (otherPool * basePool / (otherPool - otherAmount) / (1 +- EXCHANGE_FEE)) - basePool
+    let exchangeFee = FixedU128.fromNatural(1).sub(EXCHANGE_FEE);
+    if (isAddExchangeFee) {
+        exchangeFee = FixedU128.fromNatural(1).add(EXCHANGE_FEE);
+    }
+    return otherPool
+        .mul(basePool)
+        .div(otherPool.sub(otherAmount).div(exchangeFee))
+        .sub(basePool)
+        .add(FixedU128.fromNatural(0.00005));
 }

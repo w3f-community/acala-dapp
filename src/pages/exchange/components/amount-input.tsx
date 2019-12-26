@@ -4,12 +4,19 @@ import { createTypography } from '@/theme';
 import TokenSelect from '@/components/token-select';
 import { DEX_TOKENS } from '@/config';
 import { useTranslate } from '@/hooks/i18n';
+import useMobileMatch from '@/hooks/mobile-match';
 
 const SubTitle = withStyles((theme: Theme) => ({
     root: {
         position: 'absolute',
         top: -60,
         ...createTypography(28, 32, 500, 'Roboto', theme.palette.primary.light),
+        [theme.breakpoints.down('sm')]: {
+            position: 'relative',
+            top: 0,
+            width: '100%',
+            marginBottom: 26,
+        },
     },
 }))(Typography);
 
@@ -36,6 +43,7 @@ interface AmountInputProps {
 const AmountInput: React.FC<AmountInputProps> = ({ title, defaultAsset = 1, value = 0, onChange, error }) => {
     const { t } = useTranslate();
     const [asset, setAsset] = useState<number>(defaultAsset);
+    const match = useMobileMatch('sm');
 
     /* eslint-disable */
     useEffect(() => {
@@ -50,7 +58,7 @@ const AmountInput: React.FC<AmountInputProps> = ({ title, defaultAsset = 1, valu
     };
 
     return (
-        <SGrid container alignItems="center" wrap="nowrap" style={{ width: 'auto' }}>
+        <SGrid container alignItems="center" wrap={match ? 'wrap' : 'nowrap'} style={{ width: 'auto' }}>
             <SubTitle>{title}</SubTitle>
             <TokenSelect defaultToken={defaultAsset} data={DEX_TOKENS} onChange={handleTokenChange} />
             <STextField

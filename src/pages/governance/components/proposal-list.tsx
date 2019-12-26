@@ -117,8 +117,8 @@ const ProposalList: React.FC = () => {
     return (
         <Grid container>
             {data.map(item => (
-                <Grid xs={12} lg={8}>
-                    <ProposalItem {...item} key={item.title} />
+                <Grid item xs={12} lg={8} key={item.title}>
+                    <ProposalItem {...item} />
                 </Grid>
             ))}
         </Grid>

@@ -13,7 +13,7 @@ import {
 import { TransitionProps } from '@material-ui/core/transitions';
 import { useTranslate } from '@/hooks/i18n';
 import { useSelector, useDispatch } from 'react-redux';
-import { accountListSelector, accountStoreSelector } from '@/store/account/selectors';
+import { accountStoreSelector } from '@/store/account/selectors';
 import { selectAccount } from '@/store/account/actions';
 import { formatAddress } from '@/utils';
 

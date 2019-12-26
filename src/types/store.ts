@@ -59,7 +59,10 @@ export interface Tx {
 // dex
 export interface DexLiquidityPoolData {
     asset: number;
-    pool: FixedU128[];
+    pool: {
+        other: FixedU128;
+        base: FixedU128;
+    };
 }
 
 // governace
@@ -74,13 +77,12 @@ export interface ProposalData {
             amount: FixedU128;
             asset: number;
         };
-    }
+    };
     current: {
         yay: FixedU128;
         nay: FixedU128;
-    }
+    };
 }
-
 
 export interface UpdateVaultData {
     asset: number;
@@ -133,5 +135,5 @@ export interface VaultState {
 }
 
 export interface GovernanceState {
-    proposal: ProposalData[]
+    proposal: ProposalData[];
 }

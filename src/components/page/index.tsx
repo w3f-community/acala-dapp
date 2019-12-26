@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { Container, useMediaQuery } from '@material-ui/core';
+import { Container } from '@material-ui/core';
 import useMobileMatch from '@/hooks/mobile-match';
 
 interface Props {

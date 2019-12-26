@@ -107,6 +107,14 @@ const VaultsList: React.FC<Props> = ({ onAdd, onSelect }) => {
                 if (!vault) return null;
 
                 const collateralPrice = prices.find(price => price.asset === item.asset) || { price: ZERO };
+                const currentCollateralRatio = calcCollateralRatio(
+                    collateralToUSD(item.collateral, collateralPrice.price),
+                    debitToUSD(item.debit, vault.debitExchangeRate, stableCoinPrice.price),
+                );
+                const status = currentCollateralRatio.isGreaterThan(
+                    vault.requiredCollateralRatio.add(FixedU128.fromNatural(0.2)),
+                );
+
                 return (
                     <Grid item key={`vault-type-${item.asset}`} onClick={() => onSelect(item.asset)}>
                         <Paper elevation={mobileMatch ? 2 : 0} className={classes.paper} square={true}>
@@ -117,10 +125,8 @@ const VaultsList: React.FC<Props> = ({ onAdd, onSelect }) => {
                             <Typography variant="body1">
                                 <Formatter
                                     type="ratio"
-                                    data={calcCollateralRatio(
-                                        collateralToUSD(item.collateral, collateralPrice.price),
-                                        debitToUSD(item.debit, vault.debitExchangeRate, stableCoinPrice.price),
-                                    )}
+                                    data={currentCollateralRatio}
+                                    color={status ? 'primary' : 'warning'}
                                 />
                             </Typography>
                         </Paper>

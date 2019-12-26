@@ -69,7 +69,13 @@ const Card: React.FC<CardProps> = ({ header, content, formatterProps }) => {
     const classes = useStyles();
     return (
         <SPaper elevation={match ? 0 : 2} square={true} className={classes.card}>
-            <Grid container direction={match ? 'row' : 'column'} justify="space-between" alignItems="center">
+            <Grid
+                container
+                direction={match ? 'row' : 'column'}
+                justify="space-between"
+                alignItems="center"
+                wrap="nowrap"
+            >
                 <Typography variant="body2">{header}</Typography>
                 <Typography variant="body1">
                     <Formatter data={content} {...formatterProps} />
@@ -96,6 +102,13 @@ const VaultInfo: React.FC<Props> = ({ current }) => {
         return <Skeleton variant="rect" height={240} />;
     }
 
+    const currentCollateralRatio = calcCollateralRatio(
+        collateralToUSD(userVault.collateral, collateralPrice),
+        debitToUSD(userVault.debit, vault.debitExchangeRate, stableCoinPrice),
+    );
+
+    const status = currentCollateralRatio.isGreaterThan(vault.requiredCollateralRatio.add(FixedU128.fromNatural(0.2)));
+
     const renderInfo = () => {
         return (
             <>
@@ -106,11 +119,11 @@ const VaultInfo: React.FC<Props> = ({ current }) => {
                 />
                 <Card
                     header={t('Current Collateral Ratio')}
-                    content={calcCollateralRatio(
-                        collateralToUSD(userVault.collateral, collateralPrice),
-                        debitToUSD(userVault.debit, vault.debitExchangeRate, stableCoinPrice),
-                    )}
-                    formatterProps={{ type: 'ratio' }}
+                    content={currentCollateralRatio}
+                    formatterProps={{
+                        type: 'ratio',
+                        color: status ? 'primary' : 'warning',
+                    }}
                 />
                 <Card
                     header={t('Liquidation Ratio')}
