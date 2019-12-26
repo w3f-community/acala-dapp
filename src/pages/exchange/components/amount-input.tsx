@@ -9,7 +9,7 @@ const SubTitle = withStyles((theme: Theme) => ({
     root: {
         position: 'absolute',
         top: -60,
-        ...createTypography(28, 32, 600, 'Roboto', theme.palette.primary.light),
+        ...createTypography(28, 32, 500, 'Roboto', theme.palette.primary.light),
     },
 }))(Typography);
 

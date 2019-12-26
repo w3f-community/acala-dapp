@@ -12,7 +12,7 @@ import {
 } from '@material-ui/core';
 import { useTranslate } from '@/hooks/i18n';
 import { createTypography } from '@/theme';
-import { BaseVaultData } from '@/store/types';
+import { BaseVaultData } from '@/types/store';
 import CollateralSelect from '@/components/collateral-select';
 import FixedU128 from '@/utils/fixed_u128';
 import Formatter from '@/components/formatter';

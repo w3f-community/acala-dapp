@@ -1,5 +1,5 @@
 import { assets } from '@/config';
-import { Account } from '@/store/types';
+import { Account } from '@/types/store';
 
 export function getAssetName(id: number): string {
     const result = assets.get(id);

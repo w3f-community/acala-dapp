@@ -29,7 +29,7 @@ const useStepStyles = makeStyles((theme: Theme) =>
             marginBottom: 32,
         },
         item: {
-            ...createTypography(21, 28, 600, 'Roboto', '#757575'),
+            ...createTypography(21, 28, 500, 'Roboto', '#757575'),
         },
         active: {
             color: theme.palette.primary.light,

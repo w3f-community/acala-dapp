@@ -9,12 +9,7 @@ import { loadingSelector } from '@/store/loading/reducer';
 import Loading from '@/components/loading';
 import actions from '@/store/actions';
 import { getEndPoint, sideBarConfig } from '@/config';
-import {
-    extensionStatusSelector,
-    accountListSelector,
-    accountErrorSelector,
-    accountStatusSelector,
-} from '@/store/account/selectors';
+import { accountStoreSelector } from '@/store/account/selectors';
 import Header from './components/header';
 import Sidebar from './components/side-bar';
 import NoExtension from './components/no-extension';
@@ -56,11 +51,9 @@ const MainLayout: React.FC<Props> = props => {
     const dispatch = useDispatch();
     const classes = useStyles();
     const connectLoading = useSelector(loadingSelector(actions.chain.CONNECT_ASYNC));
-    const extensionStatus = useSelector(extensionStatusSelector);
-    const accountStatus = useSelector(accountStatusSelector);
-
-    const accountList = useSelector(accountListSelector);
-    const accountError = useSelector(accountErrorSelector);
+    const [accountStatus, accountList, extensionStatus, accountError] = useSelector(
+        accountStoreSelector(['accountStatus', 'accountList', 'extensionStatus', 'error']),
+    );
 
     const match = useMobileMatch('sm');
     // const connectStatus = useSelector(connectedSelector);

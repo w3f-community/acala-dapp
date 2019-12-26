@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         label: {
             marginBottom: 22,
-            ...createTypography(21, 28, 600, 'Roboto', theme.palette.primary.light),
+            ...createTypography(21, 28, 500, 'Roboto', theme.palette.primary.light),
         },
         helper: {
             marginTop: 28,
@@ -79,7 +79,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const SListItem = withStyles(() => ({
     root: {
-        ...createTypography(15, 22, 600, 'Roboto', '#424242'),
+        ...createTypography(15, 22, 500, 'Roboto', '#424242'),
     },
 }))(ListItem);
 

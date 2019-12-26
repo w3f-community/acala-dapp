@@ -6,6 +6,7 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core';
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         root: {
+            minHeight: 200,
             padding: '28px 24px',
             [theme.breakpoints.down('sm')]: {
                 padding: '24px 30px',

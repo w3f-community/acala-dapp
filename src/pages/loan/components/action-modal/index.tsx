@@ -1,4 +1,4 @@
-import React, { useState, ChangeEventHandler, useEffect, ReactElement, useRef, useCallback } from 'react';
+import React, { useState, ChangeEventHandler, useEffect, ReactElement, useRef } from 'react';
 import {
     Dialog,
     DialogTitle,
@@ -54,7 +54,7 @@ const useInputStyles = makeStyles((theme: Theme) =>
     createStyles({
         root: {
             width: '100%',
-            ...createTypography(30, 32, 600, 'Roboto', theme.palette.common.black),
+            ...createTypography(30, 32, 500, 'Roboto', theme.palette.common.black),
         },
         underline: {
             color: '#0123cc',
@@ -84,8 +84,7 @@ const ActionModal: React.FC<ActionModalProps> = props => {
     const { action, current, onClose } = props;
     const { t } = useTranslate();
     const dispatch = useDispatch();
-    const stableCoinPrice = useSelector(specPriceSelector(STABLE_COIN));
-    const collateralPrice = useSelector(specPriceSelector(current));
+    const [stableCoinPrice, collateralPrice] = useSelector(specPriceSelector([STABLE_COIN, current]));
     const collateralbalance = useSelector(specBalanceSelector(current));
     const vault = useSelector(specVaultSelector(current));
     const userVault = useSelector(specUserVaultSelector(current));
@@ -97,10 +96,9 @@ const ActionModal: React.FC<ActionModalProps> = props => {
     const [borrowed, setBorrowed] = useState<FixedU128>(ZERO);
     const [collateralRatio, setCollateralRatio] = useState<FixedU128>(ZERO);
     const [liquidationPrice, setLiquidationPrice] = useState<FixedU128>(ZERO);
-    const _onClose = useCallback(() => {
-        setAmount(0);
+    const _onClose = () => {
         onClose && onClose();
-    }, [onClose]);
+    };
 
     useEffect(() => {
         if (vault && userVault && init.current === false) {
@@ -307,12 +305,16 @@ const ActionModal: React.FC<ActionModalProps> = props => {
 interface BaseActionModalProps {
     title: string;
     confirmBtnText: string;
+    // input props
+    amount: number;
+    placeholder?: string;
+    error?: boolean;
+    startAdornment?: string;
+
     borrowed: FixedU128;
     collateralRatio: FixedU128;
     liquidationPrice: FixedU128;
-    amount: number;
-    placeholder?: string;
-    startAdornment?: string;
+
     onChange?: (value: number) => void;
     onConfirm?: () => void;
 }

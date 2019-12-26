@@ -22,7 +22,7 @@ const Card = withStyles(() => ({
 const Title = withStyles((theme: Theme) => ({
     root: {
         marginTop: 45,
-        ...createTypography(21, 28, 600, 'Roboto', theme.palette.primary.light),
+        ...createTypography(21, 28, 500, 'Roboto', theme.palette.primary.light),
     },
 }))(Typography);
 

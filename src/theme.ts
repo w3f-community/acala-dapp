@@ -47,10 +47,10 @@ const createTheme = (options: ThemeOptions) =>
             h1: createTypography(22, 26, 700),
             h2: createTypography(17, 20, 700),
             h6: createTypography(12, 14, 700),
-            subtitle1: createTypography(18, 22, 600, 'Roboto'),
-            body1: createTypography(22, 32, 600, 'Roboto'),
-            body2: createTypography(15, 22, 600, 'Roboto'),
-            button: createTypography(15, 20, 600, 'Roboto'),
+            subtitle1: createTypography(18, 22, 500, 'Roboto'),
+            body1: createTypography(22, 32, 500, 'Roboto'),
+            body2: createTypography(15, 22, 500, 'Roboto'),
+            button: createTypography(15, 20, 500, 'Roboto'),
         },
         overrides: {
             MuiSelect: {
@@ -86,7 +86,7 @@ const createTheme = (options: ThemeOptions) =>
                     padding: 0,
                     marginBottom: 35,
                     '& .MuiTypography-h6': {
-                        ...createTypography(22, 22, 600, 'Roboto', COLOR_BLACK),
+                        ...createTypography(22, 22, 500, 'Roboto', COLOR_BLACK),
                     },
                 },
             },
@@ -113,11 +113,11 @@ const createTheme = (options: ThemeOptions) =>
             },
             MuiListItemText: {
                 primary: {
-                    ...createTypography(15, 22, 600),
+                    ...createTypography(15, 22, 500),
                     color: COLOR_GRAY,
                 },
                 secondary: {
-                    ...createTypography(22, 32, 600),
+                    ...createTypography(22, 32, 500),
                     color: COLOR_BLACK,
                 },
                 multiline: {

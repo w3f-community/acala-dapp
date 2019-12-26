@@ -1,5 +1,6 @@
 import React, { ReactNode } from 'react';
-import { Container } from '@material-ui/core';
+import { Container, useMediaQuery } from '@material-ui/core';
+import useMobileMatch from '@/hooks/mobile-match';
 
 interface Props {
     children: ReactNode;
@@ -7,8 +8,9 @@ interface Props {
 }
 
 const Page: React.FC<Props> = ({ children, padding }) => {
+    const match = useMobileMatch('sm');
     return (
-        <Container maxWidth={false} style={{ padding }}>
+        <Container maxWidth={false} style={match ? { padding: 20 } : { padding: padding }}>
             {children}
         </Container>
     );

@@ -10,6 +10,7 @@ import btcIcon from '@/assets/coin/btc.svg';
 
 // TODO: polkadot icon
 import ethIcon from '@/assets/coin/eth.svg';
+import FixedU128 from './utils/fixed_u128';
 // import ltcIcon from '@/assets/coin/ltc.svg';
 
 export interface Asset {
@@ -30,6 +31,8 @@ export const COLLATERAL: number[] = [2, 3];
 export const DEX_TOKENS: number[] = [1, 2, 3];
 
 export const STABLE_COIN = 1;
+
+export const DEFAULT_DEBIT_EXCHANGE_RATE = FixedU128.fromNatural(1);
 
 export const getEndPoint = (): string => 'wss://testnet-node-1.acala.laminar.one/ws';
 

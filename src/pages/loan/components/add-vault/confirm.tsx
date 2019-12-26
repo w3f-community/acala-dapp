@@ -32,10 +32,10 @@ const SListItem = withStyles((theme: Theme) => ({
     root: {
         padding: 0,
         marginBottom: 24,
-        ...createTypography(21, 28, 600, 'Roboto', '#424242'),
+        ...createTypography(21, 28, 500, 'Roboto', '#424242'),
         [theme.breakpoints.down('sm')]: {
             marginBottom: 24,
-            ...createTypography(15, 22, 600, 'Roboto', theme.palette.common.black),
+            ...createTypography(15, 22, 500, 'Roboto', theme.palette.common.black),
         },
     },
 }))(ListItem);
@@ -96,8 +96,7 @@ const Component: React.FC<Props> = ({ onNext, onPrev, onCancel }) => {
     const assetName = getAssetName(selectedAsset);
     const vault = useSelector(specVaultSelector(selectedAsset));
     const balance = useSelector(specBalanceSelector(selectedAsset));
-    const collateralPrice = useSelector(specPriceSelector(selectedAsset));
-    const stableCoinPrice = useSelector(specPriceSelector(STABLE_COIN));
+    const [stableCoinPrice, collateralPrice] = useSelector(specPriceSelector([STABLE_COIN, selectedAsset]));
     const updateVaultStatus = useSelector(statusSelector('updateVault'));
     const loading = useSelector(loadingSelector(rootActions.vault.UPDATE_VAULT));
 

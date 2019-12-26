@@ -26,7 +26,7 @@ const AssetName = withStyles((theme: Theme) => ({
     root: {
         minWidth: theme.spacing(6),
         marginLeft: 14,
-        ...createTypography(18, 22, 600, 'Roboto', theme.palette.common.black),
+        ...createTypography(18, 22, 500, 'Roboto', theme.palette.common.black),
     },
 }))(Typography);
 
@@ -34,7 +34,7 @@ const SDialogTitle = withStyles((theme: Theme) => ({
     root: {
         cursor: 'pointer',
         padding: 0,
-        ...createTypography(21, 22, 600, 'Roboto', theme.palette.common.black),
+        ...createTypography(21, 22, 500, 'Roboto', theme.palette.common.black),
     },
 }))(DialogTitle);
 
@@ -43,10 +43,10 @@ const SListItemText = withStyles((theme: Theme) => ({
         marginLeft: 12,
     },
     primary: {
-        ...createTypography(22, 32, 600, 'Roboto', theme.palette.common.black),
+        ...createTypography(22, 32, 500, 'Roboto', theme.palette.common.black),
     },
     secondary: {
-        ...createTypography(15, 22, 600, 'Roboto', theme.palette.secondary.main),
+        ...createTypography(15, 22, 500, 'Roboto', theme.palette.secondary.main),
     },
 }))(ListItemText);
 

@@ -1,13 +1,12 @@
 import React, { ChangeEvent, ReactNode } from 'react';
 import { MenuItem, Select, withStyles, Theme } from '@material-ui/core';
 import { createTypography } from '@/theme';
-import { BaseVaultData } from '@/store/types';
+import { BaseVaultData } from '@/types/store';
 import { getAssetName } from '@/utils';
 
 const SMenuItem = withStyles((theme: Theme) => ({
     root: {
-        marginBottom: 8,
-        ...createTypography(18, 22, 600, 'Roboto', theme.palette.common.black),
+        ...createTypography(18, 22, 500, 'Roboto', theme.palette.common.black),
     },
 }))(MenuItem);
 

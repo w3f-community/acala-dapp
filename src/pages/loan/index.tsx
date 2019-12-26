@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Grid, Box, makeStyles, createStyles, Theme } from '@material-ui/core';
 
@@ -43,13 +43,14 @@ const useStyle = makeStyles((theme: Theme) =>
 );
 
 const Loan: React.FC = () => {
+    const initStatus = useRef<boolean>(false);
     const dispatch = useDispatch();
     const [currentVault, setCurrentVault] = useState<number>(0);
     const [addVaultStatus, setAddVaultstatus] = useState<boolean>(false);
     const userVaults = useSelector(accountVaultsSelector);
     const classes = useStyle();
-    const showAddVault = useCallback(() => setAddVaultstatus(true), []);
-    const hideAddVault = useCallback(() => setAddVaultstatus(false), []);
+    const showAddVault = () => setAddVaultstatus(true);
+    const hideAddVault = () => setAddVaultstatus(false);
     const match = useMobileMatch('sm');
     const mdMatch = useMobileMatch('md');
 
@@ -68,10 +69,11 @@ const Loan: React.FC = () => {
 
     useEffect(() => {
         // set default vault
-        if (userVaults.length) {
+        if (userVaults.length && initStatus.current === false) {
             setCurrentVault(userVaults[0].asset);
+            initStatus.current = true;
         }
-    }, [userVaults]);
+    }, [userVaults, initStatus]);
 
     const handleVaultSelect = (vault: number) => {
         setCurrentVault(vault);
@@ -79,7 +81,7 @@ const Loan: React.FC = () => {
     };
 
     return (
-        <Page padding={match ? '20px' : '46px 55px'}>
+        <Page padding={'46px 55px'}>
             <Grid container direction={match ? 'column' : 'row'}>
                 <VaultsList onAdd={showAddVault} onSelect={handleVaultSelect} />
             </Grid>

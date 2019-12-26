@@ -24,7 +24,7 @@ const StyledBodyCell = withStyles((theme: Theme) => ({
 const StyledHeaderCell = withStyles((theme: Theme) => ({
     root: {
         color: theme.palette.common.black,
-        ...createTypography(15, 22, 600, 'Roboto'),
+        ...createTypography(15, 22, 500, 'Roboto'),
     },
 }))(TableCell);
 

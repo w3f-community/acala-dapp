@@ -20,7 +20,7 @@ import Formatter from '@/components/formatter';
 import { useSelector } from 'react-redux';
 import { vaultsSelector } from '@/store/chain/selectors';
 import { balancesSelector } from '@/store/account/selectors';
-import { BaseVaultData } from '@/store/types';
+import { BaseVaultData } from '@/types/store';
 import { createTypography } from '@/theme';
 import { useForm } from '@/hooks/form';
 import { formContext } from './context';
@@ -57,7 +57,7 @@ const SBodyCell = withStyles((theme: Theme) => ({
 const SHeaderCell = withStyles((theme: Theme) => ({
     root: {
         color: theme.palette.common.black,
-        ...createTypography(15, 22, 600, 'Roboto'),
+        ...createTypography(15, 22, 500, 'Roboto'),
     },
 }))(TableCell);
 

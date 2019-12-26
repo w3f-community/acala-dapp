@@ -13,7 +13,7 @@ import {
 import { TransitionProps } from '@material-ui/core/transitions';
 import { useTranslate } from '@/hooks/i18n';
 import { useSelector, useDispatch } from 'react-redux';
-import { accountListSelector } from '@/store/account/selectors';
+import { accountListSelector, accountStoreSelector } from '@/store/account/selectors';
 import { selectAccount } from '@/store/account/actions';
 import { formatAddress } from '@/utils';
 
@@ -27,7 +27,7 @@ interface Props {
 const NoExtension: React.FC<Props> = ({ open }) => {
     const { t } = useTranslate();
     const dispatch = useDispatch();
-    const accountList = useSelector(accountListSelector);
+    const [accountList] = useSelector(accountStoreSelector(['accountList']));
     const [selected, setSelected] = useState<number>(0);
 
     // if there is only one account, don't show select view

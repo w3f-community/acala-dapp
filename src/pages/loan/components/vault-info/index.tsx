@@ -89,8 +89,7 @@ const VaultInfo: React.FC<Props> = ({ current }) => {
     const classes = useStyles();
     const vault = useSelector(specVaultSelector(current));
     const userVault = useSelector(specUserVaultSelector(current));
-    const collateralPrice = useSelector(specPriceSelector(current));
-    const stableCoinPrice = useSelector(specPriceSelector(STABLE_COIN));
+    const [stableCoinPrice, collateralPrice] = useSelector(specPriceSelector([STABLE_COIN, current]));
     const match = useMobileMatch('sm');
 
     if (!vault || !userVault) {

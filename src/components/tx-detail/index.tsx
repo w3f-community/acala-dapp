@@ -1,5 +1,5 @@
 import React from 'react';
-import { Tx, UpdateVaultData } from '@/store/types';
+import { Tx, UpdateVaultData } from '@/types/store';
 import FixedU128 from '@/utils/fixed_u128';
 import { useTranslate } from '@/hooks/i18n';
 import { getAssetName } from '@/utils';

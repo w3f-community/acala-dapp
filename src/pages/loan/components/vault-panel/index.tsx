@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
 import { Grid, Typography, List, ListItem, ListItemText, Button, Theme } from '@material-ui/core';
 
 import Card from '@/components/card';
@@ -28,7 +28,7 @@ interface Props {
 
 const Asset = withStyles((theme: Theme) => ({
     root: {
-        ...createTypography(30, 32, 600, 'Roboto', theme.palette.common.black),
+        ...createTypography(30, 32, 500, 'Roboto', theme.palette.common.black),
     },
 }))(Typography);
 
@@ -36,18 +36,17 @@ const VaultPanel: React.FC<Props> = ({ current }) => {
     const { t } = useTranslate();
     const userVault = useSelector(specUserVaultSelector(current));
     const vault = useSelector(specVaultSelector(current));
-    const collateralPrice = useSelector(specPriceSelector(current));
-    const stableCoinPrice = useSelector(specPriceSelector(STABLE_COIN));
+    const [stableCoinPrice, collateralPrice] = useSelector(specPriceSelector([STABLE_COIN, current]));
     const collateralAssetName = getAssetName(current);
     const stableCoinAssetName = getAssetName(STABLE_COIN);
     const [modalProps, setModalProps] = useState<Omit<ActionModalProps, 'current'>>({ open: false, action: 'any' });
     const match = useMobileMatch('sm');
 
-    const handleCloseModal = useCallback(() => setModalProps({ open: false, action: 'any' }), []);
-    const handleShowPayBack = useCallback(() => setModalProps({ open: true, action: 'payback' }), []);
-    const handleShowGenerate = useCallback(() => setModalProps({ open: true, action: 'generate' }), []);
-    const handleShowDeposit = useCallback(() => setModalProps({ open: true, action: 'deposit' }), []);
-    const handleShowWithdraw = useCallback(() => setModalProps({ open: true, action: 'withdraw' }), []);
+    const handleCloseModal = () => setModalProps({ open: false, action: 'any' });
+    const handleShowPayBack = () => setModalProps({ open: true, action: 'payback' });
+    const handleShowGenerate = () => setModalProps({ open: true, action: 'generate' });
+    const handleShowDeposit = () => setModalProps({ open: true, action: 'deposit' });
+    const handleShowWithdraw = () => setModalProps({ open: true, action: 'withdraw' });
 
     if (!vault || !userVault) {
         return <Skeleton variant="rect" height={300} />;

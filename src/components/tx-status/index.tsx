@@ -6,7 +6,7 @@ import { TransitionProps } from '@material-ui/core/transitions';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import WarningIcon from '@material-ui/icons/Warning';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { Tx } from '@/store/types';
+import { Tx } from '@/types/store';
 import { formatHash } from '@/utils';
 import { green } from '@material-ui/core/colors';
 import TxDetail from '../tx-detail';

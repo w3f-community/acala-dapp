@@ -11,7 +11,7 @@ const STypography = withStyles((theme: Theme) => ({
     root: {
         paddingTop: 123,
         paddingBottom: 38,
-        ...createTypography(34, 40, 700, 'Roboto', theme.palette.common.black),
+        ...createTypography(34, 40, 600, 'Roboto', theme.palette.common.black),
     },
 }))(Typography);
 

@@ -27,7 +27,7 @@ interface Props {
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         item: {
-            ...createTypography(21, 28, 600, 'Roboto', theme.palette.common.black),
+            ...createTypography(21, 28, 500, 'Roboto', theme.palette.common.black),
         },
         arrow: {
             margin: '20px 0',
