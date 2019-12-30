@@ -24,8 +24,12 @@ class FixedU128 {
         return this.inner.toFixed().split('.')[0];
     }
 
-    public toNumber(): number {
-        return this.inner.div(FixedU128.PRECISION).toNumber();
+    public toNumber(precision?: number): number {
+        let result = this.inner.div(FixedU128.PRECISION);
+        if (precision) {
+            result = result.decimalPlaces(precision, 1);
+        }
+        return result.toNumber();
     }
 
     static fromNatural(n: NumLike): FixedU128 {

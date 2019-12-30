@@ -16,6 +16,7 @@ import VaultPanel from './components/vault-panel';
 import TransactionHistory from './components/transactions-history';
 import VaultInfo from './components/vault-info';
 import AddVault from './components/add-vault';
+import WalletBalance from './components/account-balance';
 
 const useStyle = makeStyles((theme: Theme) =>
     createStyles({
@@ -106,6 +107,8 @@ const Loan: React.FC = () => {
                     )}
                 </Grid>
                 <Grid item md={12} className={classes.systemInfo}>
+                    <WalletBalance />
+                    <Box paddingTop={3} />
                     <PricesFeed />
                     <Box paddingTop={3} />
                     <SystemInfo />

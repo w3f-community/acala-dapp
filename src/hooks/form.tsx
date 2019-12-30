@@ -1,5 +1,5 @@
 import React, { Context, useContext, useState, ReactNode } from 'react';
-import { set } from 'lodash';
+import { set, get } from 'lodash';
 
 type Error = string;
 
@@ -26,8 +26,9 @@ type Combine<Origin, Base> = {
 export type ProviderData<T> = {
     data: Combine<T, FormData>;
     setValue: (key: keyof T, value: any) => void;
-    setError: (key: keyof T, error: any) => void;
+    setError: (key: keyof T, error: string) => void;
     clearError: (key: keyof T) => void;
+    checkVerify: (callback: () => void) => boolean;
 };
 
 export const Form: React.FC<ProviderProps> = React.memo(({ context, data, children }) => {
@@ -43,11 +44,28 @@ export const Form: React.FC<ProviderProps> = React.memo(({ context, data, childr
             const result = set(data, [key, 'value'], value);
             setValue({ ...result } as CombinedFormData);
         },
-        setError: (key: keyof CombinedFormData, error: any) => {
+        setError: (key: keyof CombinedFormData, error: string) => {
             setValue(Object.assign({}, set(data as object, [key, 'error'], error)));
         },
         clearError: (key: keyof CombinedFormData) => {
             setValue(Object.assign({}, set(data as object, [key, 'error'], '')));
+        },
+        checkVerify: callback => {
+            let result = true;
+            Object.keys(data).forEach(key => {
+                const validator = get(data as object, [key, 'validator']);
+                const value = get(data as object, [key, 'value']);
+
+                if (validator) {
+                    contextValue.setError(key, validator(value));
+                }
+                const error = get(data as object, [key, 'error']);
+                result = result && !error;
+            });
+            if (result) {
+                callback();
+            }
+            return result;
         },
     };
 

@@ -4,14 +4,32 @@ import { RootState } from 'typesafe-actions';
 
 export const balancesSelector: Selector<BalanceData[]> = state => state.account.balancas;
 
-export const specBalanceSelector: (asset: number) => Selector<FixedU128> = asset => {
+// export const specBalanceSelector: (asset: number) => Selector<FixedU128> = asset => {
+//     return state => {
+//         const balances = state.account.balancas;
+//         const result = balances.find(item => item.asset === asset);
+
+//         return result ? result.balance : FixedU128.fromNatural(0);
+//     };
+// };
+export function specBalanceSelector(assets: number): Selector<FixedU128>;
+export function specBalanceSelector(assets: number[]): Selector<FixedU128[]>;
+export function specBalanceSelector(assets: number | number[]): Selector<FixedU128> | Selector<FixedU128[]> {
+    if (typeof assets === 'number') {
+        return state => {
+            const balances = state.account.balancas;
+            const result = balances.find(item => item.asset === assets);
+            return result ? result.balance : FixedU128.fromNatural(0);
+        };
+    }
     return state => {
         const balances = state.account.balancas;
-        const result = balances.find(item => item.asset === asset);
-
-        return result ? result.balance : FixedU128.fromNatural(0);
+        return assets.map(asset => {
+            const result = balances.find(item => item.asset === asset);
+            return result ? result.balance : FixedU128.fromNatural(0);
+        });
     };
-};
+}
 
 // add account prefix to avoid conflict
 export const accountVaultsSelector: Selector<UserVaultData[]> = state => {

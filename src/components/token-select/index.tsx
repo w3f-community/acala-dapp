@@ -105,7 +105,15 @@ const TokenSelect: FC<Props> = ({ defaultToken, data, onChange }) => {
 
     const openDialogHandler = () => setOpen(true);
     const closeDialogHandler = () => setOpen(false);
-    const selectItemHandlerGen = (asset: number) => () => setSelected(asset);
+    const selectItemHandlerGen = (asset: number) => () => {
+        setSelected(asset);
+        onChange(asset);
+    };
+
+    useEffect(() => {
+        setSelected(defaultToken);
+        setAsset(defaultToken);
+    }, [defaultToken]);
 
     const selectBtnHandler = () => {
         setOpen(false);
@@ -114,11 +122,6 @@ const TokenSelect: FC<Props> = ({ defaultToken, data, onChange }) => {
         }
         setAsset(selected);
     };
-
-    // notify asset changed
-    useEffect(() => {
-        onChange(asset);
-    }, [asset, onChange]);
 
     return (
         <>

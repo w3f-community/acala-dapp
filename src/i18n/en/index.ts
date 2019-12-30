@@ -91,4 +91,5 @@ export default {
     Governance: 'Governance',
     'Read more': 'Read more',
     'Vote for this proposal': 'Vote for this proposal',
+    'Wallet Balance': 'Wallet Balance',
 };

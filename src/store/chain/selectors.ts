@@ -31,6 +31,7 @@ export function specPriceSelector(assets: number | number[]): Selector<FixedU128
         });
     };
 }
+
 export function specIssuanceSelector(assets: number): Selector<FixedU128>;
 export function specIssuanceSelector(assets: number[]): Selector<FixedU128[]>;
 export function specIssuanceSelector(assets: number | number[]): Selector<FixedU128 | FixedU128[]> {

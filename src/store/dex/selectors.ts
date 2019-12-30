@@ -4,7 +4,7 @@ type StatusType = 'swapCurrency';
 
 export const statusSelector: (type: StatusType) => Selector<TxStatus> = type => {
     return state => {
-        return state.vault[`${type}Status`];
+        return state.dex[`${type}Status`];
     };
 };
 

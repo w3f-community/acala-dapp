@@ -16,6 +16,10 @@ export default createReducer(initialState)
         ...state,
         swapCurrencyStatus: 'success',
     }))
+    .handleAction(actions.swapCurrency.failure, state => ({
+        ...state,
+        swapCurrencyStatus: 'failure',
+    }))
     .handleAction(actions.reset, state => ({
         ...state,
         swapCurrencyStatus: 'none',
