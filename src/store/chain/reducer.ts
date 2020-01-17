@@ -12,6 +12,7 @@ const initialState: ChainState = {
 
 export default createReducer(initialState)
     .handleAction(actions.connectAsync.success, (state, action) => {
+        console.log(action.payload)
         return {
             ...state,
             app: action.payload,

@@ -21,7 +21,12 @@ export const fetchAssetBalanceEpic: Epic<RootAction, RootAction, RootState> = (a
             const data = action.payload as AssetList;
             const app = state.chain.app;
             const account = state.account.account!.address;
-            return combineLatest(data.map(asset => app!.query.tokens.balance(asset, account))).pipe(
+            return combineLatest(data.map(asset => {
+                if (asset === 0) {
+                    return app!.query.balances.freeBalance(account)
+                }
+                return app!.query.tokens.balance(asset, account)
+            })).pipe(
                 map(result => {
                     return data.map((asset, index) => ({
                         asset,

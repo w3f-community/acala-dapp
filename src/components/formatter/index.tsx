@@ -8,7 +8,6 @@ function correct(source: number, base = 12): number {
 }
 
 function format(source: number, precision = 100): number {
-    source = correct(source);
     return correct(Math.floor(source * precision) / precision);
 }
 

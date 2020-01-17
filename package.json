@@ -8,7 +8,7 @@
     "@material-ui/icons": "^4.5.1",
     "@material-ui/lab": "^4.0.0-alpha.36",
     "@material-ui/styles": "^4.5.0",
-    "@polkadot/api": "^0.98.1",
+    "@polkadot/api": "^1.0.0-beta.7",
     "@polkadot/extension-dapp": "^0.14.1",
     "@types/bignumber.js": "^5.0.0",
     "bignumber.js": "^9.0.0",
