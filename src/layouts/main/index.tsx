@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { makeStyles, createStyles } from '@material-ui/core';
 import { Theme } from '@material-ui/core/styles';
-import acalaTypes from '@acala-network/types/src/interfaces/runtime/definitions';
+import acalaTypes from '@acala-network/types/interfaces/runtime/definitions';
 
 import { loadingSelector } from '@/store/loading/reducer';
 import Loading from '@/components/loading';
