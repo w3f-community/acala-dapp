@@ -6,7 +6,7 @@ export default {
     'Liquidation Ratio': '清算比率',
     '{{asset}} in USD': '{{asset}} in USD',
     'Price Feed': '喂价信息',
-    'Systom Info': '系统信息',
+    'System Info': '系统信息',
     'aUSD in Supply': 'aUSD 供应量',
     Collateral: 'Collateral',
     'Stability Fee/Interest': 'Stability Fee/Interest',
