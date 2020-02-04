@@ -6,7 +6,7 @@ import { useTranslate } from '@/hooks/i18n';
 import { getAssetName } from '@/utils';
 import ActionModal, { ActionModalProps } from '../action-modal';
 import { useSelector } from 'react-redux';
-import { specUserVaultSelector } from '@/store/account/selectors';
+import { specUserVaultSelector } from '@/store/vault/selectors';
 import Formatter, { formatBalance } from '@/components/formatter';
 import { specVaultSelector, specPriceSelector } from '@/store/chain/selectors';
 import { STABLE_COIN } from '@/config';
@@ -49,7 +49,7 @@ const VaultPanel: React.FC<Props> = ({ current }) => {
     const handleShowWithdraw = () => setModalProps({ open: true, action: 'withdraw' });
 
     if (!vault || !userVault) {
-        return <Skeleton variant="rect" height={300} />;
+        return null;
     }
 
     const requiredCollateral = calcRequiredCollateral(

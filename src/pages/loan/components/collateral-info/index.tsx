@@ -29,7 +29,7 @@ const CollateralInfo: React.FC<Props> = ({ current }) => {
     };
 
     if (!vaults.length) {
-        return <Skeleton variant="rect" height={240} />;
+        return null;
     }
     return (
         <Card

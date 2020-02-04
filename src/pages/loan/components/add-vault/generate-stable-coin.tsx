@@ -1,4 +1,4 @@
-import React, { ChangeEvent } from 'react';
+import React, { ChangeEvent, useEffect } from 'react';
 import {
     Grid,
     Paper,
@@ -121,6 +121,12 @@ const Component: React.FC<Props> = ({ onNext, onPrev, onCancel }) => {
     const balance = useSelector(specBalanceSelector(selectedAsset));
     const collateralPrice = useSelector(specPriceSelector(selectedAsset));
 
+    useEffect(() => {
+        // reset to empty
+        setValue('collateral', '');
+        setValue('borrow', '');
+    }, [])
+
     if (!vault) {
         return null;
     }
@@ -169,6 +175,7 @@ const Component: React.FC<Props> = ({ onNext, onPrev, onCancel }) => {
         if (FixedU128.fromNatural(value).isGreaterThan(maxBorrowd)) {
             setError('borrow', 'larger than maxto borrow');
         }
+        clearError('borrow');
         setValue('borrow', value);
     };
 

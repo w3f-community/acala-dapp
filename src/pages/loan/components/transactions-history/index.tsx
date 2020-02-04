@@ -38,7 +38,7 @@ const TransactionHistory: React.FC<Props> = ({ current }) => {
     const match = useMobileMatch('sm');
 
     if (!current || !txRecord.length) {
-        return <Skeleton variant="rect" height={240} />;
+        return null;
     }
 
     if (match) {

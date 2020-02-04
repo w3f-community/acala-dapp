@@ -8,7 +8,7 @@ import { u8aToNumber } from '@/utils';
 import { startLoading, endLoading } from '../loading/reducer';
 import * as appActions from '../app/actions';
 import { Tx } from '@/types/store';
-import { txLog$, txResultHandler$ } from '@/utils/epic';
+import { txLog$, txResultFilter$ } from '@/utils/epic';
 
 export const createValutEpic: Epic<RootAction, RootAction, RootState> = (action$, state$) =>
     action$.pipe(
@@ -39,7 +39,7 @@ export const createValutEpic: Epic<RootAction, RootAction, RootState> = (action$
                 of(appActions.updateTransition(txRecord)),
                 tx.signAndSend(address).pipe(
                     txLog$,
-                    txResultHandler$,
+                    txResultFilter$,
                     flatMap(result =>
                         of(
                             appActions.updateTransition({ ...txRecord, time: new Date().getTime(), status: 'success' }),
@@ -80,6 +80,7 @@ export const fetchDexLiquidityPool: Epic<RootAction, RootAction, RootState> = (a
                     });
                 }),
                 map(actions.fetchDexLiquidityPool.success),
+                catchError(() => of(actions.fetchDexLiquidityPool.failure('fetch dex liquidity pool error')))
             );
         }),
     );

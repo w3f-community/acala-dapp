@@ -41,7 +41,7 @@ const AddVault: React.FC<Props> = ({ onCancel }) => {
             return <Confirm onNext={changeStepGen('success')} onPrev={changeStepGen('generate')} onCancel={onCancel} />;
         }
         if (step === 'success') {
-            return <Success onCancel={onCancel} />;
+            return <Success onConfirm={onCancel} />;
         }
         return null;
     };

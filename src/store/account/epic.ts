@@ -23,7 +23,7 @@ export const fetchAssetBalanceEpic: Epic<RootAction, RootAction, RootState> = (a
             const account = state.account.account!.address;
             return combineLatest(data.map(asset => {
                 if (asset === 0) {
-                    return app!.query.balances.freeBalance(account)
+                    return app!.query.balances.account(account)
                 }
                 return app!.query.tokens.balance(asset, account)
             })).pipe(
@@ -41,7 +41,7 @@ export const fetchAssetBalanceEpic: Epic<RootAction, RootAction, RootState> = (a
 export const importAccmountEpic: Epic<RootAction, RootAction, RootState> = (action$, state$) =>
     action$.pipe(
         filter(isActionOf(actions.importAccount.request)),
-        delay(1000), // don't remove this, await 1000ms for loading chrome extends
+        delay(1000), // don't remove this, wait 1000ms for loading chrome extends
         switchMap(() =>
             defer(async () => {
                 const injected = await web3Enable('Acala Honzon Platform');
@@ -97,32 +97,3 @@ export const selectAccountEpic: Epic<RootAction, RootAction, RootState> = (actio
         }),
     );
 
-export const fetchVaultsEpic: Epic<RootAction, RootAction, RootState> = (action$, state$) =>
-    action$.pipe(
-        filter(isActionOf(actions.fetchVaults.request)),
-        withLatestFrom(state$),
-        switchMap(([action, state]) => {
-            const app = state.chain.app!;
-            const account = state.account.account!;
-            const assetList = action.payload;
-            return combineLatest(
-                assetList.map(asset =>
-                    combineLatest([
-                        app.query.vaults.collaterals(account.address, asset),
-                        app.query.vaults.debits(account.address, asset),
-                    ]),
-                ),
-            ).pipe(
-                map(result => {
-                    return assetList.map((asset, index) => ({
-                        asset: asset,
-                        collateral: FixedU128.fromParts(u8aToNumber(result[index][0])),
-                        debit: FixedU128.fromParts(u8aToNumber(result[index][1])),
-                    }));
-                }),
-                map(actions.fetchVaults.success),
-                startWith(startLoading(actions.FETCH_VAULTS)),
-                endWith(endLoading(actions.FETCH_VAULTS)),
-            );
-        }),
-    );

@@ -34,7 +34,8 @@ export const STABLE_COIN = 1;
 
 export const DEFAULT_DEBIT_EXCHANGE_RATE = FixedU128.fromNatural(1);
 
-export const getEndPoint = (): string => 'wss://testnet-node-1.acala.laminar.one/ws';
+// export const getEndPoint = (): string => 'wss://testnet-node-1.acala.laminar.one/ws';
+export const getEndPoint = (): string => 'ws://127.0.0.1:9944';
 
 export const POLKADOT_EXTENSIONS_ADDRESS =
     'https://chrome.google.com/webstore/detail/polkadot%7Bjs%7D-extension/mopnmbcafieddcagagdcbnhejhlodfdd';
@@ -56,11 +57,11 @@ export const sideBarConfig: SideBarConfig = {
             path: 'governance',
             icon: governanceIcon,
         },
-        {
-            name: 'Acala Stats',
-            path: 'states',
-            icon: statesIcon,
-        },
+        // {
+        //     name: 'Acala Stats',
+        //     path: 'states',
+        //     icon: statesIcon,
+        // },
     ],
     socialMedia: [
         {

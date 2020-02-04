@@ -16,17 +16,6 @@ export const connectEpic: Epic<RootAction, RootAction, RootState> = action$ =>
         filter(isActionOf(actions.connectAsync.request)),
         switchMap(({ payload }) => {
             const { endpoint, types } = payload;
-            // TODO: need fixed
-            Object.assign(types, {
-                TimestampedValue: {
-                    value: 'OracleValue',
-                    timestamp: 'Moment',
-                },
-                TimestampedValueOf: 'TimestampedValue',
-                FixedU128: 'u128',
-                Price: 'FixedU128',
-                'sp_std::marker::PhantomData': 'u128',
-            });
             const wsProvider = new WsProvider(endpoint);
             return concat(
                 of(startLoading(actions.CONNECT_ASYNC)),

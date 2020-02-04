@@ -12,7 +12,7 @@ import {
 } from '@material-ui/core';
 import { useTranslate } from '@/hooks/i18n';
 import CloseIcon from '@/components/svgs/close';
-import AddVaultSuccess from '@/components/svgs/add-vault-success';
+import Loan from '@/components/svgs/loan';
 import { createTypography } from '@/theme';
 
 const Card = withStyles(() => ({
@@ -38,23 +38,23 @@ const useStyles = makeStyles(() =>
 );
 
 interface Props {
-    onCancel: () => void;
+    onConfirm: () => void;
 }
 
-const Success: React.FC<Props> = ({ onCancel }) => {
+const Success: React.FC<Props> = ({ onConfirm }) => {
     const { t } = useTranslate();
     const classes = useStyles();
     return (
         <Card square={true} elevation={1}>
-            <Grid container justify="flex-end" onClick={onCancel}>
+            <Grid container justify="flex-end" onClick={onConfirm}>
                 <IconButton>
                     <CloseIcon />
                 </IconButton>
             </Grid>
             <Grid container justify="center" alignItems="center" direction="column">
                 <Title>{t('Your loan is created, and aUSD is generated!')}</Title>
-                <AddVaultSuccess className={classes.img} />
-                <Button variant="contained" color="primary" onClick={onCancel}>
+                <Loan className={classes.img} />
+                <Button variant="contained" color="primary" onClick={onConfirm}>
                     DONE
                 </Button>
             </Grid>

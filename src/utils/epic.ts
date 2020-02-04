@@ -10,7 +10,7 @@ export const txLog$ = tap((result: any) => {
     }
 });
 
-export const txResultHandler$ = filter((result: any) => {
+export const txResultFilter$ = filter((result: any) => {
     result.events.forEach(({ phase, event: { data, method, section } }: any) => {
         if (method === 'ExtrinsicFailed') {
             console.log('error: ', method);

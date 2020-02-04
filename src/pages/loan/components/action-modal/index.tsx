@@ -36,7 +36,8 @@ import {
     calcLiquidationPrice,
     calcRequiredCollateral,
 } from '@/utils/vault';
-import { specUserVaultSelector, specBalanceSelector } from '@/store/account/selectors';
+import { specUserVaultSelector } from '@/store/vault/selectors';
+import { specBalanceSelector } from '@/store/account/selectors'
 
 export type ActionType = 'any' | 'payback' | 'generate' | 'deposit' | 'withdraw';
 
@@ -47,6 +48,11 @@ const useStyles = makeStyles(() =>
         information: {
             marginTop: 46,
         },
+        maxBtn: {
+            marginRight: 8,
+            minWidth: 'auto',
+            height: 'auto',
+        }
     }),
 );
 
@@ -151,6 +157,7 @@ const ActionModal: React.FC<ActionModalProps> = props => {
             title: t('Payback {{ asset}}', { asset: stableCoinAssetName }),
             confirmBtnText: t('Payback'),
             placeholder: `${formatBalance(debitValue)} max`,
+            max: debitValue,
             startAdornment: stableCoinAssetName,
             onChange: value => {
                 if (FixedU128.fromNatural(value).isGreaterThan(debitValue)) {
@@ -187,6 +194,7 @@ const ActionModal: React.FC<ActionModalProps> = props => {
             title: t('Generate {{asset}}', { asset: stableCoinAssetName }),
             confirmBtnText: t('Generate'),
             placeholder: `${formatBalance(canGenerate)} max`,
+            max: canGenerate,
             startAdornment: stableCoinAssetName,
             onChange: value => {
                 if (FixedU128.fromNatural(value).isGreaterThan(canGenerate)) {
@@ -223,6 +231,7 @@ const ActionModal: React.FC<ActionModalProps> = props => {
             title: t('Disposit {{asset}}', { asset: currentAssetName }),
             confirmBtnText: t('Deposit'),
             placeholder: `${formatBalance(collateralbalance)} max`,
+            max: collateralbalance,
             startAdornment: currentAssetName,
             onChange: value => {
                 if (FixedU128.fromNatural(value).isGreaterThan(collateralbalance)) {
@@ -264,6 +273,7 @@ const ActionModal: React.FC<ActionModalProps> = props => {
             title: t('Withdraw {{asset}}', { asset: currentAssetName }),
             confirmBtnText: t('Withdraw'),
             placeholder: `${formatBalance(ableWithdraw)} max`,
+            max: ableWithdraw,
             startAdornment: currentAssetName,
             onChange: value => {
                 if (FixedU128.fromNatural(value).isGreaterThan(ableWithdraw)) {
@@ -308,6 +318,7 @@ interface BaseActionModalProps {
     // input props
     amount: number;
     placeholder?: string;
+    max: FixedU128,
     error?: boolean;
     startAdornment?: string;
 
@@ -315,7 +326,7 @@ interface BaseActionModalProps {
     collateralRatio: FixedU128;
     liquidationPrice: FixedU128;
 
-    onChange?: (value: number) => void;
+    onChange: (value: number) => void;
     onConfirm?: () => void;
 }
 
@@ -327,6 +338,7 @@ const BaseActionModal: React.FC<BaseActionModalProps & ActionModalProps> = ({
     liquidationPrice,
     amount,
     placeholder,
+    max,
     startAdornment,
     open,
     onChange,
@@ -339,10 +351,15 @@ const BaseActionModal: React.FC<BaseActionModalProps & ActionModalProps> = ({
     const inputClasses = useInputStyles();
     const updateVaultStatus = useSelector(statusSelector('updateVault'));
 
+    // reset amount
+    useEffect(() => { onChange(0) }, [])
+
     const handleInput: ChangeEventHandler<HTMLInputElement> = e => {
         const value = Number(e.currentTarget.value);
-        onChange && onChange(value);
+        onChange(value);
     };
+
+    const handleMax = () => { onChange(max.toNumber()) };
 
     useEffect(() => {
         if (updateVaultStatus === 'success') {
@@ -369,7 +386,12 @@ const BaseActionModal: React.FC<BaseActionModalProps & ActionModalProps> = ({
                         placeholder: placeholder,
                         value: !amount ? '' : amount,
                         onChange: handleInput,
-                        endAdornment: <InputAdornment position="start">{startAdornment}</InputAdornment>,
+                        endAdornment: (
+                            <InputAdornment position="start">
+                                <Button disableRipple className={classes.maxBtn} size="small" onClick={handleMax}>max</Button>
+                                {startAdornment}
+                            </InputAdornment>
+                        ),
                     }}
                 />
                 <Box paddingTop={4} />

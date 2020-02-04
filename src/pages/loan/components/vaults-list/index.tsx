@@ -7,7 +7,7 @@ import { Theme } from '@material-ui/core/styles';
 import add from '@/assets/add.svg';
 import { getAssetName, getAssetIcon } from '@/utils';
 import { vaultsSelector, pricesFeedSelector } from '@/store/chain/selectors';
-import { accountVaultsSelector } from '@/store/account/selectors';
+import { accountVaultsSelector } from '@/store/vault/selectors';
 import Formatter from '@/components/formatter';
 import clsx from 'clsx';
 import { collateralToUSD, debitToUSD, calcCollateralRatio } from '@/utils/vault';

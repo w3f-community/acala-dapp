@@ -1,12 +1,14 @@
 import { Epic } from 'redux-observable';
-import { filter, switchMap, withLatestFrom, catchError, flatMap, takeUntil } from 'rxjs/operators';
+import { filter, switchMap, withLatestFrom, catchError, flatMap, takeUntil, map, startWith, endWith, take } from 'rxjs/operators';
 import { isActionOf, RootAction, RootState } from 'typesafe-actions';
-import { of, concat } from 'rxjs';
+import { of, concat, combineLatest, forkJoin } from 'rxjs';
 import { Tx } from '@/types/store';
-import { txLog$, txResultHandler$ } from '@/utils/epic';
+import { txLog$, txResultFilter$ } from '@/utils/epic';
 import * as actions from './actions';
 import * as appActions from '../app/actions';
 import { startLoading, endLoading } from '../loading/reducer';
+import FixedU128 from '@/utils/fixed_u128';
+import { u8aToNumber } from '@/utils';
 
 export const createValutEpic: Epic<RootAction, RootAction, RootState> = (action$, state$) =>
     action$.pipe(
@@ -37,7 +39,7 @@ export const createValutEpic: Epic<RootAction, RootAction, RootState> = (action$
                 of(appActions.updateTransition(txRecord)),
                 tx.signAndSend(address).pipe(
                     txLog$,
-                    txResultHandler$,
+                    txResultFilter$,
                     flatMap(result =>
                         of(
                             appActions.updateTransition({
@@ -61,6 +63,34 @@ export const createValutEpic: Epic<RootAction, RootAction, RootState> = (action$
                     takeUntil(action$.ofType(actions.updateVault.success, actions.updateVault.failure)),
                 ),
                 of(endLoading(actions.UPDATE_VAULT)),
+            );
+        }),
+    );
+
+export const fetchVaultsEpic: Epic<RootAction, RootAction, RootState> = (action$, state$) =>
+    action$.pipe(
+        filter(isActionOf(actions.fetchVaults.request)),
+        withLatestFrom(state$),
+        switchMap(([action, state]) => {
+            const app = state.chain.app!;
+            const account = state.account.account!;
+            const assetList = action.payload;
+            return combineLatest(
+                assetList.map(asset => combineLatest([
+                    app.query.vaults.collaterals(account.address, asset),
+                    app.query.vaults.debits(account.address, asset),
+                ]))
+            ).pipe(
+                map((result) => assetList.map((asset, index) => ({
+                    asset: asset,
+                    collateral: FixedU128.fromParts(u8aToNumber(result[index][0])),
+                    debit: FixedU128.fromParts(u8aToNumber(result[index][1])),
+                }))),
+                map(actions.fetchVaults.success),
+                take(1),
+                startWith(startLoading(actions.FETCH_VAULTS)),
+                endWith(endLoading(actions.FETCH_VAULTS)),
+                catchError(() => of(actions.fetchVaults.failure('error'))),
             );
         }),
     );

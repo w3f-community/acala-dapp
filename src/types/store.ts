@@ -103,7 +103,6 @@ export type AccountState = {
 
     // account information
     balancas: BalanceData[];
-    vaults: UserVaultData[];
 
     // account error
     error: AccountError;
@@ -132,6 +131,7 @@ export interface VaultState {
     updateVaultStatus: TxStatus;
     txRecord: Tx[];
     [T: string]: any;
+    vaults: UserVaultData[];
 }
 
 export interface GovernanceState {

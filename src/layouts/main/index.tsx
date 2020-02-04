@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { makeStyles, createStyles } from '@material-ui/core';
 import { Theme } from '@material-ui/core/styles';
-import acalaTypes from '@acala-network/types/src/interfaces/runtime/definitions';
+import { types as acalaTypes } from '@acala-network/types';
 
 import { loadingSelector } from '@/store/loading/reducer';
 import Loading from '@/components/loading';
@@ -60,7 +60,7 @@ const MainLayout: React.FC<Props> = props => {
 
     useEffect(() => {
         // connect to blockchain
-        dispatch(actions.chain.connectAsync.request({ endpoint: getEndPoint(), ...acalaTypes }));
+        dispatch(actions.chain.connectAsync.request({ endpoint: getEndPoint(), types: acalaTypes }));
         dispatch(actions.account.importAccount.request(''));
     }, [dispatch]);
 

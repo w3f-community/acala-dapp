@@ -5,7 +5,7 @@ import Formatter, { FormatterProps } from '@/components/formatter';
 import { useSelector } from 'react-redux';
 import { specVaultSelector, specPriceSelector } from '@/store/chain/selectors';
 import { STABLE_COIN } from '@/config';
-import { specUserVaultSelector } from '@/store/account/selectors';
+import { specUserVaultSelector } from '@/store/vault/selectors';
 import { calcCollateralRatio, calcStableFee, collateralToUSD, debitToUSD, calcLiquidationPrice } from '@/utils/vault';
 import FixedU128 from '@/utils/fixed_u128';
 import Skeleton from '@material-ui/lab/Skeleton';
@@ -99,7 +99,7 @@ const VaultInfo: React.FC<Props> = ({ current }) => {
     const match = useMobileMatch('sm');
 
     if (!vault || !userVault) {
-        return <Skeleton variant="rect" height={240} />;
+        return null;
     }
 
     const currentCollateralRatio = calcCollateralRatio(

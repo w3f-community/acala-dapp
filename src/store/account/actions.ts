@@ -21,10 +21,3 @@ export const fetchAssetsBalance = createAsyncAction(
     '@account/fetch_assets_balance/success',
     '@account/fetch_assets_balance/failure',
 )<AssetList, BalanceData[], any>();
-
-export const FETCH_VAULTS = '@account/fetch_vaults';
-export const fetchVaults = createAsyncAction(
-    FETCH_VAULTS,
-    '@account/fetch_vaults/success',
-    '@account/fetch_vaults/failure',
-)<AssetList, UserVaultData[], string>();

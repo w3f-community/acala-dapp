@@ -4,7 +4,7 @@ import { Grid, Box, makeStyles, createStyles, Theme } from '@material-ui/core';
 
 import actions from '@/store/actions';
 import { COLLATERAL, STABLE_COIN, assets } from '@/config';
-import { accountVaultsSelector } from '@/store/account/selectors';
+import { accountVaultsSelector } from '@/store/vault/selectors';
 import useMobileMatch from '@/hooks/mobile-match';
 
 import Page from '@/components/page';
@@ -17,6 +17,10 @@ import TransactionHistory from './components/transactions-history';
 import VaultInfo from './components/vault-info';
 import AddVault from './components/add-vault';
 import WalletBalance from './components/account-balance';
+import { loadingSelector } from '@/store/loading/reducer';
+import { FETCH_VAULTS } from '@/store/vault/actions';
+import Skeleton from '@material-ui/lab/Skeleton';
+import Guide from './components/guide';
 
 const useStyle = makeStyles((theme: Theme) =>
     createStyles({
@@ -47,17 +51,18 @@ const Loan: React.FC = () => {
     const initStatus = useRef<boolean>(false);
     const dispatch = useDispatch();
     const [currentVault, setCurrentVault] = useState<number>(0);
-    const [addVaultStatus, setAddVaultstatus] = useState<boolean>(false);
+    const [addVault, setAddVault] = useState<boolean>(false);
     const userVaults = useSelector(accountVaultsSelector);
+    const isLoadingVault = useSelector(loadingSelector(FETCH_VAULTS))
     const classes = useStyle();
-    const showAddVault = () => setAddVaultstatus(true);
-    const hideAddVault = () => setAddVaultstatus(false);
+    const showAddVault = () => setAddVault(true);
+    const hideAddVault = () => setAddVault(false);
     const match = useMobileMatch('sm');
     const mdMatch = useMobileMatch('md');
 
     useEffect(() => {
         // fetch user vaults info
-        dispatch(actions.account.fetchVaults.request(COLLATERAL));
+        dispatch(actions.vault.fetchVaults.request(COLLATERAL));
         // fetch user asset balance
         dispatch(actions.account.fetchAssetsBalance.request(Array.from(assets.keys())));
         // fetch tokens total issuance
@@ -78,8 +83,29 @@ const Loan: React.FC = () => {
 
     const handleVaultSelect = (vault: number) => {
         setCurrentVault(vault);
-        setAddVaultstatus(false);
+        setAddVault(false);
     };
+
+    const renderVault = () => {
+        if (typeof isLoadingVault !== 'boolean') {
+            return null
+        } 
+        if (isLoadingVault === true) {
+            return <Skeleton variant="rect" width="100%" height={500} />;
+        }
+        if (!userVaults.length) {
+            return <Guide onConfirm={showAddVault} />
+        }
+        return (
+            <>
+                <VaultInfo current={currentVault} />
+                <Box paddingTop={match ? 4 : 7} />
+                <VaultPanel current={currentVault} />
+                <Box paddingTop={match ? 4 : 7} />
+                <TransactionHistory current={currentVault} />
+            </>
+        );
+    }
 
     return (
         <Page padding={'46px 55px'}>
@@ -94,17 +120,7 @@ const Loan: React.FC = () => {
                 className={classes.detail}
             >
                 <Grid item xs={12} className={classes.vaultInfo}>
-                    {addVaultStatus ? (
-                        <AddVault onCancel={hideAddVault} />
-                    ) : (
-                        <>
-                            <VaultInfo current={currentVault} />
-                            <Box paddingTop={match ? 4 : 7} />
-                            <VaultPanel current={currentVault} />
-                            <Box paddingTop={match ? 4 : 7} />
-                            <TransactionHistory current={currentVault} />
-                        </>
-                    )}
+                    {addVault ? <AddVault onCancel={hideAddVault} /> : renderVault() }
                 </Grid>
                 <Grid item md={12} className={classes.systemInfo}>
                     <WalletBalance />

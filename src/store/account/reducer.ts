@@ -10,7 +10,6 @@ const initialState: AccountState = {
     accountStatus: 'none',
 
     balancas: [],
-    vaults: [],
 
     error: 'none',
 };
@@ -45,7 +44,3 @@ export default createReducer(initialState)
 
         return newState;
     })
-    .handleAction(actions.fetchVaults.success, (state, action) => ({
-        ...state,
-        vaults: action.payload,
-    }));

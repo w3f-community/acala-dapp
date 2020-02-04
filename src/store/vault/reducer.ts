@@ -7,6 +7,7 @@ import { VaultState } from '@/types/store';
 const initialState: VaultState = {
     updateVaultStatus: 'none',
     txRecord: [],
+    vaults: [],
 };
 
 const STORAGE_KEY = 'vault-tx-storage';
@@ -63,4 +64,8 @@ export default createReducer(initialState)
             return { ...state, txRecord: storageData };
         }
         return state;
-    });
+    })
+    .handleAction(actions.fetchVaults.success, (state, action) => ({
+        ...state,
+        vaults: action.payload,
+    }));

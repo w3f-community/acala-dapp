@@ -80,13 +80,12 @@ interface Props {
 
 const Component: React.FC<Props> = ({ onNext, onCancel }) => {
     const { t } = useTranslate();
-    // set default value
     const classes = useStyles();
     const { data, setValue } = useForm(formContext);
     const selectedAsset = data.asset.value;
     const vaults = filterEmptyVault(useSelector(vaultsSelector));
     const balances = useSelector(balancesSelector);
-    const match = useMobileMatch('sm');
+    const mobileMatch = useMobileMatch('sm');
 
     const handleNextBtnClick = () => onNext();
 
@@ -96,7 +95,7 @@ const Component: React.FC<Props> = ({ onNext, onCancel }) => {
     };
 
     useEffect(() => {
-        // auto select
+        // auto select first
         if (!data.asset.value && vaults.length !== 0) {
             setValue('asset', vaults[0].asset);
         }
@@ -119,7 +118,7 @@ const Component: React.FC<Props> = ({ onNext, onCancel }) => {
 
     const renderBottom = () => {
         return (
-            <Grid container justify={match ? 'space-between' : 'flex-end'} className={classes.bottom}>
+            <Grid container justify={mobileMatch ? 'space-between' : 'flex-end'} className={classes.bottom}>
                 <Button variant="contained" color="secondary" onClick={onCancel}>
                     {t('Cancel')}
                 </Button>
@@ -135,7 +134,7 @@ const Component: React.FC<Props> = ({ onNext, onCancel }) => {
         return null;
     }
 
-    if (match) {
+    if (mobileMatch) {
         return (
             <SelectCollateralMobile
                 renderBottom={renderBottom}
@@ -167,6 +166,7 @@ const Component: React.FC<Props> = ({ onNext, onCancel }) => {
                                     value={item.asset}
                                     onChange={handleAssetRadioSelect}
                                     checked={selectedAsset === item.asset}
+                                    disabled={item.stabilityFee.isZero()}
                                 />
                                 {getAssetName(item.asset)}
                             </SBodyCell>
