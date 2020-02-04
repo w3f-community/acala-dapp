@@ -10,7 +10,7 @@ export const statusSelector: (type: StatusType) => Selector<TxStatus> = type => 
 export const vaultTxRecordSelector: Selector<Tx[]> = state => state.vault.txRecord.slice().reverse();
 
 // add account prefix to avoid conflict
-export const accountVaultsSelector: Selector<UserVaultData[]> = state => {
+export const vaultsSelector: Selector<UserVaultData[]> = state => {
     const vaults = state.vault.vaults;
 
     // filter empty vault

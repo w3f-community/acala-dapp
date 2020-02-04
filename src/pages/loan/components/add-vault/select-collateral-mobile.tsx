@@ -12,7 +12,7 @@ import {
 } from '@material-ui/core';
 import { useTranslate } from '@/hooks/i18n';
 import { createTypography } from '@/theme';
-import { BaseVaultData } from '@/types/store';
+import { CdpTypeData } from '@/types/store';
 import CollateralSelect from '@/components/collateral-select';
 import FixedU128 from '@/utils/fixed_u128';
 import Formatter from '@/components/formatter';
@@ -61,19 +61,19 @@ const Value = withStyles(() => ({
 
 interface Props {
     selected: number;
-    onSelect: (e: ChangeEvent<{ value: unknown }>) => void;
+    onSelect: (asset: number) => void;
     renderBottom: () => ReactNode;
-    vaults: BaseVaultData[];
+    cdpTypes: CdpTypeData[];
     balances: { [key in number]: FixedU128 };
 }
 
-const SelectCollateral: React.FC<Props> = ({ selected, onSelect, renderBottom, vaults, balances }) => {
+const SelectCollateral: React.FC<Props> = ({ selected, onSelect, renderBottom, cdpTypes, balances }) => {
     const { t } = useTranslate();
     const classes = useStyles();
 
-    const selectedVault = vaults.find(item => item.asset === selected);
+    const selectedCdp = cdpTypes.find(item => item.asset === selected);
 
-    if (!selectedVault) {
+    if (!selectedCdp) {
         return null;
     }
 
@@ -82,34 +82,34 @@ const SelectCollateral: React.FC<Props> = ({ selected, onSelect, renderBottom, v
             <Title>{t('Select Collateral')}</Title>
             <Grid container justify="space-between" alignItems="center" className={classes.collateralType}>
                 {t('Collateral Type')}
-                <CollateralSelect selected={selected} onChange={onSelect} vaults={vaults} />
+                <CollateralSelect selected={selected} onChange={onSelect} cdpTypes={cdpTypes} />
             </Grid>
             <List>
                 <SListItem button>
                     <Lable>{t('Interest Rate')}</Lable>
                     <Value>
-                        <Formatter data={calcStableFee(selectedVault.stabilityFee)} type="ratio" />
+                        <Formatter data={calcStableFee(selectedCdp.stabilityFee)} type="ratio" />
                     </Value>
                 </SListItem>
                 <SListItem button>
                     <Lable>{t('LIQ Ratio')}</Lable>
                     <Value>
-                        <Formatter data={selectedVault.liquidationRatio} type="ratio" />{' '}
+                        <Formatter data={selectedCdp.liquidationRatio} type="ratio" />{' '}
                     </Value>
                 </SListItem>
                 <SListItem button>
                     <Lable>{t('LIQ Fee')}</Lable>
                     <Value>
-                        <Formatter data={selectedVault.liquidationPenalty} type="ratio" />{' '}
+                        <Formatter data={selectedCdp.liquidationPenalty} type="ratio" />{' '}
                     </Value>
                 </SListItem>
                 <SListItem button>
                     <Lable>{t('Avail. Balance')}</Lable>
                     <Value>
                         <Formatter
-                            data={balances[selectedVault.asset] || 0}
+                            data={balances[selectedCdp.asset] || 0}
                             type="balance"
-                            suffix={getAssetName(selectedVault.asset)}
+                            suffix={getAssetName(selectedCdp.asset)}
                         />
                     </Value>
                 </SListItem>

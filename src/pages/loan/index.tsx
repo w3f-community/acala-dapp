@@ -1,26 +1,27 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Grid, Box, makeStyles, createStyles, Theme } from '@material-ui/core';
+import Skeleton from '@material-ui/lab/Skeleton';
 
 import actions from '@/store/actions';
 import { COLLATERAL, STABLE_COIN, assets } from '@/config';
-import { accountVaultsSelector } from '@/store/vault/selectors';
+import { vaultsSelector } from '@/store/vault/selectors';
 import useMobileMatch from '@/hooks/mobile-match';
-
-import Page from '@/components/page';
-import PricesFeed from './components/prices-feed';
-import VaultsList from './components/vaults-list';
-import SystemInfo from './components/system-info';
-import CollateralInfo from './components/collateral-info';
-import VaultPanel from './components/vault-panel';
-import TransactionHistory from './components/transactions-history';
-import VaultInfo from './components/vault-info';
-import AddVault from './components/add-vault';
-import WalletBalance from './components/account-balance';
 import { loadingSelector } from '@/store/loading/reducer';
 import { FETCH_VAULTS } from '@/store/vault/actions';
-import Skeleton from '@material-ui/lab/Skeleton';
+import Page from '@/components/page';
+
+import PricesFeed from './components/prices-feed';
+import { Active as VaultListActive, VaultsList } from './components/vaults-list';
+import SystemInfo from './components/system-info';
+import CollateralInfo from './components/collateral-info';
+import VaultConsole from './components/vault-console';
+import TransactionHistory from './components/transactions-history';
+import VaultPanel from './components/vault-panel';
+import AddVault from './components/add-vault';
+import WalletBalance from './components/account-balance';
 import Guide from './components/guide';
+import Overview from './components/overview';
 
 const useStyle = makeStyles((theme: Theme) =>
     createStyles({
@@ -48,15 +49,25 @@ const useStyle = makeStyles((theme: Theme) =>
 );
 
 const Loan: React.FC = () => {
-    const initStatus = useRef<boolean>(false);
     const dispatch = useDispatch();
     const [currentVault, setCurrentVault] = useState<number>(0);
-    const [addVault, setAddVault] = useState<boolean>(false);
-    const userVaults = useSelector(accountVaultsSelector);
-    const isLoadingVault = useSelector(loadingSelector(FETCH_VAULTS))
+    const [isAddVault, setAddVault] = useState<boolean>(false);
+    // show overview as default
+    const [isOverview, setIsShowOverview] = useState<boolean>(true);
+    const [active, setActive] = useState<VaultListActive>('overview');
+    const userVaults = useSelector(vaultsSelector);
+    const isLoadingVault = useSelector(loadingSelector(FETCH_VAULTS));
     const classes = useStyle();
-    const showAddVault = () => setAddVault(true);
+    const showAddVault = () => {
+        setAddVault(true);
+        setActive('add_vault');
+    };
     const hideAddVault = () => setAddVault(false);
+    const showOverview = () => {
+        setIsShowOverview(true);
+        setActive('overview');
+    };
+    const hideOverview = () => setIsShowOverview(false);
     const match = useMobileMatch('sm');
     const mdMatch = useMobileMatch('md');
 
@@ -68,49 +79,54 @@ const Loan: React.FC = () => {
         // fetch tokens total issuance
         dispatch(actions.chain.fetchTotalIssuance.request([STABLE_COIN]));
         // fetch system vaults info
-        dispatch(actions.chain.fetchVaults.request(COLLATERAL));
+        dispatch(actions.chain.fetchCdpTypes.request(COLLATERAL));
         // load tx record
         dispatch(actions.vault.loadTxRecord());
     }, [dispatch]);
 
-    useEffect(() => {
-        // set default vault
-        if (userVaults.length && initStatus.current === false) {
-            setCurrentVault(userVaults[0].asset);
-            initStatus.current = true;
-        }
-    }, [userVaults, initStatus]);
-
     const handleVaultSelect = (vault: number) => {
         setCurrentVault(vault);
-        setAddVault(false);
+        setActive(vault);
+        hideAddVault();
+        hideOverview();
     };
 
-    const renderVault = () => {
+    const renderContent = () => {
         if (typeof isLoadingVault !== 'boolean') {
-            return null
-        } 
+            return null;
+        }
         if (isLoadingVault === true) {
             return <Skeleton variant="rect" width="100%" height={500} />;
         }
         if (!userVaults.length) {
-            return <Guide onConfirm={showAddVault} />
+            return <Guide onConfirm={showAddVault} />;
+        }
+        if (isAddVault) {
+            return <AddVault onCancel={hideAddVault} />;
+        }
+        if (isOverview) {
+            return <Overview onSelect={handleVaultSelect} />;
         }
         return (
             <>
-                <VaultInfo current={currentVault} />
-                <Box paddingTop={match ? 4 : 7} />
                 <VaultPanel current={currentVault} />
+                <Box paddingTop={match ? 4 : 7} />
+                <VaultConsole current={currentVault} />
                 <Box paddingTop={match ? 4 : 7} />
                 <TransactionHistory current={currentVault} />
             </>
         );
-    }
+    };
 
     return (
         <Page padding={'46px 55px'}>
             <Grid container direction={match ? 'column' : 'row'}>
-                <VaultsList onAdd={showAddVault} onSelect={handleVaultSelect} />
+                <VaultsList
+                    active={active}
+                    onOverview={showOverview}
+                    onAdd={showAddVault}
+                    onSelect={handleVaultSelect}
+                />
             </Grid>
             <Grid
                 container
@@ -120,7 +136,7 @@ const Loan: React.FC = () => {
                 className={classes.detail}
             >
                 <Grid item xs={12} className={classes.vaultInfo}>
-                    {addVault ? <AddVault onCancel={hideAddVault} /> : renderVault() }
+                    {renderContent()}
                 </Grid>
                 <Grid item md={12} className={classes.systemInfo}>
                     <WalletBalance />

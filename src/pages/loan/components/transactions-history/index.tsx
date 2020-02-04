@@ -1,14 +1,13 @@
 import React from 'react';
-import Card from '@/components/card';
 import { Typography, Table, TableBody, TableHead, TableRow, TableCell, Theme, withStyles } from '@material-ui/core';
 import Moment from 'dayjs';
 import { useSelector } from 'react-redux';
 
+import Card from '@/components/card';
 import { useTranslate } from '@/hooks/i18n';
 import { getAssetName, formatHash } from '@/utils';
 import { createTypography } from '@/theme';
 import { vaultTxRecordSelector } from '@/store/vault/selectors';
-import Skeleton from '@material-ui/lab/Skeleton';
 import useMobileMatch from '@/hooks/mobile-match';
 
 import Mobile from './mobile';

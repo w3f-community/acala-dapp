@@ -6,13 +6,13 @@ const initialState: ChainState = {
     app: null,
     connected: false,
     pricesFeed: [],
-    vaults: [],
+    cdpTypes: [],
     totalIssuance: [],
 };
 
 export default createReducer(initialState)
     .handleAction(actions.connectAsync.success, (state, action) => {
-        console.log(action.payload)
+        console.log(action.payload);
         return {
             ...state,
             app: action.payload,
@@ -23,9 +23,9 @@ export default createReducer(initialState)
         ...state,
         pricesFeed: action.payload,
     }))
-    .handleAction(actions.fetchVaults.success, (state, action) => ({
+    .handleAction(actions.fetchCdpTypes.success, (state, action) => ({
         ...state,
-        vaults: action.payload,
+        cdpTypes: action.payload,
     }))
     .handleAction(actions.fetchTotalIssuance.success, (state, action) => ({
         ...state,

@@ -18,9 +18,9 @@ import { useTranslate } from '@/hooks/i18n';
 import { getAssetName } from '@/utils';
 import Formatter from '@/components/formatter';
 import { useSelector } from 'react-redux';
-import { vaultsSelector } from '@/store/chain/selectors';
+import { cdpTypeSelector } from '@/store/chain/selectors';
 import { balancesSelector } from '@/store/account/selectors';
-import { BaseVaultData } from '@/types/store';
+import { CdpTypeData } from '@/types/store';
 import { createTypography } from '@/theme';
 import { useForm } from '@/hooks/form';
 import { formContext } from './context';
@@ -61,7 +61,7 @@ const SHeaderCell = withStyles((theme: Theme) => ({
     },
 }))(TableCell);
 
-const filterEmptyVault = (source: BaseVaultData[]): BaseVaultData[] => {
+const filterEmptyVault = (source: CdpTypeData[]): CdpTypeData[] => {
     return source.filter(
         item =>
             !item.debitExchangeRate.isZero() ||
@@ -83,7 +83,7 @@ const Component: React.FC<Props> = ({ onNext, onCancel }) => {
     const classes = useStyles();
     const { data, setValue } = useForm(formContext);
     const selectedAsset = data.asset.value;
-    const vaults = filterEmptyVault(useSelector(vaultsSelector));
+    const cdpTypes = filterEmptyVault(useSelector(cdpTypeSelector));
     const balances = useSelector(balancesSelector);
     const mobileMatch = useMobileMatch('sm');
 
@@ -96,10 +96,10 @@ const Component: React.FC<Props> = ({ onNext, onCancel }) => {
 
     useEffect(() => {
         // auto select first
-        if (!data.asset.value && vaults.length !== 0) {
-            setValue('asset', vaults[0].asset);
+        if (!data.asset.value && cdpTypes.length !== 0) {
+            setValue('asset', cdpTypes[0].asset);
         }
-    }, [vaults, data.asset.value, setValue]);
+    }, [cdpTypes, data.asset.value, setValue]);
 
     const handleAssetSelect = (e: ChangeEvent<{ value: unknown }>) => {
         const result = Number(e.target.value);
@@ -129,8 +129,8 @@ const Component: React.FC<Props> = ({ onNext, onCancel }) => {
         );
     };
 
-    // ensure vaults is not empty
-    if (!vaults.length) {
+    // ensure cdpTypes is not empty
+    if (!cdpTypes.length) {
         return null;
     }
 
@@ -138,9 +138,9 @@ const Component: React.FC<Props> = ({ onNext, onCancel }) => {
         return (
             <SelectCollateralMobile
                 renderBottom={renderBottom}
-                vaults={vaults}
+                cdpTypes={cdpTypes}
                 balances={balancesMap}
-                onSelect={handleAssetSelect}
+                onSelect={(asset: number) => setValue('asset', asset)}
                 selected={data.asset.value}
             />
         );
@@ -159,7 +159,7 @@ const Component: React.FC<Props> = ({ onNext, onCancel }) => {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {vaults.map(item => (
+                    {cdpTypes.map(item => (
                         <TableRow key={`select-collateral-asset-${item.asset}`}>
                             <SBodyCell>
                                 <Radio

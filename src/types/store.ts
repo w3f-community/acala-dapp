@@ -28,7 +28,7 @@ export interface Account {
     [other: string]: any;
 }
 
-export interface BaseVaultData {
+export interface CdpTypeData {
     asset: number;
     debitExchangeRate: FixedU128;
     liquidationPenalty: FixedU128;
@@ -117,7 +117,7 @@ export interface ChainState {
     connected: boolean;
 
     pricesFeed: PriceData[];
-    vaults: BaseVaultData[];
+    cdpTypes: CdpTypeData[];
     totalIssuance: IssuanceData[];
 }
 

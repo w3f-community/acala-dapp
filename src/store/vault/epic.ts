@@ -1,5 +1,16 @@
 import { Epic } from 'redux-observable';
-import { filter, switchMap, withLatestFrom, catchError, flatMap, takeUntil, map, startWith, endWith, take } from 'rxjs/operators';
+import {
+    filter,
+    switchMap,
+    withLatestFrom,
+    catchError,
+    flatMap,
+    takeUntil,
+    map,
+    startWith,
+    endWith,
+    take,
+} from 'rxjs/operators';
 import { isActionOf, RootAction, RootState } from 'typesafe-actions';
 import { of, concat, combineLatest, forkJoin } from 'rxjs';
 import { Tx } from '@/types/store';
@@ -76,16 +87,20 @@ export const fetchVaultsEpic: Epic<RootAction, RootAction, RootState> = (action$
             const account = state.account.account!;
             const assetList = action.payload;
             return combineLatest(
-                assetList.map(asset => combineLatest([
-                    app.query.vaults.collaterals(account.address, asset),
-                    app.query.vaults.debits(account.address, asset),
-                ]))
+                assetList.map(asset =>
+                    combineLatest([
+                        app.query.vaults.collaterals(account.address, asset),
+                        app.query.vaults.debits(account.address, asset),
+                    ]),
+                ),
             ).pipe(
-                map((result) => assetList.map((asset, index) => ({
-                    asset: asset,
-                    collateral: FixedU128.fromParts(u8aToNumber(result[index][0])),
-                    debit: FixedU128.fromParts(u8aToNumber(result[index][1])),
-                }))),
+                map(result =>
+                    assetList.map((asset, index) => ({
+                        asset: asset,
+                        collateral: FixedU128.fromParts(u8aToNumber(result[index][0])),
+                        debit: FixedU128.fromParts(u8aToNumber(result[index][1])),
+                    })),
+                ),
                 map(actions.fetchVaults.success),
                 take(1),
                 startWith(startLoading(actions.FETCH_VAULTS)),

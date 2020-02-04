@@ -47,9 +47,9 @@ export const fetchPricesFeedEpic: Epic<RootAction, RootAction, RootState> = (act
         }),
     );
 
-export const fetchVaultsEpic: Epic<RootAction, RootAction, RootState> = (action$, state$) =>
+export const fetchCdpTypesEpic: Epic<RootAction, RootAction, RootState> = (action$, state$) =>
     action$.pipe(
-        filter(isActionOf(actions.fetchVaults.request)),
+        filter(isActionOf(actions.fetchCdpTypes.request)),
         withLatestFrom(state$),
         switchMap(([action, state]) => {
             const assetList = action.payload;
@@ -79,7 +79,7 @@ export const fetchVaultsEpic: Epic<RootAction, RootAction, RootState> = (action$
                         stabilityFee: FixedU128.fromParts(u8aToNumber(result[index][5])),
                     }));
                 }),
-                map(actions.fetchVaults.success),
+                map(actions.fetchCdpTypes.success),
             );
         }),
     );

@@ -17,7 +17,7 @@ import { formatRatio, formatPrice, formatBalance } from '@/components/formatter'
 import { formContext } from './context';
 import { getAssetName } from '@/utils';
 import { useSelector } from 'react-redux';
-import { specVaultSelector, specPriceSelector } from '@/store/chain/selectors';
+import { specCdpTypeSelector, specPriceSelector } from '@/store/chain/selectors';
 import { useForm } from '@/hooks/form';
 import { specBalanceSelector } from '@/store/account/selectors';
 import FixedU128 from '@/utils/fixed_u128';
@@ -117,7 +117,7 @@ const Component: React.FC<Props> = ({ onNext, onPrev, onCancel }) => {
     const borrow = FixedU128.fromNatural(data.borrow.value);
     const assetName = getAssetName(selectedAsset);
     const stableCoinAssetName = getAssetName(STABLE_COIN);
-    const vault = useSelector(specVaultSelector(selectedAsset));
+    const vault = useSelector(specCdpTypeSelector(selectedAsset));
     const balance = useSelector(specBalanceSelector(selectedAsset));
     const collateralPrice = useSelector(specPriceSelector(selectedAsset));
 
@@ -125,7 +125,7 @@ const Component: React.FC<Props> = ({ onNext, onPrev, onCancel }) => {
         // reset to empty
         setValue('collateral', '');
         setValue('borrow', '');
-    }, [])
+    }, []);
 
     if (!vault) {
         return null;

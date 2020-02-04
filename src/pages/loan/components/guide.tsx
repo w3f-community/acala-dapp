@@ -1,13 +1,5 @@
 import React from 'react';
-import {
-    withStyles,
-    Grid,
-    Paper,
-    Button,
-    Theme,
-    createStyles,
-    makeStyles,
-} from '@material-ui/core';
+import { withStyles, Grid, Paper, Button, Theme, createStyles, makeStyles } from '@material-ui/core';
 import { useTranslate } from '@/hooks/i18n';
 import RightArrow from '@/assets/right-arrow.svg';
 import Loan from '@/components/svgs/loan';
@@ -38,25 +30,21 @@ interface Props {
     onConfirm: () => void;
 }
 
-const Success: React.FC<Props> = ({ onConfirm }) => {
+const Guide: React.FC<Props> = ({ onConfirm }) => {
     const { t } = useTranslate();
     const classes = useStyles();
-    const steps: Array<{key: string, title: string}> = [
-        { key: 'select', title: t('Select Collateral'), },
-        { key: 'generate', title: t('Generate aUSD'), },
-        { key: 'confirm', title: t('Confirmation'), },
+    const steps: Array<{ key: string; title: string }> = [
+        { key: 'select', title: t('Select Collateral') },
+        { key: 'generate', title: t('Generate aUSD') },
+        { key: 'confirm', title: t('Confirmation') },
     ];
     return (
         <Card square={true} elevation={1}>
             <Grid container justify="center" alignItems="center" direction="column">
-                <Grid container alignItems="center" spacing={2} justify="center"  className={classes.title}>
+                <Grid container alignItems="center" spacing={2} justify="center" className={classes.title}>
                     {steps.map(({ key, title }, index) => {
                         return [
-                            <Grid
-                                key={`add-vault-step-key-${key}`}
-                                item
-                                className={classes.item}
-                            >
+                            <Grid key={`add-vault-step-key-${key}`} item className={classes.item}>
                                 {title}
                             </Grid>,
                             index < steps.length - 1 && (
@@ -68,10 +56,12 @@ const Success: React.FC<Props> = ({ onConfirm }) => {
                     })}
                 </Grid>
                 <Loan className={classes.img} />
-                <Button variant="contained" color="primary" onClick={onConfirm}>{t('Get Started')}</Button>
+                <Button variant="contained" color="primary" onClick={onConfirm}>
+                    {t('Get Started')}
+                </Button>
             </Grid>
         </Card>
     );
 };
 
-export default Success;
+export default Guide;

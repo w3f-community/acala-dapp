@@ -25,7 +25,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { formatPrice, formatBalance, formatRatio } from '@/components/formatter';
 import actions from '@/store/actions';
 import { statusSelector } from '@/store/vault/selectors';
-import { specPriceSelector, specVaultSelector } from '@/store/chain/selectors';
+import { specPriceSelector, specCdpTypeSelector } from '@/store/chain/selectors';
 import FixedU128 from '@/utils/fixed_u128';
 import {
     USDToDebit,
@@ -37,7 +37,7 @@ import {
     calcRequiredCollateral,
 } from '@/utils/vault';
 import { specUserVaultSelector } from '@/store/vault/selectors';
-import { specBalanceSelector } from '@/store/account/selectors'
+import { specBalanceSelector } from '@/store/account/selectors';
 
 export type ActionType = 'any' | 'payback' | 'generate' | 'deposit' | 'withdraw';
 
@@ -52,7 +52,7 @@ const useStyles = makeStyles(() =>
             marginRight: 8,
             minWidth: 'auto',
             height: 'auto',
-        }
+        },
     }),
 );
 
@@ -92,7 +92,7 @@ const ActionModal: React.FC<ActionModalProps> = props => {
     const dispatch = useDispatch();
     const [stableCoinPrice, collateralPrice] = useSelector(specPriceSelector([STABLE_COIN, current]));
     const collateralbalance = useSelector(specBalanceSelector(current));
-    const vault = useSelector(specVaultSelector(current));
+    const vault = useSelector(specCdpTypeSelector(current));
     const userVault = useSelector(specUserVaultSelector(current));
     const stableCoinAssetName = getAssetName(STABLE_COIN);
     const currentAssetName = getAssetName(current);
@@ -318,7 +318,7 @@ interface BaseActionModalProps {
     // input props
     amount: number;
     placeholder?: string;
-    max: FixedU128,
+    max: FixedU128;
     error?: boolean;
     startAdornment?: string;
 
@@ -352,14 +352,18 @@ const BaseActionModal: React.FC<BaseActionModalProps & ActionModalProps> = ({
     const updateVaultStatus = useSelector(statusSelector('updateVault'));
 
     // reset amount
-    useEffect(() => { onChange(0) }, [])
+    useEffect(() => {
+        onChange(0);
+    }, []);
 
     const handleInput: ChangeEventHandler<HTMLInputElement> = e => {
         const value = Number(e.currentTarget.value);
         onChange(value);
     };
 
-    const handleMax = () => { onChange(max.toNumber()) };
+    const handleMax = () => {
+        onChange(max.toNumber());
+    };
 
     useEffect(() => {
         if (updateVaultStatus === 'success') {
@@ -388,7 +392,9 @@ const BaseActionModal: React.FC<BaseActionModalProps & ActionModalProps> = ({
                         onChange: handleInput,
                         endAdornment: (
                             <InputAdornment position="start">
-                                <Button disableRipple className={classes.maxBtn} size="small" onClick={handleMax}>max</Button>
+                                <Button disableRipple className={classes.maxBtn} size="small" onClick={handleMax}>
+                                    max
+                                </Button>
                                 {startAdornment}
                             </InputAdornment>
                         ),

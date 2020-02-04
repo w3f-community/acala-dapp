@@ -1,7 +1,7 @@
 import React, { ChangeEvent, ReactNode } from 'react';
 import { MenuItem, Select, withStyles, Theme } from '@material-ui/core';
 import { createTypography } from '@/theme';
-import { BaseVaultData } from '@/types/store';
+import { CdpTypeData } from '@/types/store';
 import { getAssetName } from '@/utils';
 
 const SMenuItem = withStyles((theme: Theme) => ({
@@ -12,18 +12,23 @@ const SMenuItem = withStyles((theme: Theme) => ({
 
 interface Props {
     selected: number;
-    vaults: BaseVaultData[];
-    onChange: (event: ChangeEvent<{ name?: string | undefined; value: unknown }>, child: ReactNode) => void;
+    cdpTypes: CdpTypeData[];
+    onChange: (asset: number) => void;
 }
-const CollateralSelect: React.FC<Props> = ({ selected, vaults, onChange }) => {
-    // hidden, if vaults doesn't contain selecte
-    if (!vaults.find(item => item.asset === selected)) {
+const CollateralSelect: React.FC<Props> = ({ selected, cdpTypes, onChange }) => {
+    if (!cdpTypes.find(item => item.asset === selected)) {
+        onChange(cdpTypes[0].asset);
         return null;
     }
 
+    const handleChange = (event: ChangeEvent<{ name?: string | undefined; value: unknown }>): void => {
+        const result = Number(event.target.value);
+        onChange(result);
+    };
+
     return (
-        <Select value={selected} onChange={onChange} disableUnderline>
-            {vaults.map(item => (
+        <Select value={selected} onChange={handleChange} disableUnderline>
+            {cdpTypes.map(item => (
                 <SMenuItem value={item.asset} key={`colateral-${item.asset}`}>
                     {getAssetName(item.asset)}
                 </SMenuItem>

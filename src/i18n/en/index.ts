@@ -69,6 +69,14 @@ export default {
     'Terms and Conditions': 'Terms and Conditions',
     'Collateral Ratio': 'Collateral Ratio',
     'Payback {{asset}}': 'Payback {{asset}}',
+    // overview
+    'Total Collateral Locked': 'Total Collateral Locked',
+    'Total aUSD Debit': 'Total aUSD Debit',
+    'Current Ratio': 'Current Ratio',
+    Deposited: 'Deposited',
+    'Avil. to Withdraw': 'Avil. to Withdraw',
+    StableCoin: 'StableCoin',
+    'Manage Loan': 'Manage Loan',
     // exchange
     Exchange: 'Exchange',
     'Pay with': 'Pay with',

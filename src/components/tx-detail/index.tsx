@@ -5,7 +5,7 @@ import { useTranslate } from '@/hooks/i18n';
 import { getAssetName } from '@/utils';
 import { debitToStableCoin } from '@/utils/vault';
 import { useSelector } from 'react-redux';
-import { specVaultSelector } from '@/store/chain/selectors';
+import { specCdpTypeSelector } from '@/store/chain/selectors';
 import { formatBalance } from '../formatter';
 import { STABLE_COIN } from '@/config';
 
@@ -17,7 +17,7 @@ const ZERO = FixedU128.fromNatural(0);
 
 const TxDetail: React.FC<Props> = ({ data }) => {
     const { t } = useTranslate();
-    const vault = useSelector(specVaultSelector(data.data.asset));
+    const vault = useSelector(specCdpTypeSelector(data.data.asset));
 
     if (!vault) {
         return null;

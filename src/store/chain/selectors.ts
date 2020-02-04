@@ -1,17 +1,17 @@
-import { Selector, PriceData, BaseVaultData, IssuanceData } from '@/types/store';
+import { Selector, PriceData, CdpTypeData, IssuanceData } from '@/types/store';
 import FixedU128 from '@/utils/fixed_u128';
 
 export const connectedSelector: Selector<boolean> = state => state.chain.connected;
 
 export const pricesFeedSelector: Selector<PriceData[]> = state => state.chain.pricesFeed;
 
-export const vaultsSelector: Selector<BaseVaultData[]> = state => state.chain.vaults;
-
 export const totalIssuanceSelector: Selector<IssuanceData[]> = state => state.chain.totalIssuance;
 
-export const specVaultSelector: (asset: number) => Selector<BaseVaultData | undefined> = asset => {
+export const cdpTypeSelector: Selector<CdpTypeData[]> = state => state.chain.cdpTypes;
+
+export const specCdpTypeSelector: (asset: number) => Selector<CdpTypeData | undefined> = asset => {
     return state => {
-        return state.chain.vaults.find(item => item.asset === asset);
+        return state.chain.cdpTypes.find(item => item.asset === asset);
     };
 };
 

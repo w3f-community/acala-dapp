@@ -80,7 +80,7 @@ export const fetchDexLiquidityPool: Epic<RootAction, RootAction, RootState> = (a
                     });
                 }),
                 map(actions.fetchDexLiquidityPool.success),
-                catchError(() => of(actions.fetchDexLiquidityPool.failure('fetch dex liquidity pool error')))
+                catchError(() => of(actions.fetchDexLiquidityPool.failure('fetch dex liquidity pool error'))),
             );
         }),
     );

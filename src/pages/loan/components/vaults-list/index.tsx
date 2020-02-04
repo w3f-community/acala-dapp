@@ -3,11 +3,12 @@ import { useSelector } from 'react-redux';
 import { Grid, Paper, Typography } from '@material-ui/core';
 import { makeStyles, createStyles } from '@material-ui/styles';
 import { Theme } from '@material-ui/core/styles';
+import { isEmpty } from 'lodash';
 
 import add from '@/assets/add.svg';
 import { getAssetName, getAssetIcon } from '@/utils';
-import { vaultsSelector, pricesFeedSelector } from '@/store/chain/selectors';
-import { accountVaultsSelector } from '@/store/vault/selectors';
+import { cdpTypeSelector, pricesFeedSelector } from '@/store/chain/selectors';
+import { vaultsSelector } from '@/store/vault/selectors';
 import Formatter from '@/components/formatter';
 import clsx from 'clsx';
 import { collateralToUSD, debitToUSD, calcCollateralRatio } from '@/utils/vault';
@@ -41,6 +42,10 @@ const useStyle = makeStyles((theme: Theme) =>
                 alignItems: 'center',
             },
 
+            '&.active': {
+                border: `1px solid ${theme.palette.primary.light}`,
+            },
+
             '&.addContent': {
                 alignItem: 'center',
                 justifyContent: 'center',
@@ -49,6 +54,13 @@ const useStyle = makeStyles((theme: Theme) =>
                     fontWeight: 400,
                     textAlign: 'center',
                 },
+            },
+
+            '&.overview': {
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: 8,
+                textTransform: 'uppercase',
             },
         },
         header: {
@@ -71,10 +83,14 @@ const useStyle = makeStyles((theme: Theme) =>
     }),
 );
 
-const AddVault: React.FC<Pick<Props, 'onAdd'>> = ({ onAdd }) => {
+interface ItemProps {
+    active: boolean;
+    onClick: () => void;
+}
+const AddVault: React.FC<ItemProps> = ({ active, onClick }) => {
     const classes = useStyle();
     return (
-        <Grid item onClick={onAdd} className={classes.addVault}>
+        <Grid item onClick={onClick} className={clsx(classes.addVault, { active })}>
             <Paper elevation={2} className={clsx(classes.paper, { addContent: true })} square={true}>
                 <img src={add} alt="add" />
                 <Typography variant="h6">Add Wallet</Typography>
@@ -83,59 +99,85 @@ const AddVault: React.FC<Pick<Props, 'onAdd'>> = ({ onAdd }) => {
     );
 };
 
+const Overview: React.FC<ItemProps> = ({ active, onClick }) => {
+    const classes = useStyle();
+    return (
+        <Grid item onClick={onClick}>
+            <Paper
+                elevation={2}
+                className={clsx(classes.paper, {
+                    active,
+                    overview: true,
+                })}
+                square={true}
+            >
+                <Typography variant="body2">Overview</Typography>
+            </Paper>
+        </Grid>
+    );
+};
+
 interface Props {
+    active: Active;
+    onOverview: () => void;
     onAdd: () => void;
     onSelect: (vault: number) => void;
 }
 
 const ZERO = FixedU128.fromNatural(0);
 
-const VaultsList: React.FC<Props> = ({ onAdd, onSelect }) => {
+export type Active = 'overview' | 'add_vault' | number;
+
+export const VaultsList: React.FC<Props> = ({ active, onOverview, onAdd, onSelect }) => {
     const classes = useStyle();
-    const systemVaults = useSelector(vaultsSelector);
-    const userVaults = useSelector(accountVaultsSelector);
+    const cdpTypes = useSelector(cdpTypeSelector);
+    const userVaults = useSelector(vaultsSelector);
     const prices = useSelector(pricesFeedSelector);
     const mobileMatch = useMobileMatch('sm');
 
     const stableCoinPrice = prices.find(item => item.asset === STABLE_COIN) || { price: ZERO };
+    const renderContent = () =>
+        userVaults.map(item => {
+            const vault = cdpTypes.find(vault => vault.asset === item.asset);
 
+            if (!vault) return null;
+
+            const collateralPrice = prices.find(price => price.asset === item.asset) || { price: ZERO };
+            const currentCollateralRatio = calcCollateralRatio(
+                collateralToUSD(item.collateral, collateralPrice.price),
+                debitToUSD(item.debit, vault.debitExchangeRate, stableCoinPrice.price),
+            );
+            const status = currentCollateralRatio.isGreaterThan(
+                vault.requiredCollateralRatio.add(FixedU128.fromNatural(0.2)),
+            );
+
+            return (
+                <Grid item key={`vault-type-${item.asset}`} onClick={() => onSelect(item.asset)}>
+                    <Paper
+                        elevation={mobileMatch ? 0 : 2}
+                        className={clsx(classes.paper, { active: active === item.asset })}
+                        square={true}
+                    >
+                        <Grid container justify="space-between" alignItems="center" className={classes.header}>
+                            <Typography variant="h6">{getAssetName(item.asset)}</Typography>
+                            <img src={getAssetIcon(item.asset)} alt={`icon-${item.asset}`} width={20} />
+                        </Grid>
+                        <Typography variant="body1">
+                            <Formatter
+                                type="ratio"
+                                data={currentCollateralRatio}
+                                color={status ? 'primary' : 'warning'}
+                            />
+                        </Typography>
+                    </Paper>
+                </Grid>
+            );
+        });
     return (
         <Grid container spacing={mobileMatch ? 0 : 3} className={classes.root}>
-            {userVaults.map(item => {
-                const vault = systemVaults.find(vault => vault.asset === item.asset);
-
-                if (!vault) return null;
-
-                const collateralPrice = prices.find(price => price.asset === item.asset) || { price: ZERO };
-                const currentCollateralRatio = calcCollateralRatio(
-                    collateralToUSD(item.collateral, collateralPrice.price),
-                    debitToUSD(item.debit, vault.debitExchangeRate, stableCoinPrice.price),
-                );
-                const status = currentCollateralRatio.isGreaterThan(
-                    vault.requiredCollateralRatio.add(FixedU128.fromNatural(0.2)),
-                );
-
-                return (
-                    <Grid item key={`vault-type-${item.asset}`} onClick={() => onSelect(item.asset)}>
-                        <Paper elevation={mobileMatch ? 2 : 0} className={classes.paper} square={true}>
-                            <Grid container justify="space-between" alignItems="center" className={classes.header}>
-                                <Typography variant="h6">{getAssetName(item.asset)}</Typography>
-                                <img src={getAssetIcon(item.asset)} alt={`icon-${item.asset}`} width={20} />
-                            </Grid>
-                            <Typography variant="body1">
-                                <Formatter
-                                    type="ratio"
-                                    data={currentCollateralRatio}
-                                    color={status ? 'primary' : 'warning'}
-                                />
-                            </Typography>
-                        </Paper>
-                    </Grid>
-                );
-            })}
-            <AddVault onAdd={onAdd} />
+            {!isEmpty(userVaults) && <Overview onClick={onOverview} active={active === 'overview'} />}
+            {renderContent()}
+            <AddVault onClick={onAdd} active={active === 'add_vault'} />
         </Grid>
     );
 };
-
-export default VaultsList;

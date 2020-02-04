@@ -6,7 +6,7 @@ import { useTranslate } from '@/hooks/i18n';
 import { createTypography } from '@/theme';
 import { formatRatio, formatBalance } from '@/components/formatter';
 import { useForm } from '@/hooks/form';
-import { specVaultSelector, specPriceSelector } from '@/store/chain/selectors';
+import { specCdpTypeSelector, specPriceSelector } from '@/store/chain/selectors';
 import { specBalanceSelector } from '@/store/account/selectors';
 import { getAssetName } from '@/utils';
 import actions from '@/store/actions';
@@ -94,7 +94,7 @@ const Component: React.FC<Props> = ({ onNext, onPrev, onCancel }) => {
     const borrow = FixedU128.fromNatural(data.borrow.value);
 
     const assetName = getAssetName(selectedAsset);
-    const vault = useSelector(specVaultSelector(selectedAsset));
+    const vault = useSelector(specCdpTypeSelector(selectedAsset));
     const balance = useSelector(specBalanceSelector(selectedAsset));
     const [stableCoinPrice, collateralPrice] = useSelector(specPriceSelector([STABLE_COIN, selectedAsset]));
     const updateVaultStatus = useSelector(statusSelector('updateVault'));

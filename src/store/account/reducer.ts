@@ -43,4 +43,4 @@ export default createReducer(initialState)
         }
 
         return newState;
-    })
+    });

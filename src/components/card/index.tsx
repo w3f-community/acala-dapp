@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { Paper, Grid, Box } from '@material-ui/core';
+import { Paper, Grid, Box, useTheme } from '@material-ui/core';
 import clsx from 'clsx';
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
 
@@ -38,6 +38,7 @@ interface Props {
     contentClassName?: string;
     header?: ReactNode;
     divider?: boolean;
+    marginTop?: number;
 }
 
 const Card: React.FC<Props> = ({
@@ -48,9 +49,10 @@ const Card: React.FC<Props> = ({
     headerClassName,
     contentPadding = 2,
     divider = true,
+    marginTop = 0,
 }) => {
     const classes = useStyles();
-
+    const theme = useTheme();
     return (
         <Paper
             square={true}
@@ -59,6 +61,7 @@ const Card: React.FC<Props> = ({
                 [classes.root]: size === 'normal',
                 [classes.rootLarge]: size === 'large',
             })}
+            style={{ marginTop: theme.spacing(marginTop) }}
         >
             <Grid container direction="column">
                 {header && (
@@ -70,7 +73,7 @@ const Card: React.FC<Props> = ({
                         {header}
                     </div>
                 )}
-                <Box paddingTop={contentPadding}>{children}</Box>
+                <Box marginTop={contentPadding}>{children}</Box>
             </Grid>
         </Paper>
     );
