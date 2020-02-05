@@ -12,7 +12,7 @@ const SystemInfo: React.FC = () => {
     const stableIssuance = useSelector(specIssuanceSelector(STABLE_COIN));
 
     return (
-        <Card size="normal" elevation={1} header={<Typography variant="subtitle1">{t('Systom Info')}</Typography>}>
+        <Card size="normal" elevation={1} header={<Typography variant="subtitle1">{t('System Info')}</Typography>}>
             <List>
                 <ListItem disableGutters>
                     <Grid container justify="space-between">

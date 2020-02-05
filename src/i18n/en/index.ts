@@ -10,7 +10,7 @@ export default {
     'Liquidation Ratio': 'Liquidation Ratio',
     '{{asset}} in USD': '{{asset}} in USD',
     'Price Feed': 'Price Feed',
-    'Systom Info': 'Systom Info',
+    'System Info': 'System Info',
     'aUSD in Supply': 'aUSD in Supply',
     Collateral: 'Collateral',
     'Stability Fee/Interest': 'Stability Fee/Interest',

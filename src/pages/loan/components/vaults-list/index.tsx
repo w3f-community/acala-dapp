@@ -93,7 +93,7 @@ const AddVault: React.FC<ItemProps> = ({ active, onClick }) => {
         <Grid item onClick={onClick} className={clsx(classes.addVault, { active })}>
             <Paper elevation={2} className={clsx(classes.paper, { addContent: true })} square={true}>
                 <img src={add} alt="add" />
-                <Typography variant="h6">Add Wallet</Typography>
+                <Typography variant="h6">Add Loan</Typography>
             </Paper>
         </Grid>
     );
