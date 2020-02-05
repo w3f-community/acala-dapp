@@ -27,6 +27,10 @@ export function debitToStableCoin(debit: FixedU128, debitExchangeRate: FixedU128
     return debit.mul(debitExchangeRate);
 }
 
+export function stableCoinToDebit(amount: FixedU128, debitExchangeRate: FixedU128): FixedU128 {
+    return amount.div(debitExchangeRate);
+}
+
 // convert collateral to stable coin amount
 export function collateralToUSD(collateral: FixedU128, collateralPrice: FixedU128): FixedU128 {
     return collateral.mul(collateralPrice);

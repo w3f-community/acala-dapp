@@ -9,7 +9,6 @@ import {
     map,
     startWith,
     endWith,
-    take,
 } from 'rxjs/operators';
 import { isActionOf, RootAction, RootState } from 'typesafe-actions';
 import { of, concat, combineLatest, forkJoin } from 'rxjs';
@@ -101,10 +100,13 @@ export const fetchVaultsEpic: Epic<RootAction, RootAction, RootState> = (action$
                         debit: FixedU128.fromParts(u8aToNumber(result[index][1])),
                     })),
                 ),
-                map(actions.fetchVaults.success),
-                take(1),
+                flatMap((result) => 
+                    of(
+                        actions.fetchVaults.success(result),
+                        endLoading(actions.FETCH_VAULTS)
+                    ),
+                ),
                 startWith(startLoading(actions.FETCH_VAULTS)),
-                endWith(endLoading(actions.FETCH_VAULTS)),
                 catchError(() => of(actions.fetchVaults.failure('error'))),
             );
         }),

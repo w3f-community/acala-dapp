@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 
-import Title from '@/components/page/title';
 import { useTranslate } from '@/hooks/i18n';
 import Page from '@/components/page';
 import actions from '@/store/actions';
@@ -40,8 +39,7 @@ const Exchange: React.FC = () => {
 
     return (
         <Form context={formContext} data={defaultFormData}>
-            <Page padding="0 55px">
-                <Title>{t('Exchange')}</Title>
+            <Page title={t('Exchange')}>
                 <ExchangeBar />
             </Page>
         </Form>

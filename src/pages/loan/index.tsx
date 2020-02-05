@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Grid, Box, makeStyles, createStyles, Theme } from '@material-ui/core';
 import Skeleton from '@material-ui/lab/Skeleton';
+import { isEmpty } from 'lodash';
 
 import actions from '@/store/actions';
 import { COLLATERAL, STABLE_COIN, assets } from '@/config';
@@ -98,11 +99,11 @@ const Loan: React.FC = () => {
         if (isLoadingVault === true) {
             return <Skeleton variant="rect" width="100%" height={500} />;
         }
-        if (!userVaults.length) {
-            return <Guide onConfirm={showAddVault} />;
-        }
         if (isAddVault) {
             return <AddVault onCancel={hideAddVault} />;
+        }
+        if (isEmpty(userVaults)) {
+            return <Guide onConfirm={showAddVault} />;
         }
         if (isOverview) {
             return <Overview onSelect={handleVaultSelect} />;
@@ -119,7 +120,7 @@ const Loan: React.FC = () => {
     };
 
     return (
-        <Page padding={'46px 55px'}>
+        <Page>
             <Grid container direction={match ? 'column' : 'row'}>
                 <VaultsList
                     active={active}

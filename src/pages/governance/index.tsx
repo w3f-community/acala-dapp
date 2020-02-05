@@ -1,23 +1,40 @@
-import React from 'react';
-import { HashRouter as Router, Route } from 'react-router-dom';
-import Title from '@/components/page/title';
+import React, { useState, useEffect } from 'react';
 import { useTranslate } from '@/hooks/i18n';
 import Page from '@/components/page';
-import ProposalList from './components/proposal-list';
+import { Tabs, TabsItem } from '@/components/tabs';
+import { Proposals } from './components/proposals';
+import { useDispatch } from 'react-redux';
+import { fetchProposals } from '@/store/governance/actions';
 
-const Exchange: React.FC = () => {
+type TabsType = 'proposal' | 'council' | string;
+
+const Governance: React.FC = () => {
     const { t } = useTranslate();
+    const [active, setActive] = useState<TabsType>('proposal')
+    const dispatch = useDispatch();
+    const tabsConfig: TabsItem[] = [
+        {
+            key: 'proposal',
+            title: t('Proposal'),
+            render: () => <Proposals />
+        },
+        {
+            key: 'council',
+            title: t('Council'),
+            render: () => { return <p>council</p> }
+        }
+    ]
+    const handleActive = (key: TabsType) => setActive(key)
+
+    useEffect(() => {
+        dispatch(fetchProposals.request({}))
+    }, [dispatch])
 
     return (
-        <Page padding="0 55px">
-            <Title>{t('Governance')}</Title>
-            <Router>
-                <Route path="/">
-                    <ProposalList />
-                </Route>
-            </Router>
+        <Page title={t('Governance')} style={{ maxWidth: 900 }}>
+            <Tabs active={active} config={tabsConfig} onChange={handleActive}/>
         </Page>
     );
 };
 
-export default Exchange;
+export default Governance;

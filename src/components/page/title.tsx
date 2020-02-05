@@ -9,8 +9,7 @@ interface Props {
 
 const STypography = withStyles((theme: Theme) => ({
     root: {
-        marginTop: 123,
-        marginBottom: 38,
+        marginBottom: 54,
         ...createTypography(34, 40, 500, 'Roboto', theme.palette.common.black),
         [theme.breakpoints.down('sm')]: {
             textAlign: 'center',
@@ -21,8 +20,6 @@ const STypography = withStyles((theme: Theme) => ({
     },
 }))(Typography);
 
-const Title: React.FC<Props> = ({ children }) => {
+export const Title: React.FC<Props> = ({ children }) => {
     return <STypography>{children}</STypography>;
 };
-
-export default Title;

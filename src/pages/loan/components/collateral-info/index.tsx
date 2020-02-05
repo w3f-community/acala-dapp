@@ -26,8 +26,6 @@ const CollateralInfo: React.FC<Props> = ({ current }) => {
     }
     const selectedCdp = cdpTypes.find(item => item.asset === selected);
 
-    console.log(selectedCdp, current, cdpTypes);
-
     return (
         <Card
             size="normal"

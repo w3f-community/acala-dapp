@@ -67,21 +67,20 @@ export interface DexLiquidityPoolData {
 
 // governace
 export interface ProposalData {
-    title: string;
-    summary: string;
-    detail: string;
-    time: number;
-    execute: {
-        time: number;
-        target: {
-            amount: FixedU128;
-            asset: number;
-        };
-    };
-    current: {
-        yay: FixedU128;
-        nay: FixedU128;
-    };
+    hash: string;
+    proposal: {
+        method: {
+            name: string;
+        },
+        callIndex: string;
+        args: {[k: string]: any}
+    },
+    vote: {
+        index: number;
+        threshold: number;
+        ayes: string[];
+        nays: string[]
+    }
 }
 
 export interface UpdateVaultData {
@@ -135,5 +134,5 @@ export interface VaultState {
 }
 
 export interface GovernanceState {
-    proposal: ProposalData[];
+    proposals: ProposalData[];
 }

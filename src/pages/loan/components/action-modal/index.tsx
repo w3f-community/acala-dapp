@@ -35,6 +35,7 @@ import {
     calcCanGenerater,
     calcLiquidationPrice,
     calcRequiredCollateral,
+    stableCoinToDebit,
 } from '@/utils/vault';
 import { specUserVaultSelector } from '@/store/vault/selectors';
 import { specBalanceSelector } from '@/store/account/selectors';
@@ -213,7 +214,7 @@ const ActionModal: React.FC<ActionModalProps> = props => {
                 if (!amount) {
                     return false;
                 }
-                const debitAmount = USDToDebit(FixedU128.fromNatural(amount), vault.debitExchangeRate, stableCoinPrice);
+                const debitAmount = stableCoinToDebit(FixedU128.fromNatural(amount), vault.debitExchangeRate);
                 dispatch(
                     actions.vault.updateVault.request({
                         asset: current,
