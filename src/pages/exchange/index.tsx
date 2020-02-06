@@ -39,7 +39,7 @@ const Exchange: React.FC = () => {
 
     return (
         <Form context={formContext} data={defaultFormData}>
-            <Page title={t('Exchange')}>
+            <Page title={t('Exchange')} style={{maxWidth: 1200 }}>
                 <ExchangeBar />
             </Page>
         </Form>

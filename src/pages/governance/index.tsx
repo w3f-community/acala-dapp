@@ -4,7 +4,8 @@ import Page from '@/components/page';
 import { Tabs, TabsItem } from '@/components/tabs';
 import { Proposals } from './components/proposals';
 import { useDispatch } from 'react-redux';
-import { fetchProposals } from '@/store/governance/actions';
+import { fetchProposals, fetchCouncil } from '@/store/governance/actions';
+import { CouncilMembers } from './components/council-members';
 
 type TabsType = 'proposal' | 'council' | string;
 
@@ -23,13 +24,14 @@ const Governance: React.FC = () => {
             key: 'council',
             title: t('Council'),
             /* eslint-disable-next-line react/display-name */
-            render: () => <p>council</p>,
+            render: () => <CouncilMembers />,
         },
     ];
     const handleActive = (key: TabsType) => setActive(key);
 
     useEffect(() => {
         dispatch(fetchProposals.request({}));
+        dispatch(fetchCouncil.request({}))
     }, [dispatch]);
 
     return (

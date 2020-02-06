@@ -102,4 +102,8 @@ export default {
     'Read more': 'Read more',
     'Vote for this proposal': 'Vote for this proposal',
     'Wallet Balance': 'Wallet Balance',
+    // goverence
+    'Proposal': 'Proposal',
+    'Council': 'Council',
+    'Members': 'Members'
 };

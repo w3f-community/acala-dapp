@@ -23,6 +23,7 @@ import { u8aToNumber } from '@/utils';
 import { Hash, Proposal, Votes } from '@polkadot/types/interfaces';
 import { Option } from '@polkadot/types';
 import { stringToU8a } from '@polkadot/util';
+import { Codec } from '@polkadot/types/types';
 
 interface ProposalResult {
     callIndex: string;
@@ -41,11 +42,11 @@ export const fetchProposals: Epic<RootAction, RootAction, RootState> = (action$:
                 switchMap((hashes: Hash[]): any => {
                     /* eslint-disable */
                     return hashes.length
-                        ? [
+                        ? combineLatest([
                             of(hashes),
                             app.query.financialCouncil.proposalOf.multi(hashes),
                             app.query.financialCouncil.voting.multi(hashes),
-                        ]
+                        ])
                         : of([[], [], []]);
                     /* eslint-enable */
                 }),
@@ -68,5 +69,18 @@ export const fetchProposals: Epic<RootAction, RootAction, RootState> = (action$:
                 }),
                 map(actions.fetchProposals.success),
             );
+        }),
+    );
+
+export const fetchCouncil: Epic<RootAction, RootAction, RootState> = (action$: any, state$) =>
+    action$.pipe(
+        filter(isActionOf(actions.fetchCouncil.request)),
+        withLatestFrom(state$),
+        switchMap(([action, state]) => {
+            const app = state.chain.app!;
+            return app.query.financialCouncil.members().pipe(
+                map((result: Codec) => result.toJSON()),
+                map(actions.fetchCouncil.success)
+            )
         }),
     );

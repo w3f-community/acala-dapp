@@ -137,4 +137,5 @@ export interface VaultState {
 
 export interface GovernanceState {
     proposals: ProposalData[];
+    council: string[];
 }

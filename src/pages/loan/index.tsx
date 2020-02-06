@@ -122,7 +122,7 @@ const Loan: React.FC = () => {
     };
 
     return (
-        <Page>
+        <Page fullScreen>
             <Grid container direction={match ? 'column' : 'row'}>
                 <VaultsList
                     active={active}
