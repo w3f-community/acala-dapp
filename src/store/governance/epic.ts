@@ -24,10 +24,9 @@ import { Hash, Proposal, Votes } from '@polkadot/types/interfaces';
 import { Option } from '@polkadot/types';
 import { stringToU8a } from '@polkadot/util';
 
-
 interface ProposalResult {
     callIndex: string;
-    args: {[k: string]: any }
+    args: { [k: string]: any };
 }
 
 type Result = [Hash[], Option<Proposal>[], Option<Votes>[]];
@@ -40,33 +39,34 @@ export const fetchProposals: Epic<RootAction, RootAction, RootState> = (action$:
             const app = state.chain.app!;
             return app.query.financialCouncil.proposals().pipe(
                 switchMap((hashes: Hash[]): any => {
+                    /* eslint-disable */
                     return hashes.length
-                        ? combineLatest([
+                        ? [
                             of(hashes),
                             app.query.financialCouncil.proposalOf.multi(hashes),
-                            app.query.financialCouncil.voting.multi(hashes)
-                        ])
-                        : of([[], [], []])
+                            app.query.financialCouncil.voting.multi(hashes),
+                        ]
+                        : of([[], [], []]);
+                    /* eslint-enable */
                 }),
                 map((result: Result) => {
                     const hashes = result[0].map(item => item.toString());
                     const proposals = result[1].map(item => {
-                        // @ts-ignore
-                        const callIndex = item.value.callIndex;
-                        const data = item.toJSON() as any as ProposalResult
+                        const callIndex = (item.value as { [k: string]: any }).callIndex;
+                        const data = (item.toJSON() as any) as ProposalResult;
                         return {
                             method: item.registry.findMetaCall(callIndex).toJSON(),
-                            ...data
-                        }
+                            ...data,
+                        };
                     });
                     const votes = result[2].map(item => item.toJSON());
                     return hashes.map((hash, index) => ({
                         hash,
                         proposal: proposals[index],
-                        vote: votes[index]
-                    }))
+                        vote: votes[index],
+                    }));
                 }),
                 map(actions.fetchProposals.success),
-            )
+            );
         }),
     );

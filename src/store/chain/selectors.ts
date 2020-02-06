@@ -1,5 +1,6 @@
 import { Selector, PriceData, CdpTypeData, IssuanceData } from '@/types/store';
 import FixedU128 from '@/utils/fixed_u128';
+import { Constants } from '@/types/chain_constants';
 
 export const connectedSelector: Selector<boolean> = state => state.chain.connected;
 
@@ -48,3 +49,5 @@ export function specIssuanceSelector(assets: number | number[]): Selector<FixedU
         });
     };
 }
+
+export const constantsSelector: Selector<Constants | null> = state => state.chain.constants;

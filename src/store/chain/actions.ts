@@ -1,6 +1,7 @@
 import { createAsyncAction } from 'typesafe-actions';
 import { ApiRx } from '@polkadot/api';
 import { PriceData, CdpTypeData, AssetList, IssuanceData } from '@/types/store';
+import { Constants } from '@/types/chain_constants';
 
 interface ConnectParam {
     endpoint: string;
@@ -34,3 +35,10 @@ export const fetchTotalIssuance = createAsyncAction(
     '@chain/fetch_total_issuance/success',
     '@chain/fetch_total_issuance/failure',
 )<AssetList, IssuanceData[], string>();
+
+export const FETCH_CONSTANTS = '@chain/fetch_constants';
+export const fetchConstants = createAsyncAction(
+    FETCH_CONSTANTS,
+    '@chain/fetch_constants/success',
+    '@chain/fetch_constants/failure',
+)<unknown, Constants, string>();

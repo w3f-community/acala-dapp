@@ -100,12 +100,7 @@ export const fetchVaultsEpic: Epic<RootAction, RootAction, RootState> = (action$
                         debit: FixedU128.fromParts(u8aToNumber(result[index][1])),
                     })),
                 ),
-                flatMap((result) => 
-                    of(
-                        actions.fetchVaults.success(result),
-                        endLoading(actions.FETCH_VAULTS)
-                    ),
-                ),
+                flatMap(result => of(actions.fetchVaults.success(result), endLoading(actions.FETCH_VAULTS))),
                 startWith(startLoading(actions.FETCH_VAULTS)),
                 catchError(() => of(actions.fetchVaults.failure('error'))),
             );

@@ -1,6 +1,7 @@
 import { createReducer } from 'typesafe-actions';
 import * as actions from './actions';
 import { ChainState } from '@/types/store';
+import { Constants } from '@/types/chain_constants';
 
 const initialState: ChainState = {
     app: null,
@@ -8,6 +9,7 @@ const initialState: ChainState = {
     pricesFeed: [],
     cdpTypes: [],
     totalIssuance: [],
+    constants: null,
 };
 
 export default createReducer(initialState)
@@ -29,4 +31,10 @@ export default createReducer(initialState)
     .handleAction(actions.fetchTotalIssuance.success, (state, action) => ({
         ...state,
         totalIssuance: action.payload,
-    }));
+    }))
+    .handleAction(actions.fetchConstants.success, (state, action) => {
+        return {
+            ...state,
+            constants: action.payload,
+        };
+    });

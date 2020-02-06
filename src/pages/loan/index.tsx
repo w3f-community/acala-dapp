@@ -73,6 +73,8 @@ const Loan: React.FC = () => {
     const mdMatch = useMobileMatch('md');
 
     useEffect(() => {
+        // fetch default constants
+        dispatch(actions.chain.fetchConstants.request({}));
         // fetch user vaults info
         dispatch(actions.vault.fetchVaults.request(COLLATERAL));
         // fetch user asset balance

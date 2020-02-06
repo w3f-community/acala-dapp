@@ -32,8 +32,6 @@ export const DEX_TOKENS: number[] = [1, 2, 3];
 
 export const STABLE_COIN = 1;
 
-export const DEFAULT_DEBIT_EXCHANGE_RATE = FixedU128.fromRational(1, 10);
-
 // export const getEndPoint = (): string => 'wss://testnet-node-1.acala.laminar.one/ws';
 export const getEndPoint = (): string => 'ws://127.0.0.1:9944';
 

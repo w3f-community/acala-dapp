@@ -10,29 +10,31 @@ type TabsType = 'proposal' | 'council' | string;
 
 const Governance: React.FC = () => {
     const { t } = useTranslate();
-    const [active, setActive] = useState<TabsType>('proposal')
+    const [active, setActive] = useState<TabsType>('proposal');
     const dispatch = useDispatch();
     const tabsConfig: TabsItem[] = [
         {
             key: 'proposal',
             title: t('Proposal'),
-            render: () => <Proposals />
+            /* eslint-disable-next-line react/display-name */
+            render: () => <Proposals />,
         },
         {
             key: 'council',
             title: t('Council'),
-            render: () => { return <p>council</p> }
-        }
-    ]
-    const handleActive = (key: TabsType) => setActive(key)
+            /* eslint-disable-next-line react/display-name */
+            render: () => <p>council</p>,
+        },
+    ];
+    const handleActive = (key: TabsType) => setActive(key);
 
     useEffect(() => {
-        dispatch(fetchProposals.request({}))
-    }, [dispatch])
+        dispatch(fetchProposals.request({}));
+    }, [dispatch]);
 
     return (
         <Page title={t('Governance')} style={{ maxWidth: 900 }}>
-            <Tabs active={active} config={tabsConfig} onChange={handleActive}/>
+            <Tabs active={active} config={tabsConfig} onChange={handleActive} />
         </Page>
     );
 };

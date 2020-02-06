@@ -1,6 +1,7 @@
 import { RootState } from 'typesafe-actions';
 import FixedU128 from '@/utils/fixed_u128';
 import { ApiRx } from '@polkadot/api';
+import { Constants } from './chain_constants';
 
 export type Selector<Result> = (state: RootState) => Result;
 
@@ -71,16 +72,16 @@ export interface ProposalData {
     proposal: {
         method: {
             name: string;
-        },
+        };
         callIndex: string;
-        args: {[k: string]: any}
-    },
+        args: { [k: string]: any };
+    };
     vote: {
         index: number;
         threshold: number;
         ayes: string[];
-        nays: string[]
-    }
+        nays: string[];
+    };
 }
 
 export interface UpdateVaultData {
@@ -118,6 +119,7 @@ export interface ChainState {
     pricesFeed: PriceData[];
     cdpTypes: CdpTypeData[];
     totalIssuance: IssuanceData[];
+    constants: Constants | null;
 }
 
 export interface DexState {

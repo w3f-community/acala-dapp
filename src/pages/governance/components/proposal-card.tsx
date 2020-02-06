@@ -29,9 +29,9 @@ const ProposalItemRoot = withStyles((theme: Theme) => ({
         paddingBottom: 26,
         borderBottom: `1px solid ${theme.palette.secondary.main}`,
         '&:last-child': {
-            borderBottom: 'none'
-        }
-    }
+            borderBottom: 'none',
+        },
+    },
 }))(Box);
 
 const ProposalTitle = withStyles((theme: Theme) => ({
@@ -50,7 +50,7 @@ const Execute = withStyles((theme: Theme) => ({
 
 const VoteButton = withStyles(() => ({
     root: {
-        width: 128
+        width: 128,
     },
 }))(Button);
 
@@ -64,18 +64,20 @@ const YayStatus = withStyles((theme: Theme) => ({
 interface ItemProps {
     index: number;
     data: ProposalData;
-};
+}
 const ProposalItem: React.FC<ItemProps> = ({ index, data }) => {
     const { t } = useTranslate();
-    const [ showDetail, setShowDetail ] = useState<boolean>(false)
+    const [showDetail, setShowDetail] = useState<boolean>(false);
     return (
-        <ProposalItemRoot  display="flex" alignItems="flex-start" key={`proposal-item-${data.hash}`}>
+        <ProposalItemRoot display="flex" alignItems="flex-start" key={`proposal-item-${data.hash}`}>
             <Box flex={1}>
-                <ProposalTitle>{`${index+1} ${data.proposal.method.name}`}</ProposalTitle>
+                <ProposalTitle>{`${index + 1} ${data.proposal.method.name}`}</ProposalTitle>
                 <Execute>Detail</Execute>
             </Box>
             <Box>
-                <VoteButton variant="contained" color="primary">{t('Vote')}</VoteButton>
+                <VoteButton variant="contained" color="primary">
+                    {t('Vote')}
+                </VoteButton>
             </Box>
         </ProposalItemRoot>
     );
@@ -100,7 +102,9 @@ export const ProposalCard: FC<Props> = ({ header, count, data }) => {
             size="normal"
             divider={false}
         >
-        {data.map((item, index) => <ProposalItem data={item} index={index} key={`proposal-item-${index}`}/>)}
+            {data.map((item, index) => (
+                <ProposalItem data={item} index={index} key={`proposal-item-${index}`} />
+            ))}
         </Card>
     );
 };

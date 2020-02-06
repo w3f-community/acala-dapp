@@ -48,7 +48,7 @@ export const Tabs: FC<Props> = ({ active, config, onChange }) => {
         <>
             <STabs value={active} onChange={handleChange}>
                 {config.map(item => (
-                    <STab label={item.title} value={item.key} key={`tabs-${item.key}`}/>
+                    <STab label={item.title} value={item.key} key={`tabs-${item.key}`} />
                 ))}
             </STabs>
             {activeItem && activeItem!.render({})}

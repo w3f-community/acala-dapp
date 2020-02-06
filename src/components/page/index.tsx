@@ -5,24 +5,24 @@ import { Title } from './title';
 interface Props {
     children: ReactNode;
     title?: string;
-    style?: CSSProperties
+    style?: CSSProperties;
 }
 
 const SContainer = withStyles((theme: Theme) => ({
     root: {
         boxSizing: 'content-box',
         padding: '74px 54px',
-        marginLeft: 0, 
+        marginLeft: 0,
         [theme.breakpoints.down('sm')]: {
-            padding: '0 20px'
-        }
+            padding: '0 20px',
+        },
     },
-}))(Container)
+}))(Container);
 
 const Page: React.FC<Props> = ({ children, title, style }) => {
     return (
         <SContainer maxWidth={false} style={style}>
-            { title && <Title>{title}</Title> }
+            {title && <Title>{title}</Title>}
             {children}
         </SContainer>
     );

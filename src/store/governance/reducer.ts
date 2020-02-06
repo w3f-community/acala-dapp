@@ -3,11 +3,10 @@ import * as actions from './actions';
 import { GovernanceState, ProposalData } from '@/types/store';
 
 const initialState: GovernanceState = {
-    proposals: []
+    proposals: [],
 };
 
-export default createReducer(initialState)
-    .handleAction(actions.fetchProposals.success, (state, action) => ({
-        ...state,
-        proposals: action.payload
-    }))
+export default createReducer(initialState).handleAction(actions.fetchProposals.success, (state, action) => ({
+    ...state,
+    proposals: action.payload,
+}));
