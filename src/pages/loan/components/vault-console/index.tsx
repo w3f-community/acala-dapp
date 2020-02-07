@@ -65,7 +65,6 @@ const VaultConsole: React.FC<Props> = ({ current }) => {
                 <Card
                     size="large"
                     elevation={1}
-                    contentPadding={4}
                     header={
                         <Grid container justify="space-between" alignItems="center">
                             <Typography variant="subtitle1">{t('Borrowed aUSD')}</Typography>
@@ -117,7 +116,6 @@ const VaultConsole: React.FC<Props> = ({ current }) => {
                 <Card
                     size="large"
                     elevation={1}
-                    contentPadding={4}
                     header={
                         <Grid container justify="space-between" alignItems="center">
                             <Typography variant="subtitle1">

@@ -10,8 +10,9 @@ import { pricesFeedSelector } from '@/store/chain/selectors';
 import { assets } from '@/config';
 import { formatPrice } from '@/components/formatter';
 import Skeleton from '@material-ui/lab/Skeleton';
+import { BaseProps } from '@/types/react-component/props';
 
-const PricesFeed: React.FC = () => {
+const PricesFeed: React.FC<BaseProps> = ({ className, style }) => {
     const { t } = useTranslate();
     const dispatch = useDispatch();
     const data = useSelector(pricesFeedSelector);
@@ -25,7 +26,13 @@ const PricesFeed: React.FC = () => {
     }
 
     return (
-        <Card size="normal" elevation={1} header={<Typography variant="subtitle1">{t('Price Feed')}</Typography>}>
+        <Card
+            size="normal"
+            elevation={1}
+            header={<Typography variant="subtitle1">{t('Price Feed')}</Typography>}
+            className={className}
+            style={style}
+        >
             <List>
                 {data.map(({ asset, price }) => (
                     <ListItem disableGutters key={`feed-prices-${asset}`}>

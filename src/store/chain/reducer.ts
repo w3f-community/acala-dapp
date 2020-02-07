@@ -1,7 +1,6 @@
 import { createReducer } from 'typesafe-actions';
 import * as actions from './actions';
 import { ChainState } from '@/types/store';
-import { Constants } from '@/types/chain_constants';
 
 const initialState: ChainState = {
     app: null,

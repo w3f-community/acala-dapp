@@ -1,7 +1,7 @@
 import { RootState } from 'typesafe-actions';
 import FixedU128 from '@/utils/fixed_u128';
 import { ApiRx } from '@polkadot/api';
-import { Constants } from './chain_constants';
+import { Constants } from './chain-constants';
 
 export type Selector<Result> = (state: RootState) => Result;
 

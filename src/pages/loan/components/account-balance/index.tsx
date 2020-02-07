@@ -9,14 +9,13 @@ import { balancesSelector } from '@/store/account/selectors';
 import { getAssetName } from '@/utils';
 import FixedU128 from '@/utils/fixed_u128';
 import { withStyles } from '@material-ui/styles';
+import { BaseProps } from '@/types/react-component/props';
 
 const Number = withStyles(() => ({
-    root: {
-        textAlign: 'right',
-    },
+    root: { textAlign: 'right' },
 }))(Typography);
 
-const WalletBalance: React.FC = () => {
+const WalletBalance: React.FC<BaseProps> = ({ className, style }) => {
     const { t } = useTranslate();
     const balances = useSelector(balancesSelector);
     const prices = useSelector(pricesFeedSelector);
@@ -26,7 +25,13 @@ const WalletBalance: React.FC = () => {
     }
 
     return (
-        <Card size="normal" elevation={1} header={<Typography variant="subtitle1">{t('Wallet Balance')}</Typography>}>
+        <Card
+            size="normal"
+            elevation={1}
+            header={<Typography variant="subtitle1">{t('Wallet Balance')}</Typography>}
+            className={className}
+            style={style}
+        >
             <List>
                 {balances.map(item => {
                     const price = prices.find(price => price.asset === item.asset);

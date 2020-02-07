@@ -6,13 +6,20 @@ import { useSelector } from 'react-redux';
 import { specIssuanceSelector } from '@/store/chain/selectors';
 import Formatter from '@/components/formatter';
 import { STABLE_COIN } from '@/config';
+import { BaseProps } from '@/types/react-component/props';
 
-const SystemInfo: React.FC = () => {
+const SystemInfo: React.FC<BaseProps> = ({ className, style }) => {
     const { t } = useTranslate();
     const stableIssuance = useSelector(specIssuanceSelector(STABLE_COIN));
 
     return (
-        <Card size="normal" elevation={1} header={<Typography variant="subtitle1">{t('System Info')}</Typography>}>
+        <Card
+            size="normal"
+            elevation={1}
+            header={<Typography variant="subtitle1">{t('System Info')}</Typography>}
+            className={className}
+            style={style}
+        >
             <List>
                 <ListItem disableGutters>
                     <Grid container justify="space-between">

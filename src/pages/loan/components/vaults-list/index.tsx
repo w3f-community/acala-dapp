@@ -2,7 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { Grid, Paper, Typography } from '@material-ui/core';
 import { makeStyles, createStyles } from '@material-ui/styles';
-import { Theme } from '@material-ui/core/styles';
+import { Theme, withStyles } from '@material-ui/core/styles';
 import { isEmpty } from 'lodash';
 
 import add from '@/assets/add.svg';
@@ -15,6 +15,8 @@ import { collateralToUSD, debitToUSD, calcCollateralRatio } from '@/utils/vault'
 import { STABLE_COIN } from '@/config';
 import FixedU128 from '@/utils/fixed_u128';
 import useMobileMatch from '@/hooks/mobile-match';
+import { useTranslate } from '@/hooks/i18n';
+import { createTypography } from '@/theme';
 
 const useStyle = makeStyles((theme: Theme) =>
     createStyles({
@@ -31,7 +33,7 @@ const useStyle = makeStyles((theme: Theme) =>
             flexShrink: 0,
             minWidth: 120,
             height: 100,
-            padding: '19px 16px 8px',
+            padding: '27px 16px 8px',
             cursor: 'pointer',
 
             [theme.breakpoints.down('sm')]: {
@@ -49,11 +51,6 @@ const useStyle = makeStyles((theme: Theme) =>
             '&.addContent': {
                 alignItem: 'center',
                 justifyContent: 'center',
-                '& .MuiTypography-h6': {
-                    marginTop: 11,
-                    fontWeight: 400,
-                    textAlign: 'center',
-                },
             },
 
             '&.overview': {
@@ -83,17 +80,26 @@ const useStyle = makeStyles((theme: Theme) =>
     }),
 );
 
+const Content = withStyles((theme: Theme) => ({
+    root: {
+        marginTop: 9.2,
+        textAlign: 'center',
+        ...createTypography(15, 22, 500, 'Roboto', theme.palette.secondary.main)
+    }
+}))(Typography);
+
 interface ItemProps {
     active: boolean;
     onClick: () => void;
 }
 const AddVault: React.FC<ItemProps> = ({ active, onClick }) => {
     const classes = useStyle();
+    const { t } = useTranslate();
     return (
         <Grid item onClick={onClick} className={clsx(classes.addVault, { active })}>
-            <Paper elevation={2} className={clsx(classes.paper, { addContent: true })} square={true}>
+            <Paper elevation={1} className={clsx(classes.paper, { addContent: true })} square={true}>
                 <img src={add} alt="add" />
-                <Typography variant="h6">Add Loan</Typography>
+                <Content>{t('Create Loan')}</Content>
             </Paper>
         </Grid>
     );
@@ -104,7 +110,7 @@ const Overview: React.FC<ItemProps> = ({ active, onClick }) => {
     return (
         <Grid item onClick={onClick}>
             <Paper
-                elevation={2}
+                elevation={1}
                 className={clsx(classes.paper, {
                     active,
                     overview: true,
@@ -154,7 +160,7 @@ export const VaultsList: React.FC<Props> = ({ active, onOverview, onAdd, onSelec
             return (
                 <Grid item key={`vault-type-${item.asset}`} onClick={() => onSelect(item.asset)}>
                     <Paper
-                        elevation={mobileMatch ? 0 : 2}
+                        elevation={mobileMatch ? 0 : 1}
                         className={clsx(classes.paper, { active: active === item.asset })}
                         square={true}
                     >

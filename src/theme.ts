@@ -40,7 +40,7 @@ const createTheme = (options: ThemeOptions) =>
         // override 1 and 2 levels shadows
         shadows: Object.assign(shadows, [
             'none',
-            '0 8px 28px rgba(1, 50, 205, 0.08)',
+            '0 2px 20px rgba(1, 50, 205, 0.08)',
             '0 20px 60px rgba(49, 69, 244, 0.1)',
         ]),
         typography: {

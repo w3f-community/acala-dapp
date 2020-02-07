@@ -11,15 +11,17 @@ const Card = withStyles(() => ({
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
+        card: {
+            padding: '108px 0 80px 0'
+        },
         img: {
-            marginTop: 68,
-            marginBottom: 43,
+            marginTop: 72,
+            marginBottom: 62.5,
             width: '100%',
             maxWidth: 330,
         },
         title: {
-            marginTop: 45,
-            ...createTypography(21, 28, 500, 'Roboto', theme.palette.primary.light),
+            ...createTypography(22, 32, 500, 'Roboto', theme.palette.primary.light),
         },
         item: { ...createTypography(21, 28, 500, 'Roboto') },
         arrow: { width: 59 },
@@ -39,7 +41,7 @@ const Guide: React.FC<Props> = ({ onConfirm }) => {
         { key: 'confirm', title: t('Confirmation') },
     ];
     return (
-        <Card square={true} elevation={1}>
+        <Card square={true} elevation={1} className={classes.card}>
             <Grid container justify="center" alignItems="center" direction="column">
                 <Grid container alignItems="center" spacing={2} justify="center" className={classes.title}>
                     {steps.map(({ key, title }, index) => {

@@ -1,12 +1,9 @@
 import { createAsyncAction } from 'typesafe-actions';
 import { ApiRx } from '@polkadot/api';
 import { PriceData, CdpTypeData, AssetList, IssuanceData } from '@/types/store';
-import { Constants } from '@/types/chain_constants';
+import { Constants } from '@/types/chain-constants';
 
-interface ConnectParam {
-    endpoint: string;
-    types: any;
-}
+interface ConnectParam { endpoint: string; }
 
 export const CONNECT_ASYNC = '@chain/connect';
 export const connectAsync = createAsyncAction(CONNECT_ASYNC, '@chain/connect/success', '@chain/connnect/failure')<

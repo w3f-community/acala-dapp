@@ -41,6 +41,7 @@ export default {
     ADD_VAULT_GENERATE_STABLE_COIN_NOTE:
         'Note: the amount you borrowed / total collateral (your collateral ratio) should be safely above liquidation ratio',
     // add vault
+    'Create Loan': 'Create Loan',
     'Select Collateral': 'Select Collateral',
     'Each collateral type has its own unique risk profiles.': 'Each collateral type has its own unique risk profiles.',
     'Generate aUSD': 'Generate aUSD',

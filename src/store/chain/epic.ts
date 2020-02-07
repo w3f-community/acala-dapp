@@ -4,6 +4,8 @@ import { Epic } from 'redux-observable';
 import { filter, map, switchMap, withLatestFrom, take, first, exhaustMap, mergeMap } from 'rxjs/operators';
 import { combineLatest, concat, of, empty } from 'rxjs';
 import { isActionOf, RootAction, RootState } from 'typesafe-actions';
+import { types as acalaTypes } from '@acala-network/types';
+import ormlRPC from '@orml/jsonrpc';
 
 import { u8aToNumber } from '@/utils';
 import { startLoading, endLoading } from '../loading/reducer';
@@ -14,11 +16,14 @@ export const connectEpic: Epic<RootAction, RootAction, RootState> = action$ =>
     action$.pipe(
         filter(isActionOf(actions.connectAsync.request)),
         switchMap(({ payload }) => {
-            const { endpoint, types } = payload;
+            const { endpoint } = payload;
             const wsProvider = new WsProvider(endpoint);
+            // FIXME: use a concrete type once polkadotjs fixes inconsistency.
+            const rpc: any = { oracle: Object.values(ormlRPC.oracle.methods) };
+
             return concat(
                 of(startLoading(actions.CONNECT_ASYNC)),
-                ApiRx.create({ provider: wsProvider, types: types }).pipe(map(actions.connectAsync.success), take(1)),
+                ApiRx.create({ provider: wsProvider, types: acalaTypes as any, rpc }).pipe(map(actions.connectAsync.success), take(1)),
                 of(endLoading(actions.CONNECT_ASYNC)),
             );
         }),
@@ -30,8 +35,9 @@ export const fetchPricesFeedEpic: Epic<RootAction, RootAction, RootState> = (act
         withLatestFrom(state$),
         switchMap(([action, state]) => {
             const assetList = action.payload;
-            const app = state.chain.app;
-            return combineLatest(assetList.map(asset => app!.query.oracle.values(asset))).pipe(
+            const app = state.chain.app!;
+            // FIXME: use a concrete type once polkadotjs fixes inconsistency.
+            return combineLatest(assetList.map(asset => (app.rpc as any).oracle.getValue(asset))).pipe(
                 map(result =>
                     assetList.map((asset, index) => {
                         const price = get(result, [index, 'value', 'value'], { isNone: true });

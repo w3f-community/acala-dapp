@@ -7,12 +7,13 @@ import { cdpTypeSelector, specCdpTypeSelector } from '@/store/chain/selectors';
 import Formatter from '@/components/formatter';
 import { calcStableFee } from '@/utils/vault';
 import CollateralSelect from '@/components/collateral-select';
+import { BaseProps } from '@/types/react-component/props';
 
-interface Props {
+type Props = {
     current: number;
-}
+} & BaseProps
 
-const CollateralInfo: React.FC<Props> = ({ current }) => {
+const CollateralInfo: React.FC<Props> = ({ current, className, style }) => {
     const { t } = useTranslate();
     const cdpTypes = useSelector(cdpTypeSelector);
     const [selected, setSelected] = useState<number>(current);
@@ -36,6 +37,8 @@ const CollateralInfo: React.FC<Props> = ({ current }) => {
                     <CollateralSelect selected={selected} onChange={handleChange} cdpTypes={cdpTypes} />
                 </Grid>
             }
+            className={className}
+            style={style}
         >
             {selectedCdp && (
                 <List>

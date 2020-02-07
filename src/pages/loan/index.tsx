@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Grid, Box, makeStyles, createStyles, Theme } from '@material-ui/core';
+import { Grid, Box, makeStyles, createStyles, Theme, withStyles } from '@material-ui/core';
 import Skeleton from '@material-ui/lab/Skeleton';
 import { isEmpty } from 'lodash';
 
@@ -27,7 +27,7 @@ import Overview from './components/overview';
 const useStyle = makeStyles((theme: Theme) =>
     createStyles({
         detail: {
-            marginTop: 57,
+            marginTop: 26,
             [theme.breakpoints.down('sm')]: {
                 marginTop: 0,
             },
@@ -46,6 +46,7 @@ const useStyle = makeStyles((theme: Theme) =>
                 marginTop: 32,
             },
         },
+        gap: { marginBottom: 26 },
     }),
 );
 
@@ -142,13 +143,10 @@ const Loan: React.FC = () => {
                     {renderContent()}
                 </Grid>
                 <Grid item md={12} className={classes.systemInfo}>
-                    <WalletBalance />
-                    <Box paddingTop={3} />
-                    <PricesFeed />
-                    <Box paddingTop={3} />
-                    <SystemInfo />
-                    <Box paddingTop={3} />
-                    <CollateralInfo current={currentVault} />
+                    <WalletBalance className={classes.gap} />
+                    <PricesFeed className={classes.gap} />
+                    <SystemInfo className={classes.gap} />
+                    <CollateralInfo current={currentVault} className={classes.gap} />
                 </Grid>
             </Grid>
         </Page>
