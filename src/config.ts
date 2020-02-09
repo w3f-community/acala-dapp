@@ -32,8 +32,8 @@ export const DEX_TOKENS: number[] = [1, 2, 3];
 
 export const STABLE_COIN = 1;
 
-// export const getEndPoint = (): string => 'wss://testnet-node-1.acala.laminar.one/ws';
-export const getEndPoint = (): string => 'ws://127.0.0.1:9944';
+export const getEndPoint = (): string => 'wss://testnet-node-1.acala.laminar.one/ws';
+// export const getEndPoint = (): string => 'ws://127.0.0.1:9944';
 
 export const POLKADOT_EXTENSIONS_ADDRESS =
     'https://chrome.google.com/webstore/detail/polkadot%7Bjs%7D-extension/mopnmbcafieddcagagdcbnhejhlodfdd';

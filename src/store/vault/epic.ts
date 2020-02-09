@@ -86,11 +86,12 @@ export const fetchVaultsEpic: Epic<RootAction, RootAction, RootState> = (action$
             const app = state.chain.app!;
             const account = state.account.account!;
             const assetList = action.payload;
+            console.log(app.query)
             return combineLatest(
                 assetList.map(asset =>
                     combineLatest([
-                        app.query.vaults.collaterals(account.address, asset),
-                        app.query.vaults.debits(account.address, asset),
+                        app.query.loans.collaterals(account.address, asset),
+                        app.query.loans.debits(account.address, asset),
                     ]),
                 ),
             ).pipe(

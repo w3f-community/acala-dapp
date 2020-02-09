@@ -44,7 +44,6 @@ export const fetchPricesFeedEpic: Epic<RootAction, RootAction, RootState> = (act
                 map(result =>
                     assetList.map((asset, index) => {
                         const price = get(result, [index, 'value', 'value'], { isNone: true });
-                        console.log(price);
                         return {
                             asset,
                             price: FixedU128.fromParts(u8aToNumber(price)),
