@@ -51,6 +51,7 @@ const WalletBalance: React.FC<BaseProps> = ({ className, style }) => {
                                         <Formatter
                                             type="price"
                                             data={item.balance.mul(price ? price.price : FixedU128.fromNatural(0))}
+                                            prefix="$"
                                         />
                                     </Number>
                                 </Grid>

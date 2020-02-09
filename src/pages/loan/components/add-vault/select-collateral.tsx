@@ -28,10 +28,10 @@ import FixedU128 from '@/utils/fixed_u128';
 import { calcStableFee } from '@/utils/vault';
 import useMobileMatch from '@/hooks/mobile-match';
 import SelectCollateralMobile from './select-collateral-mobile';
+import Card from '@/components/card';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
-        root: { padding: '66px 35px 60px 29px' },
         bottom: {
             paddingTop: 73,
             '& .MuiButton-root': {
@@ -147,7 +147,7 @@ const Component: React.FC<Props> = ({ onNext, onCancel }) => {
     }
 
     return (
-        <Paper square={true} elevation={1} className={classes.root}>
+        <Card elevation={1} size="large">
             <Table>
                 <TableHead>
                     <TableRow>
@@ -191,7 +191,7 @@ const Component: React.FC<Props> = ({ onNext, onCancel }) => {
                 </TableBody>
             </Table>
             {renderBottom()}
-        </Paper>
+        </Card>
     );
 };
 

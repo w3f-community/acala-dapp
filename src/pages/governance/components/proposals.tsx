@@ -12,7 +12,12 @@ export const Proposals: FC = () => {
     const approvedProposals: ProposalData[] = [];
     return (
         <>
-            <ProposalCard header={t('Proposal')} count={pendingProposals.length} data={pendingProposals} showVote={false} />
+            <ProposalCard
+                header={t('Proposal')}
+                count={pendingProposals.length}
+                data={pendingProposals}
+                showVote={false}
+            />
         </>
     );
 };

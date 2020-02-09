@@ -18,7 +18,7 @@ const SContainer = withStyles((theme: Theme) => ({
         [theme.breakpoints.down('sm')]: {
             padding: '0 20px',
         },
-        '&.full_screen': {
+        '&.fullScreen': {
             minWidth: '100%',
             boxSizing: 'border-box',
         },
@@ -27,7 +27,7 @@ const SContainer = withStyles((theme: Theme) => ({
 
 const Page: React.FC<Props> = ({ children, title, style, className, fullScreen }) => {
     return (
-        <SContainer maxWidth={false} style={style} className={clsx(className, { full_screen: fullScreen })}>
+        <SContainer maxWidth={false} style={style} className={clsx(className, { fullScreen: fullScreen })}>
             {title && <Title>{title}</Title>}
             {children}
         </SContainer>

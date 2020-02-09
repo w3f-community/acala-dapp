@@ -25,13 +25,13 @@ interface Props {
 
 const useStepStyles = makeStyles((theme: Theme) =>
     createStyles({
-        root: { marginBottom: 32 },
-        item: { ...createTypography(21, 28, 500, 'Roboto', '#757575') },
+        root: { marginBottom: theme.spacing(3) },
+        item: { ...createTypography(22, 32, 500, 'Roboto', theme.palette.common.black) },
         active: { color: theme.palette.primary.light },
         arrow: { width: 59 },
         desc: {
             marginTop: theme.spacing(2),
-            ...createTypography(15, 20, 400, 'Roboto', theme.palette.common.black),
+            ...createTypography(15, 22, 400, 'Roboto', theme.palette.secondary.main),
         },
     }),
 );

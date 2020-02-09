@@ -28,7 +28,7 @@ const createTheme = (options: ThemeOptions) =>
             },
             primary: {
                 main: '#01279c',
-                light: '#0132cc',
+                light: '#0055ff',
             },
             secondary: {
                 main: COLOR_GRAY,

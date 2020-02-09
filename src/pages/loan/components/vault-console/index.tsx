@@ -19,7 +19,6 @@ import {
     calcCanGenerater,
     collateralToUSD,
 } from '@/utils/vault';
-import Skeleton from '@material-ui/lab/Skeleton';
 import useMobileMatch from '@/hooks/mobile-match';
 
 interface Props {
@@ -32,10 +31,17 @@ const Asset = withStyles((theme: Theme) => ({
     },
 }))(Typography);
 
+const SListItemText = withStyles((theme: Theme) => ({
+    secondary: {
+        marginTop: 9,
+        ...createTypography(15, 22, 500, 'Roboto', theme.palette.common.black),
+    },
+}))(ListItemText);
+
 const VaultConsole: React.FC<Props> = ({ current }) => {
     const { t } = useTranslate();
     const userVault = useSelector(specUserVaultSelector(current));
-    const vault = useSelector(specCdpTypeSelector(current));
+    const cdpType = useSelector(specCdpTypeSelector(current));
     const [stableCoinPrice, collateralPrice] = useSelector(specPriceSelector([STABLE_COIN, current]));
     const collateralAssetName = getAssetName(current);
     const stableCoinAssetName = getAssetName(STABLE_COIN);
@@ -48,13 +54,13 @@ const VaultConsole: React.FC<Props> = ({ current }) => {
     const handleShowDeposit = () => setModalProps({ open: true, action: 'deposit' });
     const handleShowWithdraw = () => setModalProps({ open: true, action: 'withdraw' });
 
-    if (!vault || !userVault) {
+    if (!cdpType || !userVault) {
         return null;
     }
 
     const requiredCollateral = calcRequiredCollateral(
-        debitToUSD(userVault.debit, vault.debitExchangeRate, stableCoinPrice),
-        vault.requiredCollateralRatio,
+        debitToUSD(userVault.debit, cdpType.debitExchangeRate, stableCoinPrice),
+        cdpType.requiredCollateralRatio,
         collateralPrice,
     );
 
@@ -71,7 +77,7 @@ const VaultConsole: React.FC<Props> = ({ current }) => {
                             <Asset>
                                 <Formatter
                                     type="price"
-                                    data={debitToUSD(userVault.debit, vault.debitExchangeRate, stableCoinPrice)}
+                                    data={debitToUSD(userVault.debit, cdpType.debitExchangeRate, stableCoinPrice)}
                                     prefix="$"
                                 />
                             </Asset>
@@ -80,10 +86,12 @@ const VaultConsole: React.FC<Props> = ({ current }) => {
                 >
                     <List disablePadding>
                         <ListItem disableGutters>
-                            <ListItemText
+                            <SListItemText
                                 primary={t('Can Pay Back')}
                                 secondary={t('{{number}} {{asset}}', {
-                                    number: formatBalance(debitToStableCoin(userVault.debit, vault.debitExchangeRate)),
+                                    number: formatBalance(
+                                        debitToStableCoin(userVault.debit, cdpType.debitExchangeRate),
+                                    ),
                                     asset: stableCoinAssetName,
                                 })}
                             />
@@ -92,14 +100,16 @@ const VaultConsole: React.FC<Props> = ({ current }) => {
                             </Button>
                         </ListItem>
                         <ListItem disableGutters>
-                            <ListItemText
+                            <SListItemText
                                 primary={t('Can Generate')}
                                 secondary={t('{{number}} {{asset}}', {
                                     number: formatBalance(
                                         calcCanGenerater(
                                             collateralToUSD(userVault.collateral, collateralPrice),
-                                            debitToUSD(userVault.debit, vault.debitExchangeRate, stableCoinPrice),
-                                            vault.requiredCollateralRatio,
+                                            debitToUSD(userVault.debit, cdpType.debitExchangeRate, stableCoinPrice),
+                                            cdpType.requiredCollateralRatio,
+                                            cdpType.debitExchangeRate,
+                                            stableCoinPrice,
                                         ),
                                     ),
                                     asset: stableCoinAssetName,
@@ -129,7 +139,7 @@ const VaultConsole: React.FC<Props> = ({ current }) => {
                 >
                     <List disablePadding>
                         <ListItem disableGutters>
-                            <ListItemText
+                            <SListItemText
                                 primary={t('Required for Safety')}
                                 secondary={t('{{number}} {{asset}}', {
                                     number: formatBalance(requiredCollateral),
@@ -141,7 +151,7 @@ const VaultConsole: React.FC<Props> = ({ current }) => {
                             </Button>
                         </ListItem>
                         <ListItem disableGutters>
-                            <ListItemText
+                            <SListItemText
                                 primary={t('Able to Withdraw')}
                                 secondary={t('{{number}} {{asset}}', {
                                     number: formatBalance(userVault.collateral.sub(requiredCollateral)),

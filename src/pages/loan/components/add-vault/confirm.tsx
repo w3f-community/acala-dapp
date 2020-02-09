@@ -13,26 +13,18 @@ import actions from '@/store/actions';
 import { formContext } from './context';
 import { statusSelector } from '@/store/vault/selectors';
 import FixedU128 from '@/utils/fixed_u128';
-import { calcCollateralRatio, calcStableFee, USDToDebit, collateralToUSD } from '@/utils/vault';
+import { calcCollateralRatio, calcStableFee, USDToDebit, collateralToUSD, stableCoinToDebit } from '@/utils/vault';
 import { STABLE_COIN } from '@/config';
 import { loadingSelector } from '@/store/loading/reducer';
 import rootActions from '@/store/actions';
 import Bottom from './bottom';
-
-const SPaper = withStyles((theme: Theme) => ({
-    root: {
-        padding: '66px 35px 60px 29px',
-        [theme.breakpoints.down('sm')]: {
-            paddingTop: 40,
-        },
-    },
-}))(Paper);
+import Card from '@/components/card';
 
 const SListItem = withStyles((theme: Theme) => ({
     root: {
         padding: 0,
-        marginBottom: 24,
-        ...createTypography(21, 28, 500, 'Roboto', '#424242'),
+        marginBottom: 26,
+        ...createTypography(22, 32, 500, 'Roboto', theme.palette.common.black),
         [theme.breakpoints.down('sm')]: {
             marginBottom: 24,
             ...createTypography(15, 22, 500, 'Roboto', theme.palette.common.black),
@@ -42,6 +34,9 @@ const SListItem = withStyles((theme: Theme) => ({
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
+        card: {
+            padding: '54px  26px',
+        },
         item: {
             marginBottom: 24,
         },
@@ -53,11 +48,9 @@ const useStyles = makeStyles((theme: Theme) =>
                 cursor: 'pointer',
             },
         },
-        error: {
-            color: 'red',
-        },
+        error: { color: 'red' },
         bottom: {
-            marginTop: 63,
+            marginTop: 26,
             justifyContent: 'flex-end',
             [theme.breakpoints.down('sm')]: {
                 marginTop: 40,
@@ -96,7 +89,7 @@ const Component: React.FC<Props> = ({ onNext, onPrev, onCancel }) => {
     const assetName = getAssetName(selectedAsset);
     const vault = useSelector(specCdpTypeSelector(selectedAsset));
     const balance = useSelector(specBalanceSelector(selectedAsset));
-    const [stableCoinPrice, collateralPrice] = useSelector(specPriceSelector([STABLE_COIN, selectedAsset]));
+    const [collateralPrice] = useSelector(specPriceSelector([STABLE_COIN, selectedAsset]));
     const updateVaultStatus = useSelector(statusSelector('updateVault'));
     const loading = useSelector(loadingSelector(rootActions.vault.UPDATE_VAULT));
 
@@ -114,7 +107,7 @@ const Component: React.FC<Props> = ({ onNext, onPrev, onCancel }) => {
             actions.vault.updateVault.request({
                 asset: selectedAsset,
                 collateral: collateral,
-                debit: USDToDebit(borrow, vault.debitExchangeRate, stableCoinPrice),
+                debit: stableCoinToDebit(borrow, vault.debitExchangeRate),
             }),
         );
     };
@@ -139,7 +132,7 @@ const Component: React.FC<Props> = ({ onNext, onPrev, onCancel }) => {
     }
 
     return (
-        <SPaper square={true} elevation={1}>
+        <Card elevation={1} size="large" className={classes.card}>
             <Grid container justify="center">
                 <Grid item xs={12} lg={6}>
                     <List disablePadding>
@@ -193,7 +186,7 @@ const Component: React.FC<Props> = ({ onNext, onPrev, onCancel }) => {
                 onCancel={onCancel}
                 className={classes.bottom}
             />
-        </SPaper>
+        </Card>
     );
 };
 

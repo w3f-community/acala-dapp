@@ -15,6 +15,7 @@ import {
     Grid,
     IconButton,
     Theme,
+    withStyles,
 } from '@material-ui/core';
 import { useTranslate } from '@/hooks/i18n';
 import { createTypography } from '@/theme';
@@ -36,6 +37,7 @@ import {
     calcLiquidationPrice,
     calcRequiredCollateral,
     stableCoinToDebit,
+    debitToStableCoin,
 } from '@/utils/vault';
 import { specUserVaultSelector } from '@/store/vault/selectors';
 import { specBalanceSelector } from '@/store/account/selectors';
@@ -44,24 +46,11 @@ export type ActionType = 'any' | 'payback' | 'generate' | 'deposit' | 'withdraw'
 
 const ZERO = FixedU128.fromNatural(0);
 
-const useStyles = makeStyles(() =>
-    createStyles({
-        information: {
-            marginTop: 46,
-        },
-        maxBtn: {
-            marginRight: 8,
-            minWidth: 'auto',
-            height: 'auto',
-        },
-    }),
-);
-
 const useInputStyles = makeStyles((theme: Theme) =>
     createStyles({
         root: {
             width: '100%',
-            ...createTypography(30, 32, 500, 'Roboto', theme.palette.common.black),
+            ...createTypography(22, 32, 500, 'Roboto', theme.palette.common.black),
         },
         underline: {
             color: '#0123cc',
@@ -73,6 +62,21 @@ const useInputStyles = makeStyles((theme: Theme) =>
         },
     }),
 );
+
+const Information = withStyles(() => ({
+    root: {
+        marginTop: 26,
+    },
+}))(List);
+
+const MaxButton = withStyles((theme: Theme) => ({
+    root: {
+        marginRight: 8,
+        minWidth: 'auto',
+        height: 'auto',
+        ...createTypography(22, 32, 500, 'Roboto', theme.palette.secondary.main),
+    },
+}))(Button);
 
 const createActionModal: (option: BaseActionModalProps & ActionModalProps) => ReactElement = props => {
     return <BaseActionModal {...props} />;
@@ -93,7 +97,7 @@ const ActionModal: React.FC<ActionModalProps> = props => {
     const dispatch = useDispatch();
     const [stableCoinPrice, collateralPrice] = useSelector(specPriceSelector([STABLE_COIN, current]));
     const collateralbalance = useSelector(specBalanceSelector(current));
-    const vault = useSelector(specCdpTypeSelector(current));
+    const cdpType = useSelector(specCdpTypeSelector(current));
     const userVault = useSelector(specUserVaultSelector(current));
     const stableCoinAssetName = getAssetName(STABLE_COIN);
     const currentAssetName = getAssetName(current);
@@ -108,40 +112,42 @@ const ActionModal: React.FC<ActionModalProps> = props => {
     };
 
     useEffect(() => {
-        if (vault && userVault && init.current === false) {
-            const debitValue = debitToUSD(userVault.debit, vault.debitExchangeRate, stableCoinPrice);
+        if (cdpType && userVault && init.current === false) {
+            const debitAmount = debitToUSD(userVault.debit, cdpType.debitExchangeRate, stableCoinPrice);
 
-            setBorrowed(debitValue);
+            setBorrowed(debitAmount);
             setCollateralRatio(
                 calcCollateralRatio(
                     collateralToUSD(userVault.collateral, collateralPrice),
-                    debitToUSD(userVault.debit, vault.debitExchangeRate, stableCoinPrice),
+                    debitToUSD(userVault.debit, cdpType.debitExchangeRate, stableCoinPrice),
                 ),
             );
             setLiquidationPrice(
                 calcLiquidationPrice(
-                    debitToUSD(userVault.debit, vault.debitExchangeRate, stableCoinPrice),
-                    vault.requiredCollateralRatio,
+                    debitToUSD(userVault.debit, cdpType.debitExchangeRate, stableCoinPrice),
+                    cdpType.requiredCollateralRatio,
                     userVault.collateral,
                 ),
             );
             init.current = true;
         }
-    }, [vault, userVault, stableCoinPrice, collateralPrice]);
+    }, [cdpType, userVault, stableCoinPrice, collateralPrice]);
 
-    if (!vault || !userVault) {
+    if (!cdpType || !userVault) {
         return null;
     }
 
     // vault info
-    const debitValue = debitToUSD(userVault.debit, vault.debitExchangeRate, stableCoinPrice);
-    const collateralVaule = collateralToUSD(userVault.collateral, collateralPrice);
-    const canGenerate = calcCanGenerater(collateralVaule, debitValue, vault.requiredCollateralRatio);
-    const requiredCollateral = calcRequiredCollateral(
-        debitToUSD(userVault.debit, vault.debitExchangeRate, stableCoinPrice),
-        vault.requiredCollateralRatio,
-        collateralPrice,
+    const debitAmount = debitToUSD(userVault.debit, cdpType.debitExchangeRate, stableCoinPrice);
+    const collateralAmount = collateralToUSD(userVault.collateral, collateralPrice);
+    const canGenerate = calcCanGenerater(
+        collateralAmount,
+        debitAmount,
+        cdpType.requiredCollateralRatio,
+        cdpType.debitExchangeRate,
+        stableCoinPrice,
     );
+    const requiredCollateral = calcRequiredCollateral(debitAmount, cdpType.requiredCollateralRatio, collateralPrice);
     const ableWithdraw = userVault.collateral.sub(requiredCollateral);
 
     const baseProps = {
@@ -153,31 +159,33 @@ const ActionModal: React.FC<ActionModalProps> = props => {
         onClose: _onClose,
     };
 
+    console.log(cdpType.debitExchangeRate);
+
     if (action === 'payback') {
         return createActionModal({
             title: t('Payback {{ asset}}', { asset: stableCoinAssetName }),
             confirmBtnText: t('Payback'),
-            placeholder: `${formatBalance(debitValue)} max`,
-            max: debitValue,
+            placeholder: `${formatBalance(debitAmount)} max`,
+            max: debitAmount,
             startAdornment: stableCoinAssetName,
             onChange: value => {
-                if (FixedU128.fromNatural(value).isGreaterThan(debitValue)) {
+                if (FixedU128.fromNatural(value).isGreaterThan(debitAmount)) {
                     return false;
                 }
-                const newDeibtValue = debitValue.sub(FixedU128.fromNatural(value));
+                const newDeibtValue = debitAmount.sub(FixedU128.fromNatural(value));
 
                 setAmount(value);
                 setBorrowed(newDeibtValue);
-                setCollateralRatio(calcCollateralRatio(collateralVaule, newDeibtValue));
+                setCollateralRatio(calcCollateralRatio(collateralAmount, newDeibtValue));
                 setLiquidationPrice(
-                    calcLiquidationPrice(newDeibtValue, vault.requiredCollateralRatio, userVault.collateral),
+                    calcLiquidationPrice(newDeibtValue, cdpType.requiredCollateralRatio, userVault.collateral),
                 );
             },
             onConfirm: () => {
                 if (!amount) {
                     return false;
                 }
-                const debitAmount = USDToDebit(FixedU128.fromNatural(amount), vault.debitExchangeRate, stableCoinPrice);
+                const debitAmount = stableCoinToDebit(FixedU128.fromNatural(amount), cdpType.debitExchangeRate);
                 dispatch(
                     actions.vault.updateVault.request({
                         asset: current,
@@ -201,20 +209,20 @@ const ActionModal: React.FC<ActionModalProps> = props => {
                 if (FixedU128.fromNatural(value).isGreaterThan(canGenerate)) {
                     return false;
                 }
-                const newDeibtValue = debitValue.add(FixedU128.fromNatural(value));
+                const newDeibtValue = debitAmount.add(FixedU128.fromNatural(value));
 
                 setAmount(value);
                 setBorrowed(newDeibtValue);
-                setCollateralRatio(calcCollateralRatio(collateralVaule, newDeibtValue));
+                setCollateralRatio(calcCollateralRatio(collateralAmount, newDeibtValue));
                 setLiquidationPrice(
-                    calcLiquidationPrice(newDeibtValue, vault.requiredCollateralRatio, userVault.collateral),
+                    calcLiquidationPrice(newDeibtValue, cdpType.requiredCollateralRatio, userVault.collateral),
                 );
             },
             onConfirm: () => {
                 if (!amount) {
                     return false;
                 }
-                const debitAmount = stableCoinToDebit(FixedU128.fromNatural(amount), vault.debitExchangeRate);
+                const debitAmount = stableCoinToDebit(FixedU128.fromNatural(amount), cdpType.debitExchangeRate);
                 dispatch(
                     actions.vault.updateVault.request({
                         asset: current,
@@ -238,17 +246,17 @@ const ActionModal: React.FC<ActionModalProps> = props => {
                 if (FixedU128.fromNatural(value).isGreaterThan(collateralbalance)) {
                     return false;
                 }
-                const newCollateralVaule = collateralToUSD(
+                const newcollateralAmount = collateralToUSD(
                     userVault.collateral.add(FixedU128.fromNatural(value)),
                     collateralPrice,
                 );
 
                 setAmount(value);
-                setCollateralRatio(calcCollateralRatio(newCollateralVaule, debitValue));
+                setCollateralRatio(calcCollateralRatio(newcollateralAmount, debitAmount));
                 setLiquidationPrice(
                     calcLiquidationPrice(
-                        debitValue,
-                        vault.requiredCollateralRatio,
+                        debitAmount,
+                        cdpType.requiredCollateralRatio,
                         userVault.collateral.add(FixedU128.fromNatural(value)),
                     ),
                 );
@@ -280,17 +288,17 @@ const ActionModal: React.FC<ActionModalProps> = props => {
                 if (FixedU128.fromNatural(value).isGreaterThan(ableWithdraw)) {
                     return false;
                 }
-                const newCollateralVaule = collateralToUSD(
+                const newcollateralAmount = collateralToUSD(
                     userVault.collateral.sub(FixedU128.fromNatural(value)),
                     collateralPrice,
                 );
 
                 setAmount(value);
-                setCollateralRatio(calcCollateralRatio(newCollateralVaule, debitValue));
+                setCollateralRatio(calcCollateralRatio(newcollateralAmount, debitAmount));
                 setLiquidationPrice(
                     calcLiquidationPrice(
-                        debitValue,
-                        vault.requiredCollateralRatio,
+                        debitAmount,
+                        cdpType.requiredCollateralRatio,
                         userVault.collateral.sub(FixedU128.fromNatural(value)),
                     ),
                 );
@@ -348,7 +356,6 @@ const BaseActionModal: React.FC<BaseActionModalProps & ActionModalProps> = ({
 }) => {
     const { t } = useTranslate();
     const dispatch = useDispatch();
-    const classes = useStyles();
     const inputClasses = useInputStyles();
     const updateVaultStatus = useSelector(statusSelector('updateVault'));
 
@@ -391,12 +398,12 @@ const BaseActionModal: React.FC<BaseActionModalProps & ActionModalProps> = ({
                         placeholder: placeholder,
                         value: !amount ? '' : amount,
                         onChange: handleInput,
+                        classes: { root: inputClasses.root },
                         endAdornment: (
                             <InputAdornment position="start">
-                                <Button disableRipple className={classes.maxBtn} size="small" onClick={handleMax}>
+                                <MaxButton disableRipple size="small" onClick={handleMax}>
                                     max
-                                </Button>
-                                {startAdornment}
+                                </MaxButton>
                             </InputAdornment>
                         ),
                     }}
@@ -415,7 +422,7 @@ const BaseActionModal: React.FC<BaseActionModalProps & ActionModalProps> = ({
                         {t('cancel')}
                     </Button>
                 </Grid>
-                <List disablePadding className={classes.information}>
+                <Information disablePadding>
                     <ListItem disableGutters>
                         <ListItemText
                             primary={t('Borrowed aUSD')}
@@ -431,7 +438,7 @@ const BaseActionModal: React.FC<BaseActionModalProps & ActionModalProps> = ({
                             secondary={formatPrice(liquidationPrice, '$')}
                         />
                     </ListItem>
-                </List>
+                </Information>
             </DialogContent>
         </Dialog>
     );

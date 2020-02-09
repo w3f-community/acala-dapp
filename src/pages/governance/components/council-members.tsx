@@ -37,7 +37,7 @@ export const CouncilMembers: FC = () => {
             >
                 {' '}
                 {members.map((account, index) => (
-                    <Account key={`council-${account}`}>{`${index+1}. ${account}`}</Account>
+                    <Account key={`council-${account}`}>{`${index + 1}. ${account}`}</Account>
                 ))}
             </Card>
         </>

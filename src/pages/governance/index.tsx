@@ -31,7 +31,7 @@ const Governance: React.FC = () => {
 
     useEffect(() => {
         dispatch(fetchProposals.request({}));
-        dispatch(fetchCouncil.request({}))
+        dispatch(fetchCouncil.request({}));
     }, [dispatch]);
 
     return (

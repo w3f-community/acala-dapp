@@ -43,6 +43,7 @@ export const createValutEpic: Epic<RootAction, RootAction, RootState> = (action$
                 type: 'updateVault',
                 data: data,
             };
+            console.log(data.asset, data.collateral.innerToString(), data.debit.innerToString());
 
             return concat(
                 of(startLoading(actions.UPDATE_VAULT)),

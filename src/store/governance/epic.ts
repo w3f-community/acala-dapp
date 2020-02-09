@@ -80,7 +80,7 @@ export const fetchCouncil: Epic<RootAction, RootAction, RootState> = (action$: a
             const app = state.chain.app!;
             return app.query.financialCouncil.members().pipe(
                 map((result: Codec) => result.toJSON()),
-                map(actions.fetchCouncil.success)
-            )
+                map(actions.fetchCouncil.success),
+            );
         }),
     );

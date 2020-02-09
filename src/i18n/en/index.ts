@@ -104,7 +104,7 @@ export default {
     'Vote for this proposal': 'Vote for this proposal',
     'Wallet Balance': 'Wallet Balance',
     // goverence
-    'Proposal': 'Proposal',
-    'Council': 'Council',
-    'Members': 'Members'
+    Proposal: 'Proposal',
+    Council: 'Council',
+    Members: 'Members',
 };

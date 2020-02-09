@@ -8,14 +8,15 @@ import { createTypography } from '@/theme';
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         root: {
-            padding: '30px 26px',
+            padding: '24px 26px',
             [theme.breakpoints.down('sm')]: {
                 padding: '24px 30px',
             },
             '& $header': {
                 ...createTypography(18, 22, 500, 'Roboto', theme.palette.common.black),
                 paddingBottom: 16.5,
-            }
+                marginBottom: 18.5,
+            },
         },
         rootLarge: {
             padding: '32px 26px',
@@ -23,8 +24,9 @@ const useStyles = makeStyles((theme: Theme) =>
                 padding: '32px 30px',
             },
             '& $header': {
-                paddingBottom: 26
-            }
+                paddingBottom: 8.5,
+                marginBottom: 18.5,
+            },
         },
         header: {},
         headerDivider: {
@@ -35,7 +37,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 type Size = 'normal' | 'large' | 'small';
 
-type Props  = {
+type Props = {
     size: Size;
     elevation: number;
     children: ReactNode;
@@ -44,7 +46,7 @@ type Props  = {
     header?: ReactNode;
     divider?: boolean;
     marginTop?: number;
-} & BaseProps
+} & BaseProps;
 
 const Card: React.FC<Props> = ({
     header,
@@ -55,7 +57,7 @@ const Card: React.FC<Props> = ({
     divider = true,
     marginTop = 0,
     className,
-    style
+    style,
 }) => {
     const classes = useStyles();
     const theme = useTheme();
@@ -69,7 +71,7 @@ const Card: React.FC<Props> = ({
             })}
             style={{ marginTop: theme.spacing(marginTop), ...style }}
         >
-            <Grid container direction="column">
+            <Grid container direction="column" wrap="nowrap">
                 {header && (
                     <div
                         className={clsx(classes.header, headerClassName, {

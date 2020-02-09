@@ -15,16 +15,28 @@ export const ProposalDetail: FC<Props> = ({ data }) => {
                     <p>Stable Fee To {FixedU128.fromParts(parseInt(proposal.args.stability_fee, 16)).toNumber()}</p>
                 ) : null}
                 {proposal.args.liquidation_penalty ? (
-                    <p>Liquidation Penalty To {FixedU128.fromParts(parseInt(proposal.args.liquidation_penalty, 16)).toNumber()}</p>
+                    <p>
+                        Liquidation Penalty To{' '}
+                        {FixedU128.fromParts(parseInt(proposal.args.liquidation_penalty, 16)).toNumber()}
+                    </p>
                 ) : null}
                 {proposal.args.liquidation_ratio ? (
-                    <p>Liquidation Ratio To {FixedU128.fromParts(parseInt(proposal.args.liquidation_ratio, 16)).toNumber()}</p>
+                    <p>
+                        Liquidation Ratio To{' '}
+                        {FixedU128.fromParts(parseInt(proposal.args.liquidation_ratio, 16)).toNumber()}
+                    </p>
                 ) : null}
                 {proposal.args.required_collateral_ratio ? (
-                    <p>Required Collateral Ratio To {FixedU128.fromParts(parseInt(proposal.args.required_collateral_ratio, 16)).toNumber()}</p>
+                    <p>
+                        Required Collateral Ratio To{' '}
+                        {FixedU128.fromParts(parseInt(proposal.args.required_collateral_ratio, 16)).toNumber()}
+                    </p>
                 ) : null}
                 {proposal.args.maximum_total_debit_value ? (
-                    <p>Maximum Total Debit Value To {FixedU128.fromParts(parseInt(proposal.args.maximum_total_debit_value, 16)).toNumber()}</p>
+                    <p>
+                        Maximum Total Debit Value To{' '}
+                        {FixedU128.fromParts(parseInt(proposal.args.maximum_total_debit_value, 16)).toNumber()}
+                    </p>
                 ) : null}
             </>
         );

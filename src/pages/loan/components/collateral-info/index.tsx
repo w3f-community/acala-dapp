@@ -11,7 +11,7 @@ import { BaseProps } from '@/types/react-component/props';
 
 type Props = {
     current: number;
-} & BaseProps
+} & BaseProps;
 
 const CollateralInfo: React.FC<Props> = ({ current, className, style }) => {
     const { t } = useTranslate();

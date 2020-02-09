@@ -1,7 +1,6 @@
 import React, { ChangeEvent, useEffect } from 'react';
 import {
     Grid,
-    Paper,
     TextField,
     List,
     ListItem,
@@ -32,43 +31,40 @@ import { STABLE_COIN } from '@/config';
 import { withStyles } from '@material-ui/styles';
 import useMobileMatch from '@/hooks/mobile-match';
 import Bottom from './bottom';
+import Card from '@/components/card';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
-        card: {
-            padding: '66px 35px 60px 29px',
-            [theme.breakpoints.down('sm')]: {
-                paddingTop: 40,
-            },
-        },
         input: {
             width: '50%',
-            marginBottom: 28,
+            marginBottom: 24,
             [theme.breakpoints.down('sm')]: {
                 width: '100%',
             },
         },
         label: {
-            marginBottom: 22,
-            ...createTypography(21, 28, 500, 'Roboto', theme.palette.primary.light),
+            marginBottom: 29,
+            ...createTypography(22, 32, 500, 'Roboto', theme.palette.primary.light),
         },
         helper: {
-            marginTop: 28,
+            display: 'flex',
+            justifyContent: 'space-between',
+            marginTop: 25.6,
             ...createTypography(15, 20, 400, 'Roboto', theme.palette.common.black),
         },
         list: {
-            padding: '39px 32px 37px 21px',
+            padding: '32px 26px',
             background: 'rgba(161, 161, 161, 0.11)',
         },
         bottom: {
-            marginTop: 73,
+            marginTop: 44,
             [theme.breakpoints.down('sm')]: {
                 marginTop: 44,
             },
         },
         note: {
             width: 352,
-            ...createTypography(14, 19, 400, 'Roboto', '#757575'),
+            ...createTypography(15, 22, 500, 'Roboto', theme.palette.common.black),
             [theme.breakpoints.down('sm')]: {
                 width: '100%',
                 marginBottom: 44,
@@ -77,9 +73,14 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 );
 
-const SListItem = withStyles(() => ({
+const SListItem = withStyles((theme: Theme) => ({
     root: {
-        ...createTypography(15, 22, 500, 'Roboto', '#424242'),
+        padding: 0,
+        paddingBottom: 8,
+        ...createTypography(15, 22, 500, 'Roboto', theme.palette.common.black),
+        '&:last-child': {
+            paddingBottom: 0,
+        },
     },
 }))(ListItem);
 
@@ -117,9 +118,9 @@ const Component: React.FC<Props> = ({ onNext, onPrev, onCancel }) => {
     const borrow = FixedU128.fromNatural(data.borrow.value);
     const assetName = getAssetName(selectedAsset);
     const stableCoinAssetName = getAssetName(STABLE_COIN);
-    const vault = useSelector(specCdpTypeSelector(selectedAsset));
+    const cdpType = useSelector(specCdpTypeSelector(selectedAsset));
     const balance = useSelector(specBalanceSelector(selectedAsset));
-    const collateralPrice = useSelector(specPriceSelector(selectedAsset));
+    const [collateralPrice, stableCoinPrice] = useSelector(specPriceSelector([selectedAsset, STABLE_COIN]));
 
     useEffect(() => {
         // reset to empty
@@ -127,14 +128,16 @@ const Component: React.FC<Props> = ({ onNext, onPrev, onCancel }) => {
         setValue('borrow', '');
     }, []);
 
-    if (!vault) {
+    if (!cdpType) {
         return null;
     }
 
     const maxBorrowd = calcCanGenerater(
         collateralToUSD(collateral, collateralPrice),
         FixedU128.fromNatural(0),
-        vault.requiredCollateralRatio,
+        cdpType.requiredCollateralRatio,
+        cdpType.debitExchangeRate,
+        stableCoinPrice,
     );
 
     const collateralRatio = calcCollateralRatio(collateralToUSD(collateral, collateralPrice), borrow);
@@ -146,7 +149,7 @@ const Component: React.FC<Props> = ({ onNext, onPrev, onCancel }) => {
             return false;
         }
         // ensure required collateral ratio
-        if (vault.requiredCollateralRatio.isGreaterThan(collateralRatio)) {
+        if (cdpType.requiredCollateralRatio.isGreaterThan(collateralRatio)) {
             return false;
         }
         onNext();
@@ -182,7 +185,7 @@ const Component: React.FC<Props> = ({ onNext, onPrev, onCancel }) => {
     const renderInfo = () => {
         return (
             <Grid item xs={12} lg={4}>
-                {vault && (
+                {cdpType && (
                     <List classes={{ root: classes.list }} disablePadding>
                         <InfoListItem name={t('Collateralization')} value={assetName} />
                         <InfoListItem name={t('Collateralization Ratio')} value={formatRatio(collateralRatio)} />
@@ -192,17 +195,17 @@ const Component: React.FC<Props> = ({ onNext, onPrev, onCancel }) => {
                         />
                         <InfoListItem
                             name={t('Interest Rate')}
-                            value={formatRatio(calcStableFee(vault.stabilityFee))}
+                            value={formatRatio(calcStableFee(cdpType.stabilityFee))}
                         />
                         <InfoListItem
                             name={t('Liquidation Price')}
                             value={formatPrice(
-                                calcLiquidationPrice(borrow, vault.requiredCollateralRatio, collateral),
+                                calcLiquidationPrice(borrow, cdpType.requiredCollateralRatio, collateral),
                                 '$',
                             )}
                         />
-                        <InfoListItem name={t('Liquidation Ratio')} value={formatRatio(vault.liquidationRatio)} />
-                        <InfoListItem name={t('Liquidation Penalty')} value={formatRatio(vault.liquidationPenalty)} />
+                        <InfoListItem name={t('Liquidation Ratio')} value={formatRatio(cdpType.liquidationRatio)} />
+                        <InfoListItem name={t('Liquidation Penalty')} value={formatRatio(cdpType.liquidationPenalty)} />
                     </List>
                 )}
             </Grid>
@@ -221,7 +224,7 @@ const Component: React.FC<Props> = ({ onNext, onPrev, onCancel }) => {
     };
 
     return (
-        <Paper square={true} elevation={1} classes={{ root: classes.card }}>
+        <Card elevation={1} size="large">
             {match ? <Title>{t('Generate {{asset}}', { asset: getAssetName(STABLE_COIN) })}</Title> : ''}
             <Grid container>
                 <Grid item xs={12} lg={8}>
@@ -274,7 +277,7 @@ const Component: React.FC<Props> = ({ onNext, onPrev, onCancel }) => {
             </Grid>
             {renderBottom()}
             {match ? renderInfo() : null}
-        </Paper>
+        </Card>
     );
 };
 

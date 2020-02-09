@@ -12,7 +12,7 @@ const Card = withStyles(() => ({
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         card: {
-            padding: '108px 0 80px 0'
+            padding: '108px 0 80px 0',
         },
         img: {
             marginTop: 72,

@@ -21,6 +21,9 @@ class FixedU128 {
     }
 
     public innerToString(): string {
+        if (this.inner.isNaN()) {
+            return FixedU128.fromNatural(0).inner.toFixed();
+        }
         return this.inner.toFixed().split('.')[0];
     }
 

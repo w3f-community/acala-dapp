@@ -1,6 +1,6 @@
-import { CSSProperties } from "react";
+import { CSSProperties } from 'react';
 
 export interface BaseProps {
     className?: string;
-    style?: CSSProperties
+    style?: CSSProperties;
 }

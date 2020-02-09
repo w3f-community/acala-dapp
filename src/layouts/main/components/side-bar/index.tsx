@@ -51,7 +51,7 @@ const Sidebar: React.FC<Props> = ({ config }) => {
         <Drawer variant="permanent" open={true} classes={{ root: classes.root, paper: classes.paper }}>
             <Grid className={classes.header} container justify="center" alignItems="center">
                 <img src={AcalaLogo} width={40} height={34} className={classes.icon} alt="acala-logo" />
-                <Typography variant="h1">Acala Network</Typography>
+                <Typography variant="h1">Acala Mandala</Typography>
             </Grid>
             <List>
                 <Item data={{ name: formatAddress(account), path: '/user', icon: WalletIcon }} />

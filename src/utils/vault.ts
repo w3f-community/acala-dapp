@@ -36,11 +36,11 @@ export function collateralToUSD(collateral: FixedU128, collateralPrice: FixedU12
     return collateral.mul(collateralPrice);
 }
 
-export function calcCollateralRatio(collateralVaule: FixedU128, debitVaule: FixedU128): FixedU128 {
-    if (debitVaule.isZero()) {
+export function calcCollateralRatio(collateralAmount: FixedU128, debitAmount: FixedU128): FixedU128 {
+    if (debitAmount.isZero()) {
         return ZERO;
     }
-    return collateralVaule.div(debitVaule);
+    return collateralAmount.div(debitAmount);
 }
 
 export function calcStableFee(stableFee: FixedU128): FixedU128 {
@@ -48,36 +48,44 @@ export function calcStableFee(stableFee: FixedU128): FixedU128 {
 }
 
 export function calcRequiredCollateral(
-    debitValue: FixedU128,
+    debitAmount: FixedU128,
     requiredCollateralRatio: FixedU128,
     collateralPrice: FixedU128,
 ): FixedU128 {
     if (requiredCollateralRatio.isZero() || collateralPrice.isZero()) {
         return ZERO;
     }
-    return debitValue.mul(requiredCollateralRatio).div(collateralPrice);
+    return debitAmount.mul(requiredCollateralRatio).div(collateralPrice);
 }
 
 export function calcCanGenerater(
-    collateralValue: FixedU128,
-    debitValue: FixedU128,
+    collateralAmount: FixedU128,
+    debitAmount: FixedU128,
     requiredCollateralRatio: FixedU128,
+    debitExchangeRate: FixedU128,
+    stableCoinPrice: FixedU128,
 ): FixedU128 {
     if (requiredCollateralRatio.isZero()) {
         return ZERO;
     }
-    return collateralValue.div(requiredCollateralRatio).sub(debitValue);
+    return debitToStableCoin(
+        collateralAmount
+            .div(requiredCollateralRatio)
+            .sub(debitAmount)
+            .div(stableCoinPrice),
+        debitExchangeRate,
+    );
 }
 
 export function calcLiquidationPrice(
-    debitValue: FixedU128,
+    debitAmount: FixedU128,
     requiredCollateralRatio: FixedU128,
     collateral: FixedU128,
 ): FixedU128 {
     if (collateral.isZero()) {
         return ZERO;
     }
-    return debitValue.mul(requiredCollateralRatio).div(collateral);
+    return debitAmount.mul(requiredCollateralRatio).div(collateral);
 }
 
 //TODO: need

@@ -84,8 +84,8 @@ const Content = withStyles((theme: Theme) => ({
     root: {
         marginTop: 9.2,
         textAlign: 'center',
-        ...createTypography(15, 22, 500, 'Roboto', theme.palette.secondary.main)
-    }
+        ...createTypography(15, 22, 500, 'Roboto', theme.palette.secondary.main),
+    },
 }))(Typography);
 
 interface ItemProps {

@@ -23,7 +23,10 @@ export const connectEpic: Epic<RootAction, RootAction, RootState> = action$ =>
 
             return concat(
                 of(startLoading(actions.CONNECT_ASYNC)),
-                ApiRx.create({ provider: wsProvider, types: acalaTypes as any, rpc }).pipe(map(actions.connectAsync.success), take(1)),
+                ApiRx.create({ provider: wsProvider, types: acalaTypes as any, rpc }).pipe(
+                    map(actions.connectAsync.success),
+                    take(1),
+                ),
                 of(endLoading(actions.CONNECT_ASYNC)),
             );
         }),
@@ -41,6 +44,7 @@ export const fetchPricesFeedEpic: Epic<RootAction, RootAction, RootState> = (act
                 map(result =>
                     assetList.map((asset, index) => {
                         const price = get(result, [index, 'value', 'value'], { isNone: true });
+                        console.log(price);
                         return {
                             asset,
                             price: FixedU128.fromParts(u8aToNumber(price)),

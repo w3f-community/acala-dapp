@@ -13,4 +13,4 @@ export const fetchCouncil = createAsyncAction(
     FETCH_COUNCIL,
     '@governance/fetch_council/success',
     '@governance/fetch_council/failure',
-)<unknown, string[], string>()
+)<unknown, string[], string>();
