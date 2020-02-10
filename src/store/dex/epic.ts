@@ -24,10 +24,10 @@ export const createValutEpic: Epic<RootAction, RootAction, RootState> = (action$
                 [data.supply.asset, data.supply.balance.innerToString()],
                 [data.target.asset, data.target.balance.innerToString()],
             );
-            const hash = tx.hash.toString();
             const txRecord: Tx = {
+                id: tx.hash.toHex(),
                 signer: address,
-                hash: hash,
+                hash: '',
                 status: 'pending',
                 time: new Date().getTime(),
                 type: 'swapCurrency',
@@ -42,13 +42,13 @@ export const createValutEpic: Epic<RootAction, RootAction, RootState> = (action$
                     txResultFilter$,
                     flatMap(result =>
                         of(
-                            appActions.updateTransition({ ...txRecord, time: new Date().getTime(), status: 'success' }),
+                            appActions.updateTransition({ ...txRecord, hash: tx.hash.toHex(),time: new Date().getTime(), status: 'success' }),
                             actions.swapCurrency.success(result),
                         ),
                     ),
                     catchError((error: Error) =>
                         of(
-                            appActions.updateTransition({ ...txRecord, time: new Date().getTime(), status: 'failure' }),
+                            appActions.updateTransition({ ...txRecord, hash: tx.hash.toHex(), time: new Date().getTime(), status: 'failure' }),
                             actions.swapCurrency.failure(error.message),
                         ),
                     ),

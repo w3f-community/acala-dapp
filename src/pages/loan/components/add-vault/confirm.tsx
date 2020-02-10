@@ -90,7 +90,7 @@ const Component: React.FC<Props> = ({ onNext, onPrev, onCancel }) => {
     const vault = useSelector(specCdpTypeSelector(selectedAsset));
     const balance = useSelector(specBalanceSelector(selectedAsset));
     const [collateralPrice] = useSelector(specPriceSelector([STABLE_COIN, selectedAsset]));
-    const updateVaultStatus = useSelector(statusSelector('updateVault'));
+    const updateLoanStatus = useSelector(statusSelector('updateLoan'));
     const loading = useSelector(loadingSelector(rootActions.vault.UPDATE_VAULT));
 
     const handleNextBtnClick = () => {
@@ -104,7 +104,7 @@ const Component: React.FC<Props> = ({ onNext, onPrev, onCancel }) => {
         }
 
         dispatch(
-            actions.vault.updateVault.request({
+            actions.vault.updateLoan.request({
                 asset: selectedAsset,
                 collateral: collateral,
                 debit: stableCoinToDebit(borrow, vault.debitExchangeRate),
@@ -113,11 +113,11 @@ const Component: React.FC<Props> = ({ onNext, onPrev, onCancel }) => {
     };
 
     useEffect(() => {
-        if (updateVaultStatus === 'success') {
+        if (updateLoanStatus === 'success') {
             dispatch(actions.vault.reset());
             onNext();
         }
-    }, [updateVaultStatus, dispatch, onNext]);
+    }, [updateLoanStatus, dispatch, onNext]);
 
     const handleAgree: ChangeEventHandler<HTMLInputElement> = e => {
         const result = e.target.checked;

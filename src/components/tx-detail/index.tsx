@@ -25,31 +25,31 @@ const TxDetail: React.FC<Props> = ({ data }) => {
 
     // swap currency
     if (data.type === 'swapCurrency') {
-        return <span>hello</span>;
+        return <span>Swap Currency</span>;
     }
 
     // update vault
-    if (data.type === 'updateVault') {
+    if (data.type === 'updateLoan') {
         const detail = data.data as UpdateVaultData;
         const assetName = getAssetName(detail.asset);
         const stableCoinName = getAssetName(STABLE_COIN);
         const message: Array<string> = [];
         if (detail.collateral.isGreaterThan(ZERO)) {
-            message.push(`${t('deposit')} ${formatBalance(detail.collateral)} ${assetName}`);
+            message.push(`${t('Deposit')} ${formatBalance(detail.collateral)} ${assetName}`);
         }
         if (detail.collateral.isLessThan(ZERO)) {
-            message.push(`${t('withdraw')} ${formatBalance(detail.collateral.negated())} ${assetName}`);
+            message.push(`${t('Withdraw')} ${formatBalance(detail.collateral.negated())} ${assetName}`);
         }
         if (detail.debit.isGreaterThan(ZERO)) {
             message.push(
-                `${t('generate')} ${formatBalance(
+                `${t('Generate')} ${formatBalance(
                     debitToStableCoin(detail.debit, vault.debitExchangeRate),
                 )} ${stableCoinName}`,
             );
         }
         if (detail.debit.isLessThan(ZERO)) {
             message.push(
-                `${t('payback')} ${formatBalance(
+                `${t('Pay Back')} ${formatBalance(
                     debitToStableCoin(detail.debit.negated(), vault.debitExchangeRate),
                 )} ${stableCoinName}`,
             );
@@ -58,7 +58,7 @@ const TxDetail: React.FC<Props> = ({ data }) => {
     }
 
     console.warn('unsupport tx type, please update tx-detail component');
-    return <span>hello</span>;
+    return <span></span>;
 };
 
 export default TxDetail;

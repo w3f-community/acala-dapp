@@ -144,7 +144,6 @@ const ActionModal: React.FC<ActionModalProps> = props => {
         collateralAmount,
         debitAmount,
         cdpType.requiredCollateralRatio,
-        cdpType.debitExchangeRate,
         stableCoinPrice,
     );
     const requiredCollateral = calcRequiredCollateral(debitAmount, cdpType.requiredCollateralRatio, collateralPrice);
@@ -158,8 +157,6 @@ const ActionModal: React.FC<ActionModalProps> = props => {
         liquidationPrice,
         onClose: _onClose,
     };
-
-    console.log(cdpType.debitExchangeRate);
 
     if (action === 'payback') {
         return createActionModal({
@@ -187,7 +184,7 @@ const ActionModal: React.FC<ActionModalProps> = props => {
                 }
                 const debitAmount = stableCoinToDebit(FixedU128.fromNatural(amount), cdpType.debitExchangeRate);
                 dispatch(
-                    actions.vault.updateVault.request({
+                    actions.vault.updateLoan.request({
                         asset: current,
                         collateral: ZERO,
                         debit: debitAmount.negated(),
@@ -224,7 +221,7 @@ const ActionModal: React.FC<ActionModalProps> = props => {
                 }
                 const debitAmount = stableCoinToDebit(FixedU128.fromNatural(amount), cdpType.debitExchangeRate);
                 dispatch(
-                    actions.vault.updateVault.request({
+                    actions.vault.updateLoan.request({
                         asset: current,
                         collateral: ZERO,
                         debit: debitAmount,
@@ -266,7 +263,7 @@ const ActionModal: React.FC<ActionModalProps> = props => {
                     return false;
                 }
                 dispatch(
-                    actions.vault.updateVault.request({
+                    actions.vault.updateLoan.request({
                         asset: current,
                         collateral: FixedU128.fromNatural(amount),
                         debit: ZERO,
@@ -308,7 +305,7 @@ const ActionModal: React.FC<ActionModalProps> = props => {
                     return false;
                 }
                 dispatch(
-                    actions.vault.updateVault.request({
+                    actions.vault.updateLoan.request({
                         asset: current,
                         collateral: FixedU128.fromNatural(amount).negated(),
                         debit: ZERO,
@@ -357,7 +354,7 @@ const BaseActionModal: React.FC<BaseActionModalProps & ActionModalProps> = ({
     const { t } = useTranslate();
     const dispatch = useDispatch();
     const inputClasses = useInputStyles();
-    const updateVaultStatus = useSelector(statusSelector('updateVault'));
+    const updateLoanStatus = useSelector(statusSelector('updateLoan'));
 
     // reset amount
     useEffect(() => {
@@ -374,11 +371,11 @@ const BaseActionModal: React.FC<BaseActionModalProps & ActionModalProps> = ({
     };
 
     useEffect(() => {
-        if (updateVaultStatus === 'success') {
+        if (updateLoanStatus === 'success') {
             dispatch(actions.vault.reset());
             onClose && onClose();
         }
-    }, [updateVaultStatus, dispatch, onClose]);
+    }, [updateLoanStatus, dispatch, onClose]);
 
     return (
         <Dialog open={open} onClose={onClose}>
@@ -414,7 +411,7 @@ const BaseActionModal: React.FC<BaseActionModalProps & ActionModalProps> = ({
                         variant="contained"
                         color="primary"
                         onClick={onConfirm}
-                        disabled={updateVaultStatus !== 'none'}
+                        disabled={updateLoanStatus !== 'none'}
                     >
                         {confirmBtnText}
                     </Button>

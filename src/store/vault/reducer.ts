@@ -5,35 +5,35 @@ import FixedU128 from '@/utils/fixed_u128';
 import { VaultState } from '@/types/store';
 
 const initialState: VaultState = {
-    updateVaultStatus: 'none',
+    updateLoanStatus: 'none',
     txRecord: [],
     vaults: [],
 };
 
-const STORAGE_KEY = 'vault-tx-storage';
+const STORAGE_KEY = 'vault-tx-storage-v0.0.1';
 
 export default createReducer(initialState)
-    .handleAction(actions.updateVault.request, state => ({
+    .handleAction(actions.updateLoan.request, state => ({
         ...state,
-        updateVaultStatus: 'pending',
+        updateLoanStatus: 'pending',
     }))
-    .handleAction(actions.updateVault.success, state => ({
+    .handleAction(actions.updateLoan.success, state => ({
         ...state,
-        updateVaultStatus: 'success',
+        updateLoanStatus: 'success',
     }))
-    .handleAction(actions.updateVault.failure, state => ({
+    .handleAction(actions.updateLoan.failure, state => ({
         ...state,
-        updateVaultStatus: 'none',
+        updateLoanStatus: 'none',
     }))
     .handleAction(actions.reset, state => ({
         ...state,
-        updateVaultStatus: 'none',
+        updateLoanStatus: 'none',
     }))
     .handleAction(appActions.updateTransition, (state, action) => {
         const record = state.txRecord.slice();
         const data = action.payload;
 
-        if (data.type !== 'updateVault' || data.status !== 'success') {
+        if (data.type !== 'updateLoan' || data.status !== 'success') {
             return state;
         }
 

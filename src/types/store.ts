@@ -46,9 +46,10 @@ export interface UserVaultData {
 }
 
 // tx
-export type TxType = 'updateVault' | 'swapCurrency';
+export type TxType = 'updateLoan' | 'swapCurrency';
 export type TxStatus = Status;
 export interface Tx {
+    id: string;
     signer: string; // account
     hash: string;
     type: TxType;
@@ -129,7 +130,7 @@ export interface DexState {
 }
 
 export interface VaultState {
-    updateVaultStatus: TxStatus;
+    updateLoanStatus: TxStatus;
     txRecord: Tx[];
     [T: string]: any;
     vaults: UserVaultData[];

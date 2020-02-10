@@ -45,9 +45,11 @@ const TxStatus: React.FC = () => {
                         <TxDetail data={item} />
                     </Typography>
                 </Grid>
-                <Grid item>
-                    <Typography variant="body2">tx: {formatHash(item.hash)}</Typography>
-                </Grid>
+                {item.hash && (
+                    <Grid item>
+                        <Typography variant="body2">tx: {formatHash(item.hash)}</Typography>
+                    </Grid>
+                )}
             </Grid>
         );
     };

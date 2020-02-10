@@ -136,7 +136,6 @@ const Component: React.FC<Props> = ({ onNext, onPrev, onCancel }) => {
         collateralToUSD(collateral, collateralPrice),
         FixedU128.fromNatural(0),
         cdpType.requiredCollateralRatio,
-        cdpType.debitExchangeRate,
         stableCoinPrice,
     );
 

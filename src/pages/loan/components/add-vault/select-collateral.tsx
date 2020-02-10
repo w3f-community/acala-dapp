@@ -166,7 +166,6 @@ const Component: React.FC<Props> = ({ onNext, onCancel }) => {
                                     value={item.asset}
                                     onChange={handleAssetRadioSelect}
                                     checked={selectedAsset === item.asset}
-                                    disabled={item.stabilityFee.isZero()}
                                 />
                                 {getAssetName(item.asset)}
                             </SBodyCell>

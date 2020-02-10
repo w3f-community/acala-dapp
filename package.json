@@ -17,6 +17,7 @@
     "gh-pages": "^2.1.1",
     "lodash": "^4.17.15",
     "proptypes": "^1.1.0",
+    "query-string": "^6.10.1",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-redux": "^7.1.1",

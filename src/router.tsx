@@ -55,11 +55,7 @@ const SubRoutes: React.FC<SubRoutesProps> = ({ config, prefix = '' }) => {
 };
 
 const buildRoutes = (config: RouteConfig[]) => {
-    return (
-        <Router>
-            <SubRoutes config={config} prefix="" />
-        </Router>
-    );
+    return <SubRoutes config={config} prefix="" />;
 };
 
 export default buildRoutes(routesConfig);

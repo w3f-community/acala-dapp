@@ -1,6 +1,6 @@
 import { Selector, TxStatus, Tx, UserVaultData } from '@/types/store';
 
-type StatusType = 'updateVault';
+type StatusType = 'updateLoan';
 export const statusSelector: (type: StatusType) => Selector<TxStatus> = type => {
     return state => {
         return state.vault[`${type}Status`];

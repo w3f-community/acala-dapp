@@ -1,7 +1,6 @@
 import React from 'react';
-import { Typography, Drawer, List, Grid } from '@material-ui/core';
+import { Drawer, List, Grid } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
-import AcalaLogo from '@/assets/acala-logo.svg';
 import { SideBarConfig } from '@/types/sidebar';
 
 import DashboardIcon from '@/assets/dashboard.svg';
@@ -11,6 +10,7 @@ import Item from './item';
 import { useSelector } from 'react-redux';
 import { accountSelector } from '@/store/account/selectors';
 import { formatAddress } from '@/utils';
+import { AcalaLogo } from '@/components/acala-logo';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -29,7 +29,6 @@ const useStyles = makeStyles((theme: Theme) =>
             background: theme.palette.primary.main,
         },
         header: { padding: '70px 0 62px 0' },
-        icon: { marginRight: 16 },
         connectBar: {
             marginBottom: 90,
         },
@@ -50,8 +49,7 @@ const Sidebar: React.FC<Props> = ({ config }) => {
     return (
         <Drawer variant="permanent" open={true} classes={{ root: classes.root, paper: classes.paper }}>
             <Grid className={classes.header} container justify="center" alignItems="center">
-                <img src={AcalaLogo} width={40} height={34} className={classes.icon} alt="acala-logo" />
-                <Typography variant="h1">Acala Mandala</Typography>
+                <AcalaLogo />
             </Grid>
             <List>
                 <Item data={{ name: formatAddress(account), path: '/user', icon: WalletIcon }} />

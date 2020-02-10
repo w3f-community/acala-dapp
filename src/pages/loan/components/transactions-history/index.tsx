@@ -12,6 +12,7 @@ import useMobileMatch from '@/hooks/mobile-match';
 
 import Mobile from './mobile';
 import TxDetail from '@/components/tx-detail';
+import { LinkToPolkascan } from '@/components/link-to/polkascan';
 
 const StyledBodyCell = withStyles((theme: Theme) => ({
     root: {
@@ -68,7 +69,11 @@ const TransactionHistory: React.FC<Props> = ({ current }) => {
                                 <TxDetail data={item} />
                             </StyledBodyCell>
                             <StyledBodyCell>{Moment(item.time).format('YYYY/MM/DD HH:mm')}</StyledBodyCell>
-                            <StyledBodyCell>{formatHash(item.hash)}</StyledBodyCell>
+                            <StyledBodyCell>
+                                <LinkToPolkascan extrinsic={item.hash}>
+                                    {formatHash(item.hash)}
+                                </LinkToPolkascan>
+                            </StyledBodyCell>
                         </TableRow>
                     ))}
                 </TableBody>

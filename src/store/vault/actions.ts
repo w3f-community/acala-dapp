@@ -2,7 +2,7 @@ import { createAsyncAction, createAction } from 'typesafe-actions';
 import { UpdateVaultData, AssetList, UserVaultData } from '@/types/store';
 
 export const UPDATE_VAULT = '@vault/update_vault';
-export const updateVault = createAsyncAction(
+export const updateLoan = createAsyncAction(
     UPDATE_VAULT,
     '@vault/update_vault/success',
     '@vault/update_vault/failure',

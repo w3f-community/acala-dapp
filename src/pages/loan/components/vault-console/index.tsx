@@ -108,7 +108,6 @@ const VaultConsole: React.FC<Props> = ({ current }) => {
                                             collateralToUSD(userVault.collateral, collateralPrice),
                                             debitToUSD(userVault.debit, cdpType.debitExchangeRate, stableCoinPrice),
                                             cdpType.requiredCollateralRatio,
-                                            cdpType.debitExchangeRate,
                                             stableCoinPrice,
                                         ),
                                     ),

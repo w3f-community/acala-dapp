@@ -7,7 +7,7 @@ import { Theme } from '@material-ui/core/styles';
 import { loadingSelector } from '@/store/loading/reducer';
 import Loading from '@/components/loading';
 import actions from '@/store/actions';
-import { getEndPoint, sideBarConfig } from '@/config';
+import { sideBarConfig } from '@/config';
 import { accountStoreSelector } from '@/store/account/selectors';
 import Header from './components/header';
 import Sidebar from './components/side-bar';
@@ -16,6 +16,7 @@ import NoAccount from './components/no-account';
 import SelectAccount from './components/select-account';
 import useMobileMatch from '@/hooks/mobile-match';
 import TxStatus from '@/components/tx-status';
+import { useEnvironment } from '@/hooks/environment';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -53,13 +54,14 @@ const MainLayout: React.FC<Props> = props => {
     const [accountStatus, accountList, extensionStatus, accountError] = useSelector(
         accountStoreSelector(['accountStatus', 'accountList', 'extensionStatus', 'error']),
     );
+    const { endpoint } = useEnvironment();
 
     const match = useMobileMatch('sm');
     // const connectStatus = useSelector(connectedSelector);
 
     useEffect(() => {
         // connect to blockchain
-        dispatch(actions.chain.connectAsync.request({ endpoint: getEndPoint() }));
+        dispatch(actions.chain.connectAsync.request({ endpoint }));
         dispatch(actions.account.importAccount.request(''));
     }, [dispatch]);
 

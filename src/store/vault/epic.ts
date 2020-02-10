@@ -22,28 +22,27 @@ import { u8aToNumber } from '@/utils';
 
 export const createValutEpic: Epic<RootAction, RootAction, RootState> = (action$, state$) =>
     action$.pipe(
-        filter(isActionOf(actions.updateVault.request)),
+        filter(isActionOf(actions.updateLoan.request)),
         withLatestFrom(state$),
         switchMap(([action, state]) => {
             const data = action.payload;
             const app = state.chain.app!;
             const address = state.account.account!.address;
 
-            const tx = app.tx.honzon.updateVault(
+            const tx = app.tx.honzon.updateLoan(
                 data.asset,
                 data.collateral.innerToString(),
                 data.debit.innerToString(),
             );
-            const hash = tx.hash.toString();
             const txRecord: Tx = {
+                id: tx.hash.toString(),
                 signer: address,
-                hash: hash,
+                hash: '',
                 status: 'pending',
                 time: new Date().getTime(),
-                type: 'updateVault',
+                type: 'updateLoan',
                 data: data,
             };
-            console.log(data.asset, data.collateral.innerToString(), data.debit.innerToString());
 
             return concat(
                 of(startLoading(actions.UPDATE_VAULT)),
@@ -51,27 +50,29 @@ export const createValutEpic: Epic<RootAction, RootAction, RootState> = (action$
                 tx.signAndSend(address).pipe(
                     txLog$,
                     txResultFilter$,
-                    flatMap(result =>
-                        of(
+                    flatMap(result => {
+                        return of(
                             appActions.updateTransition({
                                 ...txRecord,
+                                hash: tx.hash.toHex(), // get hash when ExtrinsicSuccess occured
                                 time: new Date().getTime(),
                                 status: 'success',
                             }),
-                            actions.updateVault.success(result),
-                        ),
-                    ),
+                            actions.updateLoan.success(result),
+                        );
+                    }),
                     catchError((error: Error) =>
                         of(
                             appActions.updateTransition({
                                 ...txRecord,
+                                hash: tx.hash.toHex(), // get hash when ExtrinsicSuccess occured
                                 time: new Date().getTime(),
                                 status: 'failure',
                             }),
-                            actions.updateVault.failure(error.message),
+                            actions.updateLoan.failure(error.message),
                         ),
                     ),
-                    takeUntil(action$.ofType(actions.updateVault.success, actions.updateVault.failure)),
+                    takeUntil(action$.ofType(actions.updateLoan.success, actions.updateLoan.failure)),
                 ),
                 of(endLoading(actions.UPDATE_VAULT)),
             );
@@ -86,7 +87,6 @@ export const fetchVaultsEpic: Epic<RootAction, RootAction, RootState> = (action$
             const app = state.chain.app!;
             const account = state.account.account!;
             const assetList = action.payload;
-            console.log(app.query)
             return combineLatest(
                 assetList.map(asset =>
                     combineLatest([

@@ -11,5 +11,5 @@ export const autoRemoveTransitionEpic: Epic<RootAction, RootAction, RootState> =
             return payload.status === 'success' || payload.status === 'failure';
         }),
         delay(2000),
-        map(({ payload }) => actions.removeTransition(payload.hash)),
+        map(({ payload }) => actions.removeTransition(payload.id)),
     );
