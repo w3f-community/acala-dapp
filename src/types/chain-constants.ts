@@ -10,6 +10,11 @@ export interface CdpEngine {
     minimumDebitValue: FixedU128;
 }
 
+export interface Babe {
+    expectedBlockTime: number;
+}
+
 export type Constants = {
     cdpEngine: CdpEngine;
+    babe: Babe;
 };

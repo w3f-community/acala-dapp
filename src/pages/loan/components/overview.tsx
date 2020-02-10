@@ -14,7 +14,6 @@ import {
     TableCell,
     Button,
 } from '@material-ui/core';
-import { isEmpty } from 'lodash';
 import { useTranslate } from '@/hooks/i18n';
 import { useSelector } from 'react-redux';
 import { pricesFeedSelector, cdpTypeSelector } from '@/store/chain/selectors';
@@ -27,7 +26,6 @@ import { getAssetName } from '@/utils';
 import Card from '@/components/card';
 import { createTypography } from '@/theme';
 import { calcCollateralRatio, collateralToUSD, debitToUSD, calcRequiredCollateral } from '@/utils/vault';
-import { isJSXEmptyExpression } from '@babel/types';
 import Formatter from '@/components/formatter';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -93,7 +91,7 @@ const VaultInfo: React.FC<Props> = ({ onSelect }) => {
                         className={classes.item}
                         header={t('Total Collateral Locked')}
                         content={totalCollateralLocked}
-                        formatterProps={{ type: 'price', prefix: '$' }}
+                        formatterProps={{ type: 'price', prefix: '$', color: 'primary' }}
                     />
                 </Grid>
                 <Grid item>
@@ -102,7 +100,7 @@ const VaultInfo: React.FC<Props> = ({ onSelect }) => {
                         className={classes.item}
                         header={t('Total aUSD Debit')}
                         content={totalDebit}
-                        formatterProps={{ type: 'balance', suffix: stableCoinName }}
+                        formatterProps={{ type: 'balance', suffix: stableCoinName, color: 'primary' }}
                     />
                 </Grid>
             </>

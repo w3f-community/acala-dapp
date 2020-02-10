@@ -2,7 +2,7 @@ import React from 'react';
 import { Grid, Paper, makeStyles, createStyles, Theme, withStyles } from '@material-ui/core';
 import { useTranslate } from '@/hooks/i18n';
 import { useSelector } from 'react-redux';
-import { specCdpTypeSelector, specPriceSelector } from '@/store/chain/selectors';
+import { specCdpTypeSelector, specPriceSelector, constantsSelector } from '@/store/chain/selectors';
 import { STABLE_COIN } from '@/config';
 import { specUserVaultSelector } from '@/store/vault/selectors';
 import { calcCollateralRatio, calcStableFee, collateralToUSD, debitToUSD, calcLiquidationPrice } from '@/utils/vault';
@@ -35,9 +35,10 @@ const VaultInfo: React.FC<Props> = ({ current }) => {
     const vault = useSelector(specCdpTypeSelector(current));
     const userVault = useSelector(specUserVaultSelector(current));
     const [stableCoinPrice, collateralPrice] = useSelector(specPriceSelector([STABLE_COIN, current]));
+    const constants = useSelector(constantsSelector);
     const match = useMobileMatch('sm');
 
-    if (!vault || !userVault) {
+    if (!vault || !userVault || !constants) {
         return null;
     }
 
@@ -53,7 +54,7 @@ const VaultInfo: React.FC<Props> = ({ current }) => {
             <>
                 <Card
                     header={t('Interest Rate')}
-                    content={calcStableFee(vault.stabilityFee)}
+                    content={calcStableFee(vault.stabilityFee, constants.babe.expectedBlockTime)}
                     formatterProps={{ type: 'ratio' }}
                 />
                 <Card

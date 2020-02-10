@@ -1,19 +1,19 @@
 import React, { ChangeEventHandler, useEffect } from 'react';
 import clsx from 'clsx';
-import { Grid, Paper, List, ListItem, makeStyles, createStyles, Checkbox, withStyles, Theme } from '@material-ui/core';
+import { Grid, List, ListItem, makeStyles, createStyles, Checkbox, withStyles, Theme } from '@material-ui/core';
 import { useSelector, useDispatch } from 'react-redux';
 import { useTranslate } from '@/hooks/i18n';
 import { createTypography } from '@/theme';
 import { formatRatio, formatBalance } from '@/components/formatter';
 import { useForm } from '@/hooks/form';
-import { specCdpTypeSelector, specPriceSelector } from '@/store/chain/selectors';
+import { specCdpTypeSelector, specPriceSelector, constantsSelector } from '@/store/chain/selectors';
 import { specBalanceSelector } from '@/store/account/selectors';
 import { getAssetName } from '@/utils';
 import actions from '@/store/actions';
 import { formContext } from './context';
 import { statusSelector } from '@/store/vault/selectors';
 import FixedU128 from '@/utils/fixed_u128';
-import { calcCollateralRatio, calcStableFee, USDToDebit, collateralToUSD, stableCoinToDebit } from '@/utils/vault';
+import { calcCollateralRatio, calcStableFee, collateralToUSD, stableCoinToDebit } from '@/utils/vault';
 import { STABLE_COIN } from '@/config';
 import { loadingSelector } from '@/store/loading/reducer';
 import rootActions from '@/store/actions';
@@ -87,11 +87,12 @@ const Component: React.FC<Props> = ({ onNext, onPrev, onCancel }) => {
     const borrow = FixedU128.fromNatural(data.borrow.value);
 
     const assetName = getAssetName(selectedAsset);
-    const vault = useSelector(specCdpTypeSelector(selectedAsset));
+    const cdpType = useSelector(specCdpTypeSelector(selectedAsset));
     const balance = useSelector(specBalanceSelector(selectedAsset));
     const [collateralPrice] = useSelector(specPriceSelector([STABLE_COIN, selectedAsset]));
     const updateLoanStatus = useSelector(statusSelector('updateLoan'));
     const loading = useSelector(loadingSelector(rootActions.vault.UPDATE_VAULT));
+    const constants = useSelector(constantsSelector)!;
 
     const handleNextBtnClick = () => {
         if (!data.agree.value) {
@@ -99,7 +100,7 @@ const Component: React.FC<Props> = ({ onNext, onPrev, onCancel }) => {
             return false;
         }
 
-        if (!vault) {
+        if (!cdpType) {
             return false;
         }
 
@@ -107,7 +108,7 @@ const Component: React.FC<Props> = ({ onNext, onPrev, onCancel }) => {
             actions.vault.updateLoan.request({
                 asset: selectedAsset,
                 collateral: collateral,
-                debit: stableCoinToDebit(borrow, vault.debitExchangeRate),
+                debit: stableCoinToDebit(borrow, cdpType.debitExchangeRate),
             }),
         );
     };
@@ -127,7 +128,7 @@ const Component: React.FC<Props> = ({ onNext, onPrev, onCancel }) => {
         }
     };
 
-    if (!vault) {
+    if (!cdpType || !constants) {
         return null;
     }
 
@@ -136,7 +137,7 @@ const Component: React.FC<Props> = ({ onNext, onPrev, onCancel }) => {
             <Grid container justify="center">
                 <Grid item xs={12} lg={6}>
                     <List disablePadding>
-                        {vault && balance && (
+                        {cdpType && balance && (
                             <>
                                 <VaultInfoItem name={t('Depositing')} value={formatBalance(collateral, assetName)} />
                                 <VaultInfoItem name={t('Borrowing/Generating')} value={formatBalance(borrow, 'aUSD')} />
@@ -148,15 +149,15 @@ const Component: React.FC<Props> = ({ onNext, onPrev, onCancel }) => {
                                 />
                                 <VaultInfoItem
                                     name={t('Liquidation Ratio')}
-                                    value={formatRatio(vault.liquidationRatio)}
+                                    value={formatRatio(cdpType.liquidationRatio)}
                                 />
                                 <VaultInfoItem
                                     name={t('Liquidation Fee')}
-                                    value={formatRatio(vault.liquidationPenalty)}
+                                    value={formatRatio(cdpType.liquidationPenalty)}
                                 />
                                 <VaultInfoItem
                                     name={t('Stability Fee/Interest Rate')}
-                                    value={formatRatio(calcStableFee(vault.stabilityFee))}
+                                    value={formatRatio(calcStableFee(cdpType.stabilityFee, constants.babe.expectedBlockTime))}
                                 />
                             </>
                         )}

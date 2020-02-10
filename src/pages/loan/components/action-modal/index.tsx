@@ -166,7 +166,8 @@ const ActionModal: React.FC<ActionModalProps> = props => {
             max: debitAmount,
             startAdornment: stableCoinAssetName,
             onChange: value => {
-                if (FixedU128.fromNatural(value).isGreaterThan(debitAmount)) {
+                const _value = FixedU128.fromNatural(value)
+                if (_value.isGreaterThan(debitAmount) || !_value.isEqualTo(debitAmount)) {
                     return false;
                 }
                 const newDeibtValue = debitAmount.sub(FixedU128.fromNatural(value));
@@ -203,7 +204,8 @@ const ActionModal: React.FC<ActionModalProps> = props => {
             max: canGenerate,
             startAdornment: stableCoinAssetName,
             onChange: value => {
-                if (FixedU128.fromNatural(value).isGreaterThan(canGenerate)) {
+                const _value = FixedU128.fromNatural(value);
+                if (_value.isGreaterThan(canGenerate) || !_value.isEqualTo(canGenerate)) {
                     return false;
                 }
                 const newDeibtValue = debitAmount.add(FixedU128.fromNatural(value));

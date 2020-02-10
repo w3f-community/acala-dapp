@@ -1,9 +1,9 @@
-import React, { useEffect, useState, ChangeEvent } from 'react';
+import React, { useState } from 'react';
 import { Typography, List, ListItem, Grid } from '@material-ui/core';
 import { useTranslate } from '@/hooks/i18n';
 import Card from '@/components/card';
 import { useSelector } from 'react-redux';
-import { cdpTypeSelector, specCdpTypeSelector } from '@/store/chain/selectors';
+import { cdpTypeSelector, constantsSelector } from '@/store/chain/selectors';
 import Formatter from '@/components/formatter';
 import { calcStableFee } from '@/utils/vault';
 import CollateralSelect from '@/components/collateral-select';
@@ -17,12 +17,13 @@ const CollateralInfo: React.FC<Props> = ({ current, className, style }) => {
     const { t } = useTranslate();
     const cdpTypes = useSelector(cdpTypeSelector);
     const [selected, setSelected] = useState<number>(current);
+    const constants = useSelector(constantsSelector);
 
     const handleChange = (asset: number) => {
         setSelected(asset);
     };
 
-    if (!cdpTypes.length) {
+    if (!cdpTypes.length || !constants) {
         return null;
     }
     const selectedCdp = cdpTypes.find(item => item.asset === selected);
@@ -61,7 +62,7 @@ const CollateralInfo: React.FC<Props> = ({ current, className, style }) => {
                     <ListItem disableGutters>
                         <Grid container justify="space-between">
                             <Typography variant="body2">{t('Stability Fee/Interest')}</Typography>
-                            <Formatter type="ratio" data={calcStableFee(selectedCdp.stabilityFee)} suffix="%" />
+                            <Formatter type="ratio" data={calcStableFee(selectedCdp.stabilityFee, constants.babe.expectedBlockTime)} suffix="%" />
                         </Grid>
                     </ListItem>
                 </List>

@@ -97,7 +97,7 @@ export const fetchCdpTypesEpic: Epic<RootAction, RootAction, RootState> = (actio
                         liquidationRatio: FixedU128.fromParts(u8aToNumber(result[index][2])),
                         maximumTotalDebitValue: FixedU128.fromParts(u8aToNumber(result[index][3])),
                         requiredCollateralRatio: FixedU128.fromParts(u8aToNumber(result[index][4])),
-                        stabilityFee: FixedU128.fromParts(u8aToNumber(result[index][5])),
+                        stabilityFee: result[index][5].isEmpty ? state.chain.constants!.cdpEngine.globalStabilityFee : FixedU128.fromParts(u8aToNumber(result[index][5])),
                     }));
                 }),
                 map(actions.fetchCdpTypes.success),
@@ -142,10 +142,13 @@ export const fetchConstants: Epic<RootAction, RootAction, RootState> = (action$,
                     maxSlippageSwapWithDex: app.consts.cdpEngine.maxSlippageSwapWithDex,
                     minimumDebitValue: app.consts.cdpEngine.minimumDebitValue,
                 },
+                babe: {
+                    expectedBlockTime: app.consts.babe.expectedBlockTime,
+                }
             };
         }),
         map(result => {
-            const { cdpEngine } = result;
+            const { cdpEngine, babe } = result;
             return {
                 cdpEngine: {
                     collateralCurrencyIds: (cdpEngine.collateralCurrencyIds.toJSON() as any) as string[],
@@ -156,6 +159,9 @@ export const fetchConstants: Epic<RootAction, RootAction, RootState> = (action$,
                     maxSlippageSwapWithDex: FixedU128.fromParts(cdpEngine.maxSlippageSwapWithDex.toString()),
                     minimumDebitValue: FixedU128.fromParts(cdpEngine.minimumDebitValue.toString()),
                 },
+                babe: {
+                    expectedBlockTime: babe.expectedBlockTime.toNumber()
+                }
             };
         }),
         map(result => actions.fetchConstants.success(result)),

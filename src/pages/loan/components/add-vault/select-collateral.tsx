@@ -18,7 +18,7 @@ import { useTranslate } from '@/hooks/i18n';
 import { getAssetName } from '@/utils';
 import Formatter from '@/components/formatter';
 import { useSelector } from 'react-redux';
-import { cdpTypeSelector } from '@/store/chain/selectors';
+import { cdpTypeSelector, constantsSelector } from '@/store/chain/selectors';
 import { balancesSelector } from '@/store/account/selectors';
 import { CdpTypeData } from '@/types/store';
 import { createTypography } from '@/theme';
@@ -86,6 +86,7 @@ const Component: React.FC<Props> = ({ onNext, onCancel }) => {
     const cdpTypes = filterEmptyVault(useSelector(cdpTypeSelector));
     const balances = useSelector(balancesSelector);
     const mobileMatch = useMobileMatch('sm');
+    const constants = useSelector(constantsSelector); 
 
     const handleNextBtnClick = () => onNext();
 
@@ -130,7 +131,7 @@ const Component: React.FC<Props> = ({ onNext, onCancel }) => {
     };
 
     // ensure cdpTypes is not empty
-    if (!cdpTypes.length) {
+    if (!cdpTypes.length || !constants) {
         return null;
     }
 
@@ -170,7 +171,7 @@ const Component: React.FC<Props> = ({ onNext, onCancel }) => {
                                 {getAssetName(item.asset)}
                             </SBodyCell>
                             <SBodyCell>
-                                <Formatter data={calcStableFee(item.stabilityFee)} type="ratio" />
+                                <Formatter data={calcStableFee(item.stabilityFee, constants.babe.expectedBlockTime)} type="ratio" />
                             </SBodyCell>
                             <SBodyCell>
                                 <Formatter data={item.liquidationRatio} type="ratio" />

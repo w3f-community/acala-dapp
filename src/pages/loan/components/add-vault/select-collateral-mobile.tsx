@@ -18,6 +18,8 @@ import FixedU128 from '@/utils/fixed_u128';
 import Formatter from '@/components/formatter';
 import { calcStableFee } from '@/utils/vault';
 import { getAssetName } from '@/utils';
+import { useSelector } from 'react-redux';
+import { constantsSelector } from '@/store/chain/selectors';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -70,10 +72,11 @@ interface Props {
 const SelectCollateral: React.FC<Props> = ({ selected, onSelect, renderBottom, cdpTypes, balances }) => {
     const { t } = useTranslate();
     const classes = useStyles();
+    const constants = useSelector(constantsSelector);
 
     const selectedCdp = cdpTypes.find(item => item.asset === selected);
 
-    if (!selectedCdp) {
+    if (!selectedCdp || !constants) {
         return null;
     }
 
@@ -88,7 +91,7 @@ const SelectCollateral: React.FC<Props> = ({ selected, onSelect, renderBottom, c
                 <SListItem button>
                     <Lable>{t('Interest Rate')}</Lable>
                     <Value>
-                        <Formatter data={calcStableFee(selectedCdp.stabilityFee)} type="ratio" />
+                        <Formatter data={calcStableFee(selectedCdp.stabilityFee, constants.babe.expectedBlockTime)} type="ratio" />
                     </Value>
                 </SListItem>
                 <SListItem button>

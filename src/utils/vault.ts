@@ -43,8 +43,9 @@ export function calcCollateralRatio(collateralAmount: FixedU128, debitAmount: Fi
     return collateralAmount.div(debitAmount);
 }
 
-export function calcStableFee(stableFee: FixedU128): FixedU128 {
-    return FixedU128.fromNatural((1 + stableFee.toNumber()) ** ((356 * 24 * 60 * 60) / 4) - 1);
+const YEAR = 364 * 24 * 60 * 60; // second of one yera
+export function calcStableFee(stableFee: FixedU128, blockTime: number): FixedU128 {
+    return FixedU128.fromNatural((1 + stableFee.toNumber()) ** (YEAR / blockTime * 1000) - 1);
 }
 
 export function calcRequiredCollateral(

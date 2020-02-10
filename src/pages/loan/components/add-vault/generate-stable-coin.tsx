@@ -16,7 +16,7 @@ import { formatRatio, formatPrice, formatBalance } from '@/components/formatter'
 import { formContext } from './context';
 import { getAssetName } from '@/utils';
 import { useSelector } from 'react-redux';
-import { specCdpTypeSelector, specPriceSelector } from '@/store/chain/selectors';
+import { specCdpTypeSelector, specPriceSelector,  constantsSelector } from '@/store/chain/selectors';
 import { useForm } from '@/hooks/form';
 import { specBalanceSelector } from '@/store/account/selectors';
 import FixedU128 from '@/utils/fixed_u128';
@@ -121,6 +121,7 @@ const Component: React.FC<Props> = ({ onNext, onPrev, onCancel }) => {
     const cdpType = useSelector(specCdpTypeSelector(selectedAsset));
     const balance = useSelector(specBalanceSelector(selectedAsset));
     const [collateralPrice, stableCoinPrice] = useSelector(specPriceSelector([selectedAsset, STABLE_COIN]));
+    const constants = useSelector(constantsSelector);
 
     useEffect(() => {
         // reset to empty
@@ -128,7 +129,7 @@ const Component: React.FC<Props> = ({ onNext, onPrev, onCancel }) => {
         setValue('borrow', '');
     }, []);
 
-    if (!cdpType) {
+    if (!cdpType || !constants) {
         return null;
     }
 
@@ -194,7 +195,7 @@ const Component: React.FC<Props> = ({ onNext, onPrev, onCancel }) => {
                         />
                         <InfoListItem
                             name={t('Interest Rate')}
-                            value={formatRatio(calcStableFee(cdpType.stabilityFee))}
+                            value={formatRatio(calcStableFee(cdpType.stabilityFee, constants.babe.expectedBlockTime))}
                         />
                         <InfoListItem
                             name={t('Liquidation Price')}
