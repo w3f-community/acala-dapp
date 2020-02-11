@@ -3,12 +3,18 @@ import FixedU128 from '@/utils/fixed_u128';
 import { makeStyles, createStyles, Theme } from '@material-ui/core';
 import { red } from '@material-ui/core/colors';
 
-function correct(source: number, base = 12): number {
-    return parseFloat(source.toPrecision(base));
+function correct(num: number, base = 12): number {
+    return parseFloat(num.toPrecision(base));
 }
 
-function format(source: number, precision = 100): number {
-    return correct(Math.floor(source * precision) / precision);
+function format(num: number, precision = 100): number {
+    return correct(Math.floor(num * precision) / precision);
+}
+
+function thousandth(num: number): string {
+    const str = String(num);
+    const result = str.replace(/(?!^)(?=(\d{3})+)/g, ',');
+    return result;
 }
 
 export function formatBalance(num: FixedU128, suffix = ''): string {
@@ -46,7 +52,7 @@ export function formatPrice(num: FixedU128, prefix = ''): string {
     if (!Number.isFinite(result)) {
         return '~';
     }
-    return `${prefix}${format(num.toNumber())}`;
+    return `${prefix}${thousandth(format(num.toNumber()))}`;
 }
 
 const useStyles = makeStyles((theme: Theme) =>

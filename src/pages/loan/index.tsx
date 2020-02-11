@@ -6,20 +6,20 @@ import { isEmpty } from 'lodash';
 
 import actions from '@/store/actions';
 import { COLLATERAL, STABLE_COIN, assets } from '@/config';
-import { vaultsSelector } from '@/store/vault/selectors';
+import { loansSelector } from '@/store/loan/selectors';
 import useMobileMatch from '@/hooks/mobile-match';
 import { loadingSelector } from '@/store/loading/reducer';
-import { FETCH_VAULTS } from '@/store/vault/actions';
+import { FETCH_VAULTS } from '@/store/loan/actions';
 import Page from '@/components/page';
 
 import PricesFeed from './components/prices-feed';
-import { Active as VaultListActive, VaultsList } from './components/vaults-list';
+import { Active as LoanListActive, LoanList } from './components/loan-list';
 import SystemInfo from './components/system-info';
 import CollateralInfo from './components/collateral-info';
-import VaultConsole from './components/vault-console';
+import LoanConsole from './components/loan-console';
 import TransactionHistory from './components/transactions-history';
-import VaultPanel from './components/vault-panel';
-import AddVault from './components/add-vault';
+import LoanPanel from './components/loan-panel';
+import AddLoan from './components/add-loan';
 import WalletBalance from './components/account-balance';
 import Guide from './components/guide';
 import Overview from './components/overview';
@@ -41,7 +41,7 @@ const useStyle = makeStyles((theme: Theme) =>
                 marginLeft: 0,
             },
         },
-        vaultInfo: {
+        loanInfo: {
             [theme.breakpoints.down('sm')]: {
                 marginTop: 32,
             },
@@ -52,19 +52,19 @@ const useStyle = makeStyles((theme: Theme) =>
 
 const Loan: React.FC = () => {
     const dispatch = useDispatch();
-    const [currentVault, setCurrentVault] = useState<number>(0);
-    const [isAddVault, setAddVault] = useState<boolean>(false);
+    const [currentLoan, setCurrentLoan] = useState<number>(0);
+    const [isAddLoan, setAddLoan] = useState<boolean>(false);
     // show overview as default
     const [isOverview, setIsShowOverview] = useState<boolean>(true);
-    const [active, setActive] = useState<VaultListActive>('overview');
-    const userVaults = useSelector(vaultsSelector);
-    const isLoadingVault = useSelector(loadingSelector(FETCH_VAULTS));
+    const [active, setActive] = useState<LoanListActive>('overview');
+    const userLoans = useSelector(loansSelector);
+    const isLoadingLoan = useSelector(loadingSelector(FETCH_VAULTS));
     const classes = useStyle();
-    const showAddVault = () => {
-        setAddVault(true);
-        setActive('add_vault');
+    const showAddLoan = () => {
+        setAddLoan(true);
+        setActive('add_loan');
     };
-    const hideAddVault = () => setAddVault(false);
+    const hideAddLoan = () => setAddLoan(false);
     const showOverview = () => {
         setIsShowOverview(true);
         setActive('overview');
@@ -76,48 +76,48 @@ const Loan: React.FC = () => {
     useEffect(() => {
         // fetch default constants
         dispatch(actions.chain.fetchConstants.request({}));
-        // fetch user vaults info
-        dispatch(actions.vault.fetchVaults.request(COLLATERAL));
+        // fetch user loans info
+        dispatch(actions.loan.fetchLoans.request(COLLATERAL));
         // fetch user asset balance
         dispatch(actions.account.fetchAssetsBalance.request(Array.from(assets.keys())));
         // fetch tokens total issuance
         dispatch(actions.chain.fetchTotalIssuance.request([STABLE_COIN]));
-        // fetch system vaults info
+        // fetch system loans info
         dispatch(actions.chain.fetchCdpTypes.request(COLLATERAL));
         // load tx record
-        dispatch(actions.vault.loadTxRecord());
+        dispatch(actions.loan.loadTxRecord());
     }, [dispatch]);
 
-    const handleVaultSelect = (vault: number) => {
-        setCurrentVault(vault);
-        setActive(vault);
-        hideAddVault();
+    const handleLoanSelect = (loan: number) => {
+        setCurrentLoan(loan);
+        setActive(loan);
+        hideAddLoan();
         hideOverview();
     };
 
     const renderContent = () => {
-        if (typeof isLoadingVault !== 'boolean') {
+        if (typeof isLoadingLoan !== 'boolean') {
             return null;
         }
-        if (isLoadingVault === true) {
+        if (isLoadingLoan === true) {
             return <Skeleton variant="rect" width="100%" height={500} />;
         }
-        if (isAddVault) {
-            return <AddVault onCancel={hideAddVault} />;
+        if (isAddLoan) {
+            return <AddLoan onCancel={hideAddLoan} />;
         }
-        if (isEmpty(userVaults)) {
-            return <Guide onConfirm={showAddVault} />;
+        if (isEmpty(userLoans)) {
+            return <Guide onConfirm={showAddLoan} />;
         }
         if (isOverview) {
-            return <Overview onSelect={handleVaultSelect} />;
+            return <Overview onSelect={handleLoanSelect} />;
         }
         return (
             <>
-                <VaultPanel current={currentVault} />
+                <LoanPanel current={currentLoan} />
                 <Box paddingTop={match ? 4 : 7} />
-                <VaultConsole current={currentVault} />
+                <LoanConsole current={currentLoan} />
                 <Box paddingTop={match ? 4 : 7} />
-                <TransactionHistory current={currentVault} />
+                <TransactionHistory current={currentLoan} />
             </>
         );
     };
@@ -125,12 +125,7 @@ const Loan: React.FC = () => {
     return (
         <Page fullScreen>
             <Grid container direction={match ? 'column' : 'row'}>
-                <VaultsList
-                    active={active}
-                    onOverview={showOverview}
-                    onAdd={showAddVault}
-                    onSelect={handleVaultSelect}
-                />
+                <LoanList active={active} onOverview={showOverview} onAdd={showAddLoan} onSelect={handleLoanSelect} />
             </Grid>
             <Grid
                 container
@@ -139,14 +134,14 @@ const Loan: React.FC = () => {
                 wrap={mdMatch ? 'wrap' : 'nowrap'}
                 className={classes.detail}
             >
-                <Grid item xs={12} className={classes.vaultInfo}>
+                <Grid item xs={12} className={classes.loanInfo}>
                     {renderContent()}
                 </Grid>
                 <Grid item md={12} className={classes.systemInfo}>
                     <WalletBalance className={classes.gap} />
                     <PricesFeed className={classes.gap} />
                     <SystemInfo className={classes.gap} />
-                    <CollateralInfo current={currentVault} className={classes.gap} />
+                    <CollateralInfo current={currentLoan} className={classes.gap} />
                 </Grid>
             </Grid>
         </Page>

@@ -12,14 +12,16 @@ interface Props {
 }
 const NoAccount: React.FC<Props> = ({ open }) => {
     const { t } = useTranslate();
-
+    const handleRetry= () => {
+        window.reload();
+    }
     return (
         <Dialog open={open} TransitionComponent={Transition}>
             <DialogContent>
                 {t('No account found, please add account in your wallet extension or unlock it!')}
             </DialogContent>
             <DialogActions>
-                <Button color="primary">Retry</Button>
+                <Button color="primary" onClick={handleRetry}>Retry</Button>
             </DialogActions>
         </Dialog>
     );

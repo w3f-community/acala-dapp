@@ -7,7 +7,7 @@ import Card from '@/components/card';
 import { useTranslate } from '@/hooks/i18n';
 import { getAssetName, formatHash } from '@/utils';
 import { createTypography } from '@/theme';
-import { vaultTxRecordSelector } from '@/store/vault/selectors';
+import { loanTxRecordSelector } from '@/store/loan/selectors';
 import useMobileMatch from '@/hooks/mobile-match';
 
 import Mobile from './mobile';
@@ -34,7 +34,7 @@ interface Props {
 
 const TransactionHistory: React.FC<Props> = ({ current }) => {
     const { t } = useTranslate();
-    const txRecord = useSelector(vaultTxRecordSelector);
+    const txRecord = useSelector(loanTxRecordSelector);
     const match = useMobileMatch('sm');
 
     if (!current || !txRecord.length) {
@@ -70,9 +70,7 @@ const TransactionHistory: React.FC<Props> = ({ current }) => {
                             </StyledBodyCell>
                             <StyledBodyCell>{Moment(item.time).format('YYYY/MM/DD HH:mm')}</StyledBodyCell>
                             <StyledBodyCell>
-                                <LinkToPolkascan extrinsic={item.hash}>
-                                    {formatHash(item.hash)}
-                                </LinkToPolkascan>
+                                <LinkToPolkascan extrinsic={item.hash}>{formatHash(item.hash)}</LinkToPolkascan>
                             </StyledBodyCell>
                         </TableRow>
                     ))}

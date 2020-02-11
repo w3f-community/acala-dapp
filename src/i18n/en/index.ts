@@ -40,7 +40,7 @@ export default {
     'Liquidation Penalty': 'Liquidation Penalty',
     ADD_VAULT_GENERATE_STABLE_COIN_NOTE:
         'Note: the amount you borrowed / total collateral (your collateral ratio) should be safely above liquidation ratio',
-    // add vault
+    // add loan
     'Create Loan': 'Create Loan',
     'Select Collateral': 'Select Collateral',
     'Each collateral type has its own unique risk profiles.': 'Each collateral type has its own unique risk profiles.',
@@ -63,13 +63,12 @@ export default {
     'Liquidation Fee': 'Liquidation Fee',
     Previous: 'Previous',
     Depositing: 'Depositing',
-    'Borrowing/Generating': 'Borrowing/Generating',
     'Collateralization Ratio': 'Collateralization Ratio',
-    'Stability Fee/Interest Rate': 'Stability Fee/Interest Rate',
     'I have read and accepted the ': 'I have read and accepted the ',
     'Terms and Conditions': 'Terms and Conditions',
     'Collateral Ratio': 'Collateral Ratio',
     'Payback {{asset}}': 'Payback {{asset}}',
+    'Borrowing': 'Borrowing',
     // guide
     'Get Started': 'Get Started',
     // overview

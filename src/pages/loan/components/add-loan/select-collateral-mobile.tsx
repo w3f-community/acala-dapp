@@ -16,7 +16,7 @@ import { CdpTypeData } from '@/types/store';
 import CollateralSelect from '@/components/collateral-select';
 import FixedU128 from '@/utils/fixed_u128';
 import Formatter from '@/components/formatter';
-import { calcStableFee } from '@/utils/vault';
+import { calcStableFee } from '@/utils/loan';
 import { getAssetName } from '@/utils';
 import { useSelector } from 'react-redux';
 import { constantsSelector } from '@/store/chain/selectors';
@@ -91,7 +91,10 @@ const SelectCollateral: React.FC<Props> = ({ selected, onSelect, renderBottom, c
                 <SListItem button>
                     <Lable>{t('Interest Rate')}</Lable>
                     <Value>
-                        <Formatter data={calcStableFee(selectedCdp.stabilityFee, constants.babe.expectedBlockTime)} type="ratio" />
+                        <Formatter
+                            data={calcStableFee(selectedCdp.stabilityFee, constants.babe.expectedBlockTime)}
+                            type="ratio"
+                        />
                     </Value>
                 </SListItem>
                 <SListItem button>

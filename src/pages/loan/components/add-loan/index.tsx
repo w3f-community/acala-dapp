@@ -19,7 +19,7 @@ const initFormValues = {
     agree: { value: undefined },
 };
 
-const AddVault: React.FC<Props> = ({ onCancel }) => {
+const AddLoan: React.FC<Props> = ({ onCancel }) => {
     const [step, setStep] = useState<AddStep>('select');
 
     const changeStepGen = (target: AddStep) => () => setStep(target);
@@ -54,4 +54,4 @@ const AddVault: React.FC<Props> = ({ onCancel }) => {
     );
 };
 
-export default AddVault;
+export default AddLoan;

@@ -63,13 +63,13 @@ export const fetchCdpTypesEpic: Epic<RootAction, RootAction, RootState> = (actio
             const [action, state] = params;
             return state.chain.constants
                 ? of([action, state] as typeof params)
-                /* eslint-disable */
-                : state$.pipe(
-                    mergeMap(state => {
-                        return state.chain.constants ? of([action, state] as typeof params) : empty();
-                    }),
-                    first(),
-                );
+                : /* eslint-disable */
+                  state$.pipe(
+                      mergeMap(state => {
+                          return state.chain.constants ? of([action, state] as typeof params) : empty();
+                      }),
+                      first(),
+                  );
             /* eslint-enable */
         }),
         switchMap(([action, state]) => {
@@ -97,7 +97,11 @@ export const fetchCdpTypesEpic: Epic<RootAction, RootAction, RootState> = (actio
                         liquidationRatio: FixedU128.fromParts(u8aToNumber(result[index][2])),
                         maximumTotalDebitValue: FixedU128.fromParts(u8aToNumber(result[index][3])),
                         requiredCollateralRatio: FixedU128.fromParts(u8aToNumber(result[index][4])),
-                        stabilityFee: result[index][5].isEmpty ? state.chain.constants!.cdpEngine.globalStabilityFee : FixedU128.fromParts(u8aToNumber(result[index][5])),
+                        stabilityFee: result[index][5].isEmpty
+                            ? state.chain.constants!.cdpEngine.globalStabilityFee
+                            : state.chain.constants!.cdpEngine.globalStabilityFee.add(
+                                FixedU128.fromParts(u8aToNumber(result[index][5])),
+                            ),
                     }));
                 }),
                 map(actions.fetchCdpTypes.success),
@@ -144,7 +148,7 @@ export const fetchConstants: Epic<RootAction, RootAction, RootState> = (action$,
                 },
                 babe: {
                     expectedBlockTime: app.consts.babe.expectedBlockTime,
-                }
+                },
             };
         }),
         map(result => {
@@ -160,8 +164,8 @@ export const fetchConstants: Epic<RootAction, RootAction, RootState> = (action$,
                     minimumDebitValue: FixedU128.fromParts(cdpEngine.minimumDebitValue.toString()),
                 },
                 babe: {
-                    expectedBlockTime: babe.expectedBlockTime.toNumber()
-                }
+                    expectedBlockTime: babe.expectedBlockTime.toNumber(),
+                },
             };
         }),
         map(result => actions.fetchConstants.success(result)),

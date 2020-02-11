@@ -46,11 +46,11 @@ const Guide: React.FC<Props> = ({ onConfirm }) => {
                 <Grid container alignItems="center" spacing={2} justify="center" className={classes.title}>
                     {steps.map(({ key, title }, index) => {
                         return [
-                            <Grid key={`add-vault-step-key-${key}`} item className={classes.item}>
+                            <Grid key={`add-loan-step-key-${key}`} item className={classes.item}>
                                 {title}
                             </Grid>,
                             index < steps.length - 1 && (
-                                <Grid item className={classes.arrow} key={`add-vault-step-title-${key}`}>
+                                <Grid item className={classes.arrow} key={`add-loan-step-title-${key}`}>
                                     <img src={RightArrow} alt="right-arrow" />
                                 </Grid>
                             ),

@@ -5,7 +5,7 @@ import { useTranslate } from '@/hooks/i18n';
 import { formatHash } from '@/utils';
 import { useSelector } from 'react-redux';
 import Moment from 'dayjs';
-import { vaultTxRecordSelector } from '@/store/vault/selectors';
+import { loanTxRecordSelector } from '@/store/loan/selectors';
 import Skeleton from '@material-ui/lab/Skeleton';
 
 interface Props {
@@ -14,7 +14,7 @@ interface Props {
 
 const TransactionHistory: React.FC<Props> = ({ current }) => {
     const { t } = useTranslate();
-    const txRecord = useSelector(vaultTxRecordSelector);
+    const txRecord = useSelector(loanTxRecordSelector);
 
     if (!current || !txRecord.length) {
         return <Skeleton variant="rect" height={240} />;

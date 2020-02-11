@@ -11,16 +11,16 @@ import { specBalanceSelector } from '@/store/account/selectors';
 import { getAssetName } from '@/utils';
 import actions from '@/store/actions';
 import { formContext } from './context';
-import { statusSelector } from '@/store/vault/selectors';
+import { statusSelector } from '@/store/loan/selectors';
 import FixedU128 from '@/utils/fixed_u128';
-import { calcCollateralRatio, calcStableFee, collateralToUSD, stableCoinToDebit } from '@/utils/vault';
+import { calcCollateralRatio, calcStableFee, collateralToUSD, stableCoinToDebit } from '@/utils/loan';
 import { STABLE_COIN } from '@/config';
 import { loadingSelector } from '@/store/loading/reducer';
 import rootActions from '@/store/actions';
 import Bottom from './bottom';
 import Card from '@/components/card';
 
-const SListItem = withStyles((theme: Theme) => ({
+const InfoItem = withStyles((theme: Theme) => ({
     root: {
         padding: 0,
         marginBottom: 26,
@@ -31,6 +31,12 @@ const SListItem = withStyles((theme: Theme) => ({
         },
     },
 }))(ListItem);
+
+const ConfirmCheckbox = withStyles(() => ({
+    root: {
+        paddingLeft: 0,
+    },
+}))(Checkbox);
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -59,14 +65,14 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 );
 
-const VaultInfoItem: React.FC<{ name: string; value: string }> = ({ name, value }) => {
+const LoanInfoItem: React.FC<{ name: string; value: string }> = ({ name, value }) => {
     return (
-        <SListItem button>
+        <InfoItem button>
             <Grid container justify="space-between">
                 <span>{name}</span>
                 <span>{value}</span>
             </Grid>
-        </SListItem>
+        </InfoItem>
     );
 };
 
@@ -89,9 +95,9 @@ const Component: React.FC<Props> = ({ onNext, onPrev, onCancel }) => {
     const assetName = getAssetName(selectedAsset);
     const cdpType = useSelector(specCdpTypeSelector(selectedAsset));
     const balance = useSelector(specBalanceSelector(selectedAsset));
-    const [collateralPrice] = useSelector(specPriceSelector([STABLE_COIN, selectedAsset]));
+    const [stableCoinPrice, collateralPrice] = useSelector(specPriceSelector([STABLE_COIN, selectedAsset]));
     const updateLoanStatus = useSelector(statusSelector('updateLoan'));
-    const loading = useSelector(loadingSelector(rootActions.vault.UPDATE_VAULT));
+    const loading = useSelector(loadingSelector(rootActions.loan.UPDATE_VAULT));
     const constants = useSelector(constantsSelector)!;
 
     const handleNextBtnClick = () => {
@@ -105,7 +111,7 @@ const Component: React.FC<Props> = ({ onNext, onPrev, onCancel }) => {
         }
 
         dispatch(
-            actions.vault.updateLoan.request({
+            actions.loan.updateLoan.request({
                 asset: selectedAsset,
                 collateral: collateral,
                 debit: stableCoinToDebit(borrow, cdpType.debitExchangeRate),
@@ -115,7 +121,7 @@ const Component: React.FC<Props> = ({ onNext, onPrev, onCancel }) => {
 
     useEffect(() => {
         if (updateLoanStatus === 'success') {
-            dispatch(actions.vault.reset());
+            dispatch(actions.loan.reset());
             onNext();
         }
     }, [updateLoanStatus, dispatch, onNext]);
@@ -139,25 +145,30 @@ const Component: React.FC<Props> = ({ onNext, onPrev, onCancel }) => {
                     <List disablePadding>
                         {cdpType && balance && (
                             <>
-                                <VaultInfoItem name={t('Depositing')} value={formatBalance(collateral, assetName)} />
-                                <VaultInfoItem name={t('Borrowing/Generating')} value={formatBalance(borrow, 'aUSD')} />
-                                <VaultInfoItem
+                                <LoanInfoItem name={t('Depositing')} value={formatBalance(collateral, assetName)} />
+                                <LoanInfoItem name={t('Borrowing')} value={formatBalance(borrow, 'aUSD')} />
+                                <LoanInfoItem
                                     name={t('Collateralization Ratio')}
                                     value={formatRatio(
-                                        calcCollateralRatio(collateralToUSD(collateral, collateralPrice), borrow),
+                                        calcCollateralRatio(
+                                            collateralToUSD(collateral, collateralPrice),
+                                            borrow.mul(stableCoinPrice),
+                                        ),
                                     )}
                                 />
-                                <VaultInfoItem
+                                <LoanInfoItem
                                     name={t('Liquidation Ratio')}
                                     value={formatRatio(cdpType.liquidationRatio)}
                                 />
-                                <VaultInfoItem
+                                <LoanInfoItem
                                     name={t('Liquidation Fee')}
                                     value={formatRatio(cdpType.liquidationPenalty)}
                                 />
-                                <VaultInfoItem
-                                    name={t('Stability Fee/Interest Rate')}
-                                    value={formatRatio(calcStableFee(cdpType.stabilityFee, constants.babe.expectedBlockTime))}
+                                <LoanInfoItem
+                                    name={t('Interest Rate')}
+                                    value={formatRatio(
+                                        calcStableFee(cdpType.stabilityFee, constants.babe.expectedBlockTime),
+                                    )}
                                 />
                             </>
                         )}
@@ -170,7 +181,7 @@ const Component: React.FC<Props> = ({ onNext, onPrev, onCancel }) => {
                         alignItems="center"
                         wrap="nowrap"
                     >
-                        <Checkbox value={data.agree.value} onChange={handleAgree} />
+                        <ConfirmCheckbox value={data.agree.value} onChange={handleAgree} />
                         <span>
                             {t('I have read and accepted the ')}
                             <a className={'underline'} href="/">

@@ -4,6 +4,7 @@ import { StateType, ActionType } from 'typesafe-actions';
 // declare window
 declare global {
     interface Window {
+        reload: any;
         // declare for redux devtools
         __REDUX_DEVTOOLS_EXTENSION_COMPOSE__: any;
     }

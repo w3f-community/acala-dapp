@@ -1,17 +1,7 @@
 import { Epic } from 'redux-observable';
-import {
-    filter,
-    switchMap,
-    withLatestFrom,
-    catchError,
-    flatMap,
-    takeUntil,
-    map,
-    startWith,
-    endWith,
-} from 'rxjs/operators';
+import { filter, switchMap, withLatestFrom, catchError, flatMap, takeUntil, map, startWith } from 'rxjs/operators';
 import { isActionOf, RootAction, RootState } from 'typesafe-actions';
-import { of, concat, combineLatest, forkJoin } from 'rxjs';
+import { of, concat, combineLatest } from 'rxjs';
 import { Tx } from '@/types/store';
 import { txLog$, txResultFilter$ } from '@/utils/epic';
 import * as actions from './actions';
@@ -20,7 +10,7 @@ import { startLoading, endLoading } from '../loading/reducer';
 import FixedU128 from '@/utils/fixed_u128';
 import { u8aToNumber } from '@/utils';
 
-export const createValutEpic: Epic<RootAction, RootAction, RootState> = (action$, state$) =>
+export const createLoanEpic: Epic<RootAction, RootAction, RootState> = (action$, state$) =>
     action$.pipe(
         filter(isActionOf(actions.updateLoan.request)),
         withLatestFrom(state$),
@@ -79,9 +69,9 @@ export const createValutEpic: Epic<RootAction, RootAction, RootState> = (action$
         }),
     );
 
-export const fetchVaultsEpic: Epic<RootAction, RootAction, RootState> = (action$, state$) =>
+export const fetchLoansEpic: Epic<RootAction, RootAction, RootState> = (action$, state$) =>
     action$.pipe(
-        filter(isActionOf(actions.fetchVaults.request)),
+        filter(isActionOf(actions.fetchLoans.request)),
         withLatestFrom(state$),
         switchMap(([action, state]) => {
             const app = state.chain.app!;
@@ -102,9 +92,9 @@ export const fetchVaultsEpic: Epic<RootAction, RootAction, RootState> = (action$
                         debit: FixedU128.fromParts(u8aToNumber(result[index][1])),
                     })),
                 ),
-                flatMap(result => of(actions.fetchVaults.success(result), endLoading(actions.FETCH_VAULTS))),
+                flatMap(result => of(actions.fetchLoans.success(result), endLoading(actions.FETCH_VAULTS))),
                 startWith(startLoading(actions.FETCH_VAULTS)),
-                catchError(() => of(actions.fetchVaults.failure('error'))),
+                catchError(() => of(actions.fetchLoans.failure('error'))),
             );
         }),
     );

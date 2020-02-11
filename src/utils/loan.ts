@@ -13,14 +13,14 @@ export function debitToUSD(debit: FixedU128, debitExchangeRate: FixedU128, stabl
 
 // convert stable coin amount to debits
 export function USDToDebit(
-    stableVaule: FixedU128,
+    stableValue: FixedU128,
     debitExchangeRate: FixedU128,
     stableCoinPrice: FixedU128,
 ): FixedU128 {
     if (stableCoinPrice.isZero() || debitExchangeRate.isZero()) {
         return ZERO;
     }
-    return stableVaule.div(stableCoinPrice).div(debitExchangeRate);
+    return stableValue.div(stableCoinPrice).div(debitExchangeRate);
 }
 
 export function debitToStableCoin(debit: FixedU128, debitExchangeRate: FixedU128): FixedU128 {
@@ -45,7 +45,7 @@ export function calcCollateralRatio(collateralAmount: FixedU128, debitAmount: Fi
 
 const YEAR = 364 * 24 * 60 * 60; // second of one yera
 export function calcStableFee(stableFee: FixedU128, blockTime: number): FixedU128 {
-    return FixedU128.fromNatural((1 + stableFee.toNumber()) ** (YEAR / blockTime * 1000) - 1);
+    return FixedU128.fromNatural((1 + stableFee.toNumber()) ** ((YEAR / blockTime) * 1000) - 1);
 }
 
 export function calcRequiredCollateral(
@@ -70,20 +70,16 @@ export function calcCanGenerater(
     }
 
     return collateralAmount
-            .div(requiredCollateralRatio)
-            .sub(debitAmount)
-            .div(stableCoinPrice);
+        .div(requiredCollateralRatio)
+        .sub(debitAmount)
+        .div(stableCoinPrice);
 }
 
-export function calcLiquidationPrice(
-    debitAmount: FixedU128,
-    requiredCollateralRatio: FixedU128,
-    collateral: FixedU128,
-): FixedU128 {
-    if (collateral.isZero()) {
+export function calcLiquidationPrice(debitAmount: FixedU128, liquidationRatio: FixedU128): FixedU128 {
+    if (debitAmount.isZero()) {
         return ZERO;
     }
-    return debitAmount.mul(requiredCollateralRatio).div(collateral);
+    return debitAmount.mul(liquidationRatio);
 }
 
 //TODO: need

@@ -51,10 +51,12 @@ const Sidebar: React.FC<Props> = ({ config }) => {
             <Grid className={classes.header} container justify="center" alignItems="center">
                 <AcalaLogo />
             </Grid>
-            <List>
-                <Item data={{ name: formatAddress(account), path: '/user', icon: WalletIcon }} />
-                <Item data={{ name: 'Dashboard', path: '/', icon: DashboardIcon }} />
-            </List>
+            {/*
+                    <List>
+                        <Item data={{ name: formatAddress(account), path: '/user', icon: WalletIcon }} />
+                        <Item data={{ name: 'Dashboard', path: '/', icon: DashboardIcon }} />
+                    </List>
+                */}
             <div style={{ flex: 1 }}>
                 <List className={classes.products}>
                     {config.products.map(data => (

@@ -16,7 +16,7 @@ import { formatRatio, formatPrice, formatBalance } from '@/components/formatter'
 import { formContext } from './context';
 import { getAssetName } from '@/utils';
 import { useSelector } from 'react-redux';
-import { specCdpTypeSelector, specPriceSelector,  constantsSelector } from '@/store/chain/selectors';
+import { specCdpTypeSelector, specPriceSelector, constantsSelector } from '@/store/chain/selectors';
 import { useForm } from '@/hooks/form';
 import { specBalanceSelector } from '@/store/account/selectors';
 import FixedU128 from '@/utils/fixed_u128';
@@ -26,12 +26,13 @@ import {
     calcCanGenerater,
     calcLiquidationPrice,
     collateralToUSD,
-} from '@/utils/vault';
+} from '@/utils/loan';
 import { STABLE_COIN } from '@/config';
 import { withStyles } from '@material-ui/styles';
 import useMobileMatch from '@/hooks/mobile-match';
 import Bottom from './bottom';
 import Card from '@/components/card';
+import { NumberInput } from '@/components/number-input';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -73,14 +74,10 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 );
 
-const SListItem = withStyles((theme: Theme) => ({
+const InfoItem = withStyles((theme: Theme) => ({
     root: {
-        padding: 0,
-        paddingBottom: 8,
+        padding: '4px 0',
         ...createTypography(15, 22, 500, 'Roboto', theme.palette.common.black),
-        '&:last-child': {
-            paddingBottom: 0,
-        },
     },
 }))(ListItem);
 
@@ -93,12 +90,12 @@ const Title = withStyles(() => ({
 
 const InfoListItem: React.FC<{ name: string; value: string | number }> = ({ name, value }) => {
     return (
-        <SListItem button>
+        <InfoItem button>
             <Grid container justify="space-between">
                 <span>{name}</span>
                 <span>{value}</span>
             </Grid>
-        </SListItem>
+        </InfoItem>
     );
 };
 
@@ -143,6 +140,10 @@ const Component: React.FC<Props> = ({ onNext, onPrev, onCancel }) => {
     const collateralRatio = calcCollateralRatio(collateralToUSD(collateral, collateralPrice), borrow);
 
     const handleNextBtnClick = () => {
+        // ensure no error
+        if (data.collateral.error || data.borrow.error) {
+            return false;
+        }
         // ensure collateral is not empty
         if (!data.collateral.value) {
             setError('collateral', 'collateral should not be zero');
@@ -155,29 +156,12 @@ const Component: React.FC<Props> = ({ onNext, onPrev, onCancel }) => {
         onNext();
     };
 
-    const handleCollateralInput = (e: ChangeEvent<HTMLInputElement>) => {
-        const value = Number(e.currentTarget.value);
-        if (value < 0) {
-            setError('collateral', 'can not be zero');
-            return false;
-        }
-        if (FixedU128.fromNatural(value).isGreaterThan(balance)) {
-            setError('collateral', 'larger');
-            return false;
-        }
+    const handleCollateralInput = (value: number) => {
         clearError('collateral');
         setValue('collateral', value);
     };
 
-    const handleBorrowInput = (e: ChangeEvent<HTMLInputElement>) => {
-        const value = Number(e.currentTarget.value);
-        if (value < 0) {
-            setError('borrow', 'can not be zero');
-            return false;
-        }
-        if (FixedU128.fromNatural(value).isGreaterThan(maxBorrowd)) {
-            setError('borrow', 'larger than maxto borrow');
-        }
+    const handleBorrowInput = (value: number) => {
         clearError('borrow');
         setValue('borrow', value);
     };
@@ -199,10 +183,7 @@ const Component: React.FC<Props> = ({ onNext, onPrev, onCancel }) => {
                         />
                         <InfoListItem
                             name={t('Liquidation Price')}
-                            value={formatPrice(
-                                calcLiquidationPrice(borrow, cdpType.requiredCollateralRatio, collateral),
-                                '$',
-                            )}
+                            value={formatPrice(calcLiquidationPrice(borrow, cdpType.liquidationRatio), '$')}
                         />
                         <InfoListItem name={t('Liquidation Ratio')} value={formatRatio(cdpType.liquidationRatio)} />
                         <InfoListItem name={t('Liquidation Penalty')} value={formatRatio(cdpType.liquidationPenalty)} />
@@ -233,10 +214,13 @@ const Component: React.FC<Props> = ({ onNext, onPrev, onCancel }) => {
                             asset: assetName,
                         })}
                     </Typography>
-                    <TextField
-                        type="number"
+                    <NumberInput
                         className={classes.input}
-                        error={!!data.collateral.error}
+                        onChange={handleCollateralInput}
+                        max={balance.toNumber()}
+                        min={0}
+                        error={data.collateral.error}
+                        onError={() => setError('collateral', 'some_error')}
                         helperText={
                             <>
                                 <span style={{ marginRight: 30 }}>{t('Max to Lock')}</span>
@@ -244,19 +228,20 @@ const Component: React.FC<Props> = ({ onNext, onPrev, onCancel }) => {
                             </>
                         }
                         InputProps={{
-                            value: collateral,
                             endAdornment: <InputAdornment position="end">{assetName}</InputAdornment>,
-                            onChange: handleCollateralInput,
                         }}
                         FormHelperTextProps={{
                             classes: { root: classes.helper },
                         }}
                     />
                     <Typography className={classes.label}>{t('How much aUSD would you like to borrow?')}</Typography>
-                    <TextField
-                        type="number"
+                    <NumberInput
                         className={classes.input}
-                        error={!!data.borrow.erro}
+                        onChange={handleBorrowInput}
+                        max={maxBorrowd.toNumber()}
+                        min={0}
+                        error={data.borrow.error}
+                        onError={() => setError('borrow', 'some_error')}
                         helperText={
                             <>
                                 <span style={{ marginRight: 30 }}>{t('Max available to borrow')}</span>
@@ -264,9 +249,7 @@ const Component: React.FC<Props> = ({ onNext, onPrev, onCancel }) => {
                             </>
                         }
                         InputProps={{
-                            value: borrow,
                             endAdornment: <InputAdornment position="end">{'aUSD'}</InputAdornment>,
-                            onChange: handleBorrowInput,
                         }}
                         FormHelperTextProps={{
                             classes: { root: classes.helper },

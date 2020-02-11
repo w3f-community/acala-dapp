@@ -4,7 +4,7 @@ import loadingReducer from './loading/reducer';
 import appReducer from './app/reducer';
 import chainReducer from './chain/reducer';
 import accountReducer from './account/reducer';
-import vaultReducer from './vault/reducer';
+import loanReducer from './loan/reducer';
 import dexReducer from './dex/reducer';
 import governanceReducer from './governance/reducer';
 
@@ -13,7 +13,7 @@ export default combineReducers({
     chain: chainReducer,
     app: appReducer,
     account: accountReducer,
-    vault: vaultReducer,
+    loan: loanReducer,
     dex: dexReducer,
     governance: governanceReducer,
 });

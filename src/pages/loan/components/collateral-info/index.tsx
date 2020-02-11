@@ -5,7 +5,7 @@ import Card from '@/components/card';
 import { useSelector } from 'react-redux';
 import { cdpTypeSelector, constantsSelector } from '@/store/chain/selectors';
 import Formatter from '@/components/formatter';
-import { calcStableFee } from '@/utils/vault';
+import { calcStableFee } from '@/utils/loan';
 import CollateralSelect from '@/components/collateral-select';
 import { BaseProps } from '@/types/react-component/props';
 
@@ -62,7 +62,11 @@ const CollateralInfo: React.FC<Props> = ({ current, className, style }) => {
                     <ListItem disableGutters>
                         <Grid container justify="space-between">
                             <Typography variant="body2">{t('Stability Fee/Interest')}</Typography>
-                            <Formatter type="ratio" data={calcStableFee(selectedCdp.stabilityFee, constants.babe.expectedBlockTime)} suffix="%" />
+                            <Formatter
+                                type="ratio"
+                                data={calcStableFee(selectedCdp.stabilityFee, constants.babe.expectedBlockTime)}
+                                suffix="%"
+                            />
                         </Grid>
                     </ListItem>
                 </List>

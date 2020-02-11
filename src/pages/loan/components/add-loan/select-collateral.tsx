@@ -25,7 +25,7 @@ import { createTypography } from '@/theme';
 import { useForm } from '@/hooks/form';
 import { formContext } from './context';
 import FixedU128 from '@/utils/fixed_u128';
-import { calcStableFee } from '@/utils/vault';
+import { calcStableFee } from '@/utils/loan';
 import useMobileMatch from '@/hooks/mobile-match';
 import SelectCollateralMobile from './select-collateral-mobile';
 import Card from '@/components/card';
@@ -61,7 +61,7 @@ const SHeaderCell = withStyles((theme: Theme) => ({
     },
 }))(TableCell);
 
-const filterEmptyVault = (source: CdpTypeData[]): CdpTypeData[] => {
+const filterEmptyLoan = (source: CdpTypeData[]): CdpTypeData[] => {
     return source.filter(
         item =>
             !item.debitExchangeRate.isZero() ||
@@ -83,10 +83,10 @@ const Component: React.FC<Props> = ({ onNext, onCancel }) => {
     const classes = useStyles();
     const { data, setValue } = useForm(formContext);
     const selectedAsset = data.asset.value;
-    const cdpTypes = filterEmptyVault(useSelector(cdpTypeSelector));
+    const cdpTypes = filterEmptyLoan(useSelector(cdpTypeSelector));
     const balances = useSelector(balancesSelector);
     const mobileMatch = useMobileMatch('sm');
-    const constants = useSelector(constantsSelector); 
+    const constants = useSelector(constantsSelector);
 
     const handleNextBtnClick = () => onNext();
 
@@ -171,7 +171,10 @@ const Component: React.FC<Props> = ({ onNext, onCancel }) => {
                                 {getAssetName(item.asset)}
                             </SBodyCell>
                             <SBodyCell>
-                                <Formatter data={calcStableFee(item.stabilityFee, constants.babe.expectedBlockTime)} type="ratio" />
+                                <Formatter
+                                    data={calcStableFee(item.stabilityFee, constants.babe.expectedBlockTime)}
+                                    type="ratio"
+                                />
                             </SBodyCell>
                             <SBodyCell>
                                 <Formatter data={item.liquidationRatio} type="ratio" />

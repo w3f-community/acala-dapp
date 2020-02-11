@@ -1,9 +1,9 @@
 import React from 'react';
-import { Tx, UpdateVaultData } from '@/types/store';
+import { Tx, UpdateLoanData } from '@/types/store';
 import FixedU128 from '@/utils/fixed_u128';
 import { useTranslate } from '@/hooks/i18n';
 import { getAssetName } from '@/utils';
-import { debitToStableCoin } from '@/utils/vault';
+import { debitToStableCoin } from '@/utils/loan';
 import { useSelector } from 'react-redux';
 import { specCdpTypeSelector } from '@/store/chain/selectors';
 import { formatBalance } from '../formatter';
@@ -17,9 +17,9 @@ const ZERO = FixedU128.fromNatural(0);
 
 const TxDetail: React.FC<Props> = ({ data }) => {
     const { t } = useTranslate();
-    const vault = useSelector(specCdpTypeSelector(data.data.asset));
+    const loan = useSelector(specCdpTypeSelector(data.data.asset));
 
-    if (!vault) {
+    if (!loan) {
         return null;
     }
 
@@ -28,9 +28,9 @@ const TxDetail: React.FC<Props> = ({ data }) => {
         return <span>Swap Currency</span>;
     }
 
-    // update vault
+    // update loan
     if (data.type === 'updateLoan') {
-        const detail = data.data as UpdateVaultData;
+        const detail = data.data as UpdateLoanData;
         const assetName = getAssetName(detail.asset);
         const stableCoinName = getAssetName(STABLE_COIN);
         const message: Array<string> = [];
@@ -43,14 +43,14 @@ const TxDetail: React.FC<Props> = ({ data }) => {
         if (detail.debit.isGreaterThan(ZERO)) {
             message.push(
                 `${t('Generate')} ${formatBalance(
-                    debitToStableCoin(detail.debit, vault.debitExchangeRate),
+                    debitToStableCoin(detail.debit, loan.debitExchangeRate),
                 )} ${stableCoinName}`,
             );
         }
         if (detail.debit.isLessThan(ZERO)) {
             message.push(
                 `${t('Pay Back')} ${formatBalance(
-                    debitToStableCoin(detail.debit.negated(), vault.debitExchangeRate),
+                    debitToStableCoin(detail.debit.negated(), loan.debitExchangeRate),
                 )} ${stableCoinName}`,
             );
         }

@@ -10,7 +10,7 @@ import * as appActions from '../app/actions';
 import { Tx } from '@/types/store';
 import { txLog$, txResultFilter$ } from '@/utils/epic';
 
-export const createValutEpic: Epic<RootAction, RootAction, RootState> = (action$, state$) =>
+export const createLoanEpic: Epic<RootAction, RootAction, RootState> = (action$, state$) =>
     action$.pipe(
         filter(isActionOf(actions.swapCurrency.request)),
         withLatestFrom(state$),
@@ -42,13 +42,23 @@ export const createValutEpic: Epic<RootAction, RootAction, RootState> = (action$
                     txResultFilter$,
                     flatMap(result =>
                         of(
-                            appActions.updateTransition({ ...txRecord, hash: tx.hash.toHex(),time: new Date().getTime(), status: 'success' }),
+                            appActions.updateTransition({
+                                ...txRecord,
+                                hash: tx.hash.toHex(),
+                                time: new Date().getTime(),
+                                status: 'success',
+                            }),
                             actions.swapCurrency.success(result),
                         ),
                     ),
                     catchError((error: Error) =>
                         of(
-                            appActions.updateTransition({ ...txRecord, hash: tx.hash.toHex(), time: new Date().getTime(), status: 'failure' }),
+                            appActions.updateTransition({
+                                ...txRecord,
+                                hash: tx.hash.toHex(),
+                                time: new Date().getTime(),
+                                status: 'failure',
+                            }),
                             actions.swapCurrency.failure(error.message),
                         ),
                     ),

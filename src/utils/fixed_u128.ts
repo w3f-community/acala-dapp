@@ -75,7 +75,7 @@ class FixedU128 {
     }
 
     public isEqualTo(n: FixedU128): boolean {
-        return this.inner.isEqualTo(n.inner)
+        return this.inner.isEqualTo(n.inner);
     }
 
     public negated(): FixedU128 {

@@ -10,7 +10,7 @@ import actions from '@/store/actions';
 import { specDexLiquidatePoolSelector, statusSelector } from '@/store/dex/selectors';
 import { useForm } from '@/hooks/form';
 import { formContext } from './context';
-import { swapToTarget, swapToBase } from '@/utils/vault';
+import { swapToTarget, swapToBase } from '@/utils/loan';
 import { loadingSelector } from '@/store/loading/reducer';
 import { SWAP_CURRENCY } from '@/store/dex/actions';
 import { STABLE_COIN } from '@/config';

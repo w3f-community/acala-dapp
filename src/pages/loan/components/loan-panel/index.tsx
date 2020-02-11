@@ -4,8 +4,8 @@ import { useTranslate } from '@/hooks/i18n';
 import { useSelector } from 'react-redux';
 import { specCdpTypeSelector, specPriceSelector, constantsSelector } from '@/store/chain/selectors';
 import { STABLE_COIN } from '@/config';
-import { specUserVaultSelector } from '@/store/vault/selectors';
-import { calcCollateralRatio, calcStableFee, collateralToUSD, debitToUSD, calcLiquidationPrice } from '@/utils/vault';
+import { specUserLoanSelector } from '@/store/loan/selectors';
+import { calcCollateralRatio, calcStableFee, collateralToUSD, debitToUSD, calcLiquidationPrice } from '@/utils/loan';
 import FixedU128 from '@/utils/fixed_u128';
 import useMobileMatch from '@/hooks/mobile-match';
 import { DigitalCard as Card } from '@/components/digital-card';
@@ -28,33 +28,33 @@ interface Props {
     current: number;
 }
 
-const VaultInfo: React.FC<Props> = ({ current }) => {
+const LoanInfo: React.FC<Props> = ({ current }) => {
     const { t } = useTranslate();
 
     const classes = useStyles();
-    const vault = useSelector(specCdpTypeSelector(current));
-    const userVault = useSelector(specUserVaultSelector(current));
+    const loan = useSelector(specCdpTypeSelector(current));
+    const userLoan = useSelector(specUserLoanSelector(current));
     const [stableCoinPrice, collateralPrice] = useSelector(specPriceSelector([STABLE_COIN, current]));
     const constants = useSelector(constantsSelector);
     const match = useMobileMatch('sm');
 
-    if (!vault || !userVault || !constants) {
+    if (!loan || !userLoan || !constants) {
         return null;
     }
 
     const currentCollateralRatio = calcCollateralRatio(
-        collateralToUSD(userVault.collateral, collateralPrice),
-        debitToUSD(userVault.debit, vault.debitExchangeRate, stableCoinPrice),
+        collateralToUSD(userLoan.collateral, collateralPrice),
+        debitToUSD(userLoan.debit, loan.debitExchangeRate, stableCoinPrice),
     );
 
-    const status = currentCollateralRatio.isGreaterThan(vault.requiredCollateralRatio.add(FixedU128.fromNatural(0.2)));
+    const status = currentCollateralRatio.isGreaterThan(loan.requiredCollateralRatio.add(FixedU128.fromNatural(0.2)));
 
     const renderContent = () => {
         return (
             <>
                 <Card
                     header={t('Interest Rate')}
-                    content={calcStableFee(vault.stabilityFee, constants.babe.expectedBlockTime)}
+                    content={calcStableFee(loan.stabilityFee, constants.babe.expectedBlockTime)}
                     formatterProps={{ type: 'ratio' }}
                 />
                 <Card
@@ -67,21 +67,20 @@ const VaultInfo: React.FC<Props> = ({ current }) => {
                 />
                 <Card
                     header={t('Liquidation Ratio')}
-                    content={vault.liquidationRatio}
+                    content={loan.liquidationRatio}
                     formatterProps={{ type: 'ratio' }}
                 />
                 <Card
                     header={t('Liquidation Price')}
                     content={calcLiquidationPrice(
-                        debitToUSD(userVault.debit, vault.debitExchangeRate, stableCoinPrice),
-                        vault.requiredCollateralRatio,
-                        userVault.collateral,
+                        debitToUSD(userLoan.debit, loan.debitExchangeRate, stableCoinPrice),
+                        loan.liquidationRatio,
                     )}
                     formatterProps={{ type: 'price', prefix: '$' }}
                 />
                 <Card
                     header={t('Liquidation Penalty')}
-                    content={vault.liquidationPenalty}
+                    content={loan.liquidationPenalty}
                     formatterProps={{ type: 'ratio' }}
                 />
             </>
@@ -101,4 +100,4 @@ const VaultInfo: React.FC<Props> = ({ current }) => {
     );
 };
 
-export default VaultInfo;
+export default LoanInfo;

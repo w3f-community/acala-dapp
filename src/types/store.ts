@@ -39,7 +39,7 @@ export interface CdpTypeData {
     stabilityFee: FixedU128;
 }
 
-export interface UserVaultData {
+export interface UserLoanData {
     asset: number;
     collateral: FixedU128;
     debit: FixedU128;
@@ -55,7 +55,7 @@ export interface Tx {
     type: TxType;
     status: TxStatus;
     time: number;
-    data: UpdateVaultData | any;
+    data: UpdateLoanData | any;
 }
 
 // dex
@@ -85,7 +85,7 @@ export interface ProposalData {
     };
 }
 
-export interface UpdateVaultData {
+export interface UpdateLoanData {
     asset: number;
     collateral: FixedU128;
     debit: FixedU128;
@@ -129,11 +129,11 @@ export interface DexState {
     [T: string]: any;
 }
 
-export interface VaultState {
+export interface LoanState {
     updateLoanStatus: TxStatus;
     txRecord: Tx[];
     [T: string]: any;
-    vaults: UserVaultData[];
+    loans: UserLoanData[];
 }
 
 export interface GovernanceState {

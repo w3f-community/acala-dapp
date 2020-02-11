@@ -1,5 +1,5 @@
 import React from 'react';
-const AddVaultSuccess: React.FC<{ className?: string }> = ({ className }) => {
+const AddLoanSuccess: React.FC<{ className?: string }> = ({ className }) => {
     return (
         <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" className={className}>
             <g id="Glyphs-–-24/Close" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd" fillOpacity="0.7">
@@ -13,4 +13,4 @@ const AddVaultSuccess: React.FC<{ className?: string }> = ({ className }) => {
     );
 };
 
-export default AddVaultSuccess;
+export default AddLoanSuccess;

@@ -8,10 +8,10 @@ import { isEmpty } from 'lodash';
 import add from '@/assets/add.svg';
 import { getAssetName, getAssetIcon } from '@/utils';
 import { cdpTypeSelector, pricesFeedSelector } from '@/store/chain/selectors';
-import { vaultsSelector } from '@/store/vault/selectors';
+import { loansSelector } from '@/store/loan/selectors';
 import Formatter from '@/components/formatter';
 import clsx from 'clsx';
-import { collateralToUSD, debitToUSD, calcCollateralRatio } from '@/utils/vault';
+import { collateralToUSD, debitToUSD, calcCollateralRatio } from '@/utils/loan';
 import { STABLE_COIN } from '@/config';
 import FixedU128 from '@/utils/fixed_u128';
 import useMobileMatch from '@/hooks/mobile-match';
@@ -68,7 +68,7 @@ const useStyle = makeStyles((theme: Theme) =>
                 },
             },
         },
-        addVault: {
+        addLoan: {
             [theme.breakpoints.down('sm')]: {
                 marginTop: 13,
                 '& $paper': {
@@ -92,11 +92,11 @@ interface ItemProps {
     active: boolean;
     onClick: () => void;
 }
-const AddVault: React.FC<ItemProps> = ({ active, onClick }) => {
+const AddLoan: React.FC<ItemProps> = ({ active, onClick }) => {
     const classes = useStyle();
     const { t } = useTranslate();
     return (
-        <Grid item onClick={onClick} className={clsx(classes.addVault, { active })}>
+        <Grid item onClick={onClick} className={clsx(classes.addLoan, { active })}>
             <Paper elevation={1} className={clsx(classes.paper, { addContent: true })} square={true}>
                 <img src={add} alt="add" />
                 <Content>{t('Create Loan')}</Content>
@@ -127,38 +127,38 @@ interface Props {
     active: Active;
     onOverview: () => void;
     onAdd: () => void;
-    onSelect: (vault: number) => void;
+    onSelect: (loan: number) => void;
 }
 
 const ZERO = FixedU128.fromNatural(0);
 
-export type Active = 'overview' | 'add_vault' | number;
+export type Active = 'overview' | 'add_loan' | number;
 
-export const VaultsList: React.FC<Props> = ({ active, onOverview, onAdd, onSelect }) => {
+export const LoanList: React.FC<Props> = ({ active, onOverview, onAdd, onSelect }) => {
     const classes = useStyle();
     const cdpTypes = useSelector(cdpTypeSelector);
-    const userVaults = useSelector(vaultsSelector);
+    const userLoans = useSelector(loansSelector);
     const prices = useSelector(pricesFeedSelector);
     const mobileMatch = useMobileMatch('sm');
 
     const stableCoinPrice = prices.find(item => item.asset === STABLE_COIN) || { price: ZERO };
     const renderContent = () =>
-        userVaults.map(item => {
-            const vault = cdpTypes.find(vault => vault.asset === item.asset);
+        userLoans.map(item => {
+            const loan = cdpTypes.find(loan => loan.asset === item.asset);
 
-            if (!vault) return null;
+            if (!loan) return null;
 
             const collateralPrice = prices.find(price => price.asset === item.asset) || { price: ZERO };
             const currentCollateralRatio = calcCollateralRatio(
                 collateralToUSD(item.collateral, collateralPrice.price),
-                debitToUSD(item.debit, vault.debitExchangeRate, stableCoinPrice.price),
+                debitToUSD(item.debit, loan.debitExchangeRate, stableCoinPrice.price),
             );
             const status = currentCollateralRatio.isGreaterThan(
-                vault.requiredCollateralRatio.add(FixedU128.fromNatural(0.2)),
+                loan.requiredCollateralRatio.add(FixedU128.fromNatural(0.2)),
             );
 
             return (
-                <Grid item key={`vault-type-${item.asset}`} onClick={() => onSelect(item.asset)}>
+                <Grid item key={`loan-type-${item.asset}`} onClick={() => onSelect(item.asset)}>
                     <Paper
                         elevation={mobileMatch ? 0 : 1}
                         className={clsx(classes.paper, { active: active === item.asset })}
@@ -181,9 +181,9 @@ export const VaultsList: React.FC<Props> = ({ active, onOverview, onAdd, onSelec
         });
     return (
         <Grid container spacing={mobileMatch ? 0 : 3} className={classes.root}>
-            {!isEmpty(userVaults) && <Overview onClick={onOverview} active={active === 'overview'} />}
+            {!isEmpty(userLoans) && <Overview onClick={onOverview} active={active === 'overview'} />}
             {renderContent()}
-            <AddVault onClick={onAdd} active={active === 'add_vault'} />
+            <AddLoan onClick={onAdd} active={active === 'add_loan'} />
         </Grid>
     );
 };

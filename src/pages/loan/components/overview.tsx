@@ -18,14 +18,14 @@ import { useTranslate } from '@/hooks/i18n';
 import { useSelector } from 'react-redux';
 import { pricesFeedSelector, cdpTypeSelector } from '@/store/chain/selectors';
 import { STABLE_COIN } from '@/config';
-import { vaultsSelector } from '@/store/vault/selectors';
+import { loansSelector } from '@/store/loan/selectors';
 import FixedU128 from '@/utils/fixed_u128';
 import useMobileMatch from '@/hooks/mobile-match';
 import { DigitalCard } from '@/components/digital-card';
 import { getAssetName } from '@/utils';
 import Card from '@/components/card';
 import { createTypography } from '@/theme';
-import { calcCollateralRatio, collateralToUSD, debitToUSD, calcRequiredCollateral } from '@/utils/vault';
+import { calcCollateralRatio, collateralToUSD, debitToUSD, calcRequiredCollateral } from '@/utils/loan';
 import Formatter from '@/components/formatter';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -61,23 +61,23 @@ interface Props {
     onSelect: (asset: number) => void;
 }
 
-const VaultInfo: React.FC<Props> = ({ onSelect }) => {
+const LoanInfo: React.FC<Props> = ({ onSelect }) => {
     const { t } = useTranslate();
 
     const classes = useStyles();
     const cdpTypes = useSelector(cdpTypeSelector);
-    const vaults = useSelector(vaultsSelector);
+    const loans = useSelector(loansSelector);
     const prices = useSelector(pricesFeedSelector);
     const match = useMobileMatch('sm');
     const stableCoinPrice = prices.find(item => item.asset === STABLE_COIN);
     const stableCoinName = getAssetName(STABLE_COIN);
 
     // calcault data
-    const totalCollateralLocked = vaults.reduce((acc, cur) => {
+    const totalCollateralLocked = loans.reduce((acc, cur) => {
         const price = prices.find(item => item.asset === cur.asset);
         return price ? acc.add(cur.collateral.mul(price.price)) : acc;
     }, FixedU128.fromNatural(0));
-    const totalDebit = vaults.reduce((acc, cur) => {
+    const totalDebit = loans.reduce((acc, cur) => {
         const cdp = cdpTypes.find(item => item.asset === cur.asset);
         return cdp ? acc.add(cur.debit.mul(cdp.debitExchangeRate)) : acc;
     }, FixedU128.fromNatural(0));
@@ -108,34 +108,34 @@ const VaultInfo: React.FC<Props> = ({ onSelect }) => {
     };
 
     const renderTable = () =>
-        vaults.map(vault => {
-            const cdp = cdpTypes.find(item => item.asset === vault.asset);
-            const price = prices.find(item => item.asset === vault.asset);
+        loans.map(loan => {
+            const cdp = cdpTypes.find(item => item.asset === loan.asset);
+            const price = prices.find(item => item.asset === loan.asset);
 
             if (!(price && cdp && stableCoinPrice)) {
                 return null;
             }
 
-            const assetName = getAssetName(vault.asset);
+            const assetName = getAssetName(loan.asset);
             const currentCollateralRatio = calcCollateralRatio(
-                collateralToUSD(vault.collateral, price.price),
-                debitToUSD(vault.debit, cdp.debitExchangeRate, stableCoinPrice.price),
+                collateralToUSD(loan.collateral, price.price),
+                debitToUSD(loan.debit, cdp.debitExchangeRate, stableCoinPrice.price),
             );
             const requiredCollateral = calcRequiredCollateral(
-                debitToUSD(vault.debit, cdp.debitExchangeRate, stableCoinPrice.price),
+                debitToUSD(loan.debit, cdp.debitExchangeRate, stableCoinPrice.price),
                 cdp.requiredCollateralRatio,
                 price.price,
             );
-            const ableToWithdraw = vault.collateral.sub(requiredCollateral);
-            const stableCoinGenerater = vault.debit.mul(cdp.debitExchangeRate);
+            const ableToWithdraw = loan.collateral.sub(requiredCollateral);
+            const stableCoinGenerater = loan.debit.mul(cdp.debitExchangeRate);
             return (
-                <TableRow key={`overview-${vault.asset}`}>
-                    <StyledBodyCell>{getAssetName(vault.asset)}</StyledBodyCell>
+                <TableRow key={`overview-${loan.asset}`}>
+                    <StyledBodyCell>{getAssetName(loan.asset)}</StyledBodyCell>
                     <StyledBodyCell>
                         <Formatter type="ratio" data={currentCollateralRatio} />
                     </StyledBodyCell>
                     <StyledBodyCell>
-                        <Formatter type="balance" data={vault.collateral} suffix={assetName} />
+                        <Formatter type="balance" data={loan.collateral} suffix={assetName} />
                     </StyledBodyCell>
                     <StyledBodyCell>
                         <Formatter type="balance" data={ableToWithdraw} suffix={assetName} />
@@ -148,7 +148,7 @@ const VaultInfo: React.FC<Props> = ({ onSelect }) => {
                             variant="outlined"
                             color="primary"
                             onClick={() => {
-                                onSelect(vault.asset);
+                                onSelect(loan.asset);
                             }}
                         >
                             {t('Manage Loan')}
@@ -182,4 +182,4 @@ const VaultInfo: React.FC<Props> = ({ onSelect }) => {
     );
 };
 
-export default VaultInfo;
+export default LoanInfo;

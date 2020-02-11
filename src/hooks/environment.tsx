@@ -12,26 +12,21 @@ interface Environment {
 const Context = createContext<Environment>({} as Environment);
 
 interface Props {
-    children: ReactNode
+    children: ReactNode;
 }
 export const EnvironmentProvider: FC<Props> = ({ children }) => {
-
     const location = useLocation();
     const params = queryString.parse(location.search);
     const defaultEndpoint = 'wss://testnet-node-1.acala.laminar.one/ws';
     const environment = {
-        endpoint: params.endpoint as string || defaultEndpoint,
+        endpoint: (params.endpoint as string) || defaultEndpoint,
         logo: AcalaMandalaLogo,
-        polkascanPrefix: 'https://polkascan.io/pre/acala-mandala'
-    }
-    return (
-        <Context.Provider value={environment}>
-            {children}
-        </Context.Provider>
-    )
-}
+        polkascanPrefix: 'https://polkascan.io/pre/acala-mandala',
+    };
+    return <Context.Provider value={environment}>{children}</Context.Provider>;
+};
 
 export const useEnvironment = () => {
     const enviroment = useContext(Context);
     return enviroment;
-}
+};

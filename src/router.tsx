@@ -1,5 +1,5 @@
-import React, { ElementType } from 'react';
-import { HashRouter as Router, Route, Switch } from 'react-router-dom';
+import React, { ReactNode, ElementType, FC } from 'react';
+import { Route, Switch, Redirect } from 'react-router-dom';
 import MainLayout from '@/layouts/main';
 import Dashboard from '@/pages/dashboard';
 import Loan from '@/pages/loan';
@@ -7,11 +7,13 @@ import Exchange from '@/pages/exchange';
 import Governance from '@/pages/governance';
 
 interface RouteConfig {
+    exact?: boolean;
     path: string;
     Component: ElementType;
     routes?: RouteConfig[];
 }
 
+const ToLoan: FC = () => <Redirect to="/loan"/>
 const routesConfig: RouteConfig[] = [
     {
         path: '/',
@@ -31,8 +33,8 @@ const routesConfig: RouteConfig[] = [
             },
             {
                 path: '',
-                Component: Dashboard,
-            },
+                Component: ToLoan
+            }
         ],
     },
 ];
@@ -43,11 +45,16 @@ interface SubRoutesProps {
 }
 
 const SubRoutes: React.FC<SubRoutesProps> = ({ config, prefix = '' }) => {
+    console.log(prefix, `${prefix}${config[0].path}`);
     return (
         <Switch>
-            {config.map(({ Component, routes, path }: RouteConfig, key: number) => (
-                <Route key={`route_${prefix}_${key}`} path={`${prefix}${path}`}>
-                    <Component>{routes && <SubRoutes config={routes} prefix={path} />}</Component>
+            {config.map(({ Component, routes, path, exact }: RouteConfig, key: number) => (
+                <Route key={`route_${prefix}_${key}`} path={`${prefix}${path}`} exact={exact}>
+                {
+                    React.createElement(Component, {
+                        children: routes && <SubRoutes config={routes} prefix={path} />
+                    })
+                }
                 </Route>
             ))}
         </Switch>

@@ -36,7 +36,7 @@ export default {
     'Liquidation Penalty': 'Liquidation Penalty',
     ADD_VAULT_GENERATE_STABLE_COIN_NOTE:
         'Note: the amount you borrowed / total collateral (your collateral ratio) should be safely above liquidation ratio',
-    // add vault
+    // add loan
     'Select Collateral': 'Select Collateral',
     'Each collateral type has its own unique risk profiles.': 'Each collateral type has its own unique risk profiles.',
     'Generate aUSD': 'Generate aUSD',

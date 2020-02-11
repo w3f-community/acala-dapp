@@ -79,7 +79,7 @@ const Component: React.FC<Props> = ({ current }) => {
                 {steps.map(({ key, title }, index) => {
                     return [
                         <Grid
-                            key={`add-vault-step-key-${key}`}
+                            key={`add-loan-step-key-${key}`}
                             item
                             className={clsx(classes.item, {
                                 [classes.active]: key === current,
@@ -88,7 +88,7 @@ const Component: React.FC<Props> = ({ current }) => {
                             {title}
                         </Grid>,
                         index < steps.length - 1 && (
-                            <Grid item className={classes.arrow} key={`add-vault-step-title-${key}`}>
+                            <Grid item className={classes.arrow} key={`add-loan-step-title-${key}`}>
                                 <img src={RightArrow} alt="right-arrow" />
                             </Grid>
                         ),
@@ -96,7 +96,7 @@ const Component: React.FC<Props> = ({ current }) => {
                 })}
             </Grid>
             {currentStepData.map(({ key, desc }) => (
-                <Typography key={`add-vault-step-dec-${key}`} className={classes.desc}>
+                <Typography key={`add-loan-step-dec-${key}`} className={classes.desc}>
                     {desc}
                 </Typography>
             ))}

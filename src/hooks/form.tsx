@@ -24,7 +24,7 @@ type Combine<Origin, Base> = {
 };
 
 export type ProviderData<T> = {
-    data: Combine<T, FormData>;
+    data: Combine<T, FormDataItem>;
     setValue: (key: keyof T, value: any) => void;
     setError: (key: keyof T, error: string) => void;
     clearError: (key: keyof T) => void;

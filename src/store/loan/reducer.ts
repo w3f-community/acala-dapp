@@ -2,15 +2,15 @@ import { createReducer } from 'typesafe-actions';
 import * as actions from './actions';
 import * as appActions from '../app/actions';
 import FixedU128 from '@/utils/fixed_u128';
-import { VaultState } from '@/types/store';
+import { LoanState } from '@/types/store';
 
-const initialState: VaultState = {
+const initialState: LoanState = {
     updateLoanStatus: 'none',
     txRecord: [],
-    vaults: [],
+    loans: [],
 };
 
-const STORAGE_KEY = 'vault-tx-storage-v0.0.1';
+const STORAGE_KEY = 'loan-tx-storage-v0.0.1';
 
 export default createReducer(initialState)
     .handleAction(actions.updateLoan.request, state => ({
@@ -65,7 +65,7 @@ export default createReducer(initialState)
         }
         return state;
     })
-    .handleAction(actions.fetchVaults.success, (state, action) => ({
+    .handleAction(actions.fetchLoans.success, (state, action) => ({
         ...state,
-        vaults: action.payload,
+        loans: action.payload,
     }));

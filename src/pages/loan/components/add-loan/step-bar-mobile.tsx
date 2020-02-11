@@ -67,11 +67,11 @@ const StepBarMobile: React.FC<Props> = ({ steps }) => {
                     <Grid container alignItems="center" direction="column" justify="center">
                         {steps.map(({ key, title }, index) => {
                             return [
-                                <Grid item key={`add-vault-step-key-${key}`} className={clsx(classes.item)}>
+                                <Grid item key={`add-loan-step-key-${key}`} className={clsx(classes.item)}>
                                     {title}
                                 </Grid>,
                                 index < steps.length - 1 && (
-                                    <Grid item key={`add-vault-step-title-${key}`} className={classes.arrow}>
+                                    <Grid item key={`add-loan-step-title-${key}`} className={classes.arrow}>
                                         <img src={RightArrow} alt="right-arrow" />
                                     </Grid>
                                 ),
