@@ -97,11 +97,13 @@ export const fetchCdpTypesEpic: Epic<RootAction, RootAction, RootState> = (actio
                         liquidationRatio: FixedU128.fromParts(u8aToNumber(result[index][2])),
                         maximumTotalDebitValue: FixedU128.fromParts(u8aToNumber(result[index][3])),
                         requiredCollateralRatio: FixedU128.fromParts(u8aToNumber(result[index][4])),
+                        /* eslint-disable */
                         stabilityFee: result[index][5].isEmpty
                             ? state.chain.constants!.cdpEngine.globalStabilityFee
                             : state.chain.constants!.cdpEngine.globalStabilityFee.add(
                                 FixedU128.fromParts(u8aToNumber(result[index][5])),
                             ),
+                        /* eslint-enable */
                     }));
                 }),
                 map(actions.fetchCdpTypes.success),

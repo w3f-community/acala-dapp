@@ -68,7 +68,7 @@ export default {
     'Terms and Conditions': 'Terms and Conditions',
     'Collateral Ratio': 'Collateral Ratio',
     'Payback {{asset}}': 'Payback {{asset}}',
-    'Borrowing': 'Borrowing',
+    Borrowing: 'Borrowing',
     // guide
     'Get Started': 'Get Started',
     // overview

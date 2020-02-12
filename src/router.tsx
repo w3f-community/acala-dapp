@@ -13,7 +13,7 @@ interface RouteConfig {
     routes?: RouteConfig[];
 }
 
-const ToLoan: FC = () => <Redirect to="/loan"/>
+const ToLoan: FC = () => <Redirect to="/loan" />;
 const routesConfig: RouteConfig[] = [
     {
         path: '/',
@@ -33,8 +33,8 @@ const routesConfig: RouteConfig[] = [
             },
             {
                 path: '',
-                Component: ToLoan
-            }
+                Component: ToLoan,
+            },
         ],
     },
 ];
@@ -45,16 +45,11 @@ interface SubRoutesProps {
 }
 
 const SubRoutes: React.FC<SubRoutesProps> = ({ config, prefix = '' }) => {
-    console.log(prefix, `${prefix}${config[0].path}`);
     return (
         <Switch>
             {config.map(({ Component, routes, path, exact }: RouteConfig, key: number) => (
                 <Route key={`route_${prefix}_${key}`} path={`${prefix}${path}`} exact={exact}>
-                {
-                    React.createElement(Component, {
-                        children: routes && <SubRoutes config={routes} prefix={path} />
-                    })
-                }
+                    <Component>{routes && <SubRoutes config={routes} prefix={path} />}</Component>
                 </Route>
             ))}
         </Switch>

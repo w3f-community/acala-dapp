@@ -30,10 +30,19 @@ export const fetchAssetBalanceEpic: Epic<RootAction, RootAction, RootState> = (a
                 }),
             ).pipe(
                 map(result => {
-                    return data.map((asset, index) => ({
-                        asset,
-                        balance: FixedU128.fromParts(u8aToNumber(result[index])),
-                    }));
+                    return data.map((asset, index) => {
+                        if (asset === 0) {
+                            return {
+                                asset,
+                                // eslint-disable-nextline
+                                balance: FixedU128.fromParts(u8aToNumber((result[index] as any).free)),
+                            };
+                        }
+                        return {
+                            asset,
+                            balance: FixedU128.fromParts(u8aToNumber(result[index])),
+                        };
+                    });
                 }),
                 map(actions.fetchAssetsBalance.success),
             );
