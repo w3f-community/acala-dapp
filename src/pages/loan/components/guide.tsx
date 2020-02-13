@@ -6,7 +6,7 @@ import Loan from '@/components/svgs/loan';
 import { createTypography } from '@/theme';
 
 const Card = withStyles(() => ({
-    root: { padding: '47px 54px 98px 54px' },
+    root: { padding: '20px 54px 64px 54px' },
 }))(Paper);
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -21,9 +21,9 @@ const useStyles = makeStyles((theme: Theme) =>
             maxWidth: 330,
         },
         title: {
-            ...createTypography(22, 32, 500, 'Roboto', theme.palette.primary.light),
+            ...createTypography(17, 24, 500, 'Roboto', theme.palette.primary.light),
         },
-        item: { ...createTypography(21, 28, 500, 'Roboto') },
+        item: { ...createTypography(17, 24, 500, 'Roboto') },
         arrow: { width: 59 },
     }),
 );

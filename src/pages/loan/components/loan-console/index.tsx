@@ -19,18 +19,34 @@ interface Props {
     current: number;
 }
 
+const Title = withStyles((theme: Theme) => ({
+    root: {
+        ...createTypography(17, 24, 500, 'Roboto', theme.palette.common.black),
+    },
+}))(Typography);
+
 const Asset = withStyles((theme: Theme) => ({
     root: {
-        ...createTypography(30, 32, 500, 'Roboto', theme.palette.common.black),
+        ...createTypography(17, 24, 500, 'Roboto', theme.palette.common.black),
     },
 }))(Typography);
 
 const SListItemText = withStyles((theme: Theme) => ({
     secondary: {
-        marginTop: 9,
         ...createTypography(15, 22, 500, 'Roboto', theme.palette.common.black),
     },
 }))(ListItemText);
+
+const SListItem = withStyles((theme: Theme) => ({
+    root: {
+        alignItems: 'flex-start',
+        paddingTop: 0,
+        paddingBottom: 8,
+        '&:last-child': {
+            paddingBottom: 0,
+        },
+    },
+}))(ListItem);
 
 const LoanConsole: React.FC<Props> = ({ current }) => {
     const { t } = useTranslate();
@@ -59,7 +75,7 @@ const LoanConsole: React.FC<Props> = ({ current }) => {
     );
 
     return (
-        <Grid container spacing={5} direction={match ? 'column' : 'row'}>
+        <Grid container spacing={2} direction={match ? 'column' : 'row'}>
             <ActionModal {...modalProps} onClose={handleCloseModal} current={current} />
             <Grid item sm={12} lg={6}>
                 <Card
@@ -67,7 +83,7 @@ const LoanConsole: React.FC<Props> = ({ current }) => {
                     elevation={1}
                     header={
                         <Grid container justify="space-between" alignItems="center">
-                            <Typography variant="subtitle1">{t('Borrowed aUSD')}</Typography>
+                            <Title>{t('Borrowed aUSD')}</Title>
                             <Asset>
                                 <Formatter
                                     type="price"
@@ -79,7 +95,7 @@ const LoanConsole: React.FC<Props> = ({ current }) => {
                     }
                 >
                     <List disablePadding>
-                        <ListItem disableGutters>
+                        <SListItem button disableGutters>
                             <SListItemText
                                 primary={t('Can Pay Back')}
                                 secondary={t('{{number}} {{asset}}', {
@@ -90,8 +106,8 @@ const LoanConsole: React.FC<Props> = ({ current }) => {
                             <Button variant="contained" color="primary" onClick={handleShowPayBack}>
                                 {t('Payback')}
                             </Button>
-                        </ListItem>
-                        <ListItem disableGutters>
+                        </SListItem>
+                        <SListItem button disableGutters>
                             <SListItemText
                                 primary={t('Can Generate')}
                                 secondary={t('{{number}} {{asset}}', {
@@ -109,7 +125,7 @@ const LoanConsole: React.FC<Props> = ({ current }) => {
                             <Button variant="contained" color="primary" onClick={handleShowGenerate}>
                                 {t('Generate')}
                             </Button>
-                        </ListItem>
+                        </SListItem>
                     </List>
                 </Card>
             </Grid>
@@ -119,9 +135,7 @@ const LoanConsole: React.FC<Props> = ({ current }) => {
                     elevation={1}
                     header={
                         <Grid container justify="space-between" alignItems="center">
-                            <Typography variant="subtitle1">
-                                {t('Collateral {{asset}}', { asset: collateralAssetName })}
-                            </Typography>
+                            <Title>{t('Collateral {{asset}}', { asset: collateralAssetName })}</Title>
                             <Asset>
                                 <Formatter type="balance" data={userLoan.collateral} suffix={getAssetName(current)} />
                             </Asset>
@@ -129,7 +143,7 @@ const LoanConsole: React.FC<Props> = ({ current }) => {
                     }
                 >
                     <List disablePadding>
-                        <ListItem disableGutters>
+                        <SListItem button disableGutters disableRipple>
                             <SListItemText
                                 primary={t('Required for Safety')}
                                 secondary={t('{{number}} {{asset}}', {
@@ -140,8 +154,8 @@ const LoanConsole: React.FC<Props> = ({ current }) => {
                             <Button variant="contained" color="primary" onClick={handleShowDeposit}>
                                 {t('Deposit')}
                             </Button>
-                        </ListItem>
-                        <ListItem disableGutters>
+                        </SListItem>
+                        <SListItem button disableGutters disableRipple>
                             <SListItemText
                                 primary={t('Able to Withdraw')}
                                 secondary={t('{{number}} {{asset}}', {
@@ -152,7 +166,7 @@ const LoanConsole: React.FC<Props> = ({ current }) => {
                             <Button variant="contained" color="primary" onClick={handleShowWithdraw}>
                                 {t('Withdraw')}
                             </Button>
-                        </ListItem>
+                        </SListItem>
                     </List>
                 </Card>
             </Grid>

@@ -45,7 +45,7 @@ const useStyle = makeStyles((theme: Theme) =>
             },
 
             '&.active': {
-                border: `1px solid ${theme.palette.primary.light}`,
+                border: `1px solid ${theme.palette.primary.main}`,
             },
 
             '&.addContent': {
@@ -180,7 +180,7 @@ export const LoanList: React.FC<Props> = ({ active, onOverview, onAdd, onSelect 
             );
         });
     return (
-        <Grid container spacing={mobileMatch ? 0 : 3} className={classes.root}>
+        <Grid container spacing={mobileMatch ? 0 : 2} className={classes.root}>
             {!isEmpty(userLoans) && <Overview onClick={onOverview} active={active === 'overview'} />}
             {renderContent()}
             <AddLoan onClick={onAdd} active={active === 'add_loan'} />

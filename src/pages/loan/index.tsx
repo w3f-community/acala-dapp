@@ -24,17 +24,26 @@ import WalletBalance from './components/account-balance';
 import Guide from './components/guide';
 import Overview from './components/overview';
 
+const Detail = withStyles((theme: Theme) => ({
+    root: {
+        marginTop: theme.spacing(2),
+        [theme.breakpoints.down('sm')]: {
+            marginTop: 0,
+        },
+    },
+}))(Grid);
+
 const useStyle = makeStyles((theme: Theme) =>
     createStyles({
-        detail: {
-            marginTop: 26,
-            [theme.breakpoints.down('sm')]: {
-                marginTop: 0,
+        page: {
+            [theme.breakpoints.down('lg')]: {
+                maxWidth: 1200,
+            },
+            [theme.breakpoints.up('xl')]: {
+                maxWidth: 1600
             },
         },
         systemInfo: {
-            flex: '0 0 349px',
-            marginLeft: 48,
             [theme.breakpoints.down('md')]: {
                 flex: '1 1 100%',
                 marginTop: 32,
@@ -46,7 +55,7 @@ const useStyle = makeStyles((theme: Theme) =>
                 marginTop: 32,
             },
         },
-        gap: { marginBottom: 26 },
+        gap: { marginBottom: theme.spacing(2) },
     }),
 );
 
@@ -114,36 +123,30 @@ const Loan: React.FC = () => {
         return (
             <>
                 <LoanPanel current={currentLoan} />
-                <Box paddingTop={match ? 4 : 7} />
+                <Box paddingTop={match ? 4 : 2} />
                 <LoanConsole current={currentLoan} />
-                <Box paddingTop={match ? 4 : 7} />
+                <Box paddingTop={match ? 4 : 2} />
                 <TransactionHistory current={currentLoan} />
             </>
         );
     };
 
     return (
-        <Page fullScreen>
+        <Page className={classes.page}>
             <Grid container direction={match ? 'column' : 'row'}>
                 <LoanList active={active} onOverview={showOverview} onAdd={showAddLoan} onSelect={handleLoanSelect} />
             </Grid>
-            <Grid
-                container
-                direction={match ? 'column' : 'row'}
-                justify="space-between"
-                wrap={mdMatch ? 'wrap' : 'nowrap'}
-                className={classes.detail}
-            >
-                <Grid item xs={12} className={classes.loanInfo}>
+            <Detail spacing={2} container direction={match ? 'column' : 'row'} wrap={mdMatch ? 'wrap' : 'nowrap'}>
+                <Grid item md={12} lg={8} xl={9} className={classes.loanInfo}>
                     {renderContent()}
                 </Grid>
-                <Grid item md={12} className={classes.systemInfo}>
+                <Grid item md={12} lg={4} xl={3} className={classes.systemInfo}>
                     <WalletBalance className={classes.gap} />
                     <PricesFeed className={classes.gap} />
                     <SystemInfo className={classes.gap} />
                     <CollateralInfo current={currentLoan} className={classes.gap} />
                 </Grid>
-            </Grid>
+            </Detail>
         </Page>
     );
 };

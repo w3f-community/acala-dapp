@@ -4,6 +4,7 @@ export default {
     'No account found, please add account in your wallet extension or unlock it!':
         'No account found, please add account in your wallet extension or unlock it!',
     BTC: 'BTC',
+    aUSD: 'aUSD',
     ETH: '{{asset}}',
     'Interest Rate': 'Interest Rate',
     'Current Collateral Ratio': 'Current Collateral Ratio',
@@ -103,4 +104,8 @@ export default {
     Proposal: 'Proposal',
     Council: 'Council',
     Members: 'Members',
+    'Min. Collateral %': 'Min. Collateral %',
+    'Interest Rate %': 'Interest Rate %',
+    'Liquidation': 'Liquidation',
+    'Required Ratio': 'Required Ratio',
 };

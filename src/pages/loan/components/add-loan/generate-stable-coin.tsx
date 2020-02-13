@@ -1,13 +1,13 @@
-import React, { ChangeEvent, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import {
     Grid,
-    TextField,
     List,
     ListItem,
     Typography,
     InputAdornment,
     makeStyles,
     createStyles,
+    withStyles,
     Theme,
 } from '@material-ui/core';
 import { useTranslate } from '@/hooks/i18n';
@@ -28,7 +28,6 @@ import {
     collateralToUSD,
 } from '@/utils/loan';
 import { STABLE_COIN } from '@/config';
-import { withStyles } from '@material-ui/styles';
 import useMobileMatch from '@/hooks/mobile-match';
 import Bottom from './bottom';
 import Card from '@/components/card';
@@ -36,29 +35,29 @@ import { NumberInput } from '@/components/number-input';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
-        input: {
+        numberInput: {
             width: '50%',
-            marginBottom: 24,
+            marginBottom: theme.spacing(4),
             [theme.breakpoints.down('sm')]: {
                 width: '100%',
             },
         },
         label: {
-            marginBottom: 29,
-            ...createTypography(22, 32, 500, 'Roboto', theme.palette.primary.light),
+            marginBottom: theme.spacing(4),
+            ...createTypography(17, 24, 500, 'Roboto', theme.palette.primary.light),
         },
         helper: {
             display: 'flex',
             justifyContent: 'space-between',
-            marginTop: 25.6,
-            ...createTypography(15, 20, 400, 'Roboto', theme.palette.common.black),
+            marginTop: theme.spacing(4),
+            ...createTypography(15, 20, 400, 'Roboto', theme.palette.secondary.main),
         },
         list: {
-            padding: '32px 26px',
+            padding: theme.spacing(4),
             background: 'rgba(161, 161, 161, 0.11)',
         },
         bottom: {
-            marginTop: 44,
+            marginTop: theme.spacing(4),
             [theme.breakpoints.down('sm')]: {
                 marginTop: 44,
             },
@@ -88,12 +87,19 @@ const Title = withStyles(() => ({
     },
 }))(Typography);
 
+const InfoListItemValue = withStyles((theme: Theme) => ({
+    root: {
+        font: 'inherit',
+        color: theme.palette.primary.light,
+    },
+}))(Typography);
+
 const InfoListItem: React.FC<{ name: string; value: string | number }> = ({ name, value }) => {
     return (
         <InfoItem button>
             <Grid container justify="space-between">
                 <span>{name}</span>
-                <span>{value}</span>
+                <InfoListItemValue>{value}</InfoListItemValue>
             </Grid>
         </InfoItem>
     );
@@ -215,7 +221,7 @@ const Component: React.FC<Props> = ({ onNext, onPrev, onCancel }) => {
                         })}
                     </Typography>
                     <NumberInput
-                        className={classes.input}
+                        className={classes.numberInput}
                         onChange={handleCollateralInput}
                         max={balance.toNumber()}
                         min={0}
@@ -236,7 +242,7 @@ const Component: React.FC<Props> = ({ onNext, onPrev, onCancel }) => {
                     />
                     <Typography className={classes.label}>{t('How much aUSD would you like to borrow?')}</Typography>
                     <NumberInput
-                        className={classes.input}
+                        className={classes.numberInput}
                         onChange={handleBorrowInput}
                         max={maxBorrowd.toNumber()}
                         min={0}

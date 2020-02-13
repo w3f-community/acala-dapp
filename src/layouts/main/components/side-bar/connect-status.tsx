@@ -1,10 +1,10 @@
 import React from 'react';
-import { FormControlLabel, Switch, createStyles, makeStyles, Theme } from '@material-ui/core';
+import { FormControlLabel, Switch, createStyles, Theme, withStyles } from '@material-ui/core';
 import { createTypography } from '@/theme';
 import { useSelector } from 'react-redux';
 import { connectedSelector } from '@/store/chain/selectors';
 
-const useFormControlStyles = makeStyles((theme: Theme) =>
+const ConnectFormControl = withStyles((theme: Theme) =>
     createStyles({
         root: {
             width: 162,
@@ -15,19 +15,17 @@ const useFormControlStyles = makeStyles((theme: Theme) =>
         },
         label: {
             color: theme.palette.common.white,
-            ...createTypography(17, 20, 400, 'Roboto', theme.palette.common.white),
+            ...createTypography(17, 20, 500, 'Roboto', theme.palette.common.white),
         },
     }),
-);
+)(FormControlLabel);
 
-const DEFAULT_SWITCH_COLOR = '#616161';
-const useSwitchStyles = makeStyles((theme: Theme) =>
+const ConnectSwitch = withStyles((theme: Theme) =>
     createStyles({
         root: {
             width: 58,
             height: 34,
             padding: 0,
-            margin: theme.spacing(1),
         },
         switchBase: {
             padding: 5,
@@ -39,8 +37,8 @@ const useSwitchStyles = makeStyles((theme: Theme) =>
         },
         track: {
             borderRadius: 34 / 2,
-            border: `4px solid ${DEFAULT_SWITCH_COLOR}`,
-            background: DEFAULT_SWITCH_COLOR,
+            border: `4px solid ${theme.palette.primary.light}`,
+            background: theme.palette.primary.light,
             opacity: 1,
         },
         thumb: {
@@ -53,11 +51,9 @@ const useSwitchStyles = makeStyles((theme: Theme) =>
             },
         },
     }),
-);
+)(Switch);
 
 const ConnectStatus: React.FC = () => {
-    const formControlClasses = useFormControlStyles();
-    const switchClasses = useSwitchStyles();
     const connected = useSelector(connectedSelector);
 
     const handleConnect = () => {
@@ -65,11 +61,10 @@ const ConnectStatus: React.FC = () => {
     };
 
     return (
-        <FormControlLabel
-            control={<Switch classes={switchClasses} checked={connected} color="default" onChange={handleConnect} />}
+        <ConnectFormControl
+            control={<ConnectSwitch checked={connected} color="default" onChange={handleConnect} />}
             label={connected ? 'Connected' : 'Connect'}
             labelPlacement="start"
-            classes={formControlClasses}
         />
     );
 };

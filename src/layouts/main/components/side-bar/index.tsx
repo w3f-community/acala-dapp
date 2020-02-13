@@ -1,16 +1,14 @@
 import React from 'react';
-import { Drawer, List, Grid } from '@material-ui/core';
+import { Drawer, Grid } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
 import { SideBarConfig } from '@/types/sidebar';
 
-import DashboardIcon from '@/assets/dashboard.svg';
-import WalletIcon from '@/assets/wallet.svg';
 import ConnectStatus from './connect-status';
-import Item from './item';
 import { useSelector } from 'react-redux';
 import { accountSelector } from '@/store/account/selectors';
-import { formatAddress } from '@/utils';
 import { AcalaLogo } from '@/components/acala-logo';
+import { Products } from './products';
+import { SocialMedias } from './socal-medias';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -29,11 +27,11 @@ const useStyles = makeStyles((theme: Theme) =>
             background: theme.palette.primary.main,
         },
         header: { padding: '70px 0 62px 0' },
-        connectBar: {
-            marginBottom: 90,
+        bottom: {
+            marginBottom: 40,
         },
-        products: {
-            margin: '50px 0 112px 0',
+        social: {
+            marginBottom: 40,
         },
     }),
 );
@@ -44,7 +42,6 @@ interface Props {
 
 const Sidebar: React.FC<Props> = ({ config }) => {
     const classes = useStyles();
-    const account = useSelector(accountSelector);
 
     return (
         <Drawer variant="permanent" open={true} classes={{ root: classes.root, paper: classes.paper }}>
@@ -58,18 +55,10 @@ const Sidebar: React.FC<Props> = ({ config }) => {
                     </List>
                 */}
             <div style={{ flex: 1 }}>
-                <List className={classes.products}>
-                    {config.products.map(data => (
-                        <Item data={data} key={`products-${data.name}`} />
-                    ))}
-                </List>
-                <List>
-                    {config.socialMedia.map(data => (
-                        <Item data={data} key={`products-${data.name}`} />
-                    ))}
-                </List>
+                <Products data={config.products} />
             </div>
-            <Grid container justify="center" className={classes.connectBar}>
+            <Grid container justify="center" className={classes.bottom}>
+                <SocialMedias data={config.socialMedia} />
                 <ConnectStatus />
             </Grid>
         </Drawer>

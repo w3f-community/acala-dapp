@@ -37,6 +37,7 @@ const createTheme = (options: ThemeOptions) =>
                 secondary: '#4d4d4d',
             },
         },
+        spacing: 5,
         // override 1 and 2 levels shadows
         shadows: Object.assign(shadows, [
             'none',
@@ -62,8 +63,8 @@ const createTheme = (options: ThemeOptions) =>
             },
             MuiButton: {
                 root: {
-                    minWidth: 114,
-                    height: 48,
+                    minWidth: 104,
+                    height: 34,
                     borderRadius: 0, // clear default button border radius
                     textTransform: 'inherit', // clear default uppercase
                 },
@@ -103,11 +104,14 @@ const createTheme = (options: ThemeOptions) =>
             },
             MuiListItem: {
                 root: {
-                    paddingTop: 10, // clear default list item padding
-                    paddingBottom: 10, // clear default list item padding
+                    paddingTop: 4, // clear default list item padding
+                    paddingBottom: 4, // clear default list item padding
                     marginBottom: 0,
                     '&:last-child': {
-                        marginBottom: 0,
+                        paddingTop: 0,
+                    },
+                    '&:first-child': {
+                        paddingTop: 0,
                     },
                 },
             },
@@ -131,6 +135,6 @@ const createTheme = (options: ThemeOptions) =>
 
 export default createTheme({
     sidebar: {
-        width: 300,
+        width: 224.5,
     },
 });

@@ -33,7 +33,7 @@ const PricesFeed: React.FC<BaseProps> = ({ className, style }) => {
             className={className}
             style={style}
         >
-            <List>
+            <List disablePadding>
                 {data.map(({ asset, price }) => (
                     <ListItem disableGutters key={`feed-prices-${asset}`}>
                         <Grid container justify="space-between">

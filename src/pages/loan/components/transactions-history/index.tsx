@@ -1,33 +1,26 @@
 import React from 'react';
-import { Typography, Table, TableBody, TableHead, TableRow, TableCell, Theme, withStyles } from '@material-ui/core';
+import { Typography } from '@material-ui/core';
 import Moment from 'dayjs';
 import { useSelector } from 'react-redux';
 
 import Card from '@/components/card';
 import { useTranslate } from '@/hooks/i18n';
 import { getAssetName, formatHash } from '@/utils';
-import { createTypography } from '@/theme';
 import { loanTxRecordSelector } from '@/store/loan/selectors';
 import useMobileMatch from '@/hooks/mobile-match';
 
 import Mobile from './mobile';
 import TxDetail from '@/components/tx-detail';
 import { LinkToPolkascan } from '@/components/link-to/polkascan';
+import { Table } from '@/components/table';
+import { Tx } from '@/types/store';
 
-const StyledBodyCell = withStyles((theme: Theme) => ({
-    root: {
-        borderBottom: 'none',
-        color: theme.palette.text.secondary,
-    },
-}))(TableCell);
-
-const StyledHeaderCell = withStyles((theme: Theme) => ({
-    root: {
-        color: theme.palette.common.black,
-        ...createTypography(15, 22, 500, 'Roboto'),
-    },
-}))(TableCell);
-
+interface TableItem {
+    asset: number;
+    detail: Tx;
+    time: string;
+    tx: string;
+}
 interface Props {
     current: number;
 }
@@ -45,6 +38,35 @@ const TransactionHistory: React.FC<Props> = ({ current }) => {
         return <Mobile current={current} />;
     }
 
+    const tableConfig = [
+        {
+            renderKey: 'token',
+            title: t('Token'),
+            render: (text: string, record: TableItem) => getAssetName(record.asset),
+        },
+        {
+            renderKey: 'detail',
+            title: t('Action'),
+            render: (detail: any) => <TxDetail data={detail} />,
+        },
+        {
+            renderKey: 'time',
+            title: t('When'),
+            render: (time: string) => time,
+        },
+        {
+            renderKey: 'tx',
+            title: t('Tx Hash'),
+            render: (tx: string) => <LinkToPolkascan extrinsic={tx}>{formatHash(tx)}</LinkToPolkascan>,
+        },
+    ];
+    const tableData = txRecord.map(item => ({
+        asset: item.data.asset,
+        detail: item,
+        time: Moment(item.time).format('YYYY/MM/DD HH:mm'),
+        tx: item.hash,
+    }));
+
     return (
         <Card
             size="large"
@@ -52,30 +74,7 @@ const TransactionHistory: React.FC<Props> = ({ current }) => {
             header={<Typography variant="subtitle1">{t('Transaction History')}</Typography>}
             divider={false}
         >
-            <Table>
-                <TableHead>
-                    <TableRow>
-                        <StyledHeaderCell>{t('Token')}</StyledHeaderCell>
-                        <StyledHeaderCell>{t('Action')}</StyledHeaderCell>
-                        <StyledHeaderCell>{t('When')}</StyledHeaderCell>
-                        <StyledHeaderCell>{t('Tx Hash')}</StyledHeaderCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {txRecord.map(item => (
-                        <TableRow key={`transaction-history-${item.hash}`}>
-                            <StyledBodyCell>{getAssetName(item.data.asset)}</StyledBodyCell>
-                            <StyledBodyCell>
-                                <TxDetail data={item} />
-                            </StyledBodyCell>
-                            <StyledBodyCell>{Moment(item.time).format('YYYY/MM/DD HH:mm')}</StyledBodyCell>
-                            <StyledBodyCell>
-                                <LinkToPolkascan extrinsic={item.hash}>{formatHash(item.hash)}</LinkToPolkascan>
-                            </StyledBodyCell>
-                        </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
+            <Table<TableItem> config={tableConfig} data={tableData} />
         </Card>
     );
 };

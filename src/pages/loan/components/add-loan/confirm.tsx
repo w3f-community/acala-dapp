@@ -1,6 +1,16 @@
 import React, { ChangeEventHandler, useEffect } from 'react';
 import clsx from 'clsx';
-import { Grid, List, ListItem, makeStyles, createStyles, Checkbox, withStyles, Theme } from '@material-ui/core';
+import {
+    Grid,
+    List,
+    ListItem,
+    makeStyles,
+    createStyles,
+    Checkbox,
+    withStyles,
+    Theme,
+    Typography,
+} from '@material-ui/core';
 import { useSelector, useDispatch } from 'react-redux';
 import { useTranslate } from '@/hooks/i18n';
 import { createTypography } from '@/theme';
@@ -23,8 +33,8 @@ import Card from '@/components/card';
 const InfoItem = withStyles((theme: Theme) => ({
     root: {
         padding: 0,
-        marginBottom: 26,
-        ...createTypography(22, 32, 500, 'Roboto', theme.palette.common.black),
+        marginBottom: 8,
+        ...createTypography(17, 24, 500, 'Roboto', theme.palette.common.black),
         [theme.breakpoints.down('sm')]: {
             marginBottom: 24,
             ...createTypography(15, 22, 500, 'Roboto', theme.palette.common.black),
@@ -41,7 +51,7 @@ const ConfirmCheckbox = withStyles(() => ({
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         card: {
-            padding: '54px  26px',
+            padding: theme.spacing(4),
         },
         item: {
             marginBottom: 24,
@@ -56,7 +66,7 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         error: { color: 'red' },
         bottom: {
-            marginTop: 26,
+            marginTop: theme.spacing(4),
             justifyContent: 'flex-end',
             [theme.breakpoints.down('sm')]: {
                 marginTop: 40,
@@ -65,12 +75,19 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 );
 
+const LoanInfoItemValue = withStyles((theme: Theme) => ({
+    root: {
+        font: 'inherit',
+        color: theme.palette.secondary.main,
+    },
+}))(Typography);
+
 const LoanInfoItem: React.FC<{ name: string; value: string }> = ({ name, value }) => {
     return (
         <InfoItem button>
             <Grid container justify="space-between">
                 <span>{name}</span>
-                <span>{value}</span>
+                <LoanInfoItemValue>{value}</LoanInfoItemValue>
             </Grid>
         </InfoItem>
     );
@@ -140,8 +157,8 @@ const Component: React.FC<Props> = ({ onNext, onPrev, onCancel }) => {
 
     return (
         <Card elevation={1} size="large" className={classes.card}>
-            <Grid container justify="center">
-                <Grid item xs={12} lg={6}>
+            <Grid container>
+                <Grid item xs={12}>
                     <List disablePadding>
                         {cdpType && balance && (
                             <>

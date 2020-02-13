@@ -52,7 +52,6 @@ const ExchangeBar: React.FC = () => {
         data: { payAsset, pay, receiveAsset, receive },
         setValue,
         setError,
-        clearError,
         checkVerify,
     } = useForm(formContext);
 

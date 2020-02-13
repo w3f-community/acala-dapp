@@ -1,5 +1,5 @@
 import { createAsyncAction } from 'typesafe-actions';
-import { AssetList, BalanceData, UserLoanData, Account, AccountError } from '@/types/store';
+import { AssetList, BalanceData, Account, AccountError } from '@/types/store';
 
 export const IMPORT_ACCOUNT = '@account/import_account';
 export const importAccount = createAsyncAction(

@@ -13,7 +13,7 @@ function format(num: number, precision = 100): number {
 
 function thousandth(num: number): string {
     const str = String(num);
-    const result = str.replace(/(?!^)(?=(\d{3})+)/g, ',');
+    const result = str.replace(/(?!^)(?=(\d{3})+\.)/g, ',');
     return result;
 }
 

@@ -1,6 +1,6 @@
 import { createReducer } from 'typesafe-actions';
 import * as actions from './actions';
-import { GovernanceState, ProposalData } from '@/types/store';
+import { GovernanceState } from '@/types/store';
 
 const initialState: GovernanceState = {
     proposals: [],

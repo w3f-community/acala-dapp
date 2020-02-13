@@ -1,4 +1,4 @@
-import React, { ChangeEvent, ReactNode } from 'react';
+import React, { ChangeEvent } from 'react';
 import { MenuItem, Select, withStyles, Theme } from '@material-ui/core';
 import { createTypography } from '@/theme';
 import { CdpTypeData } from '@/types/store';

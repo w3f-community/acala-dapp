@@ -1,101 +1,104 @@
-import React from 'react';
-import { Grid, Paper, makeStyles, createStyles, Theme, withStyles } from '@material-ui/core';
+import React, { ReactNode, FC } from 'react';
+import { Grid, Typography, List, ListItem } from '@material-ui/core';
 import { useTranslate } from '@/hooks/i18n';
 import { useSelector } from 'react-redux';
 import { specCdpTypeSelector, specPriceSelector, constantsSelector } from '@/store/chain/selectors';
 import { STABLE_COIN } from '@/config';
 import { specUserLoanSelector } from '@/store/loan/selectors';
-import { calcCollateralRatio, calcStableFee, collateralToUSD, debitToUSD, calcLiquidationPrice } from '@/utils/loan';
+import { calcCollateralRatio, collateralToUSD, debitToUSD, calcLiquidationPrice } from '@/utils/loan';
 import FixedU128 from '@/utils/fixed_u128';
 import useMobileMatch from '@/hooks/mobile-match';
-import { DigitalCard as Card } from '@/components/digital-card';
+import Card from '@/components/card';
+import Formatter from '@/components/formatter';
 
-const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-        container: {
-            marginBottom: '-1%',
-        },
-        paper: {
-            [theme.breakpoints.down('sm')]: {
-                paddingTop: 22,
-                paddingBottom: 27,
-            },
-        },
-    }),
-);
+interface ItemProps {
+    label: string;
+    children: ReactNode;
+}
+const LoanInfoItem: FC<ItemProps> = ({ label, children }) => {
+    return (
+        <ListItem disableGutters>
+            <Grid container justify="space-between">
+                <Typography variant="body2">{label}</Typography>
+                <Typography variant="body2">{children}</Typography>
+            </Grid>
+        </ListItem>
+    );
+};
 
 interface Props {
     current: number;
 }
 
-const LoanInfo: React.FC<Props> = ({ current }) => {
+const LoanInfo: FC<Props> = ({ current }) => {
     const { t } = useTranslate();
 
-    const classes = useStyles();
-    const loan = useSelector(specCdpTypeSelector(current));
-    const userLoan = useSelector(specUserLoanSelector(current));
+    const cdpType = useSelector(specCdpTypeSelector(current));
+    const loan = useSelector(specUserLoanSelector(current));
     const [stableCoinPrice, collateralPrice] = useSelector(specPriceSelector([STABLE_COIN, current]));
     const constants = useSelector(constantsSelector);
     const match = useMobileMatch('sm');
 
-    if (!loan || !userLoan || !constants) {
+    if (!cdpType || !loan || !constants) {
         return null;
     }
 
     const currentCollateralRatio = calcCollateralRatio(
-        collateralToUSD(userLoan.collateral, collateralPrice),
-        debitToUSD(userLoan.debit, loan.debitExchangeRate, stableCoinPrice),
+        collateralToUSD(loan.collateral, collateralPrice),
+        debitToUSD(loan.debit, cdpType.debitExchangeRate, stableCoinPrice),
+    );
+    const status = currentCollateralRatio.isGreaterThan(
+        cdpType.requiredCollateralRatio.add(FixedU128.fromNatural(0.2)),
+    );
+    const liquidationPrice = calcLiquidationPrice(
+        debitToUSD(loan.debit, cdpType.debitExchangeRate, stableCoinPrice),
+        cdpType.liquidationRatio,
     );
 
-    const status = currentCollateralRatio.isGreaterThan(loan.requiredCollateralRatio.add(FixedU128.fromNatural(0.2)));
-
-    const renderContent = () => {
-        return (
-            <>
-                <Card
-                    header={t('Interest Rate')}
-                    content={calcStableFee(loan.stabilityFee, constants.babe.expectedBlockTime)}
-                    formatterProps={{ type: 'ratio' }}
-                />
-                <Card
-                    header={t('Current Collateral Ratio')}
-                    content={currentCollateralRatio}
-                    formatterProps={{
-                        type: 'ratio',
-                        color: status ? 'primary' : 'warning',
-                    }}
-                />
-                <Card
-                    header={t('Liquidation Ratio')}
-                    content={loan.liquidationRatio}
-                    formatterProps={{ type: 'ratio' }}
-                />
-                <Card
-                    header={t('Liquidation Price')}
-                    content={calcLiquidationPrice(
-                        debitToUSD(userLoan.debit, loan.debitExchangeRate, stableCoinPrice),
-                        loan.liquidationRatio,
-                    )}
-                    formatterProps={{ type: 'price', prefix: '$' }}
-                />
-                <Card
-                    header={t('Liquidation Penalty')}
-                    content={loan.liquidationPenalty}
-                    formatterProps={{ type: 'ratio' }}
-                />
-            </>
-        );
-    };
-
     return (
-        <Grid container direction={match ? 'column' : 'row'} justify="space-between" className={classes.container}>
-            {match ? (
-                <Paper elevation={match ? 2 : 0} square={true} className={classes.paper}>
-                    {renderContent()}
-                </Paper>
-            ) : (
-                renderContent()
-            )}
+        <Grid container direction={match ? 'column' : 'row'} spacing={2} justify="space-between">
+            <Grid item md={12} lg={6}>
+                <Card
+                    size="normal"
+                    elevation={1}
+                    header={<Typography variant="subtitle1">{t('Liquidation')}</Typography>}
+                >
+                    <List disablePadding>
+                        <LoanInfoItem label={t('Liquidation Price')}>
+                            <Formatter data={liquidationPrice} type="price" prefix={'$'} color={status ? 'primary' : 'warning' }/>
+                        </LoanInfoItem>
+                        <LoanInfoItem label={t('Liquidation Ratio')}>
+                            <Formatter data={cdpType.liquidationRatio} type="ratio" />
+                        </LoanInfoItem>
+                        <LoanInfoItem label={t('Liquidation Penalty')}>
+                            <Formatter data={cdpType.liquidationPenalty} type="ratio" />
+                        </LoanInfoItem>
+                    </List>
+                </Card>
+            </Grid>
+            <Grid item md={6} lg={6}>
+                <Card
+                    size="normal"
+                    elevation={1}
+                    header={<Typography variant="subtitle1">{t('Collateralization')}</Typography>}
+                >
+                    <List disablePadding>
+                        <LoanInfoItem label={t('Current Ratio')}>
+                            <Formatter
+                                data={currentCollateralRatio}
+                                type="ratio"
+                                color={status ? 'primary' : 'warning'}
+                            />
+                        </LoanInfoItem>
+                        <LoanInfoItem label={t('Required Ratio')}>
+                            <Formatter data={cdpType.requiredCollateralRatio} type="ratio" />
+                        </LoanInfoItem>
+                        <LoanInfoItem label={t('Interest Rate')}>
+                            <Formatter data={cdpType.stabilityFee} type="ratio" />
+                        </LoanInfoItem>
+                    </List>
+                </Card>
+            </Grid>
         </Grid>
     );
 };

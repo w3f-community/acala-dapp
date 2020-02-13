@@ -1,4 +1,4 @@
-import React, { ReactNode, FC, ChangeEvent } from 'react';
+import React, { FC, ChangeEvent } from 'react';
 import { Tabs as MTabs, Tab, Theme } from '@material-ui/core';
 import { withStyles } from '@material-ui/styles';
 import { createTypography } from '@/theme';

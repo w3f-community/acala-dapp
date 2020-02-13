@@ -1,19 +1,5 @@
 import React from 'react';
-import {
-    Grid,
-    Paper,
-    makeStyles,
-    createStyles,
-    Theme,
-    withStyles,
-    Typography,
-    Table,
-    TableHead,
-    TableRow,
-    TableBody,
-    TableCell,
-    Button,
-} from '@material-ui/core';
+import { Grid, makeStyles, createStyles, Theme, Button } from '@material-ui/core';
 import { useTranslate } from '@/hooks/i18n';
 import { useSelector } from 'react-redux';
 import { pricesFeedSelector, cdpTypeSelector } from '@/store/chain/selectors';
@@ -24,9 +10,9 @@ import useMobileMatch from '@/hooks/mobile-match';
 import { DigitalCard } from '@/components/digital-card';
 import { getAssetName } from '@/utils';
 import Card from '@/components/card';
-import { createTypography } from '@/theme';
 import { calcCollateralRatio, collateralToUSD, debitToUSD, calcRequiredCollateral } from '@/utils/loan';
 import Formatter from '@/components/formatter';
+import { Table } from '@/components/table';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -37,25 +23,20 @@ const useStyles = makeStyles((theme: Theme) =>
             },
         },
         item: {
-            minWidth: 260,
-            padding: '62px 32px',
+            width: 250,
+            padding: '54px 32px',
         },
     }),
 );
 
-const StyledBodyCell = withStyles((theme: Theme) => ({
-    root: {
-        borderBottom: 'none',
-        color: theme.palette.text.secondary,
-    },
-}))(TableCell);
-
-const StyledHeaderCell = withStyles((theme: Theme) => ({
-    root: {
-        color: theme.palette.common.black,
-        ...createTypography(15, 22, 500, 'Roboto'),
-    },
-}))(TableCell);
+interface TableDataItem {
+    asset: number;
+    currentRatio: FixedU128;
+    deposited: FixedU128;
+    withdraw: FixedU128;
+    aUSD: FixedU128;
+    [k: string]: any;
+}
 
 interface Props {
     onSelect: (asset: number) => void;
@@ -84,7 +65,7 @@ const LoanInfo: React.FC<Props> = ({ onSelect }) => {
 
     const renderContent = () => {
         return (
-            <>
+            <Grid spacing={2} container direction={match ? 'column' : 'row'}>
                 <Grid item>
                     <DigitalCard
                         elevation={1}
@@ -103,80 +84,90 @@ const LoanInfo: React.FC<Props> = ({ onSelect }) => {
                         formatterProps={{ type: 'balance', suffix: stableCoinName, color: 'primary' }}
                     />
                 </Grid>
-            </>
+            </Grid>
         );
     };
 
-    const renderTable = () =>
-        loans.map(loan => {
-            const cdp = cdpTypes.find(item => item.asset === loan.asset);
-            const price = prices.find(item => item.asset === loan.asset);
+    const loanData = loans.map(loan => {
+        const cdp = cdpTypes.find(item => item.asset === loan.asset);
+        const price = prices.find(item => item.asset === loan.asset);
 
-            if (!(price && cdp && stableCoinPrice)) {
-                return null;
-            }
+        if (!(price && cdp && stableCoinPrice)) {
+            return null;
+        }
 
-            const assetName = getAssetName(loan.asset);
-            const currentCollateralRatio = calcCollateralRatio(
-                collateralToUSD(loan.collateral, price.price),
-                debitToUSD(loan.debit, cdp.debitExchangeRate, stableCoinPrice.price),
-            );
-            const requiredCollateral = calcRequiredCollateral(
-                debitToUSD(loan.debit, cdp.debitExchangeRate, stableCoinPrice.price),
-                cdp.requiredCollateralRatio,
-                price.price,
-            );
-            const ableToWithdraw = loan.collateral.sub(requiredCollateral);
-            const stableCoinGenerater = loan.debit.mul(cdp.debitExchangeRate);
-            return (
-                <TableRow key={`overview-${loan.asset}`}>
-                    <StyledBodyCell>{getAssetName(loan.asset)}</StyledBodyCell>
-                    <StyledBodyCell>
-                        <Formatter type="ratio" data={currentCollateralRatio} />
-                    </StyledBodyCell>
-                    <StyledBodyCell>
-                        <Formatter type="balance" data={loan.collateral} suffix={assetName} />
-                    </StyledBodyCell>
-                    <StyledBodyCell>
-                        <Formatter type="balance" data={ableToWithdraw} suffix={assetName} />
-                    </StyledBodyCell>
-                    <StyledBodyCell>
-                        <Formatter type="balance" data={stableCoinGenerater} suffix={stableCoinName} />
-                    </StyledBodyCell>
-                    <StyledBodyCell>
-                        <Button
-                            variant="outlined"
-                            color="primary"
-                            onClick={() => {
-                                onSelect(loan.asset);
-                            }}
-                        >
-                            {t('Manage Loan')}
-                        </Button>
-                    </StyledBodyCell>
-                </TableRow>
-            );
-        });
+        const currentCollateralRatio = calcCollateralRatio(
+            collateralToUSD(loan.collateral, price.price),
+            debitToUSD(loan.debit, cdp.debitExchangeRate, stableCoinPrice.price),
+        );
+        const requiredCollateral = calcRequiredCollateral(
+            debitToUSD(loan.debit, cdp.debitExchangeRate, stableCoinPrice.price),
+            cdp.requiredCollateralRatio,
+            price.price,
+        );
+        const ableToWithdraw = loan.collateral.sub(requiredCollateral);
+        const stableCoinGenerater = loan.debit.mul(cdp.debitExchangeRate);
+        return {
+            asset: loan.asset,
+            currentRatio: currentCollateralRatio,
+            deposited: loan.collateral,
+            withdraw: ableToWithdraw,
+            aUSD: stableCoinGenerater,
+        };
+    });
+
+    const tableConfig = [
+        {
+            renderKey: 'token',
+            title: t('Token'),
+            render: (_: any, loan: TableDataItem) => getAssetName(loan.asset),
+        },
+        {
+            renderKey: 'currentRatio',
+            title: t('Current Ratio'),
+            render: (text: FixedU128) => <Formatter data={text} type="ratio" />,
+        },
+        {
+            renderKey: 'deposited',
+            title: t('Deposited'),
+            render: (text: FixedU128, loan: TableDataItem) => (
+                <Formatter data={text} type="balance" suffix={getAssetName(loan.asset)} />
+            ),
+        },
+        {
+            renderKey: 'withdraw',
+            title: t('Avil. to Withdraw'),
+            render: (text: FixedU128, loan: TableDataItem) => (
+                <Formatter data={text} type="balance" suffix={getAssetName(loan.asset)} />
+            ),
+        },
+        {
+            renderKey: 'aUSD',
+            title: t('aUSD'),
+            render: (text: FixedU128) => <Formatter data={text} type="balance" suffix={stableCoinName} />,
+        },
+        {
+            renderKey: 'action',
+            title: '',
+            render: (_: string, loan: TableDataItem) => (
+                <Button
+                    variant="outlined"
+                    color="primary"
+                    onClick={() => {
+                        onSelect(loan.asset);
+                    }}
+                >
+                    {t('Manage Loan')}
+                </Button>
+            ),
+        },
+    ];
 
     return (
         <>
-            <Grid spacing={3} container direction={match ? 'column' : 'row'}>
-                {renderContent()}
-            </Grid>
-            <Card size="large" elevation={1} marginTop={3}>
-                <Table>
-                    <TableHead>
-                        <TableRow>
-                            <StyledHeaderCell>{t('Token')}</StyledHeaderCell>
-                            <StyledHeaderCell>{t('Current Ratio')}</StyledHeaderCell>
-                            <StyledHeaderCell>{t('Deposited')}</StyledHeaderCell>
-                            <StyledHeaderCell>{t('Avil. to Withdraw')}</StyledHeaderCell>
-                            <StyledHeaderCell>{t('StableCoin')}</StyledHeaderCell>
-                            <StyledHeaderCell />
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>{renderTable()}</TableBody>
-                </Table>
+            {renderContent()}
+            <Card size="large" elevation={1} marginTop={2}>
+                <Table<TableDataItem> config={tableConfig} data={loanData} />
             </Card>
         </>
     );

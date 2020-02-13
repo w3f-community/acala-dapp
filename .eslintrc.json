@@ -19,6 +19,7 @@
     "no-var": "error",
     "indent": ["error", 4],
     "react/prop-types": [0],
-    "react-hooks/exhaustive-deps": [0]
+    "react-hooks/exhaustive-deps": [0],
+    "react/display-name": [0]
   }
 }

@@ -1,19 +1,19 @@
-import React, { ReactNode, CSSProperties } from 'react';
+import React, { ReactNode } from 'react';
 import { Container, Theme, withStyles } from '@material-ui/core';
 import { Title } from './title';
 import clsx from 'clsx';
 import { BaseProps } from '@/types/react-component/props';
 
-type Props = {
+interface Props extends BaseProps {
     children: ReactNode;
     title?: string;
     fullScreen?: boolean;
-} & BaseProps;
+}
 
 const SContainer = withStyles((theme: Theme) => ({
     root: {
-        boxSizing: 'content-box',
-        padding: '74px 54px',
+        boxSizing: 'border-box',
+        padding: `${theme.spacing(4)}px ${theme.spacing(2)}px`,
         marginLeft: 0,
         [theme.breakpoints.down('sm')]: {
             padding: '0 20px',

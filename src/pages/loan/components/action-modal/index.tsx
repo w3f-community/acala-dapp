@@ -3,7 +3,6 @@ import {
     Dialog,
     DialogTitle,
     DialogContent,
-    TextField,
     InputAdornment,
     Button,
     List,
@@ -49,7 +48,7 @@ const useInputStyles = makeStyles((theme: Theme) =>
     createStyles({
         root: {
             width: '100%',
-            ...createTypography(22, 32, 500, 'Roboto', theme.palette.common.black),
+            ...createTypography(15, 22, 500, 'Roboto', theme.palette.common.black),
         },
         underline: {
             color: '#0123cc',
@@ -73,9 +72,39 @@ const MaxButton = withStyles((theme: Theme) => ({
         marginRight: 8,
         minWidth: 'auto',
         height: 'auto',
-        ...createTypography(22, 32, 500, 'Roboto', theme.palette.secondary.main),
+        ...createTypography(15, 22, 500, 'Roboto', theme.palette.secondary.main),
     },
 }))(Button);
+
+const SDialog = withStyles((theme: Theme) => ({
+    root: {},
+    paper: {
+        minWidth: 220,
+        maxWidth: 220,
+        padding: theme.spacing(4),
+    },
+}))(Dialog);
+
+const SDialogTitle = withStyles((theme: Theme) => ({
+    root: {
+        ...createTypography(17, 24, 500, 'Roboto', theme.palette.common.black),
+    },
+}))(DialogTitle);
+
+const DialogButton = withStyles((theme: Theme) => ({
+    root: {
+        minWidth: 80,
+    },
+}))(Button);
+
+const DialogListItemText = withStyles((theme: Theme) => ({
+    primary: {
+        ...createTypography(15, 22, 500, 'Roboto', theme.palette.common.black),
+    },
+    secondary: {
+        ...createTypography(15, 22, 500, 'Roboto', theme.palette.common.black),
+    },
+}))(ListItemText);
 
 const createActionModal: (option: BaseActionModalProps & ActionModalProps) => ReactElement = props => {
     return <BaseActionModal {...props} />;
@@ -316,10 +345,12 @@ const BaseActionModal: React.FC<BaseActionModalProps & ActionModalProps> = ({
     const dispatch = useDispatch();
     const inputClasses = useInputStyles();
     const updateLoanStatus = useSelector(statusSelector('updateLoan'));
+    const [defaultValue, setDefaultValue] = useState<number>(amount);
 
     // reset amount
     useEffect(() => {
         onChange(0);
+        setDefaultValue(0);
     }, []);
 
     const handleInput: ChangeEventHandler<HTMLInputElement> = e => {
@@ -328,7 +359,7 @@ const BaseActionModal: React.FC<BaseActionModalProps & ActionModalProps> = ({
     };
 
     const handleMax = () => {
-        onChange(max);
+        setDefaultValue(max);
     };
 
     useEffect(() => {
@@ -339,21 +370,21 @@ const BaseActionModal: React.FC<BaseActionModalProps & ActionModalProps> = ({
     }, [updateLoanStatus, dispatch, onClose]);
 
     return (
-        <Dialog open={open} onClose={onClose}>
-            <DialogTitle>
+        <SDialog open={open} onClose={onClose}>
+            <SDialogTitle disableTypography>
                 <Grid container justify="space-between" alignItems="center">
                     <p>{title}</p>
                     <IconButton onClick={onClose}>
                         <CloseIcon />
                     </IconButton>
                 </Grid>
-            </DialogTitle>
+            </SDialogTitle>
             <DialogContent>
                 <NumberInput
                     classes={{ root: inputClasses.root }}
                     min={0}
                     max={max}
-                    defaultValue={amount}
+                    defaultValue={defaultValue}
                     onChange={onChange}
                     InputProps={{
                         placeholder: placeholder,
@@ -369,37 +400,40 @@ const BaseActionModal: React.FC<BaseActionModalProps & ActionModalProps> = ({
                 />
                 <Box paddingTop={4} />
                 <Grid container justify="space-between">
-                    <Button
+                    <DialogButton
                         variant="contained"
                         color="primary"
                         onClick={onConfirm}
                         disabled={updateLoanStatus !== 'none'}
                     >
                         {confirmBtnText}
-                    </Button>
-                    <Button variant="contained" color="secondary" onClick={onClose}>
+                    </DialogButton>
+                    <DialogButton variant="contained" color="secondary" onClick={onClose}>
                         {t('cancel')}
-                    </Button>
+                    </DialogButton>
                 </Grid>
                 <Information disablePadding>
                     <ListItem disableGutters>
-                        <ListItemText
+                        <DialogListItemText
                             primary={t('Borrowed aUSD')}
                             secondary={t('{{number}} {{asset}}', { number: formatBalance(borrowed), asset: 'aUSD' })}
                         />
                     </ListItem>
                     <ListItem disableGutters>
-                        <ListItemText primary={t('New Collateral Ratio')} secondary={formatRatio(collateralRatio)} />
+                        <DialogListItemText
+                            primary={t('New Collateral Ratio')}
+                            secondary={formatRatio(collateralRatio)}
+                        />
                     </ListItem>
                     <ListItem disableGutters>
-                        <ListItemText
+                        <DialogListItemText
                             primary={t('New Liquidation Price')}
                             secondary={formatPrice(liquidationPrice, '$')}
                         />
                     </ListItem>
                 </Information>
             </DialogContent>
-        </Dialog>
+        </SDialog>
     );
 };
 

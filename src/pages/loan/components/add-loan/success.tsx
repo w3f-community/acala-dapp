@@ -16,21 +16,20 @@ import Loan from '@/components/svgs/loan';
 import { createTypography } from '@/theme';
 
 const Card = withStyles(() => ({
-    root: { padding: '47px 54px 98px 54px' },
+    root: { padding: '20px 54px 64px 54px' },
 }))(Paper);
 
 const Title = withStyles((theme: Theme) => ({
     root: {
-        marginTop: 45,
-        ...createTypography(21, 28, 500, 'Roboto', theme.palette.primary.light),
+        marginTop: theme.spacing(6),
+        ...createTypography(17, 24, 500, 'Roboto', theme.palette.primary.light),
     },
 }))(Typography);
 
-const useStyles = makeStyles(() =>
+const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         img: {
-            marginTop: 68,
-            marginBottom: 43,
+            margin: theme.spacing(8),
             width: '100%',
             maxWidth: 330,
         },

@@ -1,19 +1,5 @@
-import React, { ReactEventHandler, useEffect, ChangeEvent } from 'react';
-import {
-    Table,
-    TableHead,
-    TableRow,
-    TableCell,
-    TableBody,
-    Paper,
-    Grid,
-    Button,
-    Radio,
-    makeStyles,
-    createStyles,
-    Theme,
-    withStyles,
-} from '@material-ui/core';
+import React, { ReactEventHandler, useEffect } from 'react';
+import { Box, Grid, Button, Radio, makeStyles, createStyles, Theme } from '@material-ui/core';
 import { useTranslate } from '@/hooks/i18n';
 import { getAssetName } from '@/utils';
 import Formatter from '@/components/formatter';
@@ -21,7 +7,6 @@ import { useSelector } from 'react-redux';
 import { cdpTypeSelector, constantsSelector } from '@/store/chain/selectors';
 import { balancesSelector } from '@/store/account/selectors';
 import { CdpTypeData } from '@/types/store';
-import { createTypography } from '@/theme';
 import { useForm } from '@/hooks/form';
 import { formContext } from './context';
 import FixedU128 from '@/utils/fixed_u128';
@@ -29,11 +14,12 @@ import { calcStableFee } from '@/utils/loan';
 import useMobileMatch from '@/hooks/mobile-match';
 import SelectCollateralMobile from './select-collateral-mobile';
 import Card from '@/components/card';
+import { Table } from '@/components/table';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         bottom: {
-            paddingTop: 73,
+            paddingTop: theme.spacing(4),
             '& .MuiButton-root': {
                 marginLeft: theme.spacing(2),
             },
@@ -47,20 +33,6 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 );
 
-const SBodyCell = withStyles((theme: Theme) => ({
-    root: {
-        borderBottom: 'none',
-        color: theme.palette.text.secondary,
-    },
-}))(TableCell);
-
-const SHeaderCell = withStyles((theme: Theme) => ({
-    root: {
-        color: theme.palette.common.black,
-        ...createTypography(15, 22, 500, 'Roboto'),
-    },
-}))(TableCell);
-
 const filterEmptyLoan = (source: CdpTypeData[]): CdpTypeData[] => {
     return source.filter(
         item =>
@@ -72,6 +44,10 @@ const filterEmptyLoan = (source: CdpTypeData[]): CdpTypeData[] => {
             !item.stabilityFee.isZero(),
     );
 };
+
+interface TableItem extends CdpTypeData {
+    balance: FixedU128;
+}
 
 interface Props {
     onNext: () => void;
@@ -101,11 +77,6 @@ const Component: React.FC<Props> = ({ onNext, onCancel }) => {
             setValue('asset', cdpTypes[0].asset);
         }
     }, [cdpTypes, data.asset.value, setValue]);
-
-    const handleAssetSelect = (e: ChangeEvent<{ value: unknown }>) => {
-        const result = Number(e.target.value);
-        setValue('asset', result);
-    };
 
     if (!balances.length) {
         return null;
@@ -147,52 +118,59 @@ const Component: React.FC<Props> = ({ onNext, onCancel }) => {
         );
     }
 
+    const tableConfig = [
+        {
+            renderKey: 'asset',
+            title: t('Collateral Type'),
+            render: (asset: number) => (
+                <Box display="flex" alignItems="center">
+                    <Radio value={asset} onChange={handleAssetRadioSelect} checked={selectedAsset === asset} />
+                    {getAssetName(asset)}
+                </Box>
+            ),
+        },
+        {
+            renderKey: 'stabilityFee',
+            title: t('Interest Rate %'),
+            render: (stabilityFee: FixedU128) => (
+                <Formatter data={calcStableFee(stabilityFee, constants.babe.expectedBlockTime)} type="ratio" />
+            ),
+        },
+        {
+            renderKey: 'requiredCollateralRatio',
+            title: t('Min. Collateral %'),
+            render: (data: FixedU128) => <Formatter data={data} type="ratio" />,
+        },
+        {
+            renderKey: 'liquidationRatio',
+            title: t('LIQ Ratio'),
+            render: (data: FixedU128) => <Formatter data={data} type="ratio" />,
+        },
+        {
+            renderKey: 'liquidationPenalty',
+            title: t('LIQ Fee'),
+            render: (data: FixedU128) => <Formatter data={data} type="ratio" />,
+        },
+        {
+            renderKey: 'balance',
+            title: t('Avail. Balance'),
+            render: (balance: FixedU128, record: TableItem) => (
+                <Formatter data={balance} type="balance" suffix={getAssetName(record.asset)} />
+            ),
+        },
+    ];
+
+    const tableData = cdpTypes.map(item => {
+        const balance = balances.find(data => data.asset === item.asset);
+        return {
+            ...item,
+            balance: balance ? balance.balance : FixedU128.fromNatural(0),
+        };
+    });
+
     return (
         <Card elevation={1} size="large">
-            <Table>
-                <TableHead>
-                    <TableRow>
-                        <SHeaderCell>{t('Collateral Type')}</SHeaderCell>
-                        <SHeaderCell>{t('Interest Rate')}</SHeaderCell>
-                        <SHeaderCell>{t('LIQ Ratio')}</SHeaderCell>
-                        <SHeaderCell>{t('LIQ Fee')}</SHeaderCell>
-                        <SHeaderCell>{t('Avail. Balance')}</SHeaderCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {cdpTypes.map(item => (
-                        <TableRow key={`select-collateral-asset-${item.asset}`}>
-                            <SBodyCell>
-                                <Radio
-                                    value={item.asset}
-                                    onChange={handleAssetRadioSelect}
-                                    checked={selectedAsset === item.asset}
-                                />
-                                {getAssetName(item.asset)}
-                            </SBodyCell>
-                            <SBodyCell>
-                                <Formatter
-                                    data={calcStableFee(item.stabilityFee, constants.babe.expectedBlockTime)}
-                                    type="ratio"
-                                />
-                            </SBodyCell>
-                            <SBodyCell>
-                                <Formatter data={item.liquidationRatio} type="ratio" />
-                            </SBodyCell>
-                            <SBodyCell>
-                                <Formatter data={item.liquidationPenalty} type="ratio" />
-                            </SBodyCell>
-                            <SBodyCell>
-                                <Formatter
-                                    data={balancesMap[item.asset] || 0}
-                                    type="balance"
-                                    suffix={getAssetName(item.asset)}
-                                />
-                            </SBodyCell>
-                        </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
+            <Table<TableItem> config={tableConfig} data={tableData} />
             {renderBottom()}
         </Card>
     );

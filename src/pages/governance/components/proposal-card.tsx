@@ -84,13 +84,6 @@ const VoteButton = withStyles(() => ({
     },
 }))(Button);
 
-const VotedAddressStatus = withStyles((theme: Theme) => ({
-    root: {
-        marginTop: 10,
-        ...createTypography(22, 32, 500, 'Roboto', theme.palette.grey[600]),
-    },
-}))(Typography);
-
 interface ItemProps {
     index: number;
     data: ProposalData;

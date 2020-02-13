@@ -42,7 +42,7 @@ const CollateralInfo: React.FC<Props> = ({ current, className, style }) => {
             style={style}
         >
             {selectedCdp && (
-                <List>
+                <List disablePadding>
                     <ListItem disableGutters>
                         <Grid container justify="space-between">
                             <Typography variant="body2">{t('Liquidation Ratio')}</Typography>

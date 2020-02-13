@@ -8,24 +8,14 @@ import { createTypography } from '@/theme';
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         root: {
-            padding: '24px 26px',
+            padding: `${theme.spacing(4)}px ${theme.spacing(4)}px`,
             [theme.breakpoints.down('sm')]: {
                 padding: '24px 30px',
             },
             '& $header': {
-                ...createTypography(18, 22, 500, 'Roboto', theme.palette.common.black),
-                paddingBottom: 16.5,
-                marginBottom: 18.5,
-            },
-        },
-        rootLarge: {
-            padding: '32px 26px',
-            [theme.breakpoints.down('sm')]: {
-                padding: '32px 30px',
-            },
-            '& $header': {
-                paddingBottom: 8.5,
-                marginBottom: 18.5,
+                ...createTypography(17, 24, 500, 'Roboto', theme.palette.common.black),
+                paddingBottom: 8,
+                marginBottom: 12,
             },
         },
         header: {},
@@ -65,10 +55,7 @@ const Card: React.FC<Props> = ({
         <Paper
             square={true}
             elevation={elevation}
-            className={clsx(className, {
-                [classes.root]: size === 'normal',
-                [classes.rootLarge]: size === 'large',
-            })}
+            className={clsx(className, classes.root)}
             style={{ marginTop: theme.spacing(marginTop), ...style }}
         >
             <Grid container direction="column" wrap="nowrap">

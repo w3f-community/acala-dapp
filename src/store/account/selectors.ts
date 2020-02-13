@@ -1,4 +1,4 @@
-import { Selector, BalanceData, UserLoanData, Account, AccountError, Status, AccountState } from '@/types/store';
+import { Selector, BalanceData, Account, AccountError, Status, AccountState } from '@/types/store';
 import FixedU128 from '@/utils/fixed_u128';
 import { RootState } from 'typesafe-actions';
 

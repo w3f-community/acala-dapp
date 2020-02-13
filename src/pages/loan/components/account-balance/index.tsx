@@ -32,7 +32,7 @@ const WalletBalance: React.FC<BaseProps> = ({ className, style }) => {
             className={className}
             style={style}
         >
-            <List>
+            <List disablePadding>
                 {balances.map(item => {
                     const price = prices.find(price => price.asset === item.asset);
                     return (

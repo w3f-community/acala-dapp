@@ -4,13 +4,9 @@ import twitterIcon from '@/assets/twitter.svg';
 import emailIcon from '@/assets/email.svg';
 import exchangeIcon from '@/assets/exchange.svg';
 import governanceIcon from '@/assets/governance.svg';
-import statesIcon from '@/assets/states.svg';
 import aUSDIcon from '@/assets/coin/aUSD.svg';
 import btcIcon from '@/assets/coin/btc.svg';
 import dotIcon from '@/assets/coin/dot.svg';
-import ethIcon from '@/assets/coin/eth.svg';
-
-import FixedU128 from './utils/fixed_u128';
 
 export interface Asset {
     name: string;

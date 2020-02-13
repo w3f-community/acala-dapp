@@ -1,7 +1,6 @@
-import React, { ReactNode, ElementType, FC } from 'react';
+import React, { ElementType, FC } from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
 import MainLayout from '@/layouts/main';
-import Dashboard from '@/pages/dashboard';
 import Loan from '@/pages/loan';
 import Exchange from '@/pages/exchange';
 import Governance from '@/pages/governance';
