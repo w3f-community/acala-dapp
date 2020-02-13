@@ -1,19 +1,19 @@
 {
   "files": {
     "main.css": "/static/css/main.a34147fa.chunk.css",
-    "main.js": "/static/js/main.fd6f67c6.chunk.js",
-    "main.js.map": "/static/js/main.fd6f67c6.chunk.js.map",
+    "main.js": "/static/js/main.3dcc14ae.chunk.js",
+    "main.js.map": "/static/js/main.3dcc14ae.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.5f635983.js",
     "runtime-main.js.map": "/static/js/runtime-main.5f635983.js.map",
-    "static/js/2.57d12df7.chunk.js": "/static/js/2.57d12df7.chunk.js",
-    "static/js/2.57d12df7.chunk.js.map": "/static/js/2.57d12df7.chunk.js.map",
+    "static/js/2.9439fd1d.chunk.js": "/static/js/2.9439fd1d.chunk.js",
+    "static/js/2.9439fd1d.chunk.js.map": "/static/js/2.9439fd1d.chunk.js.map",
     "index.html": "/index.html",
-    "precache-manifest.22090b685fa458a94bfbf677a8e91a0e.js": "/precache-manifest.22090b685fa458a94bfbf677a8e91a0e.js",
+    "precache-manifest.1b970ae1e7c060245d04961d99f1b19e.js": "/precache-manifest.1b970ae1e7c060245d04961d99f1b19e.js",
     "service-worker.js": "/service-worker.js",
     "static/css/main.a34147fa.chunk.css.map": "/static/css/main.a34147fa.chunk.css.map",
     "static/media/aUSD.svg": "/static/media/aUSD.18dfb053.svg",
     "static/media/acala-logo.svg": "/static/media/acala-logo.20c64337.svg",
-    "static/media/acala-mandala-logo.svg": "/static/media/acala-mandala-logo.fe290ace.svg",
+    "static/media/acala-mandala-logo.svg": "/static/media/acala-mandala-logo.079546c0.svg",
     "static/media/add.svg": "/static/media/add.0b1f51fe.svg",
     "static/media/btc.svg": "/static/media/btc.7a8ff0cc.svg",
     "static/media/chevron-down.svg": "/static/media/chevron-down.579c1821.svg",
@@ -29,8 +29,8 @@
   },
   "entrypoints": [
     "static/js/runtime-main.5f635983.js",
-    "static/js/2.57d12df7.chunk.js",
+    "static/js/2.9439fd1d.chunk.js",
     "static/css/main.a34147fa.chunk.css",
-    "static/js/main.fd6f67c6.chunk.js"
+    "static/js/main.3dcc14ae.chunk.js"
   ]
 }
