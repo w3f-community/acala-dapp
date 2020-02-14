@@ -61,7 +61,7 @@ const CollateralInfo: React.FC<Props> = ({ current, className, style }) => {
                     </ListItem>
                     <ListItem disableGutters>
                         <Grid container justify="space-between">
-                            <Typography variant="body2">{t('Stability Fee/Interest')}</Typography>
+                            <Typography variant="body2">{t('Interest Rate')}</Typography>
                             <Formatter
                                 type="ratio"
                                 data={calcStableFee(selectedCdp.stabilityFee, constants.babe.expectedBlockTime)}
