@@ -19,10 +19,10 @@ export const NumberInput: FC<Props> = ({ defaultValue, max, min, error, onError,
         setValue(e.target.value);
     };
     const handleBound = (value: number): void => {
-        if (max && value > max) {
+        if (typeof max === 'number' && value > max) {
             setValue(String(max));
         }
-        if (min && value < min) {
+        if (typeof min === 'number' && value < min) {
             setValue(String(min));
         }
     };

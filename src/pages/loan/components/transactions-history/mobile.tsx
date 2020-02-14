@@ -9,14 +9,15 @@ import { loanTxRecordSelector } from '@/store/loan/selectors';
 import Skeleton from '@material-ui/lab/Skeleton';
 
 interface Props {
-    current: number;
+    asset: number;
+    account: string;
 }
 
-const TransactionHistory: React.FC<Props> = ({ current }) => {
+const TransactionHistory: React.FC<Props> = ({ asset, account }) => {
     const { t } = useTranslate();
-    const txRecord = useSelector(loanTxRecordSelector);
+    const txRecord = useSelector(loanTxRecordSelector(account));
 
-    if (!current || !txRecord.length) {
+    if (!asset || !txRecord.length) {
         return <Skeleton variant="rect" height={240} />;
     }
 

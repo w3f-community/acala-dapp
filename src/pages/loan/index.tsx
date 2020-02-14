@@ -97,12 +97,19 @@ const Loan: React.FC = () => {
         dispatch(actions.loan.loadTxRecord());
     }, [dispatch]);
 
-    const handleLoanSelect = (loan: number) => {
-        setCurrentLoan(loan);
-        setActive(loan);
+    const handleLoanSelect = (asset: number) => {
+        setCurrentLoan(asset);
+        setActive(asset);
         hideAddLoan();
         hideOverview();
     };
+
+    const handleAddLoanSuccess = (asset: number) => {
+        setCurrentLoan(asset);
+        setActive(asset);
+        hideAddLoan();
+        hideOverview();
+    }
 
     const renderContent = () => {
         if (typeof isLoadingLoan !== 'boolean') {
@@ -112,7 +119,7 @@ const Loan: React.FC = () => {
             return <Skeleton variant="rect" width="100%" height={500} />;
         }
         if (isAddLoan) {
-            return <AddLoan onCancel={hideAddLoan} />;
+            return <AddLoan onCancel={hideAddLoan} onSuccess={handleAddLoanSuccess}/>;
         }
         if (isEmpty(userLoans)) {
             return <Guide onConfirm={showAddLoan} />;
@@ -126,7 +133,7 @@ const Loan: React.FC = () => {
                 <Box paddingTop={match ? 4 : 2} />
                 <LoanConsole current={currentLoan} />
                 <Box paddingTop={match ? 4 : 2} />
-                <TransactionHistory current={currentLoan} />
+                <TransactionHistory asset={currentLoan} />
             </>
         );
     };

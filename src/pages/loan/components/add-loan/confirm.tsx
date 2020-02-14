@@ -117,6 +117,11 @@ const Component: React.FC<Props> = ({ onNext, onPrev, onCancel }) => {
     const loading = useSelector(loadingSelector(rootActions.loan.UPDATE_VAULT));
     const constants = useSelector(constantsSelector)!;
 
+    useEffect(() => {
+        // reset to empty
+        setValue('agree', false);
+    }, []);
+
     const handleNextBtnClick = () => {
         if (!data.agree.value) {
             setError('agree', 'need agree');

@@ -20,7 +20,7 @@ const SystemInfo: React.FC<BaseProps> = ({ className, style }) => {
             className={className}
             style={style}
         >
-            <List>
+            <List disablePadding>
                 <ListItem disableGutters>
                     <Grid container justify="space-between">
                         <Typography variant="body2">{t('aUSD in Supply')}</Typography>

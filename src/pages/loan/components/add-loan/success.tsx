@@ -14,6 +14,8 @@ import { useTranslate } from '@/hooks/i18n';
 import CloseIcon from '@/components/svgs/close';
 import Loan from '@/components/svgs/loan';
 import { createTypography } from '@/theme';
+import { useForm } from '@/hooks/form';
+import { formContext } from './context';
 
 const Card = withStyles(() => ({
     root: { padding: '20px 54px 64px 54px' },
@@ -37,15 +39,22 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface Props {
-    onConfirm: () => void;
+    onCancel: () => void;
+    onConfirm: (asset: number) => void;
 }
 
-const Success: React.FC<Props> = ({ onConfirm }) => {
+const Success: React.FC<Props> = ({ onConfirm, onCancel }) => {
     const { t } = useTranslate();
+    const { data } = useForm(formContext);
     const classes = useStyles();
+
+    const handleClick = () => {
+        onConfirm(data.asset.value);
+    }
+
     return (
         <Card square={true} elevation={1}>
-            <Grid container justify="flex-end" onClick={onConfirm}>
+            <Grid container justify="flex-end" onClick={onCancel}>
                 <IconButton>
                     <CloseIcon />
                 </IconButton>
@@ -53,7 +62,7 @@ const Success: React.FC<Props> = ({ onConfirm }) => {
             <Grid container justify="center" alignItems="center" direction="column">
                 <Title>{t('Your loan is created, and aUSD is generated!')}</Title>
                 <Loan className={classes.img} />
-                <Button variant="contained" color="primary" onClick={onConfirm}>
+                <Button variant="contained" color="primary" onClick={handleClick}>
                     DONE
                 </Button>
             </Grid>

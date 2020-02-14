@@ -28,7 +28,7 @@ export function formatBalance(num: FixedU128, suffix = ''): string {
         return 'Infinity';
     }
 
-    return `${result} ${suffix}`;
+    return `${thousandth(result)} ${suffix}`;
 }
 
 export function formatRatio(num: FixedU128): string {

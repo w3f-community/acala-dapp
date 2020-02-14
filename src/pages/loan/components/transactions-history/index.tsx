@@ -14,6 +14,7 @@ import TxDetail from '@/components/tx-detail';
 import { LinkToPolkascan } from '@/components/link-to/polkascan';
 import { Table } from '@/components/table';
 import { Tx } from '@/types/store';
+import { accountStoreSelector } from '@/store/account/selectors';
 
 interface TableItem {
     asset: number;
@@ -22,20 +23,21 @@ interface TableItem {
     tx: string;
 }
 interface Props {
-    current: number;
+    asset: number;
 }
 
-const TransactionHistory: React.FC<Props> = ({ current }) => {
+const TransactionHistory: React.FC<Props> = ({ asset }) => {
     const { t } = useTranslate();
-    const txRecord = useSelector(loanTxRecordSelector);
+    const [account] =useSelector(accountStoreSelector(['account']));
+    const txRecord = useSelector(loanTxRecordSelector(account!.address));
     const match = useMobileMatch('sm');
 
-    if (!current || !txRecord.length) {
+    if (!asset || !txRecord.length) {
         return null;
     }
 
     if (match) {
-        return <Mobile current={current} />;
+        return <Mobile asset={asset} account={account!.address} />;
     }
 
     const tableConfig = [

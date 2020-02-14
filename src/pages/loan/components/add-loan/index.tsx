@@ -6,10 +6,11 @@ import GenerateStableCoin from './generate-stable-coin';
 import Confirm from './confirm';
 import Success from './success';
 import { formContext } from './context';
-import { Form } from '@/hooks/form';
+import { Form, useForm } from '@/hooks/form';
 
 interface Props {
     onCancel: () => void;
+    onSuccess: (asset: number) => void;
 }
 
 const initFormValues = {
@@ -19,7 +20,7 @@ const initFormValues = {
     agree: { value: undefined },
 };
 
-const AddLoan: React.FC<Props> = ({ onCancel }) => {
+const AddLoan: React.FC<Props> = ({ onCancel, onSuccess }) => {
     const [step, setStep] = useState<AddStep>('select');
 
     const changeStepGen = (target: AddStep) => () => setStep(target);
@@ -41,7 +42,7 @@ const AddLoan: React.FC<Props> = ({ onCancel }) => {
             return <Confirm onNext={changeStepGen('success')} onPrev={changeStepGen('generate')} onCancel={onCancel} />;
         }
         if (step === 'success') {
-            return <Success onConfirm={onCancel} />;
+            return <Success onConfirm={onSuccess} onCancel={onCancel} />;
         }
         return null;
     };

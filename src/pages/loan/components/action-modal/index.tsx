@@ -77,10 +77,11 @@ const MaxButton = withStyles((theme: Theme) => ({
 }))(Button);
 
 const SDialog = withStyles((theme: Theme) => ({
-    root: {},
+    root: {
+    },
     paper: {
-        minWidth: 220,
-        maxWidth: 220,
+        minWidth: 280,
+        maxWidth: 280,
         padding: theme.spacing(4),
     },
 }))(Dialog);
@@ -92,17 +93,19 @@ const SDialogTitle = withStyles((theme: Theme) => ({
 }))(DialogTitle);
 
 const DialogButton = withStyles((theme: Theme) => ({
-    root: {
-        minWidth: 80,
-    },
+    root: { },
 }))(Button);
 
 const DialogListItemText = withStyles((theme: Theme) => ({
+    root: {
+        display: 'flex',
+        justifyContent: 'space-between',
+    },
     primary: {
         ...createTypography(15, 22, 500, 'Roboto', theme.palette.common.black),
     },
     secondary: {
-        ...createTypography(15, 22, 500, 'Roboto', theme.palette.common.black),
+        ...createTypography(15, 22, 500, 'Roboto', theme.palette.secondary.main),
     },
 }))(ListItemText);
 

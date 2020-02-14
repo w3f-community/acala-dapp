@@ -108,4 +108,6 @@ export default {
     'Interest Rate %': 'Interest Rate %',
     'Liquidation': 'Liquidation',
     'Required Ratio': 'Required Ratio',
+    'Confirm': 'Confirm',
+    'Select Account': 'Select Account',
 };
