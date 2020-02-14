@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import { specCdpTypeSelector, specPriceSelector, constantsSelector } from '@/store/chain/selectors';
 import { STABLE_COIN } from '@/config';
 import { specUserLoanSelector } from '@/store/loan/selectors';
-import { calcCollateralRatio, collateralToUSD, debitToUSD, calcLiquidationPrice } from '@/utils/loan';
+import { calcCollateralRatio, collateralToUSD, debitToUSD, calcLiquidationPrice, calcStableFee } from '@/utils/loan';
 import FixedU128 from '@/utils/fixed_u128';
 import useMobileMatch from '@/hooks/mobile-match';
 import Card from '@/components/card';
@@ -65,7 +65,12 @@ const LoanInfo: FC<Props> = ({ current }) => {
                 >
                     <List disablePadding>
                         <LoanInfoItem label={t('Liquidation Price')}>
-                            <Formatter data={liquidationPrice} type="price" prefix={'$'} color={status ? 'primary' : 'warning' }/>
+                            <Formatter
+                                data={liquidationPrice}
+                                type="price"
+                                prefix={'$'}
+                                color={status ? 'primary' : 'warning'}
+                            />
                         </LoanInfoItem>
                         <LoanInfoItem label={t('Liquidation Ratio')}>
                             <Formatter data={cdpType.liquidationRatio} type="ratio" />
@@ -94,7 +99,10 @@ const LoanInfo: FC<Props> = ({ current }) => {
                             <Formatter data={cdpType.requiredCollateralRatio} type="ratio" />
                         </LoanInfoItem>
                         <LoanInfoItem label={t('Interest Rate')}>
-                            <Formatter data={cdpType.stabilityFee} type="ratio" />
+                            <Formatter
+                                data={calcStableFee(cdpType.stabilityFee, constants.babe.expectedBlockTime)}
+                                type="ratio"
+                            />
                         </LoanInfoItem>
                     </List>
                 </Card>
