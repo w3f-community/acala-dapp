@@ -106,8 +106,10 @@ export default {
     Members: 'Members',
     'Min. Collateral %': 'Min. Collateral %',
     'Interest Rate %': 'Interest Rate %',
-    'Liquidation': 'Liquidation',
+    Liquidation: 'Liquidation',
     'Required Ratio': 'Required Ratio',
-    'Confirm': 'Confirm',
+    Confirm: 'Confirm',
     'Select Account': 'Select Account',
+    AVOID_DUST_DEBIT_TIPS:
+        'To avoid dust debit, your loan must keep 1 aUSD debits, If you want payback all debit, please click max button.',
 };

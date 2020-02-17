@@ -50,7 +50,7 @@ const Success: React.FC<Props> = ({ onConfirm, onCancel }) => {
 
     const handleClick = () => {
         onConfirm(data.asset.value);
-    }
+    };
 
     return (
         <Card square={true} elevation={1}>

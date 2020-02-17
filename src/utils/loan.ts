@@ -68,14 +68,19 @@ export function calcCanGenerater(
     if (requiredCollateralRatio.isZero()) {
         return ZERO;
     }
-
+    // sub 0.001 to ensure generater will success
     return collateralAmount
         .div(requiredCollateralRatio)
         .sub(debitAmount)
-        .div(stableCoinPrice);
+        .div(stableCoinPrice)
+        .sub(FixedU128.fromNatural(0.001));
 }
 
-export function calcLiquidationPrice(collateral: FixedU128, debitAmount: FixedU128, liquidationRatio: FixedU128): FixedU128 {
+export function calcLiquidationPrice(
+    collateral: FixedU128,
+    debitAmount: FixedU128,
+    liquidationRatio: FixedU128,
+): FixedU128 {
     if (debitAmount.isZero()) {
         return ZERO;
     }

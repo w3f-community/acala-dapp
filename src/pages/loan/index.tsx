@@ -40,7 +40,7 @@ const useStyle = makeStyles((theme: Theme) =>
                 maxWidth: 1200,
             },
             [theme.breakpoints.up('xl')]: {
-                maxWidth: 1600
+                maxWidth: 1600,
             },
         },
         systemInfo: {
@@ -109,7 +109,7 @@ const Loan: React.FC = () => {
         setActive(asset);
         hideAddLoan();
         hideOverview();
-    }
+    };
 
     const renderContent = () => {
         if (typeof isLoadingLoan !== 'boolean') {
@@ -119,7 +119,7 @@ const Loan: React.FC = () => {
             return <Skeleton variant="rect" width="100%" height={500} />;
         }
         if (isAddLoan) {
-            return <AddLoan onCancel={hideAddLoan} onSuccess={handleAddLoanSuccess}/>;
+            return <AddLoan onCancel={hideAddLoan} onSuccess={handleAddLoanSuccess} />;
         }
         if (isEmpty(userLoans)) {
             return <Guide onConfirm={showAddLoan} />;

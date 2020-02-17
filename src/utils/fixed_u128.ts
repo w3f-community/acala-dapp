@@ -1,6 +1,7 @@
 import BigNumber from 'bignumber.js';
 
 type NumLike = number | string;
+export type ROUND_MODE = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
 
 class FixedU128 {
     public inner: BigNumber;
@@ -16,8 +17,12 @@ class FixedU128 {
         return this;
     }
 
-    public toString(): string {
-        return this.inner.div(FixedU128.PRECISION).toString();
+    public toString(dp?: number, rm?: ROUND_MODE): string {
+        let result = this.inner.div(FixedU128.PRECISION);
+        if (dp && rm) {
+            result = result.decimalPlaces(dp, rm);
+        }
+        return result.toString();
     }
 
     public innerToString(): string {
@@ -27,10 +32,10 @@ class FixedU128 {
         return this.inner.toFixed().split('.')[0];
     }
 
-    public toNumber(precision?: number): number {
+    public toNumber(dp?: number, rm?: ROUND_MODE): number {
         let result = this.inner.div(FixedU128.PRECISION);
-        if (precision) {
-            result = result.decimalPlaces(precision, 1);
+        if (dp && rm) {
+            result = result.decimalPlaces(dp, rm);
         }
         return result.toNumber();
     }
@@ -66,7 +71,10 @@ class FixedU128 {
         return new FixedU128(this.inner.div(n.inner).times(FixedU128.PRECISION));
     }
 
-    // export BigNumber methods
+    public decimalPlaces(dp: number, rm: ROUND_MODE): FixedU128 {
+        return new FixedU128(this.inner.decimalPlaces(dp, rm));
+    }
+
     public isLessThan(n: FixedU128): boolean {
         return this.inner.isLessThan(n.inner);
     }

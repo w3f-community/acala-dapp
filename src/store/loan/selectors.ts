@@ -8,11 +8,14 @@ export const statusSelector: (type: StatusType) => Selector<TxStatus> = type => 
     };
 };
 
-export const loanTxRecordSelector: (account: string) =>  Selector<Tx[]> = account => state => {
-    return state.loan.txRecord.slice().filter(item => {
-        return item.signer === account;
-    }).reverse();
-}
+export const loanTxRecordSelector: (account: string) => Selector<Tx[]> = account => state => {
+    return state.loan.txRecord
+        .slice()
+        .filter(item => {
+            return item.signer === account;
+        })
+        .reverse();
+};
 
 // add account prefix to avoid conflict
 export const loansSelector: Selector<UserLoanData[]> = state => {

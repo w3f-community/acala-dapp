@@ -85,13 +85,13 @@ export const fetchLoansEpic: Epic<RootAction, RootAction, RootState> = (action$,
                     ]),
                 ),
             ).pipe(
-                map(result =>
-                    assetList.map((asset, index) => ({
+                map(result => {
+                    return assetList.map((asset, index) => ({
                         asset: asset,
-                        collateral: FixedU128.fromParts(u8aToNumber(result[index][0])),
-                        debit: FixedU128.fromParts(u8aToNumber(result[index][1])),
-                    })),
-                ),
+                        collateral: FixedU128.fromParts(result[index][0].toString()),
+                        debit: FixedU128.fromParts(result[index][1].toString()),
+                    }));
+                }),
                 flatMap(result => of(actions.fetchLoans.success(result), endLoading(actions.FETCH_VAULTS))),
                 startWith(startLoading(actions.FETCH_VAULTS)),
                 catchError(() => of(actions.fetchLoans.failure('error'))),

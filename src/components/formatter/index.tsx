@@ -1,15 +1,7 @@
 import React from 'react';
-import FixedU128 from '@/utils/fixed_u128';
+import FixedU128, { ROUND_MODE } from '@/utils/fixed_u128';
 import { makeStyles, createStyles, Theme } from '@material-ui/core';
 import { red, yellow } from '@material-ui/core/colors';
-
-function correct(num: number, base = 12): number {
-    return parseFloat(num.toPrecision(base));
-}
-
-function format(num: number, precision = 100): number {
-    return correct(Math.floor(num * precision) / precision);
-}
 
 function thousandth(num: number): string {
     const str = String(num);
@@ -17,8 +9,8 @@ function thousandth(num: number): string {
     return result;
 }
 
-export function formatBalance(num: FixedU128, suffix = ''): string {
-    const result = format(num.toNumber());
+export function formatBalance(num: FixedU128, suffix = '', dp = 2, rm: ROUND_MODE = 3): string {
+    const result = num.toNumber(dp, rm);
 
     if (Number.isNaN(result)) {
         return '0';
@@ -31,8 +23,8 @@ export function formatBalance(num: FixedU128, suffix = ''): string {
     return `${thousandth(result)} ${suffix}`;
 }
 
-export function formatRatio(num: FixedU128): string {
-    const result = format(num.mul(FixedU128.fromNatural(100)).toNumber(), 100);
+export function formatRatio(num: FixedU128, dp = 2, rm: ROUND_MODE = 2): string {
+    const result = num.mul(FixedU128.fromNatural(100)).toNumber(dp, rm);
 
     if (Number.isNaN(result)) {
         return '0';
@@ -44,15 +36,15 @@ export function formatRatio(num: FixedU128): string {
     return result + '%';
 }
 
-export function formatPrice(num: FixedU128, prefix = ''): string {
-    const result = num.toNumber();
+export function formatPrice(num: FixedU128, prefix = '', dp = 2, rm: ROUND_MODE = 3): string {
+    const result = num.toNumber(dp, rm);
     if (Number.isNaN(result)) {
         return '~';
     }
     if (!Number.isFinite(result)) {
         return '~';
     }
-    return `${prefix}${thousandth(format(num.toNumber()))}`;
+    return `${prefix}${thousandth(result)}`;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -80,22 +72,24 @@ export interface FormatterProps {
     color?: ColorType;
     prefix?: string;
     suffix?: string;
+    dp?: number;
+    rm?: ROUND_MODE;
 }
 
-const Formatter: React.FC<FormatterProps> = ({ data, type = 'balance', color = 'normal', suffix, prefix }) => {
+const Formatter: React.FC<FormatterProps> = ({ data, type = 'balance', color = 'normal', suffix, prefix, dp, rm }) => {
     const classes = useStyles();
     const render = (value: string) => (
         <span className={classes[(color as any) as keyof typeof classes]}> {value} </span>
     );
 
     if (type === 'balance') {
-        return render(formatBalance(data, suffix));
+        return render(formatBalance(data, suffix, dp, rm));
     }
     if (type === 'ratio') {
-        return render(formatRatio(data));
+        return render(formatRatio(data, dp, rm));
     }
     // price
-    return render(formatPrice(data, prefix));
+    return render(formatPrice(data, prefix, dp, rm));
 };
 
 export default Formatter;

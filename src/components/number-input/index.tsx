@@ -41,11 +41,11 @@ export const NumberInput: FC<Props> = ({ defaultValue, max, min, error, onError,
         if (!value || regex.test(value)) {
             // dispatch to upper component
             onChange && onChange(Number(value));
-            setError(false);
+            setError(false || (!!error as boolean));
         } else {
             // show error
             onError && onError();
-            setError(true);
+            setError(true || (!!error as boolean));
         }
     }, [value]);
 
@@ -60,6 +60,7 @@ export const NumberInput: FC<Props> = ({ defaultValue, max, min, error, onError,
             type="text"
             value={value}
             error={_error}
+            helperText={error}
             onChange={inputHandler}
         />
     );

@@ -28,7 +28,7 @@ interface Props {
 
 const TransactionHistory: React.FC<Props> = ({ asset }) => {
     const { t } = useTranslate();
-    const [account] =useSelector(accountStoreSelector(['account']));
+    const [account] = useSelector(accountStoreSelector(['account']));
     const txRecord = useSelector(loanTxRecordSelector(account!.address));
     const match = useMobileMatch('sm');
 

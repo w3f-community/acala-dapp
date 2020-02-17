@@ -89,6 +89,7 @@ const LoanConsole: React.FC<Props> = ({ current }) => {
                                     type="price"
                                     data={debitToUSD(userLoan.debit, cdpType.debitExchangeRate, stableCoinPrice)}
                                     prefix="$"
+                                    rm={2}
                                 />
                             </Asset>
                         </Grid>
@@ -99,7 +100,12 @@ const LoanConsole: React.FC<Props> = ({ current }) => {
                             <SListItemText
                                 primary={t('Can Pay Back')}
                                 secondary={t('{{number}} {{asset}}', {
-                                    number: formatBalance(debitToStableCoin(userLoan.debit, cdpType.debitExchangeRate)),
+                                    number: formatBalance(
+                                        debitToStableCoin(userLoan.debit, cdpType.debitExchangeRate),
+                                        '',
+                                        2,
+                                        2,
+                                    ),
                                     asset: stableCoinAssetName,
                                 })}
                             />
@@ -147,7 +153,7 @@ const LoanConsole: React.FC<Props> = ({ current }) => {
                             <SListItemText
                                 primary={t('Required for Safety')}
                                 secondary={t('{{number}} {{asset}}', {
-                                    number: formatBalance(requiredCollateral),
+                                    number: formatBalance(requiredCollateral, '', 2, 2),
                                     asset: collateralAssetName,
                                 })}
                             />

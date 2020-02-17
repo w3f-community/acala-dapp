@@ -86,7 +86,7 @@ const LoanInfo: FC<Props> = ({ current }) => {
                     </List>
                 </Card>
             </Grid>
-            <Grid item md={6} lg={6}>
+            <Grid item md={12} lg={6}>
                 <Card
                     size="normal"
                     elevation={1}
