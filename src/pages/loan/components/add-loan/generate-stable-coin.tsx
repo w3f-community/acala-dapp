@@ -189,7 +189,7 @@ const Component: React.FC<Props> = ({ onNext, onPrev, onCancel }) => {
                         />
                         <InfoListItem
                             name={t('Liquidation Price')}
-                            value={formatPrice(calcLiquidationPrice(borrow, cdpType.liquidationRatio), '$')}
+                            value={formatPrice(calcLiquidationPrice(collateral, borrow, cdpType.liquidationRatio), '$')}
                         />
                         <InfoListItem name={t('Liquidation Ratio')} value={formatRatio(cdpType.liquidationRatio)} />
                         <InfoListItem name={t('Liquidation Penalty')} value={formatRatio(cdpType.liquidationPenalty)} />

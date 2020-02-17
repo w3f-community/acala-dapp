@@ -1,7 +1,7 @@
 import React from 'react';
 import FixedU128 from '@/utils/fixed_u128';
 import { makeStyles, createStyles, Theme } from '@material-ui/core';
-import { red } from '@material-ui/core/colors';
+import { red, yellow } from '@material-ui/core/colors';
 
 function correct(num: number, base = 12): number {
     return parseFloat(num.toPrecision(base));
@@ -57,8 +57,11 @@ export function formatPrice(num: FixedU128, prefix = ''): string {
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
-        warning: {
+        error: {
             color: red[600],
+        },
+        warning: {
+            color: yellow[800],
         },
         primary: {
             color: theme.palette.primary.light,
@@ -70,7 +73,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export type FormatterType = 'balance' | 'ratio' | 'price';
-export type ColorType = 'warning' | 'primary' | 'normal';
+export type ColorType = 'error' | 'warning' | 'primary' | 'normal';
 export interface FormatterProps {
     data: FixedU128;
     type: FormatterType;

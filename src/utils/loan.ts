@@ -75,11 +75,11 @@ export function calcCanGenerater(
         .div(stableCoinPrice);
 }
 
-export function calcLiquidationPrice(debitAmount: FixedU128, liquidationRatio: FixedU128): FixedU128 {
+export function calcLiquidationPrice(collateral: FixedU128, debitAmount: FixedU128, liquidationRatio: FixedU128): FixedU128 {
     if (debitAmount.isZero()) {
         return ZERO;
     }
-    return debitAmount.mul(liquidationRatio);
+    return debitAmount.mul(liquidationRatio).div(collateral);
 }
 
 //TODO: need

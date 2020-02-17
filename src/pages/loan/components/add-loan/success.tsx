@@ -54,7 +54,7 @@ const Success: React.FC<Props> = ({ onConfirm, onCancel }) => {
 
     return (
         <Card square={true} elevation={1}>
-            <Grid container justify="flex-end" onClick={onCancel}>
+            <Grid container justify="flex-end" onClick={handleClick}>
                 <IconButton>
                     <CloseIcon />
                 </IconButton>

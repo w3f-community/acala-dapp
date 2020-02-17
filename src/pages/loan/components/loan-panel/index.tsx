@@ -47,10 +47,20 @@ const LoanInfo: FC<Props> = ({ current }) => {
         collateralToUSD(loan.collateral, collateralPrice),
         debitToUSD(loan.debit, cdpType.debitExchangeRate, stableCoinPrice),
     );
-    const status = currentCollateralRatio.isGreaterThan(
-        cdpType.requiredCollateralRatio.add(FixedU128.fromNatural(0.2)),
-    );
+    const getStatus = () => {
+        if (
+            currentCollateralRatio.isLessThan(cdpType.requiredCollateralRatio) &&
+            currentCollateralRatio.isGreaterThan(cdpType.liquidationRatio)
+        ) {
+            return 'error';
+        }
+        if (currentCollateralRatio.isLessThan(cdpType.requiredCollateralRatio.add(FixedU128.fromNatural(0.2)))) {
+            return 'warning';
+        }
+        return 'primary';
+    };
     const liquidationPrice = calcLiquidationPrice(
+        loan.collateral,
         debitToUSD(loan.debit, cdpType.debitExchangeRate, stableCoinPrice),
         cdpType.liquidationRatio,
     );
@@ -65,12 +75,7 @@ const LoanInfo: FC<Props> = ({ current }) => {
                 >
                     <List disablePadding>
                         <LoanInfoItem label={t('Liquidation Price')}>
-                            <Formatter
-                                data={liquidationPrice}
-                                type="price"
-                                prefix={'$'}
-                                color={status ? 'primary' : 'warning'}
-                            />
+                            <Formatter data={liquidationPrice} type="price" prefix={'$'} color={getStatus()} />
                         </LoanInfoItem>
                         <LoanInfoItem label={t('Liquidation Ratio')}>
                             <Formatter data={cdpType.liquidationRatio} type="ratio" />
@@ -89,11 +94,7 @@ const LoanInfo: FC<Props> = ({ current }) => {
                 >
                     <List disablePadding>
                         <LoanInfoItem label={t('Current Ratio')}>
-                            <Formatter
-                                data={currentCollateralRatio}
-                                type="ratio"
-                                color={status ? 'primary' : 'warning'}
-                            />
+                            <Formatter data={currentCollateralRatio} type="ratio" color={getStatus()} />
                         </LoanInfoItem>
                         <LoanInfoItem label={t('Required Ratio')}>
                             <Formatter data={cdpType.requiredCollateralRatio} type="ratio" />

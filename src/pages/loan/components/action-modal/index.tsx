@@ -77,8 +77,7 @@ const MaxButton = withStyles((theme: Theme) => ({
 }))(Button);
 
 const SDialog = withStyles((theme: Theme) => ({
-    root: {
-    },
+    root: {},
     paper: {
         minWidth: 280,
         maxWidth: 280,
@@ -93,7 +92,7 @@ const SDialogTitle = withStyles((theme: Theme) => ({
 }))(DialogTitle);
 
 const DialogButton = withStyles((theme: Theme) => ({
-    root: { },
+    root: {},
 }))(Button);
 
 const DialogListItemText = withStyles((theme: Theme) => ({
@@ -155,6 +154,7 @@ const ActionModal: React.FC<ActionModalProps> = props => {
             );
             setLiquidationPrice(
                 calcLiquidationPrice(
+                    userLoan.collateral,
                     debitToUSD(userLoan.debit, cdpType.debitExchangeRate, stableCoinPrice),
                     cdpType.liquidationRatio,
                 ),
@@ -199,7 +199,7 @@ const ActionModal: React.FC<ActionModalProps> = props => {
                 const newDeibtValue = debitAmount.sub(FixedU128.fromNatural(value));
                 setBorrowed(newDeibtValue);
                 setCollateralRatio(calcCollateralRatio(collateralAmount, newDeibtValue));
-                setLiquidationPrice(calcLiquidationPrice(newDeibtValue, cdpType.liquidationRatio));
+                setLiquidationPrice(calcLiquidationPrice(userLoan.collateral, newDeibtValue, cdpType.liquidationRatio));
             },
             onConfirm: () => {
                 if (!amount) {
@@ -229,7 +229,7 @@ const ActionModal: React.FC<ActionModalProps> = props => {
                 const newDeibtValue = debitAmount.add(FixedU128.fromNatural(value));
                 setBorrowed(newDeibtValue);
                 setCollateralRatio(calcCollateralRatio(collateralAmount, newDeibtValue));
-                setLiquidationPrice(calcLiquidationPrice(newDeibtValue, cdpType.liquidationRatio));
+                setLiquidationPrice(calcLiquidationPrice(userLoan.collateral, newDeibtValue, cdpType.liquidationRatio));
             },
             onConfirm: () => {
                 if (!amount) {
@@ -256,12 +256,10 @@ const ActionModal: React.FC<ActionModalProps> = props => {
             max: collateralbalance.toNumber(5),
             onChange: value => {
                 setAmount(value);
-                const newcollateralAmount = collateralToUSD(
-                    userLoan.collateral.add(FixedU128.fromNatural(value)),
-                    collateralPrice,
-                );
-                setCollateralRatio(calcCollateralRatio(newcollateralAmount, debitAmount));
-                setLiquidationPrice(calcLiquidationPrice(debitAmount, cdpType.liquidationRatio));
+                const newCollateral = userLoan.collateral.add(FixedU128.fromNatural(value));
+                const newCollateralAmount = collateralToUSD(newCollateral, collateralPrice);
+                setCollateralRatio(calcCollateralRatio(newCollateralAmount, debitAmount));
+                setLiquidationPrice(calcLiquidationPrice(newCollateral, debitAmount, cdpType.liquidationRatio));
             },
             onConfirm: () => {
                 if (!amount) {
@@ -287,12 +285,10 @@ const ActionModal: React.FC<ActionModalProps> = props => {
             max: ableWithdraw.toNumber(5),
             onChange: value => {
                 setAmount(value);
-                const newcollateralAmount = collateralToUSD(
-                    userLoan.collateral.sub(FixedU128.fromNatural(value)),
-                    collateralPrice,
-                );
-                setCollateralRatio(calcCollateralRatio(newcollateralAmount, debitAmount));
-                setLiquidationPrice(calcLiquidationPrice(debitAmount, cdpType.liquidationRatio));
+                const newCollateral = userLoan.collateral.sub(FixedU128.fromNatural(value));
+                const newCollateralAmount = collateralToUSD(newCollateral, collateralPrice);
+                setCollateralRatio(calcCollateralRatio(newCollateralAmount, debitAmount));
+                setLiquidationPrice(calcLiquidationPrice(newCollateral, debitAmount, cdpType.liquidationRatio));
             },
             onConfirm: () => {
                 if (!amount) {
