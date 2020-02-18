@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Grid,
     List,
@@ -115,6 +115,7 @@ const Component: React.FC<Props> = ({ onNext, onPrev, onCancel }) => {
     const { t } = useTranslate();
     const classes = useStyles();
     const match = useMobileMatch('sm');
+    const [disableNextBtn, setDisableNextBtn] = useState<boolean>(true);
     const { data, setValue, setError, clearError } = useForm(formContext);
     const selectedAsset = data.asset.value;
     const collateral = FixedU128.fromNatural(data.collateral.value);
@@ -142,9 +143,7 @@ const Component: React.FC<Props> = ({ onNext, onPrev, onCancel }) => {
         cdpType.requiredCollateralRatio,
         stableCoinPrice,
     );
-
     const collateralRatio = calcCollateralRatio(collateralToUSD(collateral, collateralPrice), borrow);
-
     const handleNextBtnClick = () => {
         // ensure no error
         if (data.collateral.error || data.borrow.error) {
@@ -161,15 +160,40 @@ const Component: React.FC<Props> = ({ onNext, onPrev, onCancel }) => {
         }
         onNext();
     };
-
-    const handleCollateralInput = (value: number) => {
-        clearError('collateral');
-        setValue('collateral', value);
+    const checkInput = (collateral: FixedU128, borrow: FixedU128) => {
+        const maxBorrowd = calcCanGenerater(
+            collateralToUSD(collateral, collateralPrice),
+            FixedU128.fromNatural(0),
+            cdpType.requiredCollateralRatio,
+            stableCoinPrice,
+        );
+        let flag = true;
+        if (collateral.isZero()) {
+            flag = false;
+        }
+        if (collateral.isGreaterThan(balance)) {
+            flag = false;
+            setError('collateral', `Max to lock is ${balance.toNumber(2, 2)} ${assetName}`);
+        }
+        if (borrow.isGreaterThan(maxBorrowd)) {
+            flag = false;
+            setError('borrow', `Max to borrow is ${maxBorrowd.toNumber(2, 2)} ${stableCoinAssetName}`);
+        }
+        setDisableNextBtn(!flag);
+        if (flag) {
+            clearError('collateral');
+            clearError('borrow');
+        }
     };
-
+    const handleCollateralInput = (value: number) => {
+        const _value = FixedU128.fromNatural(value);
+        setValue('collateral', value);
+        checkInput(_value, borrow);
+    };
     const handleBorrowInput = (value: number) => {
-        clearError('borrow');
+        const _value = FixedU128.fromNatural(value);
         setValue('borrow', value);
+        checkInput(collateral, _value);
     };
 
     const renderInfo = () => {
@@ -204,12 +228,16 @@ const Component: React.FC<Props> = ({ onNext, onPrev, onCancel }) => {
             <Grid container className={classes.bottom} justify="space-between">
                 <Typography className={classes.note}>{t('ADD_VAULT_GENERATE_STABLE_COIN_NOTE')}</Typography>
                 <Grid item>
-                    <Bottom onNext={handleNextBtnClick} onPrev={onPrev} onCancel={onCancel} />
+                    <Bottom
+                        onNext={handleNextBtnClick}
+                        onPrev={onPrev}
+                        onCancel={onCancel}
+                        nextBtnDisabled={disableNextBtn}
+                    />
                 </Grid>
             </Grid>
         );
     };
-
     return (
         <Card elevation={1} size="large">
             {match ? <Title>{t('Generate {{asset}}', { asset: getAssetName(STABLE_COIN) })}</Title> : ''}
@@ -223,10 +251,9 @@ const Component: React.FC<Props> = ({ onNext, onPrev, onCancel }) => {
                     <NumberInput
                         className={classes.numberInput}
                         onChange={handleCollateralInput}
-                        max={balance.toNumber()}
-                        min={0}
                         error={data.collateral.error}
-                        onError={() => setError('collateral', 'some_error')}
+                        min={0}
+                        onError={(msg: string) => setDisableNextBtn(true)}
                         helperText={
                             <>
                                 <span style={{ marginRight: 30 }}>{t('Max to Lock')}</span>
@@ -244,13 +271,12 @@ const Component: React.FC<Props> = ({ onNext, onPrev, onCancel }) => {
                     <NumberInput
                         className={classes.numberInput}
                         onChange={handleBorrowInput}
-                        max={maxBorrowd.toNumber()}
-                        min={0}
                         error={data.borrow.error}
-                        onError={() => setError('borrow', 'some_error')}
+                        min={0}
+                        onError={(msg: string) => setDisableNextBtn(true)}
                         helperText={
                             <>
-                                <span style={{ marginRight: 30 }}>{t('Max available to borrow')}</span>
+                                <span style={{ marginRight: 30 }}>{t('Max to borrow')}</span>
                                 <span>{formatBalance(maxBorrowd, stableCoinAssetName)}</span>
                             </>
                         }

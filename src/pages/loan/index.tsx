@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Grid, Box, makeStyles, createStyles, Theme, withStyles } from '@material-ui/core';
 import Skeleton from '@material-ui/lab/Skeleton';
@@ -61,24 +61,11 @@ const useStyle = makeStyles((theme: Theme) =>
 
 const Loan: React.FC = () => {
     const dispatch = useDispatch();
-    const [currentLoan, setCurrentLoan] = useState<number>(0);
-    const [isAddLoan, setAddLoan] = useState<boolean>(false);
-    // show overview as default
-    const [isOverview, setIsShowOverview] = useState<boolean>(true);
     const [active, setActive] = useState<LoanListActive>('overview');
+    const prevActive = useRef<LoanListActive>(active);
     const userLoans = useSelector(loansSelector);
     const isLoadingLoan = useSelector(loadingSelector(FETCH_VAULTS));
     const classes = useStyle();
-    const showAddLoan = () => {
-        setAddLoan(true);
-        setActive('add_loan');
-    };
-    const hideAddLoan = () => setAddLoan(false);
-    const showOverview = () => {
-        setIsShowOverview(true);
-        setActive('overview');
-    };
-    const hideOverview = () => setIsShowOverview(false);
     const match = useMobileMatch('sm');
     const mdMatch = useMobileMatch('md');
 
@@ -97,18 +84,25 @@ const Loan: React.FC = () => {
         dispatch(actions.loan.loadTxRecord());
     }, [dispatch]);
 
-    const handleLoanSelect = (asset: number) => {
-        setCurrentLoan(asset);
-        setActive(asset);
-        hideAddLoan();
-        hideOverview();
+    const showAddLoan = () => {
+        prevActive.current = active;
+        setActive('add_loan');
     };
-
-    const handleAddLoanSuccess = (asset: number) => {
-        setCurrentLoan(asset);
+    const hideAddLoan = (backToProvious = true) => {
+        backToProvious && setActive(prevActive.current);
+    };
+    const showOverview = () => {
+        prevActive.current = active;
+        setActive('overview');
+    };
+    const handleLoanSelect = (asset: number) => {
+        prevActive.current = active;
         setActive(asset);
-        hideAddLoan();
-        hideOverview();
+    };
+    const handleAddLoanSuccess = (asset: number) => {
+        // if add loan successed, don't save add_loan to prevAction
+        setActive(asset);
+        hideAddLoan(false);
     };
 
     const renderContent = () => {
@@ -118,22 +112,22 @@ const Loan: React.FC = () => {
         if (isLoadingLoan === true) {
             return <Skeleton variant="rect" width="100%" height={500} />;
         }
-        if (isAddLoan) {
+        if (active === 'add_loan') {
             return <AddLoan onCancel={hideAddLoan} onSuccess={handleAddLoanSuccess} />;
         }
         if (isEmpty(userLoans)) {
             return <Guide onConfirm={showAddLoan} />;
         }
-        if (isOverview) {
+        if (active === 'overview') {
             return <Overview onSelect={handleLoanSelect} />;
         }
         return (
             <>
-                <LoanPanel current={currentLoan} />
+                <LoanPanel current={active} />
                 <Box paddingTop={match ? 4 : 2} />
-                <LoanConsole current={currentLoan} />
+                <LoanConsole current={active} />
                 <Box paddingTop={match ? 4 : 2} />
-                <TransactionHistory asset={currentLoan} />
+                <TransactionHistory asset={active} />
             </>
         );
     };
@@ -151,7 +145,7 @@ const Loan: React.FC = () => {
                     <WalletBalance className={classes.gap} />
                     <PricesFeed className={classes.gap} />
                     <SystemInfo className={classes.gap} />
-                    <CollateralInfo current={currentLoan} className={classes.gap} />
+                    <CollateralInfo current={typeof active === 'number' ? active : -1} className={classes.gap} />
                 </Grid>
             </Detail>
         </Page>

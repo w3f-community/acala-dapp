@@ -1,4 +1,4 @@
-import React, { ReactEventHandler, useEffect } from 'react';
+import React, { ReactEventHandler, useEffect, MouseEvent } from 'react';
 import { Box, Grid, Button, Radio, makeStyles, createStyles, Theme } from '@material-ui/core';
 import { useTranslate } from '@/hooks/i18n';
 import { getAssetName } from '@/utils';
@@ -29,6 +29,9 @@ const useStyles = makeStyles((theme: Theme) =>
                     marginLeft: 0,
                 },
             },
+        },
+        tableRowHover: {
+            cursor: 'pointer',
         },
     }),
 );
@@ -69,6 +72,10 @@ const Component: React.FC<Props> = ({ onNext, onCancel }) => {
     const handleAssetRadioSelect: ReactEventHandler<HTMLInputElement> = e => {
         const asset = Number(e.currentTarget.value);
         setValue('asset', asset);
+    };
+
+    const handleRowClick = (event: MouseEvent<HTMLTableRowElement>, data: TableItem) => {
+        setValue('asset', data.asset);
     };
 
     useEffect(() => {
@@ -170,7 +177,15 @@ const Component: React.FC<Props> = ({ onNext, onCancel }) => {
 
     return (
         <Card elevation={1} size="large">
-            <Table<TableItem> config={tableConfig} data={tableData} />
+            <Table<TableItem>
+                config={tableConfig}
+                data={tableData}
+                rawProps={{
+                    classes: { hover: classes.tableRowHover },
+                    hover: true,
+                    onClick: handleRowClick,
+                }}
+            />
             {renderBottom()}
         </Card>
     );

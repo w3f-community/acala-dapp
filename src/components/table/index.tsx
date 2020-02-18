@@ -1,5 +1,14 @@
-import React, { ReactNode } from 'react';
-import { Table as UITable, TableHead, TableRow, withStyles, TableCell, Theme, TableBody } from '@material-ui/core';
+import React, { ReactNode, MouseEvent, EventHandler } from 'react';
+import {
+    Table as UITable,
+    TableHead,
+    TableRow,
+    withStyles,
+    TableCell,
+    Theme,
+    TableBody,
+    TableRowProps,
+} from '@material-ui/core';
 import { createTypography } from '@/theme';
 import clsx from 'clsx';
 
@@ -27,9 +36,11 @@ const StyledHeaderCell = withStyles((theme: Theme) => ({
 }))(TableCell);
 
 const StyledTableBodyRow = withStyles(() => ({
-    root: {
-        paddingTop: 8,
-    },
+    root: { paddingTop: 8 },
+    selected: {}, // Pseudo-classe for user custom
+    hover: {}, // Pseudo-classes for user custom
+    head: {}, // Pseudo-classes for user custom
+    footer: {}, // Pseudo-classes for user custom
 }))(TableRow);
 
 export type TableItem<T> = {
@@ -39,12 +50,17 @@ export type TableItem<T> = {
     [k: string]: string | ReactNode;
 };
 
+interface RawProps<T> extends Omit<TableRowProps, 'onClick'> {
+    onClick: (event: MouseEvent<HTMLTableRowElement>, data: T) => void;
+}
+
 type Props<T> = {
     config: TableItem<T>[];
     data: (T | null)[];
+    rawProps?: RawProps<T>;
 };
 
-export function Table<T extends { [k: string]: any }>({ config, data }: Props<T>) {
+export function Table<T extends { [k: string]: any }>({ config, data, rawProps }: Props<T>) {
     return (
         <UITable>
             <TableHead>
@@ -56,11 +72,16 @@ export function Table<T extends { [k: string]: any }>({ config, data }: Props<T>
             </TableHead>
             <TableBody style={{ paddingTop: 8 }}>
                 {data.map((item, index) => {
+                    /* eslint-disable-next-line @typescript-eslint/no-empty-function */
+                    let onClick: EventHandler<MouseEvent<HTMLTableRowElement>> = () => {};
                     if (!item) {
                         return null;
                     }
+                    if (rawProps && rawProps.onClick) {
+                        onClick = event => rawProps.onClick(event, item);
+                    }
                     return (
-                        <StyledTableBodyRow key={`table-body-${index}`}>
+                        <StyledTableBodyRow key={`table-body-${index}`} {...rawProps} onClick={onClick}>
                             {config.map((configItem, configIndex) => (
                                 <StyledBodyCell
                                     key={`table-cell-${index}-${configItem.renderKey}`}

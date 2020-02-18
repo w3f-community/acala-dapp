@@ -78,7 +78,7 @@ const createTheme = (options: ThemeOptions) =>
             MuiDialog: {
                 paper: {
                     borderRadius: 0,
-                    padding: '50px 34px 37px 34px', // override default dialog content padding
+                    padding: 20, // override default dialog content padding
                     minWidth: 355,
                 },
             },

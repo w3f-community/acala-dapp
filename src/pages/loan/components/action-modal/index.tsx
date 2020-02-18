@@ -126,7 +126,8 @@ const ActionModal: React.FC<ActionModalProps> = props => {
     const { t } = useTranslate();
     const dispatch = useDispatch();
     const [stableCoinPrice, collateralPrice] = useSelector(specPriceSelector([STABLE_COIN, current]));
-    const collateralbalance = useSelector(specBalanceSelector(current));
+    const collateralBalance = useSelector(specBalanceSelector(current));
+    const stableCoinBalance = useSelector(specBalanceSelector(STABLE_COIN));
     const cdpType = useSelector(specCdpTypeSelector(current));
     const userLoan = useSelector(specUserLoanSelector(current));
     const stableCoinAssetName = getAssetName(STABLE_COIN);
@@ -182,11 +183,13 @@ const ActionModal: React.FC<ActionModalProps> = props => {
 
     const baseProps = {
         ...props,
+        error,
         amount,
         borrowed,
         collateralRatio,
         liquidationPrice,
         onClose: _onClose,
+        onError: (msg: string) => setError(msg),
     };
 
     if (action === 'payback') {
@@ -195,36 +198,26 @@ const ActionModal: React.FC<ActionModalProps> = props => {
             title: t('Payback {{ asset}}', { asset: stableCoinAssetName }),
             confirmBtnText: t('Payback'),
             placeholder: `${formatBalance(debitAmount, '', 2, 2)} max`,
-            max: maxDebitNumber,
-            error: error,
+            onMax: () => setAmount(maxDebitNumber),
             onChange: value => {
                 const dust = debitAmount.sub(FixedU128.fromNatural(value)).decimalPlaces(2, 3);
+                // check can payback
                 if (dust.toNumber(2, 2) !== 0 && dust.isLessThan(FixedU128.fromNatural(1))) {
                     setError(t('AVOID_DUST_DEBIT_TIPS'));
-                } else {
-                    setError('');
-                    setAmount(value);
-                }
-                if (dust.toNumber(2, 2) === 0) {
-                    const newDeibtValue = FixedU128.fromNatural(0);
-                    setBorrowed(newDeibtValue);
-                    setCollateralRatio(calcCollateralRatio(collateralAmount, newDeibtValue));
-                    setLiquidationPrice(
-                        calcLiquidationPrice(userLoan.collateral, newDeibtValue, cdpType.liquidationRatio),
-                    );
-                } else {
-                    const newDeibtValue = debitAmount.sub(FixedU128.fromNatural(value));
-                    setBorrowed(newDeibtValue);
-                    setCollateralRatio(calcCollateralRatio(collateralAmount, newDeibtValue));
-                    setLiquidationPrice(
-                        calcLiquidationPrice(userLoan.collateral, newDeibtValue, cdpType.liquidationRatio),
-                    );
-                }
-            },
-            onConfirm: () => {
-                if (!amount) {
                     return false;
                 }
+                if (FixedU128.fromNatural(value).isGreaterThan(stableCoinBalance)) {
+                    setError('No enough stable coin!');
+                    return false;
+                }
+                setError('');
+                setAmount(value);
+                const newDeibtValue = debitAmount.sub(FixedU128.fromNatural(value));
+                setBorrowed(newDeibtValue);
+                setCollateralRatio(calcCollateralRatio(collateralAmount, newDeibtValue));
+                setLiquidationPrice(calcLiquidationPrice(userLoan.collateral, newDeibtValue, cdpType.liquidationRatio));
+            },
+            onConfirm: () => {
                 let debitAmount = FixedU128.fromNatural(0);
                 if (amount === maxDebitNumber) {
                     debitAmount = userLoan.debit;
@@ -248,8 +241,14 @@ const ActionModal: React.FC<ActionModalProps> = props => {
             title: t('Generate {{asset}}', { asset: stableCoinAssetName }),
             confirmBtnText: t('Generate'),
             placeholder: `${formatBalance(canGenerate)} max`,
-            max: canGenerate.toNumber(2, 3),
+            onMax: () => setAmount(canGenerate.toNumber(2, 3)),
             onChange: value => {
+                const _value = FixedU128.fromNatural(value);
+                if (_value.isGreaterThan(canGenerate)) {
+                    setError(`Generate is larger than ${canGenerate.toNumber(2, 3)}`);
+                    return false;
+                }
+                setError('');
                 setAmount(value);
                 const newDeibtValue = debitAmount.add(FixedU128.fromNatural(value));
                 setBorrowed(newDeibtValue);
@@ -257,9 +256,6 @@ const ActionModal: React.FC<ActionModalProps> = props => {
                 setLiquidationPrice(calcLiquidationPrice(userLoan.collateral, newDeibtValue, cdpType.liquidationRatio));
             },
             onConfirm: () => {
-                if (!amount) {
-                    return false;
-                }
                 const debitAmount = stableCoinToDebit(FixedU128.fromNatural(amount), cdpType.debitExchangeRate);
                 dispatch(
                     actions.loan.updateLoan.request({
@@ -277,9 +273,17 @@ const ActionModal: React.FC<ActionModalProps> = props => {
         return createActionModal({
             title: t('Disposit {{asset}}', { asset: currentAssetName }),
             confirmBtnText: t('Deposit'),
-            placeholder: `${formatBalance(collateralbalance)} max`,
-            max: collateralbalance.toNumber(2, 3),
+            placeholder: `${formatBalance(collateralBalance)} max`,
+            onMax: () => {
+                setAmount(collateralBalance.toNumber(2, 3));
+            },
             onChange: value => {
+                const _value = FixedU128.fromNatural(value);
+                if (_value.isGreaterThan(collateralBalance)) {
+                    setError(`Deposit is larger than ${collateralBalance.toNumber(2, 3)}`);
+                    return false;
+                }
+                setError('');
                 setAmount(value);
                 const newCollateral = userLoan.collateral.add(FixedU128.fromNatural(value));
                 const newCollateralAmount = collateralToUSD(newCollateral, collateralPrice);
@@ -287,9 +291,6 @@ const ActionModal: React.FC<ActionModalProps> = props => {
                 setLiquidationPrice(calcLiquidationPrice(newCollateral, debitAmount, cdpType.liquidationRatio));
             },
             onConfirm: () => {
-                if (!amount) {
-                    return false;
-                }
                 dispatch(
                     actions.loan.updateLoan.request({
                         asset: current,
@@ -307,8 +308,14 @@ const ActionModal: React.FC<ActionModalProps> = props => {
             title: t('Withdraw {{asset}}', { asset: currentAssetName }),
             confirmBtnText: t('Withdraw'),
             placeholder: `${formatBalance(ableWithdraw)} max`,
-            max: ableWithdraw.toNumber(2, 3),
+            onMax: () => setAmount(ableWithdraw.toNumber(2, 3)),
             onChange: value => {
+                const _value = FixedU128.fromNatural(value);
+                if (_value.isGreaterThan(ableWithdraw)) {
+                    setError(`Withdraw is larger than ${ableWithdraw.toNumber(2, 3)}`);
+                    return false;
+                }
+                setError('');
                 setAmount(value);
                 const newCollateral = userLoan.collateral.sub(FixedU128.fromNatural(value));
                 const newCollateralAmount = collateralToUSD(newCollateral, collateralPrice);
@@ -316,9 +323,6 @@ const ActionModal: React.FC<ActionModalProps> = props => {
                 setLiquidationPrice(calcLiquidationPrice(newCollateral, debitAmount, cdpType.liquidationRatio));
             },
             onConfirm: () => {
-                if (!amount) {
-                    return false;
-                }
                 dispatch(
                     actions.loan.updateLoan.request({
                         asset: current,
@@ -340,7 +344,6 @@ interface BaseActionModalProps {
     // input props
     amount: number;
     placeholder?: string;
-    max: number;
     error?: string;
 
     borrowed: FixedU128;
@@ -349,6 +352,8 @@ interface BaseActionModalProps {
 
     onChange: (value: number) => void;
     onConfirm?: () => void;
+    onMax?: () => void;
+    onError?: (msg: string) => void;
 }
 
 const BaseActionModal: React.FC<BaseActionModalProps & ActionModalProps> = ({
@@ -359,33 +364,23 @@ const BaseActionModal: React.FC<BaseActionModalProps & ActionModalProps> = ({
     liquidationPrice,
     amount,
     placeholder,
-    max,
     open,
+    error,
     onChange,
     onConfirm,
+    onMax,
     onClose,
-    error,
+    onError,
 }) => {
     const { t } = useTranslate();
     const dispatch = useDispatch();
     const inputClasses = useInputStyles();
     const updateLoanStatus = useSelector(statusSelector('updateLoan'));
-    const [defaultValue, setDefaultValue] = useState<number>(amount);
 
     // reset amount
     useEffect(() => {
         onChange(0);
-        setDefaultValue(0);
     }, []);
-
-    const handleInput: ChangeEventHandler<HTMLInputElement> = e => {
-        // const value = Number(e.currentTarget.value);
-        // onChange(value);
-    };
-
-    const handleMax = () => {
-        setDefaultValue(max);
-    };
 
     useEffect(() => {
         if (updateLoanStatus === 'success') {
@@ -399,25 +394,22 @@ const BaseActionModal: React.FC<BaseActionModalProps & ActionModalProps> = ({
             <SDialogTitle disableTypography>
                 <Grid container justify="space-between" alignItems="center">
                     <p>{title}</p>
-                    <IconButton onClick={onClose}>
-                        <CloseIcon />
-                    </IconButton>
                 </Grid>
             </SDialogTitle>
             <DialogContent>
                 <NumberInput
                     classes={{ root: inputClasses.root }}
-                    min={0}
-                    max={max}
                     error={error}
-                    defaultValue={defaultValue}
+                    onError={onError}
+                    min={0}
+                    defaultValue={amount}
                     onChange={onChange}
                     InputProps={{
                         placeholder: placeholder,
                         classes: { root: inputClasses.root },
                         endAdornment: (
                             <InputAdornment position="start">
-                                <MaxButton disableRipple size="small" onClick={handleMax}>
+                                <MaxButton disableRipple size="small" onClick={onMax}>
                                     max
                                 </MaxButton>
                             </InputAdornment>
@@ -430,12 +422,12 @@ const BaseActionModal: React.FC<BaseActionModalProps & ActionModalProps> = ({
                         variant="contained"
                         color="primary"
                         onClick={onConfirm}
-                        disabled={updateLoanStatus !== 'none' || (!!error as boolean)}
+                        disabled={updateLoanStatus !== 'none' || !amount || (!!error as boolean)}
                     >
                         {confirmBtnText}
                     </DialogButton>
                     <DialogButton variant="contained" color="secondary" onClick={onClose}>
-                        {t('cancel')}
+                        {t('Cancel')}
                     </DialogButton>
                 </Grid>
                 <Information disablePadding>

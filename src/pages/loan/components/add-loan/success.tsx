@@ -1,17 +1,6 @@
 import React from 'react';
-import {
-    withStyles,
-    Grid,
-    Paper,
-    Button,
-    Theme,
-    Typography,
-    createStyles,
-    makeStyles,
-    IconButton,
-} from '@material-ui/core';
+import { withStyles, Grid, Paper, Button, Theme, Typography, createStyles, makeStyles } from '@material-ui/core';
 import { useTranslate } from '@/hooks/i18n';
-import CloseIcon from '@/components/svgs/close';
 import Loan from '@/components/svgs/loan';
 import { createTypography } from '@/theme';
 import { useForm } from '@/hooks/form';
@@ -54,11 +43,6 @@ const Success: React.FC<Props> = ({ onConfirm, onCancel }) => {
 
     return (
         <Card square={true} elevation={1}>
-            <Grid container justify="flex-end" onClick={handleClick}>
-                <IconButton>
-                    <CloseIcon />
-                </IconButton>
-            </Grid>
             <Grid container justify="center" alignItems="center" direction="column">
                 <Title>{t('Your loan is created, and aUSD is generated!')}</Title>
                 <Loan className={classes.img} />

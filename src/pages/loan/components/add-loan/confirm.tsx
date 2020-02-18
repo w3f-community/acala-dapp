@@ -42,12 +42,6 @@ const InfoItem = withStyles((theme: Theme) => ({
     },
 }))(ListItem);
 
-const ConfirmCheckbox = withStyles(() => ({
-    root: {
-        paddingLeft: 0,
-    },
-}))(Checkbox);
-
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         card: {
@@ -58,6 +52,7 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         protocol: {
             marginTop: 30,
+            transform: 'translate3d(-12px, 0, 0)',
             ...createTypography(14, 19, 400, 'Roboto', '#757575'),
             '& .underline': {
                 textDecoration: 'underline',
@@ -203,13 +198,13 @@ const Component: React.FC<Props> = ({ onNext, onPrev, onCancel }) => {
                         alignItems="center"
                         wrap="nowrap"
                     >
-                        <ConfirmCheckbox value={data.agree.value} onChange={handleAgree} />
-                        <span>
+                        <Checkbox id="agree" value={data.agree.value} onChange={handleAgree} />
+                        <label htmlFor="agree">
                             {t('I have read and accepted the ')}
                             <a className={'underline'} href="/">
                                 {t('Terms and Conditions')}
                             </a>
-                        </span>
+                        </label>
                     </Grid>
                 </Grid>
             </Grid>

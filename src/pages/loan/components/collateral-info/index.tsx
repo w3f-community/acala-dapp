@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Typography, List, ListItem, Grid } from '@material-ui/core';
 import { useTranslate } from '@/hooks/i18n';
 import Card from '@/components/card';
@@ -23,6 +23,9 @@ const CollateralInfo: React.FC<Props> = ({ current, className, style }) => {
         setSelected(asset);
     };
 
+    useEffect(() => {
+        setSelected(current);
+    }, [current]);
     if (!cdpTypes.length || !constants) {
         return null;
     }

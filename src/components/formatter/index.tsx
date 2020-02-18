@@ -15,9 +15,11 @@ export function formatBalance(num: FixedU128, suffix = '', dp = 2, rm: ROUND_MOD
     if (Number.isNaN(result)) {
         return '0';
     }
-
     if (!Number.isFinite(result)) {
         return 'Infinity';
+    }
+    if (num.isLessThan(FixedU128.ZERO)) {
+        return '0';
     }
 
     return `${thousandth(result)} ${suffix}`;
@@ -27,10 +29,13 @@ export function formatRatio(num: FixedU128, dp = 2, rm: ROUND_MODE = 2): string 
     const result = num.mul(FixedU128.fromNatural(100)).toNumber(dp, rm);
 
     if (Number.isNaN(result)) {
-        return '0';
+        return '0 %';
     }
     if (!Number.isFinite(result)) {
         return 'Infinity';
+    }
+    if (num.isLessThan(FixedU128.ZERO)) {
+        return '0 %';
     }
 
     return result + '%';
@@ -38,10 +43,14 @@ export function formatRatio(num: FixedU128, dp = 2, rm: ROUND_MODE = 2): string 
 
 export function formatPrice(num: FixedU128, prefix = '', dp = 2, rm: ROUND_MODE = 3): string {
     const result = num.toNumber(dp, rm);
+
     if (Number.isNaN(result)) {
         return '~';
     }
     if (!Number.isFinite(result)) {
+        return '~';
+    }
+    if (num.isLessThan(FixedU128.ZERO)) {
         return '~';
     }
     return `${prefix}${thousandth(result)}`;

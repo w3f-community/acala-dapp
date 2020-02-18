@@ -21,11 +21,14 @@ import { createTypography } from '@/theme';
 const useStyle = makeStyles((theme: Theme) =>
     createStyles({
         root: {
+            minHeight: 100,
             [theme.breakpoints.down('sm')]: {
                 flexDirection: 'column',
             },
         },
         paper: {
+            position: 'relative',
+            boxSizing: 'border-box',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'space-between',
@@ -33,7 +36,7 @@ const useStyle = makeStyles((theme: Theme) =>
             flexShrink: 0,
             minWidth: 120,
             height: 100,
-            padding: '27px 16px 8px',
+            padding: '17px 12px 12px',
             cursor: 'pointer',
 
             [theme.breakpoints.down('sm')]: {
@@ -44,8 +47,14 @@ const useStyle = makeStyles((theme: Theme) =>
                 alignItems: 'center',
             },
 
-            '&.active': {
-                border: `1px solid ${theme.palette.primary.main}`,
+            '&.active::before': {
+                content: "''", // FIXME: material-ui issue: https://github.com/mui-org/material-ui/issues/11839
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                border: `1px solid ${theme.palette.primary.light}`,
             },
 
             '&.addContent': {
@@ -92,11 +101,11 @@ interface ItemProps {
     active: boolean;
     onClick: () => void;
 }
-const AddLoan: React.FC<ItemProps> = ({ active, onClick }) => {
+const AddLoan: React.FC<Omit<ItemProps, 'active'>> = ({ onClick }) => {
     const classes = useStyle();
     const { t } = useTranslate();
     return (
-        <Grid item onClick={onClick} className={clsx(classes.addLoan, { active })}>
+        <Grid item onClick={onClick} className={clsx(classes.addLoan)}>
             <Paper elevation={1} className={clsx(classes.paper, { addContent: true })} square={true}>
                 <img src={add} alt="add" />
                 <Content>{t('Create Loan')}</Content>
@@ -130,7 +139,7 @@ interface Props {
     onSelect: (loan: number) => void;
 }
 
-const ZERO = FixedU128.fromNatural(0);
+const ZERO = FixedU128.ZERO;
 
 export type Active = 'overview' | 'add_loan' | number;
 
@@ -140,8 +149,16 @@ export const LoanList: React.FC<Props> = ({ active, onOverview, onAdd, onSelect 
     const userLoans = useSelector(loansSelector);
     const prices = useSelector(pricesFeedSelector);
     const mobileMatch = useMobileMatch('sm');
-
     const stableCoinPrice = prices.find(item => item.asset === STABLE_COIN) || { price: ZERO };
+    const checkIfShowAdd = () => {
+        if (!active) {
+            return true;
+        }
+        if (active === 'add_loan') {
+            return false;
+        }
+        return true;
+    };
     const renderContent = () =>
         userLoans.map(item => {
             const loan = cdpTypes.find(loan => loan.asset === item.asset);
@@ -183,7 +200,7 @@ export const LoanList: React.FC<Props> = ({ active, onOverview, onAdd, onSelect 
         <Grid container spacing={mobileMatch ? 0 : 2} className={classes.root}>
             {!isEmpty(userLoans) && <Overview onClick={onOverview} active={active === 'overview'} />}
             {renderContent()}
-            <AddLoan onClick={onAdd} active={active === 'add_loan'} />
+            {checkIfShowAdd() && <AddLoan onClick={onAdd} />}
         </Grid>
     );
 };

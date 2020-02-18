@@ -15,11 +15,18 @@ import { useTranslate } from '@/hooks/i18n';
 import { useSelector, useDispatch } from 'react-redux';
 import { accountStoreSelector } from '@/store/account/selectors';
 import { selectAccount } from '@/store/account/actions';
-import { formatAddress } from '@/utils';
+import { withStyles } from '@material-ui/styles';
+import { createTypography } from '@/theme';
 
 const Transition = React.forwardRef<unknown, TransitionProps>(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
+
+const AddressItem = withStyles(() => ({
+    secondary: {
+        ...createTypography(15, 20, 500, 'Roboto'),
+    },
+}))(ListItemText);
 
 interface Props {
     open: boolean;
@@ -51,7 +58,7 @@ const NoExtension: React.FC<Props> = ({ open }) => {
         <Dialog open={open} TransitionComponent={Transition}>
             <DialogTitle>{t('Select Account')}</DialogTitle>
             <DialogContent>
-                <List>
+                <List disablePadding>
                     {accountList.map((account, index) => (
                         <ListItem
                             button
@@ -59,7 +66,7 @@ const NoExtension: React.FC<Props> = ({ open }) => {
                             selected={index === selected}
                             key={`account-${account.address}`}
                         >
-                            <ListItemText secondary={formatAddress(account)} />
+                            <ListItemText primary={account.address} />
                         </ListItem>
                     ))}
                 </List>

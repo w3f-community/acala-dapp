@@ -8,6 +8,8 @@ class FixedU128 {
 
     static PRECISION = 10 ** 18;
 
+    static ZERO = FixedU128.fromNatural(0);
+
     constructor(origin: NumLike | BigNumber) {
         if (origin instanceof BigNumber) {
             this.inner = origin;
@@ -92,6 +94,10 @@ class FixedU128 {
 
     public isZero(): boolean {
         return this.inner ? this.inner.isZero() : false;
+    }
+
+    public isNaN(): boolean {
+        return this.inner ? this.inner.isNaN() : true;
     }
 }
 
