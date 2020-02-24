@@ -17,7 +17,7 @@ interface Props {
 export const EnvironmentProvider: FC<Props> = ({ children }) => {
     const location = useLocation();
     const params = queryString.parse(location.search);
-    const defaultEndpoint = 'wss://node-6632097881473671168.au.onfinality.cloud/ws';
+    const defaultEndpoint = 'wss://node-6635400830093635584.jm.onfinality.io/ws';
     const environment = {
         endpoint: (params.endpoint as string) || defaultEndpoint,
         logo: AcalaMandalaLogo,
