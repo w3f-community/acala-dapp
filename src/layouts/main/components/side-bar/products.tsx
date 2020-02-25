@@ -6,7 +6,7 @@ import { ProductItem } from './product-item';
 
 const ProductList = withStyles((theme: Theme) => ({
     root: {
-        margin: '50px 0 112px 0',
+        margin: '0 0 112px 0',
     },
 }))(List);
 

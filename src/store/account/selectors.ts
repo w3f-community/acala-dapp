@@ -1,17 +1,13 @@
-import { Selector, BalanceData, Account, AccountError, Status, AccountState } from '@/types/store';
+import { Selector, BalanceData, Account, AccountError, Status, AccountState, TxStatus } from '@/types/store';
 import FixedU128 from '@/utils/fixed_u128';
 import { RootState } from 'typesafe-actions';
 
+export const transferStatusSelector: Selector<TxStatus> = state => state.account.transferStatus;
+
+export const airdropSelector: Selector<BalanceData[]> = state => state.account.airdrop;
+
 export const balancesSelector: Selector<BalanceData[]> = state => state.account.balancas;
 
-// export const specBalanceSelector: (asset: number) => Selector<FixedU128> = asset => {
-//     return state => {
-//         const balances = state.account.balancas;
-//         const result = balances.find(item => item.asset === asset);
-
-//         return result ? result.balance : FixedU128.fromNatural(0);
-//     };
-// };
 export function specBalanceSelector(assets: number): Selector<FixedU128>;
 export function specBalanceSelector(assets: number[]): Selector<FixedU128[]>;
 export function specBalanceSelector(assets: number | number[]): Selector<FixedU128> | Selector<FixedU128[]> {

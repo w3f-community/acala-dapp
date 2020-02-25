@@ -1,14 +1,13 @@
 import React from 'react';
-import { Drawer, Grid } from '@material-ui/core';
+import { Drawer, Grid  } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
 import { SideBarConfig } from '@/types/sidebar';
 
 import ConnectStatus from './connect-status';
-import { useSelector } from 'react-redux';
-import { accountSelector } from '@/store/account/selectors';
 import { AcalaLogo } from '@/components/acala-logo';
 import { Products } from './products';
 import { SocialMedias } from './socal-medias';
+import { UserCenter } from './user-center';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -26,7 +25,7 @@ const useStyles = makeStyles((theme: Theme) =>
             width: theme.sidebar.width,
             background: theme.palette.primary.main,
         },
-        header: { padding: '70px 0 62px 0' },
+        header: { padding: '70px 0 28px 0' },
         bottom: {
             marginBottom: 40,
         },
@@ -54,6 +53,7 @@ const Sidebar: React.FC<Props> = ({ config }) => {
                         <Item data={{ name: 'Dashboard', path: '/', icon: DashboardIcon }} />
                     </List>
                 */}
+            <UserCenter />
             <div style={{ flex: 1 }}>
                 <Products data={config.products} />
             </div>

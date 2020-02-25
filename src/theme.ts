@@ -85,16 +85,15 @@ const createTheme = (options: ThemeOptions) =>
             MuiDialogTitle: {
                 root: {
                     padding: 0,
-                    marginBottom: 35,
+                    marginBottom: 20,
                     '& .MuiTypography-h6': {
-                        ...createTypography(22, 22, 500, 'Roboto', COLOR_BLACK),
+                        ...createTypography(17, 24, 500, 'Roboto', COLOR_BLACK),
                     },
                 },
             },
             MuiDialogContent: {
                 root: {
                     padding: 0,
-                    marginBottom: 35,
                 },
             },
             MuiDialogActions: {

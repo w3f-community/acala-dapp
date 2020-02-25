@@ -1,4 +1,4 @@
-import React, { useState, ChangeEventHandler, useEffect, ReactElement, useRef } from 'react';
+import React, { useState, useEffect, ReactElement, useRef } from 'react';
 import {
     Dialog,
     DialogTitle,
@@ -12,13 +12,11 @@ import {
     createStyles,
     Box,
     Grid,
-    IconButton,
     Theme,
     withStyles,
 } from '@material-ui/core';
 import { useTranslate } from '@/hooks/i18n';
 import { createTypography } from '@/theme';
-import CloseIcon from '@/components/svgs/close';
 import { getAssetName } from '@/utils';
 import { STABLE_COIN } from '@/config';
 import { useDispatch, useSelector } from 'react-redux';
@@ -84,12 +82,6 @@ const SDialog = withStyles((theme: Theme) => ({
         padding: theme.spacing(4),
     },
 }))(Dialog);
-
-const SDialogTitle = withStyles((theme: Theme) => ({
-    root: {
-        ...createTypography(17, 24, 500, 'Roboto', theme.palette.common.black),
-    },
-}))(DialogTitle);
 
 const DialogButton = withStyles((theme: Theme) => ({
     root: {},
@@ -384,18 +376,17 @@ const BaseActionModal: React.FC<BaseActionModalProps & ActionModalProps> = ({
 
     useEffect(() => {
         if (updateLoanStatus === 'success') {
-            dispatch(actions.loan.reset());
             onClose && onClose();
         }
     }, [updateLoanStatus, dispatch, onClose]);
 
     return (
         <SDialog open={open} onClose={onClose}>
-            <SDialogTitle disableTypography>
+            <DialogTitle disableTypography>
                 <Grid container justify="space-between" alignItems="center">
                     <p>{title}</p>
                 </Grid>
-            </SDialogTitle>
+            </DialogTitle>
             <DialogContent>
                 <NumberInput
                     classes={{ root: inputClasses.root }}

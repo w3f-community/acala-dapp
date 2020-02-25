@@ -4,6 +4,7 @@ import MainLayout from '@/layouts/main';
 import Loan from '@/pages/loan';
 import Exchange from '@/pages/exchange';
 import Governance from '@/pages/governance';
+import Wallet from '@/pages/wallet';
 
 interface RouteConfig {
     exact?: boolean;
@@ -29,6 +30,10 @@ const routesConfig: RouteConfig[] = [
             {
                 path: 'governance',
                 Component: Governance,
+            },
+            {
+                path: 'wallet',
+                Component: Wallet,
             },
             {
                 path: '',

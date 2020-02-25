@@ -8,7 +8,7 @@ import * as actions from './actions';
 import * as appActions from '../app/actions';
 import { startLoading, endLoading } from '../loading/reducer';
 import FixedU128 from '@/utils/fixed_u128';
-import { u8aToNumber } from '@/utils';
+import { Codec } from '@polkadot/types/types';
 
 export const createLoanEpic: Epic<RootAction, RootAction, RootState> = (action$, state$) =>
     action$.pipe(
@@ -81,7 +81,7 @@ export const fetchLoansEpic: Epic<RootAction, RootAction, RootState> = (action$,
                 assetList.map(asset =>
                     combineLatest([
                         app.query.loans.collaterals(account.address, asset),
-                        app.query.loans.debits(account.address, asset),
+                        app.query.loans.debits(asset, account.address),
                     ]),
                 ),
             ).pipe(
@@ -89,7 +89,9 @@ export const fetchLoansEpic: Epic<RootAction, RootAction, RootState> = (action$,
                     return assetList.map((asset, index) => ({
                         asset: asset,
                         collateral: FixedU128.fromParts(result[index][0].toString()),
-                        debit: FixedU128.fromParts(result[index][1].toString()),
+                        debit: FixedU128.fromParts(
+                            result[index][1].isEmpty ? 0 : (result[index][1] as any as Codec[])[0].toString(),
+                        ),
                     }));
                 }),
                 flatMap(result => of(actions.fetchLoans.success(result), endLoading(actions.FETCH_VAULTS))),

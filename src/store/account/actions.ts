@@ -1,5 +1,5 @@
-import { createAsyncAction } from 'typesafe-actions';
-import { AssetList, BalanceData, Account, AccountError } from '@/types/store';
+import { createAsyncAction, createAction } from 'typesafe-actions';
+import { AssetList, BalanceData, Account, AccountError, TransferData } from '@/types/store';
 
 export const IMPORT_ACCOUNT = '@account/import_account';
 export const importAccount = createAsyncAction(
@@ -20,4 +20,20 @@ export const fetchAssetsBalance = createAsyncAction(
     FETCH_ASSETS_BALANCE,
     '@account/fetch_assets_balance/success',
     '@account/fetch_assets_balance/failure',
-)<AssetList, BalanceData[], any>();
+)<AssetList, BalanceData[], string>();
+
+export const FETCH_AIRDROP = '@account/fetch_airdrop';
+export const fetchAirdrop = createAsyncAction(
+    FETCH_AIRDROP,
+    '@account/fetch_airdrop/success',
+    '@account/fetch_airdrop/failure',
+)<AssetList, BalanceData[], string>();
+
+export const TRANSFER = '@account/transfer';
+export const transfer = createAsyncAction(
+    TRANSFER,
+    '@account/transfer/success',
+    '@account/transfer/failure',
+)<TransferData, any, string>();
+
+export const reset = createAction('@loan/reset');

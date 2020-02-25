@@ -127,7 +127,7 @@ const Loan: React.FC = () => {
                 <Box paddingTop={match ? 4 : 2} />
                 <LoanConsole current={active} />
                 <Box paddingTop={match ? 4 : 2} />
-                <TransactionHistory asset={active} />
+                <TransactionHistory />
             </>
         );
     };

@@ -1,12 +1,12 @@
-import { assets } from '@/config';
+import { assets as defaultAssets } from '@/config';
 import { Account } from '@/types/store';
 
-export function getAssetName(id: number): string {
+export function getAssetName(id: number, assets = defaultAssets): string {
     const result = assets.get(id);
     return result ? result.name : '';
 }
 
-export function getAssetIcon(id: number): string {
+export function getAssetIcon(id: number, assets = defaultAssets): string {
     const result = assets.get(id);
     return result && result.icon ? result.icon : '';
 }
@@ -28,11 +28,15 @@ export function u8aToNumber(value: any, radix = 10): number {
     return result;
 }
 
-export function formatAddress(account: Account | null, length = 8, suffix = '...'): string {
-    if (!(account && account.address)) {
-        return '';
+export function formatAddress(account: Account | string | null, length = 8, suffix = '...'): string {
+    let address = '';
+    if (typeof account === 'string') {
+        address = account;
     }
-    return account.address.slice(0, length) + suffix;
+    if (typeof account === 'object' && account) {
+        address = account.address;
+    }
+    return address.slice(0, length) + suffix;
 }
 
 export function formatHash(hash: string): string {

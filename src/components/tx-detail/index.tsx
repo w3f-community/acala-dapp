@@ -1,13 +1,14 @@
 import React from 'react';
-import { Tx, UpdateLoanData } from '@/types/store';
+import { Tx, UpdateLoanData, TransferData } from '@/types/store';
 import FixedU128 from '@/utils/fixed_u128';
 import { useTranslate } from '@/hooks/i18n';
-import { getAssetName } from '@/utils';
+import { getAssetName, formatAddress, formatHash } from '@/utils';
 import { debitToStableCoin } from '@/utils/loan';
 import { useSelector } from 'react-redux';
 import { specCdpTypeSelector } from '@/store/chain/selectors';
 import { formatBalance } from '../formatter';
 import { STABLE_COIN } from '@/config';
+import { Account } from '@polkadot/types/interfaces';
 
 interface Props {
     data: Tx;
@@ -19,17 +20,13 @@ const TxDetail: React.FC<Props> = ({ data }) => {
     const { t } = useTranslate();
     const loan = useSelector(specCdpTypeSelector(data.data.asset));
 
-    if (!loan) {
-        return null;
-    }
-
     // swap currency
     if (data.type === 'swapCurrency') {
         return <span>Swap Currency</span>;
     }
 
     // update loan
-    if (data.type === 'updateLoan') {
+    if (data.type === 'updateLoan' && loan) {
         const detail = data.data as UpdateLoanData;
         const assetName = getAssetName(detail.asset);
         const stableCoinName = getAssetName(STABLE_COIN);
@@ -55,6 +52,18 @@ const TxDetail: React.FC<Props> = ({ data }) => {
             );
         }
         return <span>{message.join(', ')}</span>;
+    }
+
+    if (data.type === 'transfer') {
+        const detail = data.data as TransferData;
+        const assetName = getAssetName(detail.asset);
+        const amount = detail.amount.toNumber(2, 2);
+        return (
+            <div>
+                <p>{`To ${formatHash(detail.account)}`}</p>
+                <p>{`Transfer ${amount} ${assetName}`}</p>
+            </div>
+        );
     }
 
     console.warn('unsupport tx type, please update tx-detail component');

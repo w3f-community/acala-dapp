@@ -36,14 +36,14 @@ type Props = SideBarItem;
 export const ProductItem: React.FC<Props> = ({ name, path, icon }) => {
     const history = useHistory();
     const classes = useStyles();
+    const search = history.location.search;
 
     if (!path) {
         return null;
     }
-
     const isActive = checkActive(path, history.location.pathname);
     const handleItemClick = () => {
-        history.push(path);
+        history.push(`${path}${search}`);
     };
 
     return (

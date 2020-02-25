@@ -15,10 +15,15 @@ export interface Asset {
 }
 
 export const assets: Map<number, Asset> = new Map([
-    [0, { name: 'ACA', fullName: 'Acalc' }],
+    [0, { name: 'ACA', fullName: 'Acala' }],
     [1, { name: 'aUSD', icon: aUSDIcon, fullName: 'aUSD' }],
     [2, { name: 'DOT', icon: dotIcon, fullName: 'PolkaDOT' }],
     [3, { name: 'XBTC', icon: btcIcon, fullName: 'Bitcoin' }],
+]);
+
+export const airDropAssets: Map<number, Asset> = new Map([
+    [0, { name: 'KAR', fullName: 'Kusama Aca' }],
+    [1, { name: 'ACA', icon: aUSDIcon, fullName: 'Aca' }],
 ]);
 
 export const COLLATERAL: number[] = [2, 3];

@@ -8,6 +8,7 @@ import {
     Theme,
     TableBody,
     TableRowProps,
+    TableCellProps,
 } from '@material-ui/core';
 import { createTypography } from '@/theme';
 import clsx from 'clsx';
@@ -47,6 +48,7 @@ export type TableItem<T> = {
     title: string;
     renderKey: string;
     render: (text: any, data: T, index: number) => ReactNode;
+    cellProps?: TableCellProps;
     [k: string]: string | ReactNode;
 };
 
@@ -86,6 +88,7 @@ export function Table<T extends { [k: string]: any }>({ config, data, rawProps }
                                 <StyledBodyCell
                                     key={`table-cell-${index}-${configItem.renderKey}`}
                                     className={clsx({ first: index === 0 })}
+                                    {...configItem.cellProps}
                                 >
                                     {config[configIndex]
                                         ? config[configIndex].render(item[configItem.renderKey], item, index)

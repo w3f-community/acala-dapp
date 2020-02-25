@@ -45,8 +45,14 @@ export interface UserLoanData {
     debit: FixedU128;
 }
 
+export interface TransferData {
+    asset: number;
+    account: string;
+    amount: FixedU128;
+}
+
 // tx
-export type TxType = 'updateLoan' | 'swapCurrency';
+export type TxType = 'updateLoan' | 'swapCurrency' | 'transfer';
 export type TxStatus = Status;
 export interface Tx {
     id: string;
@@ -55,7 +61,7 @@ export interface Tx {
     type: TxType;
     status: TxStatus;
     time: number;
-    data: UpdateLoanData | any;
+    data: UpdateLoanData | TransferData |any;
 }
 
 // dex
@@ -84,7 +90,6 @@ export interface ProposalData {
         nays: string[];
     };
 }
-
 export interface UpdateLoanData {
     asset: number;
     collateral: FixedU128;
@@ -96,21 +101,19 @@ export type AccountError = 'no extends found' | 'no accounts found' | 'set singe
 export type AccountState = {
     // extension status
     extensionStatus: Status;
-
     // account import status
     account: Account | null;
     accountStatus: Status;
     accountList: Account[];
-
-    // account information
-    balancas: BalanceData[];
-
-    // account error
     error: AccountError;
+    transferStatus: TxStatus;
+    balancas: BalanceData[];
+    airdrop: BalanceData[];
 };
 
 export interface AppState {
     transactions: Tx[];
+    txRecord: Tx[];
 }
 
 export interface ChainState {
