@@ -23,7 +23,7 @@ interface TableItem {
     tx: string;
 }
 interface Props {
-    data: Tx[]
+    data: Tx[];
 }
 
 const TxHistory: React.FC<Props> = ({ data }) => {

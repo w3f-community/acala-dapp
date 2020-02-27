@@ -1,5 +1,16 @@
 import { Epic } from 'redux-observable';
-import { filter, map, switchMap, startWith, withLatestFrom, endWith, catchError, delay, flatMap, takeUntil } from 'rxjs/operators';
+import {
+    filter,
+    map,
+    switchMap,
+    startWith,
+    withLatestFrom,
+    endWith,
+    catchError,
+    delay,
+    flatMap,
+    takeUntil,
+} from 'rxjs/operators';
 import { combineLatest, defer, of, concat } from 'rxjs';
 import { isActionOf, RootAction, RootState } from 'typesafe-actions';
 import { web3Enable, web3Accounts, web3FromAddress } from '@polkadot/extension-dapp';
@@ -12,8 +23,7 @@ import { Tx } from '@/types/store';
 import { txLog$, txResultFilter$ } from '@/utils/epic';
 import { startLoading, endLoading } from '../loading/reducer';
 import * as actions from './actions';
-import { ITuple } from '@polkadot/types/types';
-import { Index, AccountData } from '@polkadot/types/interfaces';
+import { AccountInfo } from '@polkadot/types/interfaces';
 
 export const fetchAssetBalanceEpic: Epic<RootAction, RootAction, RootState> = (action$, state$) =>
     action$.pipe(
@@ -38,7 +48,7 @@ export const fetchAssetBalanceEpic: Epic<RootAction, RootAction, RootState> = (a
                         if (asset === 0) {
                             return {
                                 asset,
-                                balance: FixedU128.fromParts(u8aToNumber((result[index] as ITuple<[Index, AccountData]>)[1].free)),
+                                balance: FixedU128.fromParts(u8aToNumber((result[index] as AccountInfo).data.free)),
                             };
                         }
                         return {
@@ -60,11 +70,7 @@ export const transferEpic: Epic<RootAction, RootAction, RootState> = (action$, s
             const app = state.chain.app!;
             const address = state.account.account!.address;
 
-            const tx = app.tx.currencies.transfer(
-                data.account,
-                data.asset,
-                data.amount.innerToString(),
-            );
+            const tx = app.tx.currencies.transfer(data.account, data.asset, data.amount.innerToString());
             const txRecord: Tx = {
                 id: tx.hash.toString(),
                 signer: address,

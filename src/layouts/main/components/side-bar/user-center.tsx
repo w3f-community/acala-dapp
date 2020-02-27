@@ -1,7 +1,6 @@
 import React, { FC } from 'react';
 import { withStyles } from '@material-ui/styles';
 import { Theme, List } from '@material-ui/core';
-import { SideBarConfig } from '@/types/sidebar';
 import { ProductItem } from './product-item';
 import WalletIcon from '@/assets/wallet.svg';
 import { useSelector } from 'react-redux';

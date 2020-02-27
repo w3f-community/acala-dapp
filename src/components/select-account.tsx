@@ -15,23 +15,15 @@ import { useTranslate } from '@/hooks/i18n';
 import { useSelector, useDispatch } from 'react-redux';
 import { accountStoreSelector } from '@/store/account/selectors';
 import { selectAccount } from '@/store/account/actions';
-import { withStyles } from '@material-ui/styles';
-import { createTypography } from '@/theme';
 
 const Transition = React.forwardRef<unknown, TransitionProps>(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const AddressItem = withStyles(() => ({
-    secondary: {
-        ...createTypography(15, 20, 500, 'Roboto'),
-    },
-}))(ListItemText);
-
 interface Props {
     open: boolean;
 }
-const NoExtension: React.FC<Props> = ({ open }) => {
+export const SelectAccount: React.FC<Props> = ({ open }) => {
     const { t } = useTranslate();
     const dispatch = useDispatch();
     const [accountList] = useSelector(accountStoreSelector(['accountList']));
@@ -79,5 +71,3 @@ const NoExtension: React.FC<Props> = ({ open }) => {
         </Dialog>
     );
 };
-
-export default NoExtension;

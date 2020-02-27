@@ -13,7 +13,7 @@ import Header from './components/header';
 import Sidebar from './components/side-bar';
 import NoExtension from './components/no-extension';
 import NoAccount from './components/no-account';
-import SelectAccount from './components/select-account';
+import { SelectAccount } from '@/components/select-account';
 import useMobileMatch from '@/hooks/mobile-match';
 import TxStatus from '@/components/tx-status';
 import { useEnvironment } from '@/hooks/environment';

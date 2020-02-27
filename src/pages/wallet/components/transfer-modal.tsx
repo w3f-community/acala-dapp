@@ -7,8 +7,6 @@ import {
     Button,
     Grid,
     withStyles,
-    FormControl,
-    InputLabel,
     Theme,
     makeStyles,
     createStyles,
@@ -102,11 +100,13 @@ export const TransferModal: FC<Props> = ({ asset, open = false, onClose }) => {
         if (amountError || accountError) {
             return false;
         }
-        dispatch(actions.account.transfer.request({
-            account: account,
-            amount: FixedU128.fromNatural(amount),
-            asset: asset
-        }));
+        dispatch(
+            actions.account.transfer.request({
+                account: account,
+                amount: FixedU128.fromNatural(amount),
+                asset: asset,
+            }),
+        );
     };
 
     return (
@@ -123,12 +123,12 @@ export const TransferModal: FC<Props> = ({ asset, open = false, onClose }) => {
                             classes: { root: classes.input },
                         }}
                         helperText={accountError}
-                        InputLabelProps={{ 
+                        InputLabelProps={{
                             classes: { root: classes.label },
                         }}
                     />
                     <NumberInput
-                        style={{marginTop: 10}}
+                        style={{ marginTop: 10 }}
                         label={t('Amount')}
                         InputProps={{
                             classes: { root: classes.input },
@@ -140,7 +140,12 @@ export const TransferModal: FC<Props> = ({ asset, open = false, onClose }) => {
                     />
                 </Grid>
                 <Grid container justify="space-between" className={classes.bottom}>
-                    <Button variant="contained" color="primary" onClick={handleTransfer} disabled={!!amountError || !!accountError || transferStatus === 'pending'}>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={handleTransfer}
+                        disabled={!!amountError || !!accountError || transferStatus === 'pending'}
+                    >
                         {t('Transfer')}
                     </Button>
                     <Button variant="contained" color="secondary" onClick={onClose}>
@@ -149,5 +154,5 @@ export const TransferModal: FC<Props> = ({ asset, open = false, onClose }) => {
                 </Grid>
             </DialogContent>
         </SDialog>
-    )
+    );
 };

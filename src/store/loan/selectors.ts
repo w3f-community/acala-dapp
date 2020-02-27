@@ -1,5 +1,4 @@
 import { Selector, TxStatus, Tx, UserLoanData } from '@/types/store';
-import { filter } from 'rxjs/operators';
 
 type StatusType = 'updateLoan';
 export const statusSelector: (type: StatusType) => Selector<TxStatus> = type => {

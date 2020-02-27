@@ -94,6 +94,7 @@ const createTheme = (options: ThemeOptions) =>
             MuiDialogContent: {
                 root: {
                     padding: 0,
+                    marginBottom: 20,
                 },
             },
             MuiDialogActions: {

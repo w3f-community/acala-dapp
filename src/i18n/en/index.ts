@@ -113,11 +113,11 @@ export default {
         'To avoid dust debit, your loan must keep 1 aUSD debits, If you want payback all debit, please click max button.',
     // wallet
 
-    'Amount': 'Amount',
-    'Transfer': 'Transfer',
-    'Balance': 'Balance',
-    'Price': 'Price',
-    'AirDrop': 'AirDrop',
+    Amount: 'Amount',
+    Transfer: 'Transfer',
+    Balance: 'Balance',
+    Price: 'Price',
+    AirDrop: 'AirDrop',
     'USER CENTER': 'USER CENTER',
-    'Balances': 'Balances',
+    Balances: 'Balances',
 };

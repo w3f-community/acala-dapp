@@ -7,10 +7,10 @@ import { TxRecordSelector } from '@/store/app/selectors';
 const TransferHistory: FC = () => {
     const [account] = useSelector(accountStoreSelector(['account']));
     const txRecord = useSelector(TxRecordSelector('transfer', account!.address));
-    console.log(txRecord);
-    return (
-        <TxHistory data={txRecord} />
-    );
+    if (!txRecord.length) {
+        return null;
+    }
+    return <TxHistory data={txRecord} />;
 };
 
 export default TransferHistory;

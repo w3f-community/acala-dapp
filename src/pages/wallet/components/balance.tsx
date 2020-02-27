@@ -80,7 +80,7 @@ export const Balance: FC = () => {
     return (
         <Card header={t('Balances')} size="large" elevation={1} divider={false}>
             <Table<TableItemData> config={config} data={data} />
-            { showTransfer && <TransferModal asset={activeAssset} open={showTransfer} onClose={onCloseTransfer} /> }
+            {showTransfer && <TransferModal asset={activeAssset} open={showTransfer} onClose={onCloseTransfer} />}
         </Card>
     );
 };

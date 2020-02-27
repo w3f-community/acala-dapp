@@ -22,17 +22,17 @@ export default createReducer(initialState)
         ...state,
         airdrop: action.payload,
     }))
-    .handleAction(actions.transfer.request, (state) => ({
+    .handleAction(actions.transfer.request, state => ({
         ...state,
-        transferStatus: 'pending'
+        transferStatus: 'pending',
     }))
-    .handleAction(actions.transfer.success, (state) => ({
+    .handleAction(actions.transfer.success, state => ({
         ...state,
-        transferStatus: 'success'
+        transferStatus: 'success',
     }))
-    .handleAction(actions.transfer.failure, (state) => ({
+    .handleAction(actions.transfer.failure, state => ({
         ...state,
-        transferStatus: 'none'
+        transferStatus: 'none',
     }))
     .handleAction(actions.reset, state => ({
         ...state,

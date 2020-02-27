@@ -30,10 +30,10 @@ export const fetchAirdrop = createAsyncAction(
 )<AssetList, BalanceData[], string>();
 
 export const TRANSFER = '@account/transfer';
-export const transfer = createAsyncAction(
-    TRANSFER,
-    '@account/transfer/success',
-    '@account/transfer/failure',
-)<TransferData, any, string>();
+export const transfer = createAsyncAction(TRANSFER, '@account/transfer/success', '@account/transfer/failure')<
+    TransferData,
+    any,
+    string
+>();
 
 export const reset = createAction('@loan/reset');

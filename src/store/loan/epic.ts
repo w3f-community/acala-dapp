@@ -90,7 +90,7 @@ export const fetchLoansEpic: Epic<RootAction, RootAction, RootState> = (action$,
                         asset: asset,
                         collateral: FixedU128.fromParts(result[index][0].toString()),
                         debit: FixedU128.fromParts(
-                            result[index][1].isEmpty ? 0 : (result[index][1] as any as Codec[])[0].toString(),
+                            result[index][1].isEmpty ? 0 : ((result[index][1] as any) as Codec[])[0].toString(),
                         ),
                     }));
                 }),

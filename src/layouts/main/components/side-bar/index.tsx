@@ -1,5 +1,5 @@
 import React from 'react';
-import { Drawer, Grid  } from '@material-ui/core';
+import { Drawer, Grid } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
 import { SideBarConfig } from '@/types/sidebar';
 

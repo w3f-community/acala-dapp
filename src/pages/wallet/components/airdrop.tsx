@@ -33,23 +33,29 @@ export const AirDrop: FC = () => {
         {
             title: t('Token'),
             renderKey: 'asset',
-            render: asset => getAssetName(asset, airDropAssets),
+            render: asset => {
+                let result = getAssetName(asset, airDropAssets);
+                if (asset === 1) {
+                    result += ' (Mainnet)';
+                }
+                return result;
+            },
             cellProps: {
                 style: {
-                    width: 150 
-                }
-            }
+                    width: 150,
+                },
+            },
         },
         {
             title: t('Balance'),
             renderKey: 'balance',
-            render: balance => formatBalance(balance)
+            render: balance => formatBalance(balance),
         },
         {
             title: '',
             renderKey: '',
-            render: () => <div/>
-        }
+            render: () => <div />,
+        },
     ];
 
     return (

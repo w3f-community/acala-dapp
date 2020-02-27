@@ -7,9 +7,7 @@ import TxHistory from '@/components/tx-history';
 const TransactionHistory: FC = () => {
     const [account] = useSelector(accountStoreSelector(['account']));
     const txRecord = useSelector(loanTxRecordSelector(account!.address));
-    return (
-        <TxHistory data={txRecord} />
-    );
+    return <TxHistory data={txRecord} />;
 };
 
 export default TransactionHistory;

@@ -45,7 +45,7 @@ export default createReducer(initialState)
                     if (item.data[key].inner) {
                         item.data[key] = FixedU128.fromParts(item.data[key].inner);
                     }
-                })
+                });
             });
         if (storageData) {
             return { ...state, txRecord: storageData };

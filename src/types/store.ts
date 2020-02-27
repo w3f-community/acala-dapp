@@ -61,7 +61,7 @@ export interface Tx {
     type: TxType;
     status: TxStatus;
     time: number;
-    data: UpdateLoanData | TransferData |any;
+    data: UpdateLoanData | TransferData | any;
 }
 
 // dex
