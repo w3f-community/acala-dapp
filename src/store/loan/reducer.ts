@@ -10,7 +10,7 @@ const initialState: LoanState = {
     loans: [],
 };
 
-const STORAGE_KEY = 'loan-tx-storage-v0.0.1';
+const STORAGE_KEY = 'loan-tx-storage-v0.0.2';
 
 export default createReducer(initialState)
     .handleAction(actions.updateLoan.request, state => ({

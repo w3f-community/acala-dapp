@@ -133,6 +133,7 @@ const ActionModal: React.FC<ActionModalProps> = props => {
     const [liquidationPrice, setLiquidationPrice] = useState<FixedU128>(ZERO);
     const _onClose = () => {
         onClose && onClose();
+        dispatch(actions.loan.reset());
     };
 
     useEffect(() => {

@@ -66,6 +66,7 @@ export const TransferModal: FC<Props> = ({ asset, open = false, onClose }) => {
     useEffect(() => {
         if (transferStatus === 'success') {
             onClose();
+            dispatch(actions.account.reset());
         }
     }, [dispatch, transferStatus]);
 
