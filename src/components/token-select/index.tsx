@@ -128,7 +128,6 @@ const TokenSelect: FC<Props> = ({ defaultToken, data, onChange }) => {
             <Grid container alignItems="center" className={classes.root} onClick={openDialogHandler}>
                 <img src={getAssetIcon(asset)} className={classes.icon} alt={`token-${asset}`} />
                 <AssetName>{getAssetName(asset)}</AssetName>
-                <img src={downIcon} alt={'down-icon'} />
             </Grid>
 
             <Dialog
@@ -154,7 +153,12 @@ const TokenSelect: FC<Props> = ({ defaultToken, data, onChange }) => {
                                 key={`token-selected-${item.asset}`}
                             >
                                 <SListItemAvatar>
-                                    <img src={item.icon} className="icon" alt={item.name} />
+                                    <img
+                                        src={item.icon}
+                                        className="icon"
+                                        alt={item.name}
+                                        style={{ width: '100%', height: '100%' }}
+                                    />
                                 </SListItemAvatar>
                                 <SListItemText primary={item.name} secondary={item.fullName} />
                             </SListItem>

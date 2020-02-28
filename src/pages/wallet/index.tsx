@@ -21,6 +21,8 @@ const Wallet: FC = () => {
         dispatch(actions.account.fetchAirdrop.request(Array.from(airDropAssets.keys())));
         // load tx record
         dispatch(actions.app.loadTxRecord());
+        // load price
+        dispatch(actions.chain.fetchPricesFeed.request(Array.from(assets.keys())));
     }, []);
 
     if (!account) {

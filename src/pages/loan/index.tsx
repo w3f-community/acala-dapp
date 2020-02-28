@@ -80,6 +80,8 @@ const Loan: React.FC = () => {
         dispatch(actions.chain.fetchTotalIssuance.request([STABLE_COIN]));
         // fetch system loans info
         dispatch(actions.chain.fetchCdpTypes.request(COLLATERAL));
+
+        dispatch(actions.chain.fetchPricesFeed.request(Array.from(assets.keys())));
         // load tx record
         dispatch(actions.loan.loadTxRecord());
     }, [dispatch]);
@@ -127,7 +129,7 @@ const Loan: React.FC = () => {
                 <Box paddingTop={match ? 4 : 2} />
                 <LoanConsole current={active} />
                 <Box paddingTop={match ? 4 : 2} />
-                <TransactionHistory />
+                <TransactionHistory current={active} />
             </>
         );
     };

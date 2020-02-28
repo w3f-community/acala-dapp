@@ -90,6 +90,11 @@ const ExchangeBar: React.FC = () => {
     };
 
     useEffect(() => {
+        setValue('pay', ZERO);
+        setValue('receive', ZERO);
+    }, []);
+
+    useEffect(() => {
         if (swapTxStatus === 'failure' || swapTxStatus === 'success') {
             setValue('pay', ZERO);
             setValue('receive', ZERO);
@@ -137,6 +142,10 @@ const ExchangeBar: React.FC = () => {
 
     useEffect(() => {
         // verify pay and receive value
+        if (pay.value.isZero() && receive.value.isZero()) {
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
+            return () => {};
+        }
         if (lock) {
             setError('pay', pay.validator(pay.value));
             setError('receive', receive.validator(receive.value));

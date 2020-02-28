@@ -37,9 +37,6 @@ export function collateralToUSD(collateral: FixedU128, collateralPrice: FixedU12
 }
 
 export function calcCollateralRatio(collateralAmount: FixedU128, debitAmount: FixedU128): FixedU128 {
-    if (debitAmount.isZero()) {
-        return ZERO;
-    }
     return collateralAmount.div(debitAmount);
 }
 

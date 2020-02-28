@@ -55,7 +55,9 @@ const AmountInput: React.FC<AmountInputProps> = ({
     const match = useMobileMatch('sm');
     const ref = createRef<HTMLInputElement>();
 
-    const handleTokenChange = (asset: number) => onAssetChange(asset);
+    const handleTokenChange = (asset: number) => {
+        onAssetChange(asset);
+    };
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         onValueChange(Number(e.currentTarget.value));
     };
