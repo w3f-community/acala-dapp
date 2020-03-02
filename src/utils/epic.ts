@@ -17,5 +17,5 @@ export const txResultFilter$ = filter((result: any) => {
             throw new Error(method);
         }
     });
-    return result.isFinalized;
+    return result.isInBlock;
 });

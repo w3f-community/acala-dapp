@@ -6,10 +6,8 @@ import { useSelector } from 'react-redux';
 import Card from '@/components/card';
 import { useTranslate } from '@/hooks/i18n';
 import { getAssetName, formatHash } from '@/utils';
-import { loanTxRecordSelector } from '@/store/loan/selectors';
 import useMobileMatch from '@/hooks/mobile-match';
 
-import Mobile from './mobile';
 import TxDetail from '@/components/tx-detail';
 import { LinkToPolkascan } from '@/components/link-to/polkascan';
 import { Table } from '@/components/table';
@@ -28,8 +26,6 @@ interface Props {
 
 const TxHistory: React.FC<Props> = ({ data }) => {
     const { t } = useTranslate();
-    const [account] = useSelector(accountStoreSelector(['account']));
-    const match = useMobileMatch('sm');
 
     const tableConfig = [
         {

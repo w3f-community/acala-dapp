@@ -8,7 +8,6 @@ import { useSelector } from 'react-redux';
 import { specCdpTypeSelector } from '@/store/chain/selectors';
 import { formatBalance } from '../formatter';
 import { STABLE_COIN } from '@/config';
-import { Account } from '@polkadot/types/interfaces';
 
 interface Props {
     data: Tx;

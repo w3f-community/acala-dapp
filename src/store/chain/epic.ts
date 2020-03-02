@@ -1,8 +1,8 @@
 import { WsProvider, ApiRx } from '@polkadot/api';
 import { get } from 'lodash';
 import { Epic } from 'redux-observable';
-import { filter, map, switchMap, withLatestFrom, take, first, exhaustMap, mergeMap } from 'rxjs/operators';
-import { combineLatest, concat, of, empty } from 'rxjs';
+import { filter, map, switchMap, withLatestFrom, take, first, exhaustMap, mergeMap, startWith } from 'rxjs/operators';
+import { combineLatest, concat, of, empty, interval } from 'rxjs';
 import { isActionOf, RootAction, RootState } from 'typesafe-actions';
 import { types as acalaTypes } from '@acala-network/types';
 import ormlRPC from '@orml/jsonrpc';
@@ -40,18 +40,29 @@ export const fetchPricesFeedEpic: Epic<RootAction, RootAction, RootState> = (act
             const assetList = action.payload;
             const app = state.chain.app!;
             // FIXME: use a concrete type once polkadotjs fixes inconsistency.
-            return combineLatest(assetList.map(asset => (app.rpc as any).oracle.getValue(asset))).pipe(
-                map(result =>
-                    assetList.map((asset, index) => {
-                        const price = get(result, [index, 'value', 'value'], { isNone: true });
-                        return {
-                            asset,
-                            price: FixedU128.fromParts(u8aToNumber(price)),
-                        };
-                    }),
-                ),
-                map(actions.fetchPricesFeed.success),
-            );
+            return interval(1000 * 60).pipe(
+                startWith(0),
+                switchMap(() => {
+                    return combineLatest(assetList.map(asset => {
+                        // read aUSD price form consts module
+                        if (asset === 1) {
+                            return of(app.consts.prices.stableCurrencyFixedPrice);
+                        }
+                        return (app.rpc as any).oracle.getValue(asset)
+                    })).pipe(
+                        map(result => {
+                            return assetList.map((asset, index) => {
+                                const price = asset === 1 ? get(result, [index], { isNone: true }) : get(result, [index, 'value', 'value'], { isNone: true });
+                                return {
+                                    asset,
+                                    price: FixedU128.fromParts(u8aToNumber(price)),
+                                };
+                            });
+                        }),
+                        map(actions.fetchPricesFeed.success),
+                    );
+                })
+            )
         }),
     );
 
@@ -64,12 +75,12 @@ export const fetchCdpTypesEpic: Epic<RootAction, RootAction, RootState> = (actio
             return state.chain.constants
                 ? of([action, state] as typeof params)
                 : /* eslint-disable */
-                  state$.pipe(
-                      mergeMap(state => {
-                          return state.chain.constants ? of([action, state] as typeof params) : empty();
-                      }),
-                      first(),
-                  );
+                state$.pipe(
+                    mergeMap(state => {
+                        return state.chain.constants ? of([action, state] as typeof params) : empty();
+                    }),
+                    first(),
+                );
             /* eslint-enable */
         }),
         switchMap(([action, state]) => {
