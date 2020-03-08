@@ -83,6 +83,12 @@ const ExchangeBar: React.FC = () => {
         if (value.isZero()) {
             return 'please enter receive amount';
         }
+        if (receiveAsset.value === STABLE_COIN) {
+            if (payPool && value.isGreaterThan(payPool.pool.base)) {
+                return 'the pool has no enough asset';
+            }
+            return '';
+        }
         if (receivePool && value.isGreaterThan(receivePool.pool.other)) {
             return 'the pool has no enough asset';
         }

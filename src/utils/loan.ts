@@ -86,7 +86,7 @@ export function calcLiquidationPrice(
 }
 
 //TODO: need
-const EXCHANGE_FEE = FixedU128.fromRational(2, 1000);
+const EXCHANGE_FEE = FixedU128.fromRational(1, 1000);
 
 // (targetPool - targetPool * basePool / (basePool + baseAmount)) * (1 - EXCHANGE_FEE)
 export function swapToTarget(baseAmount: FixedU128, targetPool: FixedU128, basePool: FixedU128): FixedU128 {
