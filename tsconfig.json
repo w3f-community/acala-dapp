@@ -1,11 +1,7 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -17,13 +13,15 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react"
+    "jsx": "react",
+    "baseUrl": "./packages",
+    "paths": {
+      "@honzon-platform/apps/*": ["apps/src/*"],
+      "@honzon-platform/apps": ["apps/src"],
+      "@honzon-platform/hooks/*": ["react-hooks/src/*"],
+      "@honzon-platform/hooks": ["react-hooks/src"],
+    },
+    "skipDefaultLibCheck": true
   },
-  "exclude": [
-    "node_modules"
-  ],
-  "include": [
-    "src"
-  ],
-  "extends": "./tsconfig.custom.json"
+  "include": ["packages/**/*"]
 }

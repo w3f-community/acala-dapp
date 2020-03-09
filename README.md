@@ -9,6 +9,7 @@ cd honzon-platform
 
 ## Develop
 ```base
+lerna bootstrap
 yarn run start
 ```
 
