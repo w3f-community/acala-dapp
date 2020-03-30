@@ -18,8 +18,8 @@
     "paths": {
       "@honzon-platform/apps/*": ["apps/src/*"],
       "@honzon-platform/apps": ["apps/src"],
-      "@honzon-platform/hooks/*": ["react-hooks/src/*"],
-      "@honzon-platform/hooks": ["react-hooks/src"],
+      "@honzon-platform/react-hooks/*": ["react-hooks/src/*"],
+      "@honzon-platform/react-hooks": ["react-hooks/src"],
     },
     "skipDefaultLibCheck": true
   },

@@ -23,7 +23,7 @@ import AddLoan from './components/add-loan';
 import WalletBalance from './components/account-balance';
 import Guide from './components/guide';
 import Overview from './components/overview';
-import { useApi } from '@honzon-platform/hooks/useApi';
+import { useApi } from '@honzon-platform/react-hooks/useApi';
 
 const Detail = withStyles((theme: Theme) => ({
     root: {
@@ -69,23 +69,21 @@ const Loan: React.FC = () => {
     const classes = useStyle();
     const match = useMobileMatch('sm');
     const mdMatch = useMobileMatch('md');
-    const api = useApi();
-
     useEffect(() => {
-        // fetch default constants
-        dispatch(actions.chain.fetchConstants.request({}));
-        // fetch user loans info
-        dispatch(actions.loan.fetchLoans.request(COLLATERAL));
-        // fetch user asset balance
-        dispatch(actions.account.fetchAssetsBalance.request(Array.from(assets.keys())));
-        // fetch tokens total issuance
-        dispatch(actions.chain.fetchTotalIssuance.request([STABLE_COIN]));
-        // fetch system loans info
-        dispatch(actions.chain.fetchCdpTypes.request(COLLATERAL));
+        // // fetch default constants
+        // dispatch(actions.chain.fetchConstants.request({}));
+        // // fetch user loans info
+        // dispatch(actions.loan.fetchLoans.request(COLLATERAL));
+        // // fetch user asset balance
+        // dispatch(actions.account.fetchAssetsBalance.request(Array.from(assets.keys())));
+        // // fetch tokens total issuance
+        // dispatch(actions.chain.fetchTotalIssuance.request([STABLE_COIN]));
+        // // fetch system loans info
+        // dispatch(actions.chain.fetchCdpTypes.request(COLLATERAL));
 
-        dispatch(actions.chain.fetchPricesFeed.request(Array.from(assets.keys())));
-        // load tx record
-        dispatch(actions.loan.loadTxRecord());
+        // dispatch(actions.chain.fetchPricesFeed.request(Array.from(assets.keys())));
+        // // load tx record
+        // dispatch(actions.loan.loadTxRecord());
     }, [dispatch]);
 
     const showAddLoan = () => {
