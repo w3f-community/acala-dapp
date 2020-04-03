@@ -1,53 +1,53 @@
-import { useRef } from "react";
-import { useAccounts } from "./useAccounts";
-import { useIsAppReady } from "./useIsAppReady";
+import { useAccounts } from './useAccounts';
+import { useIsAppReady } from './useIsAppReady';
 
 interface Options {
-    customPrefix: string;
-    useAccountPrefix?: boolean;
-    useCustomPrefix?: boolean;
+  customPrefix: string;
+  useAccountPrefix?: boolean;
+  useCustomPrefix?: boolean;
 }
+type Get = (key: string) => string | null;
+type Set = (key: string, value: string) => boolean;
 
-const getPrefixKey = (key: string, options: Options & { address: string } ) => {
-    if (options.useAccountPrefix) {
-        return `${options.address}_${key}`;
-    }
-    if (options.useCustomPrefix) {
-        return `${options.customPrefix}_${key}`;
-    }
-    return key;
+const getPrefixKey = (key: string, options: Options & { address: string }): string => {
+  if (options.useAccountPrefix) {
+    return `${options.address}_${key}`;
+  }
+
+  if (options.useCustomPrefix) {
+    return `${options.customPrefix}_${key}`;
+  }
+
+  return key;
 };
 
 export const useStorage = (
-    options: Options = { useAccountPrefix: true, customPrefix: '', useCustomPrefix: false }
-) => {
-    const isReady = useIsAppReady();
-    const { activeAccount } = useAccounts();
-    const checkUseable: () => boolean = () => {
-        if (!isReady) {
-            console.error(`useStorage: storage manipulate may occur error if app is not ready. key: ${key}`);
-            return false;
-        }
-        if (options.useAccountPrefix && !!activeAccount) {
-            console.error(`useStorage: storage manipulate may occur error if active account is not ready. key: ${key}`);
-            return false;
-        }
-        return true;
-    };
-    const set = (key: string, value: string) => {
-        if (checkUseable()) {
-            const _key = getPrefixKey(key, { ...options, address: activeAccount!.address });
-            window.localStorage.setItem(_key, value);
-            return true;
-        }
-        return false;
+  options: Options = { customPrefix: '', useAccountPrefix: true, useCustomPrefix: false }
+): { get: Get; set: Set } => {
+  const isReady = useIsAppReady();
+  const { activeAccount } = useAccounts();
+
+  const get: Get = (key) => {
+    if (isReady && activeAccount) {
+      const _key = getPrefixKey(key, { ...options, address: activeAccount.address });
+
+      return window.localStorage.getItem(_key);
     }
-    const get = (key: string) => {
-        if (checkUseable()) {
-            const _key = getPrefixKey(key, { ...options, address: activeAccount!.address });
-            return window.localStorage.getItem(_key);
-        }
-        return null;
+
+    return null;
+  };
+
+  const set: Set = (key, value) => {
+    if (isReady && activeAccount) {
+      const _key = getPrefixKey(key, { ...options, address: activeAccount.address });
+
+      window.localStorage.setItem(_key, value);
+
+      return true;
     }
-    return { set, get };
-}
+
+    return false;
+  };
+
+  return { get, set };
+};

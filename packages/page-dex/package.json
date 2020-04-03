@@ -1,0 +1,9 @@
+{
+  "name": "@honzon-platform/page-dex",
+  "version": "0.2.0",
+  "description": "dex page",
+  "main": "index.js",
+  "author": "Acala Developers <hello@acala.network>",
+  "homepage": "https://github.com/AcalaNetwork/honzon-platform#readme",
+  "license": "Apache-2.0"
+}

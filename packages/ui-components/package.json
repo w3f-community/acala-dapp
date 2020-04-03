@@ -1,0 +1,13 @@
+{
+  "name": "@honzon-platform/ui-components",
+  "version": "0.2.0",
+  "description": "ui components",
+  "main": "index.js",
+  "author": "Acala Developers <hello@react.network>",
+  "homepage": "https://github.com/AcalaNetwork/honzon-platform#readme",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@material-ui/core": "^4.9.8",
+    "@material-ui/styles": "^4.9.6"
+  }
+}

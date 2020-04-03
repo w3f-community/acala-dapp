@@ -29,8 +29,8 @@ interface TrackFn {
 }
 
 interface Tracker {
-  isActive: boolean;
   count: number;
+  isActive: boolean;
   serialized: string | null;
   subscriber: TrackFnResult | null;
 }
@@ -104,7 +104,7 @@ function subscribe <T> (appReadyStatus: boolean, tracker: TrackerRef, fn: TrackF
 // FIXME The typings here need some serious TLC
 export function useCall <T> (fn: TrackFn | undefined | null | false, params: CallParams = [], options: CallOptions<T> = {}): T | undefined {
   const { appReadyStatus } = useIsAppReady();
-  const tracker = useRef<Tracker>({ isActive: false, count: 0, serialized: null, subscriber: null });
+  const tracker = useRef<Tracker>({ count: 0, isActive: false, serialized: null, subscriber: null });
   const [value, setValue] = useState<T | undefined>(options.defaultValue);
 
   // initial effect, we need an un-subscription

@@ -1,12 +1,10 @@
-import { useContext } from "react";
-import { EnvironmentContext, EnvironmentData } from "./environment";
+import { useContext } from 'react';
+import { EnvironmentContext, EnvironmentData } from '@honzon-platform/react-components';
 
 /**
  * @name useEnvironment
  * @description get environment context value
- * usage:
- *  const { api, connected, loading } = useEnvironment();
  */
-export const useEnvironment = () => {
-    return useContext<EnvironmentData>(EnvironmentContext);
+export const useEnvironment = (): EnvironmentData => {
+  return useContext<EnvironmentData>(EnvironmentContext);
 };

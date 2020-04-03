@@ -14,7 +14,7 @@ module.exports = override(function(config, env) {
                 loader.include = [
                     path.resolve(__dirname, './src'),
                     path.resolve(__dirname, '../react-hooks/src'),
-                    path.resolve(__dirname, '../api-deriver/src')
+                    path.resolve(__dirname, '../ui-components/src')
                 ]
             }
         });
@@ -25,8 +25,8 @@ module.exports = override(function(config, env) {
     );
     config.resolve.alias = {
         "@honzon-platform/apps": path.resolve(__dirname, "src"),
-        "@honzon-platform/react-hooks": path.resolve(__dirname, "../react-hooks/src"),
-        "@honzon-platform/api-deriver": path.resolve(__dirname, "../api-deriver/src")
+        "@honzon-platform/hooks": path.resolve(__dirname, "../react-hooks/src"),
+        "@honzon-platform/ui-components": path.resolve(__dirname, "../ui-components/src")
     };
     return config;
 });

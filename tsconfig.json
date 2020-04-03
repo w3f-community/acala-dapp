@@ -20,6 +20,10 @@
       "@honzon-platform/apps": ["apps/src"],
       "@honzon-platform/react-hooks/*": ["react-hooks/src/*"],
       "@honzon-platform/react-hooks": ["react-hooks/src"],
+      "@honzon-platform/react-components/*": ["react-components/src/*"],
+      "@honzon-platform/react-components": ["react-components/src"],
+      "@honzon-platform/ui-components/*": ["ui-components/src/*"],
+      "@honzon-platform/ui-components": ["ui-components/src"],
     },
     "skipDefaultLibCheck": true
   },
