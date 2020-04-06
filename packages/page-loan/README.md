@@ -1,0 +1,1 @@
+@honzon-platform/page-loan

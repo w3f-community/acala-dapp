@@ -1,5 +1,7 @@
 import React, { FC } from 'react';
 
-export const PageWallet: FC = () => {
+const PageLoan: FC = () => {
   return <div>page honzon</div>;
 };
+
+export default PageLoan;

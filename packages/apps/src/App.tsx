@@ -1,12 +1,13 @@
 import React, { FC } from 'react';
 import { UIProvider } from '@honzon-platform/ui-components';
 
+import { RouterProvider } from './components/RouterProvider';
+import { config as routerConfig } from './router-config';
+
 const App: FC = () => {
   return (
     <UIProvider>
-      <div className='App'>
-        <p>hello</p>
-      </div>
+      <RouterProvider config={routerConfig} />
     </UIProvider>
   );
 };

@@ -14,7 +14,8 @@ module.exports = override(function(config, env) {
                 loader.include = [
                     path.resolve(__dirname, './src'),
                     path.resolve(__dirname, '../react-hooks/src'),
-                    path.resolve(__dirname, '../ui-components/src')
+                    path.resolve(__dirname, '../ui-components/src'),
+                    path.resolve(__dirname, '../page-loan/src')
                 ]
             }
         });
@@ -26,7 +27,8 @@ module.exports = override(function(config, env) {
     config.resolve.alias = {
         "@honzon-platform/apps": path.resolve(__dirname, "src"),
         "@honzon-platform/hooks": path.resolve(__dirname, "../react-hooks/src"),
-        "@honzon-platform/ui-components": path.resolve(__dirname, "../ui-components/src")
+        "@honzon-platform/ui-components": path.resolve(__dirname, "../ui-components/src"),
+        "@honzon-platform/page-loan": path.resolve(__dirname, "../page-loan/src")
     };
     return config;
 });

@@ -1,7 +1,7 @@
 {
-  "name": "@honzon-platform/page-honzon",
+  "name": "@honzon-platform/page-loan",
   "version": "0.2.0",
-  "description": "honzon page",
+  "description": "honzon loan",
   "main": "index.js",
   "author": "Acala Developers <hello@acala.network>",
   "homepage": "https://github.com/AcalaNetwork/honzon-platform#readme",
