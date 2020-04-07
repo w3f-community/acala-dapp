@@ -7,8 +7,9 @@ import theme from './theme';
 export const UIProvider: FC<PropsWithChildren<{}>> = ({ children }) => {
   return (
     <ThemeProvider theme={theme}>
-      <CssBaseline />
-      {children}
+      <CssBaseline>
+        {children}
+      </CssBaseline>
     </ThemeProvider>
   );
 };

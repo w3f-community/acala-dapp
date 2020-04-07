@@ -1,0 +1,17 @@
+{
+  "name": "@honzon-platform/react-query",
+  "version": "0.2.0",
+  "description": "react query",
+  "main": "index.js",
+  "author": "Acala Developers <hello@react.network>",
+  "homepage": "https://github.com/AcalaNetwork/honzon-platform#readme",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@acala-network/api": "beta",
+    "@polkadot/api": "^1.8.1",
+    "rxjs": "^6.5.3"
+  },
+  "devDependencies": {
+    "@acala-network/api-derive": "^0.2.0-beta.27"
+  }
+}

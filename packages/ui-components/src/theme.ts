@@ -107,6 +107,11 @@ const createTheme = (options: ThemeOptions): Theme => {
       '0 20px 60px rgba(49, 69, 244, 0.1)'
     ]),
     spacing: 5,
+    typography: {
+      h4: {
+        fontSize: 18
+      }
+    },
     ...options
   });
 };

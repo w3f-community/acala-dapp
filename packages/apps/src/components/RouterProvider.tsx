@@ -1,4 +1,4 @@
-import React, { FC, FunctionComponent } from 'react';
+import React, { FC, cloneElement } from 'react';
 // FIXME: should remove ts-ignore when react-router@6 is avaliable
 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
@@ -18,8 +18,8 @@ const Routes: FC<Props> = ({ config }) => {
 
 export const RouterProvider: FC<Props> = ({ config }) => {
   config.forEach((item) => {
-    if (item.layout) {
-      item.element = React.createElement(item.layout as FunctionComponent<any>, item.element);
+    if (item.children) {
+      item.element = cloneElement(item.element, { children: <Routes config={item.children} /> });
     }
   });
 
