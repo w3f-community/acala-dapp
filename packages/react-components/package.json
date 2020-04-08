@@ -8,6 +8,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@acala-network/api": "beta",
+    "@honzon-platform/react-hooks": "^0.2.0",
     "@polkadot/api": "^1.8.1",
     "rxjs": "^6.5.3"
   },

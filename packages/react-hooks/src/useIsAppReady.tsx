@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { get, noop } from 'lodash';
-import { useEnvironment } from './useEnvironment';
+import { useApi } from './useApi';
 import { useAccounts } from './useAccounts';
 
 interface Options {
@@ -14,8 +14,8 @@ interface Options {
  */
 export const useIsAppReady = (options?: Options): { appReadyStatus: boolean } => {
   const [appReadyStatus, setAppReadyStatus] = useState<boolean>(false);
-  const { connected } = useEnvironment();
-  const { activeAccount } = useAccounts();
+  const { connected } = useApi();
+  const { active: activeAccount } = useAccounts();
 
   useEffect(() => {
     const status = !!activeAccount && !!activeAccount.address && connected;

@@ -1,0 +1,13 @@
+{
+  "name": "@honzon-platform/react-environment",
+  "version": "0.2.0",
+  "description": "react environment",
+  "main": "index.js",
+  "author": "Acala Developers <hello@react.network>",
+  "homepage": "https://github.com/AcalaNetwork/honzon-platform#readme",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@acala-network/api": "beta",
+    "@polkadot/api": "^1.8.1"
+  }
+}

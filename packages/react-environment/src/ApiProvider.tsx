@@ -1,5 +1,4 @@
 import React, { ReactNode, FC, useState, useEffect } from 'react';
-import propTypes from 'prop-types';
 import { ApiPromise, WsProvider } from '@polkadot/api';
 import { options } from '@acala-network/api';
 
@@ -7,9 +6,11 @@ const DEFAULT_ENDPOINT = 'wss://node-6640517791634960384.jm.onfinality.io/ws';
 
 const CONNECT_TIMEOUT = 1000 * 60; // one minute
 
-interface EnvironmentProps {
+interface ApiProps {
   children: ReactNode;
   endpoint?: string;
+  Loading?: ReactNode;
+  ConnectError?: ReactNode;
 }
 
 interface ConnectStatus {
@@ -18,7 +19,7 @@ interface ConnectStatus {
   loading: boolean;
 }
 
-export interface EnvironmentData {
+export interface ApiData {
   api: ApiPromise;
   connected: boolean;
   error: boolean;
@@ -27,30 +28,53 @@ export interface EnvironmentData {
   setEndpoint: (enpoint: string) => void;
 }
 
-export const EnvironmentContext = React.createContext<EnvironmentData>(
-  {} as EnvironmentData
+export const ApiContext = React.createContext<ApiData>(
+  {} as ApiData
 );
 
 /**
- * @name Environment
- * @description connect chain in the Environment Higher-Order Component.
+ * @name Api
+ * @description connect chain in the Api Higher-Order Component.
  * @example
  * ```js
- *  <Environment endpoint={ENDPOINT} >
+ *  <Api endpoint={ENDPOINT} >
  *      {...something}
- *  </Environment>
+ *  </Api>
  * ```
  */
-export const Environment: FC<EnvironmentProps> = ({
+export const ApiProvider: FC<ApiProps> = ({
   endpoint = DEFAULT_ENDPOINT,
-  children
+  children,
+  ConnectError,
+  Loading
 }) => {
   const [connectStatus, setConnectStatus] = useState<ConnectStatus>(
     {} as ConnectStatus
   );
   const [_endpoint, _setEndpoint] = useState<string>(endpoint);
   const [api, setApi] = useState<ApiPromise>({} as ApiPromise);
+
   const setEndpoint = (endpoint: string): void => _setEndpoint(endpoint);
+
+  const renderContent = (): ReactNode => {
+    if (connectStatus.loading && Loading) {
+      return Loading;
+    }
+
+    if (connectStatus.connected) {
+      return children;
+    }
+
+    return null;
+  };
+
+  const renderError = (): ReactNode => {
+    if (connectStatus.error && ConnectError) {
+      return ConnectError;
+    }
+
+    return null;
+  };
 
   useEffect(() => {
     // reset connect status
@@ -86,7 +110,7 @@ export const Environment: FC<EnvironmentProps> = ({
   }, [api, connectStatus]);
 
   return (
-    <EnvironmentContext.Provider
+    <ApiContext.Provider
       value={{
         api,
         endpoint: _endpoint,
@@ -94,12 +118,8 @@ export const Environment: FC<EnvironmentProps> = ({
         ...connectStatus
       }}
     >
-      {children}
-    </EnvironmentContext.Provider>
+      {renderContent()}
+      {renderError()}
+    </ApiContext.Provider>
   );
-};
-
-Environment.propTypes = {
-  children: propTypes.element,
-  endpoint: propTypes.string
 };

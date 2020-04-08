@@ -25,7 +25,7 @@ export const useStorage = (
   options: Options = { customPrefix: '', useAccountPrefix: true, useCustomPrefix: false }
 ): { get: Get; set: Set } => {
   const isReady = useIsAppReady();
-  const { activeAccount } = useAccounts();
+  const { active: activeAccount } = useAccounts();
 
   const get: Get = (key) => {
     if (isReady && activeAccount) {

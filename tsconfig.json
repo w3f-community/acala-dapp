@@ -24,6 +24,8 @@
       "@honzon-platform/page-loan/*": ["page-loan/src/*"],
       "@honzon-platform/react-hooks/*": ["react-hooks/src/*"],
       "@honzon-platform/react-hooks": ["react-hooks/src"],
+      "@honzon-platform/react-environment/*": ["react-environment/src/*"],
+      "@honzon-platform/react-environment": ["react-environment/src"],
       "@honzon-platform/react-components/*": ["react-components/src/*"],
       "@honzon-platform/react-components": ["react-components/src"],
       "@honzon-platform/react-query/*": ["react-query/src/*"],

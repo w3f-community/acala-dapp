@@ -9,7 +9,7 @@ type Props = {
 } & BaseQueryElementProps<number>;
 
 export const QueryTokenIssue: FC<Props> = memo(({ render, token }) => {
-  const api = useApi();
+  const { api } = useApi();
   const issue = useCall<Balance>(api.query.tokens.totalIssuance, [token]);
 
   if (issue) {

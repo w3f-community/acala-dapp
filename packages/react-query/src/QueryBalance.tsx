@@ -10,7 +10,7 @@ type Props = {
 } & BaseQueryElementProps<DerivedUserLoan>;
 
 export const QueryBalance: FC<Props> = ({ account, render }) => {
-  const api = useApi();
+  const { api } = useApi();
   // FIXME: need fix api-derive type
   const loan = useCall<DerivedUserLoan>((api.derive as any).currencies.balances, [account]);
 

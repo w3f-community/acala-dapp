@@ -1,13 +1,11 @@
 import { useContext } from 'react';
-import { ApiPromise } from '@polkadot/api';
-import { EnvironmentContext, EnvironmentData } from '@honzon-platform/react-components';
+
+import { ApiContext, ApiData } from '@honzon-platform/react-environment';
 
 /**
  * @name useApi
- * @description get api instance in environment context
+ * @description get api context value
  */
-export const useApi = (): ApiPromise => {
-  const data = useContext<EnvironmentData>(EnvironmentContext);
-
-  return data.api;
+export const useApi = (): ApiData => {
+  return useContext<ApiData>(ApiContext);
 };

@@ -16,6 +16,7 @@ module.exports = override(function(config, env) {
                     path.resolve(__dirname, '../page-homa/src'),
                     path.resolve(__dirname, '../page-loan/src'),
                     path.resolve(__dirname, '../react-components/src'),
+                    path.resolve(__dirname, '../react-environment/src'),
                     path.resolve(__dirname, '../react-hooks/src'),
                     path.resolve(__dirname, '../react-query/src'),
                     path.resolve(__dirname, '../ui-components/src')
@@ -32,6 +33,7 @@ module.exports = override(function(config, env) {
         "@honzon-platform/page-homa": path.resolve(__dirname, "../page-homa/src"),
         "@honzon-platform/page-loan": path.resolve(__dirname, "../page-loan/src"),
         "@honzon-platform/react-components": path.resolve(__dirname, "../react-components/src"),
+        "@honzon-platform/react-environment": path.resolve(__dirname, "../react-environment/src"),
         "@honzon-platform/react-hooks": path.resolve(__dirname, "../react-hooks/src"),
         "@honzon-platform/react-query": path.resolve(__dirname, "../react-query/src"),
         "@honzon-platform/ui-components": path.resolve(__dirname, "../ui-components/src")

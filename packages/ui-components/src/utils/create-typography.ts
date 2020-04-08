@@ -4,7 +4,7 @@ interface CustomTypography {
   fontSize: number;
   fontWeight: number;
   letterSpacing: number;
-  lineHeight: number;
+  lineHeight: string;
 }
 
 export const createTypography = (size: number, lineHeight: number, fontWeight: number, fontFamily = 'inherit', color = '#1a1a1a', letterSpacing = 0): CustomTypography => ({
@@ -13,5 +13,5 @@ export const createTypography = (size: number, lineHeight: number, fontWeight: n
   fontSize: size,
   fontWeight,
   letterSpacing,
-  lineHeight: lineHeight
+  lineHeight: `${lineHeight} px`
 });
