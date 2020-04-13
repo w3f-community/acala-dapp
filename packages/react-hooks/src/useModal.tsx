@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 
 interface ReturnData {
   close: () => void;
@@ -9,9 +9,9 @@ interface ReturnData {
 
 export const useModal = (defaultStatus = false): ReturnData => {
   const [status, setStatus] = useState<boolean>(defaultStatus);
-  const open = (): void => setStatus(true);
-  const close = (): void => setStatus(false);
-  const toggle = (): void => setStatus(!status);
+  const open = useCallback((): void => setStatus(true), []);
+  const close = useCallback((): void => setStatus(false), []);
+  const toggle = useCallback((): void => setStatus(!status), []);
 
   return { close, open, status, toggle };
 };

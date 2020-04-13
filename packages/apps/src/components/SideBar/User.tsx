@@ -1,28 +1,22 @@
 import React, { FC } from 'react';
-import { withStyles } from '@material-ui/styles';
-import { List } from '@material-ui/core';
+import { Menu } from 'semantic-ui-react';
 
 import { ReactComponent as WalletIcon } from '@honzon-platform/apps/assets/wallet.svg';
 
 import { ProductItem } from './ProductItem';
 import { useAccounts } from '@honzon-platform/react-hooks';
+import { FormatAddress } from '@honzon-platform/react-components';
 
-const ProductList = withStyles(() => ({
-  root: {
-    margin: '0 0 37px 0'
-  }
-}))(List);
-
-export const UserCenter: FC = () => {
+export const User: FC = () => {
   const { active } = useAccounts();
 
   return (
-    <ProductList>
+    <Menu>
       <ProductItem
         icon={<WalletIcon />}
-        name={active ? active.address : ''}
+        name={<FormatAddress address={active!.address} />}
         path='wallet'
       />
-    </ProductList>
+    </Menu>
   );
 };

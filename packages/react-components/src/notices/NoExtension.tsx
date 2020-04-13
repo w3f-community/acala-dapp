@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { Dialog, DialogContent, Button, DialogActions } from '@material-ui/core';
+import { Dialog } from '@honzon-platform/ui-components';
 
 const POLKADOT_EXTENSIONS_ADDRESS = 'https://chrome.google.com/webstore/detail/polkadot%7Bjs%7D-extension/mopnmbcafieddcagagdcbnhejhlodfdd';
 
@@ -13,18 +13,14 @@ export const NoExtension: React.FC<Props> = memo(({ open }) => {
   };
 
   return (
-    <Dialog open={open}>
-      <DialogContent>{'No polkadot{.js} extension found, please install it first!'}</DialogContent>
-      <DialogActions>
-        <Button
-          color='primary'
-          onClick={handleGetExtensionBtnClick}
-          variant='contained'
-        >
-          GET IT
-        </Button>
-      </DialogActions>
-    </Dialog>
+    <Dialog
+      visiable={true}
+      title={null}
+      content='No polkadot{.js} extension found, please install it first!'
+      cancelText={undefined}
+      confirmText='GET IT'
+      onConfirm={handleGetExtensionBtnClick}
+    />
   );
 });
 

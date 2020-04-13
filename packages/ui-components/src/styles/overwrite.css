@@ -1,0 +1,10 @@
+.ui.inverted.dimmer .ui.loader:after {
+  border-color: #01279c transparent transparent;
+}
+
+.notification--root {
+  position: absolute;
+  width: 400px;
+  top: 0;
+  right: 16px;
+}

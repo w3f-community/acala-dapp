@@ -1,23 +1,18 @@
 import React, { FC, memo } from 'react';
-import { Dialog, DialogContent, DialogActions, Button } from '@material-ui/core';
+import { Dialog } from '@honzon-platform/ui-components';
 
 export const NoAccount: FC = memo(() => {
   const handleRetry = (): void => window.location.reload();
 
   return (
-    <Dialog open={true}>
-      <DialogContent>
-        No account found, please add account in your wallet extension or unlock it!
-      </DialogContent>
-      <DialogActions>
-        <Button
-          color='primary'
-          onClick={handleRetry}
-        >
-          Retry
-        </Button>
-      </DialogActions>
-    </Dialog>
+    <Dialog 
+      visiable={true}
+      title={null}
+      content='No account found, please add account in your wallet extension or unlock it!'
+      cancelText={undefined}
+      confirmText='Retry'
+      onConfirm={handleRetry}
+    />
   );
 });
 

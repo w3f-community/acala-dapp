@@ -1,21 +1,24 @@
 import { FC } from 'react';
-import { DerivedUserLoan } from '@acala-network/api-derive/types/loan';
 import AccountId from '@polkadot/types/generic/AccountId';
+import { CurrencyId, Balance } from '@acala-network/types/interfaces';
+
 import { useApi } from '@honzon-platform/react-hooks/useApi';
 import { useCall } from '@honzon-platform/react-hooks/useCall';
+
 import { BaseQueryElementProps } from './type';
 
 type Props = {
-  account: AccountId | 'string';
-} & BaseQueryElementProps<DerivedUserLoan>;
+  account: AccountId | string;
+  token: CurrencyId | string;
+} & BaseQueryElementProps<Balance>;
 
-export const QueryBalance: FC<Props> = ({ account, render }) => {
+export const QueryBalance: FC<Props> = ({ account, token, render }) => {
   const { api } = useApi();
   // FIXME: need fix api-derive type
-  const loan = useCall<DerivedUserLoan>((api.derive as any).currencies.balances, [account]);
+  const result = useCall<Balance>((api.derive as any).currencies.balance, [account, token]);
 
-  if (loan) {
-    return render(loan);
+  if (result) {
+    return render(result);
   }
 
   return null;

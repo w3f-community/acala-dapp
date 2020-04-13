@@ -57,7 +57,6 @@ export const AccountProvider: FC<PropsWithChildren<Props>> = ({
 
   const setActiveAccount = useCallback(async (account: InjectedAccountWithMeta, api: ApiPromise): Promise<void> => {
     try {
-      console.log('set active');
       const injector = await web3FromAddress(account.address);
 
       api.setSigner(injector.signer);

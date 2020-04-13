@@ -1,17 +1,10 @@
 import React, { FC } from 'react';
-import { withStyles } from '@material-ui/styles';
-import { List } from '@material-ui/core';
 
 import { SideBarConfig } from '@honzon-platform/apps/types/sidebar';
 
 import { ProductItem } from './ProductItem';
+import { Menu } from 'semantic-ui-react';
 
-const ProductList = withStyles(() => ({
-  root: {
-    flex: '1 1 auto',
-    margin: '0 0 112px 0'
-  }
-}))(List);
 
 interface Props {
   data: SideBarConfig['products'];
@@ -19,13 +12,13 @@ interface Props {
 
 export const Products: FC<Props> = ({ data }) => {
   return (
-    <ProductList>
+    <Menu>
       {data.map((item) => (
         <ProductItem
           key={`products-${item.name}`}
           {...item}
         />
       ))}
-    </ProductList>
+    </Menu>
   );
 };

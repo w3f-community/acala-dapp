@@ -89,6 +89,7 @@ export const ApiProvider: FC<ApiProps> = ({
       timeout(CONNECT_TIMEOUT)
     ])
       .then((api: any) => {
+        console.log(api);
         setApi(api as ApiPromise);
         setConnectStatus({ connected: true, error: false, loading: false });
       })

@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { DerivedUserLoan } from '@acala-network/api-derive/types/loan';
+import { DerivedUserLoan } from '@acala-network/api-derive';
 import AccountId from '@polkadot/types/generic/AccountId';
 import { useApi } from '@honzon-platform/react-hooks/useApi';
 import { useCall } from '@honzon-platform/react-hooks/useCall';

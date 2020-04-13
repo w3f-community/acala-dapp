@@ -1,60 +1,47 @@
 import React from 'react';
-import { createStyles, makeStyles, Theme, Drawer, Grid } from '@material-ui/core';
-
+import { Sidebar as SUSidebar, Menu } from 'semantic-ui-react';
 import { SideBarConfig } from '@honzon-platform/apps/types/sidebar';
 // import { AcalaLogo } from '@honzon-platform/apps/components/acala-logo';
 import { Products } from './Products';
 import { SocialMedias } from './SocalMedias';
-import { UserCenter } from './UserCenter';
+import { User } from './User';
+import styled from 'styled-components';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    bottom: {
-      marginBottom: 40
-    },
-    header: { padding: '70px 0 28px 0' },
-    paper: {
-      background: theme.palette.primary.main,
-      width: 270
-    },
-    root: {
-      flexShrink: 0,
-      width: 270
-    },
-    social: {
-      marginBottom: 40
-    }
-  })
-);
 
 export interface SideBarProps {
   config: SideBarConfig;
 }
 
+const Root = styled('aside')`
+  flex: 0 0 260px;
+  height: 100vh;
+  background: #01279C;
+  overflow: hidden;
+
+  & .ui.menu {
+    width: 100%;
+    flex-direction: column;
+    background: transparent;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  & .ui.menu .item {
+    color: #ffffff;
+  }
+
+  & .sidebar__icon {
+    margin-right: 20px;
+  }
+`;
+
 export const Sidebar: React.FC<SideBarProps> = ({ config }) => {
-  const classes = useStyles();
 
   return (
-    <Drawer
-      classes={{ paper: classes.paper, root: classes.root }}
-      open={true}
-      variant='permanent'
-    >
-      <Grid
-        alignItems='center'
-        className={classes.header}
-        container
-        justify='center'
-      ></Grid>
-      {/*
-                    <List>
-                        <Item data={{ name: formatAddress(account), path: '/user', icon: WalletIcon }} />
-                        <Item data={{ name: 'Dashboard', path: '/', icon: DashboardIcon }} />
-                    </List>
-                */}
-      <UserCenter />
+    <Root>
+      <User />
       <Products data={config.products} />
       <SocialMedias data={config.socialMedia} />
-    </Drawer>
+    </Root>
   );
 };

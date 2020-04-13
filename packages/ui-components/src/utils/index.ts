@@ -1,3 +1,2 @@
 export * from './create-typography';
-
-export * from './FullScreenLoading';
+export * from './random-id';

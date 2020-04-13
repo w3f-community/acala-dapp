@@ -13,5 +13,5 @@ export const createTypography = (size: number, lineHeight: number, fontWeight: n
   fontSize: size,
   fontWeight,
   letterSpacing,
-  lineHeight: `${lineHeight} px`
+  lineHeight: `${lineHeight}px`
 });

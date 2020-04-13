@@ -1,0 +1,12 @@
+:global(.ui-card.card.ui) {
+  box-sizing: border-box;
+  width: 100%;
+  border: 1px solid #dddddd;
+  box-shadow: none;
+}
+
+.title {
+  padding: 16px;
+  font-size: 18px;
+  font-weight: 500;
+}

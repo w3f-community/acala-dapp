@@ -8,11 +8,15 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@acala-network/api": "beta",
+    "@acala-network/api-derive": "beta",
+    "@acala-network/app-util": "beta",
+    "@acala-network/types": "beta",
     "@honzon-platform/react-hooks": "^0.2.0",
-    "@polkadot/api": "^1.8.1",
+    "@honzon-platform/react-query": "^0.2.0",
+    "@material-ui/core": "^4.9.9",
+    "@material-ui/styles": "^4.9.6",
+    "@polkadot/api": "^1.10.1",
+    "notistack": "^0.9.9",
     "rxjs": "^6.5.3"
-  },
-  "devDependencies": {
-    "@acala-network/api-derive": "^0.2.0-beta.27"
   }
 }

@@ -1,0 +1,16 @@
+.page {
+  width: 100%;
+  max-width: 960px;
+  padding: 16px;
+}
+
+.pageTitle {
+  display: flex;
+  align-items: center;
+  height: 56px;
+  font-size: 24px;
+}
+
+.pageContent {
+  margin-top: 16px;
+}
