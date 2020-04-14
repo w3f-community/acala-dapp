@@ -12,6 +12,7 @@ module.exports = {
   rules: {
     ...base.rules,
     '@typescript-eslint/no-explicit-any': 'off',
-    'react/prop-types': 'off'
+    'react/prop-types': 'off',
+    'header/header': 'off'
   }
 };

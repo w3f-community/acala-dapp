@@ -1,8 +1,8 @@
 import React, { FC, useContext } from 'react';
 import { CurrencyId } from '@acala-network/types/interfaces';
 
-import { Card, Table, TableItem } from "@honzon-platform/ui-components";
-import { StakingPoolContext, Token, AccountBalance  } from "@honzon-platform/react-components";
+import { Card, Table, TableItem } from '@honzon-platform/ui-components';
+import { StakingPoolContext, Token, AccountBalance  } from '@honzon-platform/react-components';
 
 interface TableData {
   token: CurrencyId;
@@ -43,8 +43,8 @@ export const StakingTokeBalances: FC = () => {
     }
 
     return (
-        <Card size="large" elevation={1} header='Balance' divider={true}>
-          <Table config={tableConfig} data={tableData} />
-        </Card>
+      <Card size='large'>
+        <Table config={tableConfig} data={tableData} />
+      </Card>
     );
 }

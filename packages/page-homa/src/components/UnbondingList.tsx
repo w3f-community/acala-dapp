@@ -1,6 +1,6 @@
-import React, { FC, useContext } from 'react';
+import React, { FC, useContext, memo } from 'react';
 import { StakingPoolContext } from '@honzon-platform/react-components';
-import { List, ListItem, Grid, Typography, Box, Radio } from '@material-ui/core';
+import { List, ListItem, Grid, Typography, Radio } from '@material-ui/core';
 import { useCall, useApi } from '@honzon-platform/react-hooks';
 import { Codec } from '@polkadot/types/types';
 import { Fixed18 } from '@acala-network/app-util';
@@ -8,7 +8,7 @@ import { Fixed18 } from '@acala-network/app-util';
 interface UnbondingItemProps {
   era: number;
   selected: number;
-  onChange: (value: number) => {}
+  onChange: (value: number) => {};
 }
 
 const UnbondingItem: FC<UnbondingItemProps> = ({ selected, era, onChange }) => {
@@ -23,18 +23,18 @@ const UnbondingItem: FC<UnbondingItemProps> = ({ selected, era, onChange }) => {
   const free = Fixed18.fromParts(result[0].toString()).sub(Fixed18.fromParts(result[1].toString()));
   return (
     <ListItem>
-        <Grid container justify="space-between">
-          <Grid item>
-            <Grid container alignItems="center">
-              <Radio name="era" checked={era === selected} onChange={_onChange} />
-              <Typography variant="body2">{era}</Typography>
-            </Grid>
+      <Grid container justify="space-between">
+        <Grid item>
+          <Grid container alignItems="center">
+            <Radio name="era" checked={era === selected} onChange={_onChange} />
+            <Typography variant="body2">{era}</Typography>
           </Grid>
-          <Typography variant="body2">{free.toNumber()}</Typography>
         </Grid>
+        <Typography variant="body2">{free.toNumber()}</Typography>
+      </Grid>
     </ListItem>
   );
-}
+};
 
 interface Props {
   selected: number;

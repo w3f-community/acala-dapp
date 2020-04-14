@@ -1,5 +1,5 @@
-import React, { FC, PropsWithChildren, useState, useContext, useEffect } from 'react';
-import { useAccounts, useApi } from "@honzon-platform/react-hooks";
+import React, { FC, PropsWithChildren, useState, useContext } from 'react';
+import { useAccounts, useApi } from '@honzon-platform/react-hooks';
 import { NotificationContext } from '@honzon-platform/ui-components';
 import { Button } from 'semantic-ui-react';
 
@@ -12,7 +12,15 @@ interface Props {
   onFinally?: () => void;
 }
 
-export const TxButton: FC<PropsWithChildren<Props>> = ({ children, section, method, params, onSuccess, onFailed, onFinally }) => {
+export const TxButton: FC<PropsWithChildren<Props>> = ({
+  children,
+  method,
+  onFailed,
+  onFinally,
+  onSuccess,
+  params,
+  section
+}) => {
   const { api } = useApi();
   const { active } = useAccounts();
   const [isSending, setIsSending] = useState<boolean>(false);
@@ -30,20 +38,29 @@ export const TxButton: FC<PropsWithChildren<Props>> = ({ children, section, meth
 
   const _onFinally = (): void => {
     onFinally && onFinally();
-  }
+  };
 
-  const onClick = () => {
+  const onClick = (): void => {
     if (!api.tx[section] || !api.tx[section][method]) {
       console.error(`can not find api.tx.${section}.${method}`);
-      return false;
+
+      return;
     }
+
+    if (!(active && active.address)) {
+      console.error('can not find available address');
+
+      return;
+    }
+
     const extrinsic = api.tx[section][method](...params);
     const notification = createNotification({
-      title: extrinsic.hash.hash,
       content: 'loading',
-      placement: 'top right'
+      placement: 'top right',
+      title: extrinsic.hash.hash
     });
-    extrinsic.signAndSend(active!.address, (result) => {
+
+    extrinsic.signAndSend(active.address, (result) => {
       if (result.isInBlock) {
         notification.update({
           content: 'success',
@@ -55,19 +72,15 @@ export const TxButton: FC<PropsWithChildren<Props>> = ({ children, section, meth
       _onFailed();
     }).finally(() => {
       _onFinally();
-    })
-  }
-
-  useEffect(() => {
-
-  }, [section, method, params]);
+    });
+  };
 
   return (
     <Button
-      primary
-      loading={isSending}
       disabled={isSending}
+      loading={isSending}
       onClick={onClick}
+      primary
     >
       {children}
     </Button>

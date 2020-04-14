@@ -22,8 +22,12 @@ export const List: FC<Props> = memo(({ config, data }) => {
       {
         Object.keys(data).map((key, index) => {
           const _config = config[index];
+
           return (
-            <li key={`list-${key}-${index}`} className={classes.listItem}>
+            <li
+              className={classes.listItem}
+              key={`list-${key}-${index}`}
+            >
               <div>{_config.title}</div>
               <div>{_config.render(data[key], index)}</div>
             </li>

@@ -1,12 +1,10 @@
 import React from 'react';
-import { Sidebar as SUSidebar, Menu } from 'semantic-ui-react';
 import { SideBarConfig } from '@honzon-platform/apps/types/sidebar';
 // import { AcalaLogo } from '@honzon-platform/apps/components/acala-logo';
 import { Products } from './Products';
 import { SocialMedias } from './SocalMedias';
 import { User } from './User';
 import styled from 'styled-components';
-
 
 export interface SideBarProps {
   config: SideBarConfig;
@@ -36,7 +34,6 @@ const Root = styled('aside')`
 `;
 
 export const Sidebar: React.FC<SideBarProps> = ({ config }) => {
-
   return (
     <Root>
       <User />

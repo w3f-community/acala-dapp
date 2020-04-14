@@ -1,13 +1,7 @@
 import React, {ChangeEventHandler, FC, useContext, useState, ReactNode} from 'react';
 import { Card } from "@honzon-platform/ui-components";
-import { Fixed18 } from '@acala-network/app-util';
-import {
-  Grid,
-  Typography,
-  Box,
-  FormControl,
-  RadioGroup, FormControlLabel, Radio
-} from "@material-ui/core";
+import { Fixed18, convertToFixed18 } from '@acala-network/app-util';
+import { Grid, Typography, Box, FormControl, RadioGroup, FormControlLabel, Radio } from "@material-ui/core";
 import {StakingPoolContext, TxButton, formatCurrency, BalanceInput} from "@honzon-platform/react-components";
 import { UnbondingList } from './UnbondingList';
 import { noop } from 'lodash';
@@ -16,7 +10,7 @@ import { useFormik } from 'formik';
 type REDEEM_TYPE = 'immediately' | 'target' | 'waitForUnbonding';
 
 export const RedeemManipulate: FC = () => {
-  const { stakingPool } = useContext(StakingPoolContext);
+  const { stakingPool, stakingPoolHelper } = useContext(StakingPoolContext);
   const [value, setValue] = useState<number>(0);
   const [target, setTarget] = useState<number>(0);
   const [redeemType, setRedeemType] = useState<REDEEM_TYPE>('immediately');
@@ -42,7 +36,7 @@ export const RedeemManipulate: FC = () => {
   const renderTips = (): ReactNode => {
     const stakingCurrencyName = formatCurrency(stakingPool.stakingCurrency);
     const tips: {[k in string]: string} = {
-      'immediately': `You will redeem ${stakingCurrencyName} immediately, But will pay the most commission.`,
+      'immediately': `You will redeem ${stakingCurrencyName} immediately, But will pay ${convertToFixed18(stakingPool.maxClaimFee).toNumber() * 100}% commission.`,
       'target': `You will redeem ${stakingCurrencyName} after the target era and will pay dynamic commission.`,
       'waitForUnbonding': `You will redeem after 10 era and will pay the least commission.`
     };

@@ -1,5 +1,4 @@
 import React, { FC, memo } from 'react';
-import { Typography } from '@material-ui/core';
 
 export const FormatAddress: FC<{ address: string }> = memo(({ address }) => {
   return (
@@ -8,4 +7,3 @@ export const FormatAddress: FC<{ address: string }> = memo(({ address }) => {
 });
 
 FormatAddress.displayName = 'FormatAddress';
-

@@ -5,13 +5,13 @@ export const NoAccount: FC = memo(() => {
   const handleRetry = (): void => window.location.reload();
 
   return (
-    <Dialog 
-      visiable={true}
-      title={null}
-      content='No account found, please add account in your wallet extension or unlock it!'
+    <Dialog
       cancelText={undefined}
       confirmText='Retry'
+      content='No account found, please add account in your wallet extension or unlock it!'
       onConfirm={handleRetry}
+      title={null}
+      visiable={true}
     />
   );
 });

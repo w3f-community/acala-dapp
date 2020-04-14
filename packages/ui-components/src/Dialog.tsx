@@ -1,7 +1,6 @@
 import React, { FC, memo, ReactNode } from 'react';
 import { Modal, Button } from 'semantic-ui-react';
 import { BareProps } from './types';
-import styled from 'styled-components';
 
 interface Props extends BareProps {
   visiable: boolean;
@@ -15,23 +14,41 @@ interface Props extends BareProps {
 }
 
 export const Dialog: FC<Props> = memo(({
-  visiable,
-  title,
-  content,
   cancelText = 'Cancel',
   confirmText = 'Confrim',
-  onConfirm,
+  content,
   onCancel,
-  onClose
+  onClose,
+  onConfirm,
+  title,
+  visiable
 }) => {
   return (
-    <Modal size='small' open={visiable} onClose={onClose}>
+    <Modal
+      onClose={onClose}
+      open={visiable}
+      size='small'
+    >
       { title ? <Modal.Header>{title}</Modal.Header> : null }
-      <Modal.Content>{content}</Modal.Content>
+      <Modal.Content>
+        {content}
+      </Modal.Content>
       <Modal.Actions>
-        { onCancel ? <Button onClick={onCancel} content={cancelText} /> : null }
-        { onConfirm ? <Button onClick={onConfirm} content={confirmText} /> : null }
+        { onCancel ? (
+          <Button
+            content={cancelText}
+            onClick={onCancel}
+          />
+        ) : null }
+        { onConfirm ? (
+          <Button
+            content={confirmText}
+            onClick={onConfirm}
+          />
+        ) : null }
       </Modal.Actions>
     </Modal>
   );
 });
+
+Dialog.displayName = 'Dialog';

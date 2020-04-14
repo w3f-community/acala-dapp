@@ -1,4 +1,4 @@
-import React, { FC, memo } from 'react';
+import React, { FC, memo, ReactElement } from 'react';
 import { CurrencyId } from '@acala-network/types/interfaces';
 import { useAccounts } from '@honzon-platform/react-hooks';
 import { QueryBalance } from '@honzon-platform/react-query';
@@ -9,18 +9,24 @@ interface Props {
   account?: string;
 }
 
-export const AccountBalance: FC<Props> = memo(({ token, account }) => {
+export const AccountBalance: FC<Props> = memo(({ account, token }) => {
   const { active } = useAccounts();
 
-  if (!(active || account)) {
+  if (!account) {
+    account = active ? active.address : '';
+  }
+
+  if (!account) {
     return null;
   }
 
   return (
-    <QueryBalance 
-      account={account ? account : active!.address}
+    <QueryBalance
+      account={account}
+      render={(result): ReactElement => <FormatBalance balance={result} />}
       token={token}
-      render={(result) => <FormatBalance balance={result} />}
     />
   );
-})
+});
+
+AccountBalance.displayName = 'AccountBalance';

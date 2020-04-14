@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, memo } from 'react';
 import AccountId from '@polkadot/types/generic/AccountId';
 import { CurrencyId, Balance } from '@acala-network/types/interfaces';
 
@@ -12,7 +12,7 @@ type Props = {
   token: CurrencyId | string;
 } & BaseQueryElementProps<Balance>;
 
-export const QueryBalance: FC<Props> = ({ account, token, render }) => {
+export const QueryBalance: FC<Props> = memo(({ account, render, token }) => {
   const { api } = useApi();
   // FIXME: need fix api-derive type
   const result = useCall<Balance>((api.derive as any).currencies.balance, [account, token]);
@@ -22,4 +22,6 @@ export const QueryBalance: FC<Props> = ({ account, token, render }) => {
   }
 
   return null;
-};
+});
+
+QueryBalance.displayName = 'QueryBalance';

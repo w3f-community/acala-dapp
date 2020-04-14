@@ -1,5 +1,5 @@
 import React, { FC, memo } from 'react';
-import { Loader, Segment, Dimmer } from 'semantic-ui-react'
+import { Loader } from 'semantic-ui-react';
 import classes from './FullScreenLoading.module.scss';
 
 export const FullScreenLoading: FC = memo(() => {

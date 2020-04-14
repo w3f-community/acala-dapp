@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, ReactElement } from 'react';
 
 import { Page, Tabs } from '@honzon-platform/ui-components';
 import { StakingPoolProvider } from '@honzon-platform/react-components';
@@ -9,18 +9,17 @@ import { Redeem } from './components/Redeem';
 const PageHoma: FC = () => {
   const tabsConfig = [
     {
-      title: 'Mint',
-      render: () => {
-        return <Mint />
-      }
+      /* eslint-disable-next-line react/display-name */
+      render: (): ReactElement => <Mint />,
+      title: 'Mint'
     },
     {
-      title: 'Redeem',
-      render: () => {
-        return <Redeem />
-      }
+      /* eslint-disable-next-line react/display-name */
+      render: (): ReactElement => <Redeem />,
+      title: 'Redeem'
     }
-  ]
+  ];
+
   return (
     <Page>
       <Page.Title title={'Homa'} />

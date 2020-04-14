@@ -1,4 +1,4 @@
-import React, { createContext, PropsWithChildren, FC } from 'react';
+import React, { createContext, FC, memo, ReactElement } from 'react';
 
 import { DerivedStakingPool } from '@acala-network/api-derive';
 
@@ -12,11 +12,11 @@ interface ContextData {
 
 export const StakingPoolContext = createContext<ContextData>({} as ContextData);
 
-export const StakingPoolProvider: FC = ({ children }) => {
+export const StakingPoolProvider: FC = memo(({ children }) => {
   return (
     <QueryStakingPool
       render={
-        (result) => (
+        (result): ReactElement => (
           <StakingPoolContext.Provider value={result}>
             {children}
           </StakingPoolContext.Provider>
@@ -24,4 +24,6 @@ export const StakingPoolProvider: FC = ({ children }) => {
       }
     />
   );
-}
+});
+
+StakingPoolProvider.displayName = 'StakingPoolProvider';

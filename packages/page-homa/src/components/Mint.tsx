@@ -24,3 +24,5 @@ export const Mint: FC = () => {
     </Grid>
   );
 };
+
+Mint.displayName = 'Mint';

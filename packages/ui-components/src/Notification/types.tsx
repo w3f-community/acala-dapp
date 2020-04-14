@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode } from 'react';
 
 type Placement = 'top left' | 'top right' | 'bottom left' | 'bottom right';
 
@@ -10,7 +10,7 @@ export interface NotificationConfig {
   placement: Placement;
   removedDelay?: number;
   remove: (delay?: number) => void;
-  update: (config:  Partial<NotificationConfig>) => void;
+  update: (config: Partial<NotificationConfig>) => void;
 }
 
 export interface PartialNotificationConfig {

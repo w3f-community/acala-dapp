@@ -14,6 +14,8 @@ const Title: FC<TitleProps> = memo(({ title }) => {
   );
 });
 
+Title.displayName = 'PageTitle';
+
 const _Page: FC<BareProps> = memo(({ children }) => {
   return (
     <div className={classes.page}>
@@ -21,6 +23,8 @@ const _Page: FC<BareProps> = memo(({ children }) => {
     </div>
   );
 });
+
+_Page.displayName = 'Page';
 
 const Content: FC<BareProps> = memo(({ children }) => {
   return (
@@ -30,13 +34,14 @@ const Content: FC<BareProps> = memo(({ children }) => {
   );
 });
 
+Content.displayName = 'PageContent';
+
 interface PageType {
   Title: typeof Title;
   Content: typeof Content;
 }
 
-const Page = _Page as unknown  as PageType;
-
+const Page = _Page as unknown as PageType;
 
 Page.Title = Title;
 Page.Content = Content;

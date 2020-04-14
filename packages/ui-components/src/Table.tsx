@@ -1,7 +1,7 @@
 import React, { ReactNode, MouseEvent, EventHandler, useRef } from 'react';
-import { Table as SUTable, TableRowProps, TableCellProps} from 'semantic-ui-react';
+import { Table as SUTable, TableRowProps, TableCellProps } from 'semantic-ui-react';
 import clsx from 'clsx';
-import { render } from '@testing-library/react';
+
 import { randomID } from './utils';
 
 interface RenderCB<T> {
@@ -26,21 +26,25 @@ type Props<T> = {
   rawProps?: RawProps<T>;
 };
 
-export function Table<T extends { [k: string]: any }>({
+export function Table<T extends { [k: string]: any }> ({
   config,
   data,
   rawProps
-}: Props<T>) {
+}: Props<T>): ReactNode {
   const randomId = useRef<string>(randomID());
+
   const renderItem = (config: TableItem<T>, data: T, index: number): ReactNode => {
     if (!config.render) {
       return config.dataIndex ? data[config.dataIndex] : '';
     }
+
     if (!config.dataIndex) {
       return config.render(data, index);
     }
+
     return config.render(data[config.dataIndex], data, index);
-  }
+  };
+
   return (
     <SUTable celled>
       <SUTable.Header>
@@ -56,12 +60,15 @@ export function Table<T extends { [k: string]: any }>({
         {data.map((item, index) => {
           /* eslint-disable-next-line @typescript-eslint/no-empty-function */
           let onClick: EventHandler<MouseEvent<HTMLTableRowElement>> = () => {};
+
           if (!item) {
             return null;
           }
+
           if (rawProps && rawProps.onClick) {
-            onClick = event => rawProps.onClick(event, item);
+            onClick = (event): void => rawProps.onClick(event, item);
           }
+
           return (
             <SUTable.Row
               key={`table-body-${index}`}
@@ -70,13 +77,13 @@ export function Table<T extends { [k: string]: any }>({
             >
               {config.map((configData, configIndex) => (
                 <SUTable.Cell
-                  key={`table-cell-${randomId.current}-${index}-${configIndex}`}
                   className={clsx({ first: index === 0 })}
+                  key={`table-cell-${randomId.current}-${index}-${configIndex}`}
                   {...configData.cellProps}
                 >
-                {
-                  renderItem(configData, item, configIndex)
-                }
+                  {
+                    renderItem(configData, item, configIndex)
+                  }
                 </SUTable.Cell>
               ))}
             </SUTable.Row>

@@ -11,7 +11,7 @@ export const useModal = (defaultStatus = false): ReturnData => {
   const [status, setStatus] = useState<boolean>(defaultStatus);
   const open = useCallback((): void => setStatus(true), []);
   const close = useCallback((): void => setStatus(false), []);
-  const toggle = useCallback((): void => setStatus(!status), []);
+  const toggle = useCallback((): void => setStatus(!status), [status]);
 
   return { close, open, status, toggle };
 };

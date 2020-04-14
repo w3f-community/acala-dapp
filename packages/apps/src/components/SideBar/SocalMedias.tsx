@@ -1,11 +1,10 @@
-import React, { FC, forwardRef, cloneElement } from 'react';
+import React, { FC, forwardRef, cloneElement, memo } from 'react';
 import { NavLink } from 'react-router-dom';
 import { Menu } from 'semantic-ui-react';
 
 import { SideBarConfig, SideBarItem } from '@honzon-platform/apps/types/sidebar';
 
-
-const SocialMediaItem: FC<SideBarItem> = ({ href, icon, name }) => {
+const SocialMediaItem: FC<SideBarItem> = memo(({ href, icon, name }) => {
   const LinkBehavior = forwardRef((props: any, ref) => (
     <NavLink
       ref={ref}
@@ -22,13 +21,15 @@ const SocialMediaItem: FC<SideBarItem> = ({ href, icon, name }) => {
       {name}
     </Menu.Item>
   );
-};
+});
+
+SocialMediaItem.displayName = 'SocialMediaItem';
 
 interface Props {
   data: SideBarConfig['socialMedia'];
 }
 
-export const SocialMedias: FC<Props> = ({ data }) => {
+export const SocialMedias: FC<Props> = memo(({ data }) => {
   return (
     <Menu>
       {data.map((item) => (
@@ -39,4 +40,6 @@ export const SocialMedias: FC<Props> = ({ data }) => {
       ))}
     </Menu>
   );
-};
+});
+
+SocialMedias.displayName = 'SocialMedias';

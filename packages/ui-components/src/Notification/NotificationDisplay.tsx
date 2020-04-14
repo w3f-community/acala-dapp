@@ -5,13 +5,16 @@ import styled from 'styled-components';
 import { NotificationConfig } from './types';
 
 const NotificationPortal: FC<PropsWithChildren<{}>> = ({ children }) => {
+  /* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */
   const $body = document.querySelector('body')!;
   const $div = document.createElement('div');
+
   $div.classList.add('notification--root');
 
   useEffect((): () => void => {
     $body.append($div);
-    return () => $body.removeChild($div);
+
+    return (): void => { $body.removeChild($div); };
   }, [$body, $div]);
 
   return createPortal(children, $div);
@@ -36,7 +39,7 @@ const NotificationCard: FC<NotificationConfig> = (config) => {
       </div>
     </NotificationCardRoot>
   );
-}
+};
 
 export const NotificationDisplay: FC<{ data: NotificationConfig[] }> = ({ data }) => {
   return (
@@ -44,7 +47,10 @@ export const NotificationDisplay: FC<{ data: NotificationConfig[] }> = ({ data }
       {
         data.map((item) => {
           return (
-            <NotificationCard {...item} key={`notification-${item.id}`} />
+            <NotificationCard
+              key={`notification-${item.id}`}
+              {...item}
+            />
           );
         })
       }
