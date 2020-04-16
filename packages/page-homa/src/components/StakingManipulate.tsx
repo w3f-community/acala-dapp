@@ -25,7 +25,7 @@ export const StakingManipulate: FC = () => {
   const receivedLiquidToken = stakingPoolHelper.convertToLiquid(Fixed18.fromNatural(form.values.stakingBalance));
 
   return (
-    <Card size="large" elevation={1}>
+    <Card elevation={1}>
       <p>
         {`How much ${formatCurrency(stakingPool.stakingCurrency)} you want to stake?`}
       </p>

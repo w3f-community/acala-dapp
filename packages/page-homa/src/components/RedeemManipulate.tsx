@@ -2,7 +2,7 @@ import React, {ChangeEventHandler, FC, useContext, useState, ReactNode} from 're
 import { Card } from "@honzon-platform/ui-components";
 import { Fixed18, convertToFixed18 } from '@acala-network/app-util';
 import { Grid, Typography, Box, FormControl, RadioGroup, FormControlLabel, Radio } from "@material-ui/core";
-import {StakingPoolContext, TxButton, formatCurrency, BalanceInput} from "@honzon-platform/react-components";
+import { StakingPoolContext, TxButton, formatCurrency, BalanceInput } from "@honzon-platform/react-components";
 import { UnbondingList } from './UnbondingList';
 import { noop } from 'lodash';
 import { useFormik } from 'formik';
@@ -44,7 +44,7 @@ export const RedeemManipulate: FC = () => {
   };
 
   return (
-    <Card size="large" elevation={1}>
+    <Card elevation={1}>
       <Typography variant="h5">Choose your redeem way</Typography>
       <Box paddingTop={2}/>
       <FormControl component="fieldset">

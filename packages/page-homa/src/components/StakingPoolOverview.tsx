@@ -54,7 +54,7 @@ export const StakingPoolOverview: FC = () => {
   };
 
   return (
-    <Card size="large" elevation={1} header='Staking Pool Overview' divider={true}>
+    <Card elevation={1} header='Staking Pool Overview' divider={true}>
       <List config={listConfig} data={listData} />
     </Card>
   );

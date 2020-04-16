@@ -36,7 +36,7 @@ const Content: FC<BareProps> = memo(({ children }) => {
 
 Content.displayName = 'PageContent';
 
-interface PageType {
+interface PageType extends FC<BareProps> {
   Title: typeof Title;
   Content: typeof Content;
 }

@@ -12,7 +12,7 @@ type Props = {
 export const QueryLoan: FC<Props> = ({ render }) => {
   const { api } = useApi();
   // FIXME: need fix api-derive type
-  const loan = useCall<DerivedUserLoan>((api.derive as any).loan.loan);
+  const loan = useCall<DerivedUserLoan>((api.derive as any).loan.allLoans, []);
 
   if (loan) {
     return render(loan);

@@ -1,18 +1,13 @@
-import React, { ReactNode, MouseEvent, EventHandler, useRef } from 'react';
+import React, { ReactNode, MouseEvent, EventHandler, useRef, ReactElement } from 'react';
 import { Table as SUTable, TableRowProps, TableCellProps } from 'semantic-ui-react';
 import clsx from 'clsx';
 
 import { randomID } from './utils';
 
-interface RenderCB<T> {
-  (data: any, rowData: T, index?: number): ReactNode;
-  (rowData: T, index?: number): ReactNode;
-}
-
 export type TableItem<T> = {
   title: string;
   dataIndex?: string;
-  render?: RenderCB<T>;
+  render?: (...params: any[]) => ReactNode;
   cellProps?: TableCellProps;
 };
 
@@ -24,13 +19,15 @@ type Props<T> = {
   config: TableItem<T>[];
   data: (T | null)[];
   rawProps?: RawProps<T>;
+  showHeader?: boolean;
 };
 
 export function Table<T extends { [k: string]: any }> ({
   config,
   data,
-  rawProps
-}: Props<T>): ReactNode {
+  rawProps,
+  showHeader = false
+}: Props<T>): ReactElement {
   const randomId = useRef<string>(randomID());
 
   const renderItem = (config: TableItem<T>, data: T, index: number): ReactNode => {
@@ -46,16 +43,20 @@ export function Table<T extends { [k: string]: any }> ({
   };
 
   return (
-    <SUTable celled>
-      <SUTable.Header>
-        <SUTable.Row>
-          {config.map((item, index) => (
-            <SUTable.HeaderCell key={`table-header-${randomId.current}-${index}`}>
-              {item.title}
-            </SUTable.HeaderCell>
-          ))}
-        </SUTable.Row>
-      </SUTable.Header>
+    <SUTable>
+      {
+        showHeader ? (
+          <SUTable.Header>
+            <SUTable.Row>
+              {config.map((item, index) => (
+                <SUTable.HeaderCell key={`table-header-${randomId.current}-${index}`}>
+                  {item.title}
+                </SUTable.HeaderCell>
+              ))}
+            </SUTable.Row>
+          </SUTable.Header>
+        ) : null
+      }
       <SUTable.Body>
         {data.map((item, index) => {
           /* eslint-disable-next-line @typescript-eslint/no-empty-function */

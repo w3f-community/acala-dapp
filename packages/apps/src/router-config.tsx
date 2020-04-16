@@ -2,6 +2,7 @@ import React, { ReactElement } from 'react';
 
 import PageLoan from '@honzon-platform/page-loan';
 import PageHoma from '@honzon-platform/page-homa';
+import PageSwap from '@honzon-platform/page-swap';
 
 import { MainLayout } from './layouts/Main';
 import { sideBarConfig } from './sidebar-config';
@@ -22,6 +23,10 @@ export const config: RouterConfigData[] = [
       {
         element: <PageHoma />,
         path: 'homa'
+      },
+      {
+        element: <PageSwap />,
+        path: 'swap'
       }
     ],
     element: <MainLayout sideBarProps={{ config: sideBarConfig }} />,

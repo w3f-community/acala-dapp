@@ -22,6 +22,8 @@
       "@honzon-platform/page-homa/*": ["page-homa/src/*"],
       "@honzon-platform/page-loan": ["page-loan/src"],
       "@honzon-platform/page-loan/*": ["page-loan/src/*"],
+      "@honzon-platform/page-swap": ["page-swap/src"],
+      "@honzon-platform/page-swap/*": ["page-swap/src/*"],
       "@honzon-platform/react-hooks/*": ["react-hooks/src/*"],
       "@honzon-platform/react-hooks": ["react-hooks/src"],
       "@honzon-platform/react-environment/*": ["react-environment/src/*"],

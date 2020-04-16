@@ -22,8 +22,8 @@ export const sideBarConfig: SideBarConfig = {
     },
     {
       icon: <ExchangeSVG />,
-      name: 'Exchange',
-      path: 'exchange'
+      name: 'Swap',
+      path: 'swap'
     },
     {
       icon: <GovernanceSVG />,

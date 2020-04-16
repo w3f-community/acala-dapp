@@ -1,11 +1,11 @@
-import React, { FC } from 'react';
+import React, { FC, memo } from 'react';
 import { Grid } from 'semantic-ui-react';
 
-import {StakingTokeBalances} from './StakingTokenBalances';
+import { StakingTokeBalances } from './StakingTokenBalances';
 import { StakingManipulate } from './StakingManipulate';
 import { StakingPoolOverview } from './StakingPoolOverview';
 
-export const Mint: FC = () => {
+export const Mint: FC = memo(() => {
   return (
     <Grid>
       <Grid.Row columns={1}>
@@ -23,6 +23,6 @@ export const Mint: FC = () => {
       </Grid.Row>
     </Grid>
   );
-};
+});
 
 Mint.displayName = 'Mint';

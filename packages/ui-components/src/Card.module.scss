@@ -1,8 +1,10 @@
-:global(.ui-card.card.ui) {
-  box-sizing: border-box;
-  width: 100%;
-  border: 1px solid #dddddd;
-  box-shadow: none;
+.root {
+  &:global(.card.ui) {
+    box-sizing: border-box;
+    width: 100%;
+    border: 1px solid #dddddd;
+    box-shadow: none;
+  }
 }
 
 .title {

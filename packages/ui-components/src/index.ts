@@ -6,5 +6,6 @@ export * from './Notification';
 export * from './Page';
 export * from './Table';
 export * from './Tabs';
+export * from './Tag';
 export * from './UIProvider';
 export * from './utils';
