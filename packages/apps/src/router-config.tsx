@@ -1,5 +1,6 @@
 import React, { ReactElement } from 'react';
 
+import PageDeposit from '@honzon-platform/page-deposit';
 import PageLoan from '@honzon-platform/page-loan';
 import PageHoma from '@honzon-platform/page-homa';
 import PageSwap from '@honzon-platform/page-swap';
@@ -16,6 +17,10 @@ export interface RouterConfigData {
 export const config: RouterConfigData[] = [
   {
     children: [
+      {
+        element: <PageDeposit />,
+        path: 'deposit',
+      },
       {
         element: <PageLoan />,
         path: 'loan'

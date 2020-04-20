@@ -1,5 +1,55 @@
+.root {
+  overflow: hidden;
+  background: #fafafa;
+}
+
+.title {
+  margin-bottom: 24px;
+  font-size: 16px;
+  color: #333333;
+}
+
 .main {
   display: flex;
   justify-content: space-between;
-  align-items: flex-end; 
+  align-items: flex-end;
+  padding: 24px;
+  padding-bottom: 32px;
+  border-radius: 12px;
+  background: #ffffff;
+}
+
+.swapInfoRoot {
+  margin: 20px 24px;
+
+  p {
+    margin-bottom: 12px;
+    font-size: 16px;
+    color: #333333;
+    line-height: 19px;
+  }
+
+  p:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.swapBtn {
+  min-width: 58px;
+  max-width: 58px;
+  border-radius: 12px;
+  background: #ffffff;
+  border: 1px solid #173dc9;
+}
+
+.slippageRoot {
+  padding: 16px 24px;
+  background: #eff1f7;
+  border-radius: 12px;
+
+  & .title {
+    font-size: 16px;
+    font-weight: 500;
+    color: #333333;
+  }
 }

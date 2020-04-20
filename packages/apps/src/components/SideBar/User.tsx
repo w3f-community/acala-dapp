@@ -1,27 +1,28 @@
 import React, { FC, memo } from 'react';
-import { Menu } from 'semantic-ui-react';
 
 import { ReactComponent as WalletIcon } from '@honzon-platform/apps/assets/wallet.svg';
-
-import { ProductItem } from './ProductItem';
 import { useAccounts } from '@honzon-platform/react-hooks';
 import { FormatAddress } from '@honzon-platform/react-components';
+
+import { ProductItem } from './ProductItem';
+import classes from './Sidebar.module.scss';
 
 export const User: FC = memo(() => {
   const { active } = useAccounts();
 
-  if (!active) {
-    return null;
-  }
-
   return (
-    <Menu>
+    <div className={classes.area}>
       <ProductItem
         icon={<WalletIcon />}
-        name={<FormatAddress address={active.address} />}
+        name={
+          <div className={classes.wallet}>
+            <p className={classes.title}>Wallet</p>
+            <FormatAddress address={active?.address || ''} />
+          </div>
+        }
         path='wallet'
       />
-    </Menu>
+    </div>
   );
 });
 

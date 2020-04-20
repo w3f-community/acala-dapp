@@ -1,10 +1,13 @@
 import React, { FC, memo } from 'react';
 import { CurrencyId } from '@acala-network/types/interfaces';
 import { Input } from 'semantic-ui-react';
+
 import { useApi } from '@honzon-platform/react-hooks';
+
 import { Token } from './Token';
 import { TokenSelector } from './TokenSelector';
 import { getCurrencyIdFromName } from './utils';
+import classes from './BalanceInput.module.scss';
 
 interface Props {
   enableTokenSelect?: boolean;
@@ -16,9 +19,11 @@ interface Props {
   error?: boolean;
   placeholder?: string;
   value?: number;
+  currencies?: (CurrencyId | string)[]
 }
 
 export const BalanceInput: FC<Props> = memo(({
+  currencies,
   enableTokenSelect = false,
   error,
   id,
@@ -36,31 +41,29 @@ export const BalanceInput: FC<Props> = memo(({
   }
 
   return (
-    <Input
-      error={error}
-      id={id}
-      label={
+    <div className={classes.root}>
+      <input 
+        className={classes.input}
+        id={id}
+        name={name}
+        onChange={onChange}
+        placeholder={placeholder}
+        type='number'
+        value={value}
+      />
+      {
         enableTokenSelect
           ? (
             <TokenSelector
+              className={classes.tokenSelector}
               onChange={onTokenChange}
               value={token}
+              currencies={currencies}
             />
           )
-          : (
-            <Token
-              icon
-              token={token}
-            />
-          )
+          : <Token token={token} />
       }
-      labelPosition='right'
-      name={name}
-      onChange={onChange}
-      placeholder={placeholder}
-      type='number'
-      value={value}
-    />
+    </div>
   );
 });
 

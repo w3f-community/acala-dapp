@@ -1,4 +1,31 @@
 .root {
-  background: #dddddd;
-  border-radius: 50%;
+  box-sizing: border-box;
+  display: inline-block;
+  min-width: 30px;
+  height: 32px;
+  line-height: 32px;
+  margin: 0 8px;
+  padding: 0 8px;
+  border-radius: 13px;
+  background: #f0f0f0;
+  color: #333333;
+
+  &.white {
+    border: 1px solid #e1e1e1;
+    background: #ffffff;
+  }
+
+  &.clickable {
+    cursor: pointer;
+  }
+}
+
+.tagGroup {
+  .root {
+    margin: 0 8px 0 0;
+  }
+
+  .root:last-child {
+    margin: 0;
+  }
 }

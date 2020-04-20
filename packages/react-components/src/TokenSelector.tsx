@@ -1,22 +1,25 @@
 import React, { FC, memo, useState, useEffect, useRef, ReactElement } from 'react';
 import clsx from 'clsx';
-import { Icon } from 'semantic-ui-react';
 
 import { CurrencyId } from '@acala-network/types/interfaces';
 
+import { BareProps } from '@honzon-platform/ui-components/types';
 import { useApi, useModal } from '@honzon-platform/react-hooks';
 import { randomID } from '@honzon-platform/ui-components';
-import { Token } from './Token';
-import classes from './TokenSelector.module.scss';
-import { getAllCurrencyIds } from './utils';
 
-interface Props {
+import { ReactComponent as ArrowDownIcon } from './assets/arrow-down.svg';
+import { Token } from './Token';
+import { getAllCurrencyIds } from './utils';
+import classes from './TokenSelector.module.scss';
+
+interface Props extends BareProps {
   currencies?: (CurrencyId | string)[];
   onChange?: (token: CurrencyId) => void;
   value?: CurrencyId;
 }
 
 export const TokenSelector: FC<Props> = memo(({
+  className,
   currencies,
   onChange,
   value
@@ -69,7 +72,7 @@ export const TokenSelector: FC<Props> = memo(({
   }
 
   return (
-    <div className={clsx(classes.root, { [classes.open]: status })}>
+    <div className={clsx(className, classes.root, { [classes.open]: status })}>
       <div
         className={classes.selected}
         onClick={handleActionClick}
@@ -81,7 +84,7 @@ export const TokenSelector: FC<Props> = memo(({
           />
         </div>
         <div className={classes.selectedAction}>
-          <Icon name='angle down' />
+          <ArrowDownIcon />
         </div>
       </div>
       <ul className={classes.listContainer}>

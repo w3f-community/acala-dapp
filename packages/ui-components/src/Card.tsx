@@ -1,24 +1,32 @@
 import React, { ReactNode, memo } from 'react';
-import { Card as SUCard } from 'semantic-ui-react';
+import clsx from 'clsx';
+
 import { BareProps } from './types';
 import classes from './Card.module.scss';
-import clsx from 'clsx';
 
 interface Props extends BareProps {
   headerClassName?: string;
   contentClassName?: string;
   header?: ReactNode;
   divider?: boolean;
+  gutter?: boolean;
 }
 
-export const Card: React.FC<Props> = memo(({ children, className, header }) => {
+export const Card: React.FC<Props> = memo(({
+  children,
+  className,
+  contentClassName,
+  header,
+  headerClassName,
+  gutter = true
+}) => {
   return (
-    <SUCard className={clsx(classes.root, className)}>
-      { header ? <SUCard.Header className={classes.title}>{header}</SUCard.Header> : null }
-      <SUCard.Content className='ui-card--content'>
+    <div className={clsx(classes.root, className)}>
+      { header ? <div className={clsx(headerClassName, classes.title)}>{header}</div> : null }
+      <div className={clsx(contentClassName, classes.content, { [classes.gutter]: gutter })}>
         {children}
-      </SUCard.Content>
-    </SUCard>
+      </div>
+    </div>
   );
 });
 

@@ -13,6 +13,7 @@ module.exports = override(function(config, env) {
             if (loader.test && loader.test.toString().includes('tsx')) {
                 loader.include = [
                     path.resolve(__dirname, './src'),
+                    path.resolve(__dirname, '../page-deposit/src'),
                     path.resolve(__dirname, '../page-homa/src'),
                     path.resolve(__dirname, '../page-loan/src'),
                     path.resolve(__dirname, '../page-swap/src'),
@@ -31,6 +32,7 @@ module.exports = override(function(config, env) {
     );
     config.resolve.alias = {
         "@honzon-platform/apps": path.resolve(__dirname, "src"),
+        "@honzon-platform/page-deposit": path.resolve(__dirname, "../page-deposit/src"),
         "@honzon-platform/page-homa": path.resolve(__dirname, "../page-homa/src"),
         "@honzon-platform/page-loan": path.resolve(__dirname, "../page-loan/src"),
         "@honzon-platform/page-swap": path.resolve(__dirname, "../page-swap/src"),

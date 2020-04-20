@@ -2,7 +2,7 @@ import React, { ReactNode, FC, useState, useEffect } from 'react';
 import { ApiPromise, WsProvider } from '@polkadot/api';
 import { options } from '@acala-network/api';
 
-const DEFAULT_ENDPOINT = 'wss://node-6640517791634960384.jm.onfinality.io/ws';
+const DEFAULT_ENDPOINT = 'wss://node-6655590520181506048.jm.onfinality.io/ws?apikey=5fb96acf-6839-484f-9f3d-8784f26df699';
 
 const CONNECT_TIMEOUT = 1000 * 60; // one minute
 
@@ -119,7 +119,7 @@ export const ApiProvider: FC<ApiProps> = ({
         ...connectStatus
       }}
     >
-      {renderContent()}
+      {Loading ? renderContent() : children}
       {renderError()}
     </ApiContext.Provider>
   );

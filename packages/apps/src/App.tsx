@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 
 import { ConnectError, SelectAccount } from '@honzon-platform/react-components';
-import { UIProvider, FullScreenLoading, Notification } from '@honzon-platform/ui-components';
+import { UIProvider, Notification } from '@honzon-platform/ui-components';
 import { ApiProvider, AccountProvider } from '@honzon-platform/react-environment';
 
 import { RouterProvider } from './components/RouterProvider';
@@ -13,8 +13,7 @@ const App: FC = () => {
       <Notification>
         <ApiProvider
           ConnectError={<ConnectError />}
-          endpoint='ws://127.0.0.1:9944'
-          Loading={<FullScreenLoading />}
+          Loading={null}
         >
           <AccountProvider
             applicationName={'Acala Honzon Platfrom'}

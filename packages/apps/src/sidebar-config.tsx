@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { ReactComponent as DepositSVG } from '@honzon-platform/apps/assets/deposit.svg';
 import { ReactComponent as TwitterSVG } from '@honzon-platform/apps/assets/twitter.svg';
 import { ReactComponent as EmailSVG } from '@honzon-platform/apps/assets/email.svg';
 import { ReactComponent as LoanSVG } from '@honzon-platform/apps/assets/loan.svg';
@@ -16,13 +17,18 @@ export const sideBarConfig: SideBarConfig = {
       path: 'homa'
     },
     {
+      icon: <DepositSVG />,
+      name: 'Deposit & Earn',
+      path: 'deposit'
+    },
+    {
       icon: <LoanSVG />,
       name: 'Self Serviced Loan',
       path: 'loan'
     },
     {
       icon: <ExchangeSVG />,
-      name: 'Swap',
+      name: 'Exchange',
       path: 'swap'
     },
     {
@@ -33,15 +39,14 @@ export const sideBarConfig: SideBarConfig = {
   ],
   socialMedia: [
     {
-      href: 'mailto:hello@acala.network',
       icon: <EmailSVG />,
-      name: 'Email'
+      name: 'Email',
+      path: 'mailto:hello@acala.network'
     },
     {
-      href: 'https://twitter.com/AcalaNetwork',
       icon: <TwitterSVG />,
       name: 'Twitter',
-      target: '_blank'
+      path: 'https://twitter.com/AcalaNetwork'
     }
   ]
 };

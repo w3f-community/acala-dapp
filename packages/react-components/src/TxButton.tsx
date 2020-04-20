@@ -1,7 +1,6 @@
 import React, { FC, PropsWithChildren, useState, useContext } from 'react';
 import { useAccounts, useApi } from '@honzon-platform/react-hooks';
-import { NotificationContext } from '@honzon-platform/ui-components';
-import { Button } from 'semantic-ui-react';
+import { NotificationContext, Button } from '@honzon-platform/ui-components';
 
 interface Props {
   section: string;

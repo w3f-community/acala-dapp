@@ -1,0 +1,49 @@
+@import "./styles//variables.scss";
+
+.root {
+  width: 100%;
+  border-collapse:collapse;
+}
+
+.headerCell {
+  padding: 12px 0;
+  border-bottom: 1px solid #ecf0f2;
+  font-size: $font-m;
+}
+
+.cell {
+  padding: 12px 0;
+  border-bottom: 1px solid #ecf0f2;
+  font-size: $font-m;
+  color: $color-gray;
+}
+
+.headerCell.left, .cell.left {
+  text-align: left;
+}
+
+.headerCell.right, .cell.right {
+  text-align: right;
+}
+
+.headerCell.center, .cell.center {
+  text-align: center;
+}
+
+.row:last-child {
+  & > .cell {
+    border-bottom: none;
+  }
+}
+
+.headerCell:first-child, .cell:first-child {
+  padding-left: 24px;
+}
+
+.headerCell:last-child, .cell:last-child {
+  padding-right: 24px;
+}
+
+.row:hover {
+  background: #f2f5f7;
+}

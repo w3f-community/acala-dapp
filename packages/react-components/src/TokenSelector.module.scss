@@ -1,11 +1,15 @@
-$token-selector-height: 42px;
+$token-selector-height: 58px;
+$token-selector-action-width: 55px;
+$token-select-info-width: 140px;
 
 .root {
   position: relative;
   height: $token-selector-height;
-  width: 140px;
+  min-width: calc($token-select-info-width + $token-selector-action-width);
   border: 1px solid #dddddd;
-  border-radius: 6px;
+  border-radius: 2px;
+  font-size: 24px;
+  color: #333333;
 }
 
 .selected {
@@ -17,22 +21,33 @@ $token-selector-height: 42px;
 .selectedToken {
   display: flex;
   flex: 1;
+  min-width: $token-select-info-width;
   align-items: center;
   padding: 0 8px;
   color: #000000;
 }
 
 .selectedAction {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: $token-selector-height;
+  width: $token-selector-action-width;
   height: $token-selector-height;
-  border-left: 1px solid #dddddd;
   cursor: pointer;
 
   &:hover {
     background: #dddddd;
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: calc($token-selector-height / 2 - 42px / 2);
+    height: 42px;
+    width: 1px;
+    background: #ecf0f2;
   }
 }
 

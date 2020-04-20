@@ -1,44 +1,26 @@
 import React from 'react';
-import { SideBarConfig } from '@honzon-platform/apps/types/sidebar';
-// import { AcalaLogo } from '@honzon-platform/apps/components/acala-logo';
+
+import { ApiStatus } from '@honzon-platform/react-components';
+
+import { Logo } from './Logo';
 import { Products } from './Products';
-import { SocialMedias } from './SocalMedias';
+import { SocialMedias } from './SocialMedias';
 import { User } from './User';
-import styled from 'styled-components';
+import { SideBarConfig } from '../../types/sidebar';
+import classes from './Sidebar.module.scss';
 
 export interface SideBarProps {
   config: SideBarConfig;
 }
 
-const Root = styled('aside')`
-  flex: 0 0 260px;
-  height: 100vh;
-  background: #01279C;
-  overflow: hidden;
-
-  & .ui.menu {
-    width: 100%;
-    flex-direction: column;
-    background: transparent;
-    border-radius: 0;
-    box-shadow: none;
-  }
-
-  & .ui.menu .item {
-    color: #ffffff;
-  }
-
-  & .sidebar__icon {
-    margin-right: 20px;
-  }
-`;
-
 export const Sidebar: React.FC<SideBarProps> = ({ config }) => {
   return (
-    <Root>
+    <div className={classes.root}>
+      <Logo />
       <User />
       <Products data={config.products} />
       <SocialMedias data={config.socialMedia} />
-    </Root>
+      <ApiStatus className={classes.status}/>
+    </div>
   );
 };

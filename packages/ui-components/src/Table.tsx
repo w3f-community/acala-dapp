@@ -1,17 +1,20 @@
 import React, { ReactNode, MouseEvent, EventHandler, useRef, ReactElement } from 'react';
-import { Table as SUTable, TableRowProps, TableCellProps } from 'semantic-ui-react';
 import clsx from 'clsx';
 
+import classes from './Table.module.scss';
 import { randomID } from './utils';
+
+type CellAlign = 'left' | 'right' | 'center';
 
 export type TableItem<T> = {
   title: string;
   dataIndex?: string;
+  width?: number;
+  align?: CellAlign;
   render?: (...params: any[]) => ReactNode;
-  cellProps?: TableCellProps;
 };
 
-interface RawProps<T> extends Omit<TableRowProps, 'onClick'> {
+interface RawProps<T> {
   onClick: (event: MouseEvent<HTMLTableRowElement>, data: T) => void;
 }
 
@@ -42,22 +45,43 @@ export function Table<T extends { [k: string]: any }> ({
     return config.render(data[config.dataIndex], data, index);
   };
 
+  const totalWidthConfiged = config.reduce((acc, cur) => acc + (cur.width ? cur.width : 0), 0);
+  const defaultCellWidth = `${100 / config.length}%`;
+
   return (
-    <SUTable>
+    <table className={classes.root}>
+      <colgroup>
+        {
+          config.map((_item, index) => (
+            <col
+              key={`table-header-colgroup-${randomId.current}-${index}`}
+              style={{ width: _item.width ? `${_item.width / totalWidthConfiged}%` : defaultCellWidth}}
+            />
+          ))
+        }
+      </colgroup>
       {
         showHeader ? (
-          <SUTable.Header>
-            <SUTable.Row>
+          <thead>
+            <tr>
               {config.map((item, index) => (
-                <SUTable.HeaderCell key={`table-header-${randomId.current}-${index}`}>
+                <th 
+                  className={
+                    clsx(
+                      classes.headerCell,
+                      classes[item.align || 'center'],
+                    )
+                  }
+                  key={`table-header-${randomId.current}-${index}`}
+                >
                   {item.title}
-                </SUTable.HeaderCell>
+                </th>
               ))}
-            </SUTable.Row>
-          </SUTable.Header>
+            </tr>
+          </thead>
         ) : null
       }
-      <SUTable.Body>
+      <tbody>
         {data.map((item, index) => {
           /* eslint-disable-next-line @typescript-eslint/no-empty-function */
           let onClick: EventHandler<MouseEvent<HTMLTableRowElement>> = () => {};
@@ -71,26 +95,34 @@ export function Table<T extends { [k: string]: any }> ({
           }
 
           return (
-            <SUTable.Row
+            <tr
+              className={classes.row}
               key={`table-body-${index}`}
               {...rawProps}
               onClick={onClick}
             >
               {config.map((configData, configIndex) => (
-                <SUTable.Cell
-                  className={clsx({ first: index === 0 })}
+                <td
+                  className={
+                    clsx(
+                      classes.cell,
+                      classes[configData.align || 'center'],
+                      {
+                        first: index === 0,
+                      }
+                    )
+                  }
                   key={`table-cell-${randomId.current}-${index}-${configIndex}`}
-                  {...configData.cellProps}
                 >
                   {
                     renderItem(configData, item, configIndex)
                   }
-                </SUTable.Cell>
+                </td>
               ))}
-            </SUTable.Row>
+            </tr>
           );
         })}
-      </SUTable.Body>
-    </SUTable>
+      </tbody>
+    </table>
   );
 }

@@ -3,7 +3,6 @@ import React, { FC, memo } from 'react';
 import { SideBarConfig } from '@honzon-platform/apps/types/sidebar';
 
 import { ProductItem } from './ProductItem';
-import { Menu } from 'semantic-ui-react';
 
 interface Props {
   data: SideBarConfig['products'];
@@ -11,14 +10,14 @@ interface Props {
 
 export const Products: FC<Props> = memo(({ data }) => {
   return (
-    <Menu>
+    <div>
       {data.map((item) => (
         <ProductItem
           key={`products-${item.name}`}
           {...item}
         />
       ))}
-    </Menu>
+    </div>
   );
 });
 

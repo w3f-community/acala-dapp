@@ -4,6 +4,7 @@ export * from './format';
 export * from './utils';
 export * from './service-providers';
 
+export * from './ApiStatus';
 export * from './AccountBalance';
 export * from './BalanceInput';
 export * from './SelectAccount';

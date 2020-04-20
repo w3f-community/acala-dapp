@@ -1,0 +1,39 @@
+@import './styles/index.scss';
+
+.root {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 2px;
+  font-weight: 500;
+  color: $color-white;
+  cursor: pointer;
+
+  // clear default apperance
+  border: none;
+  outline: none;
+  box-shadow: none;
+  appearance: none;
+
+  &.primary {
+    background: $color-primary;
+  }
+
+  &.normal {
+    background: $color-white;
+  }
+
+  &.large {
+    min-width: 178px;
+    height: 58px;
+    font-size: 24px;
+    line-height: 29px;
+  }
+
+  &.small {
+    min-width: 80px;
+    height: 32px;
+    font-size: 16px;
+    line-height: 19px;
+  }
+}

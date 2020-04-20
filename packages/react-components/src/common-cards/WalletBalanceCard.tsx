@@ -20,6 +20,7 @@ export const WalletBalanceCard: FC = memo(() => {
 
   const tableConfig: TableItem<TableData>[] = [
     {
+      align: 'left',
       dataIndex: 'token',
       render: function cell (token): ReactElement {
         return <Token token={token} />;
@@ -27,6 +28,7 @@ export const WalletBalanceCard: FC = memo(() => {
       title: 'Token'
     },
     {
+      align: 'center',
       render: function cell (data): ReactElement {
         return (
           <QueryBalance
@@ -40,6 +42,7 @@ export const WalletBalanceCard: FC = memo(() => {
       title: 'Token'
     },
     {
+      align: 'right',
       /* eslint-disable-next-line react/display-name */
       render: function (data): ReactElement {
         return (
@@ -66,7 +69,10 @@ export const WalletBalanceCard: FC = memo(() => {
   ];
 
   return (
-    <Card header='Wallet Balance'>
+    <Card
+      header='Wallet Balance'
+      gutter={false}
+    >
       <QueryAllPrices
         /* eslint-disable-next-line react/display-name */
         render={(price): ReactElement => {

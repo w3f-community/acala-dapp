@@ -1,0 +1,66 @@
+@import "../../../../ui-components/src/styles/index.scss";
+
+.root {
+  min-width: 240px;
+  max-width: 240px;
+  height: 100vh;
+  overflow: hidden;
+  background: #ffffff;
+  box-shadow: 0 20px 20px 0 rgba(13,28,90,0.09);
+}
+
+.logo {
+  margin: 94px auto 44px auto;
+  text-align: center;
+}
+
+.item {
+  position: relative;
+  display: flex;
+  justify-items: flex-start;
+  align-items: center;
+  padding-left: 21px;
+  height: 58px;
+  font-size: $font-s;
+  line-height: 20px;
+  color: $color-primary;
+
+  & > svg {
+    margin-right: 13px;
+  }
+
+  &:global(.active) {
+    background-image: linear-gradient(90deg, #E5EAFF 0%, #F5F6FA 100%);
+  }
+
+  &:global(.active)::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 5px;
+    height: 100%;
+    background: $color-primary;
+  }
+
+  @include link($color-primary, $color-primary, $color-primary, $color-primary);
+}
+
+.wallet {
+  & > p:first-child {
+    color: $color-primary;
+  }
+  color: #abb4d1;
+}
+
+.social {
+  margin-top: 235px;
+
+  & .item {
+    height: 38px;
+  }
+}
+
+.status {
+  margin: 31px 21px;
+}

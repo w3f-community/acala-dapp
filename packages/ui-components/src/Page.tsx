@@ -1,6 +1,6 @@
 import React, { FC, memo } from 'react';
 import { BareProps } from './types';
-import classes from './Page.module.css';
+import classes from './Page.module.scss';
 
 interface TitleProps extends BareProps {
   title: string;

@@ -1,25 +1,16 @@
 import React, { cloneElement, forwardRef, memo } from 'react';
-import { Menu } from 'semantic-ui-react';
 import { NavLink } from 'react-router-dom';
 
 import { SideBarItem } from '@honzon-platform/apps/types/sidebar';
 
+import classes from './Sidebar.module.scss';
+
 export const ProductItem: React.FC<SideBarItem> = memo(({ icon, name, path }) => {
-  const LinkBehavior = forwardRef((props: any, ref) => (
-    <NavLink
-      ref={ref}
-      to={path as string}
-      {...props}
-    />
-  ));
-
-  LinkBehavior.displayName = 'LinkBehavior';
-
   return (
-    <Menu.Item as={LinkBehavior}>
+    <NavLink to={path as string} className={classes.item}>
       {cloneElement(icon, { className: 'sidebar__icon' })}
       {name}
-    </Menu.Item>
+    </NavLink>
   );
 });
 

@@ -1,14 +1,21 @@
+@import "styles/variables.scss";
+
 .root {
-  &:global(.card.ui) {
-    box-sizing: border-box;
-    width: 100%;
-    border: 1px solid #dddddd;
-    box-shadow: none;
-  }
+  box-sizing: border-box;
+  width: 100%;
+  background: #ffffff;
+  border: 1px solid #ebeef5;
+  box-shadow: 0 1px 20px 0 rgba(23,65,212,0.02);
+  border-radius: 12px;
 }
 
 .title {
-  padding: 16px;
-  font-size: 18px;
-  font-weight: 500;
+  padding: 22px 24px;
+  color: $color-black;
+  font-size: $font-m;
+  border-bottom: 1px solid #ecf0f2;
+}
+
+.content.gutter {
+  padding: 24px;
 }

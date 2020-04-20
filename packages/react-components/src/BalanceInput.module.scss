@@ -1,0 +1,26 @@
+.root {
+  display: flex;
+  align-items: stretch;
+  height: 58px;
+  padding-left: 16px;
+  border: 1px solid #ecf0f2;
+  border-radius: 2px;
+}
+
+.input {
+  width: 184px;
+  font-size: 24px;
+  color: #333333;
+
+  // clear default apperance
+  appearance: none;
+  box-shadow: none;
+  outline: none;
+  border: none;
+}
+
+.tokenSelector {
+  border: none;
+  border-left: 1px solid #ecf0f2;
+  border-radius: 0;
+}

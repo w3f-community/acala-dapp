@@ -3,9 +3,10 @@ import { noop } from 'lodash';
 import { useFormik } from 'formik';
 
 import { CurrencyId } from '@acala-network/types/interfaces';
-import { Card, Tag } from '@honzon-platform/ui-components';
+import { Card, Tag, Button, TagGroup } from '@honzon-platform/ui-components';
 import { BalanceInput, TxButton, SwapContext, formatCurrency, numToFixed18Inner } from '@honzon-platform/react-components';
 
+import { ReactComponent as SwapIcon } from '../assets/swap.svg';
 import classes from './SwapConsole.module.scss';
 
 interface InputAreaProps {
@@ -26,8 +27,8 @@ const InputArea: FC<InputAreaProps> = memo(({
   value
 }) => {
   return (
-    <div>
-      <p>{title}</p>
+    <div className={classes.inputRoot}>
+      <p className={classes.title}>{title}</p>
       <BalanceInput
         enableTokenSelect
         name={inputName}
@@ -48,9 +49,13 @@ interface SwapBtn {
 
 function SwapBtn ({ onClick }: SwapBtn): ReactElement {
   return (
-    <button onClick={onClick}>
-      Swap
-    </button>
+    <Button
+      className={classes.swapBtn}
+      onClick={onClick}
+      normal
+    >
+      <SwapIcon />
+    </Button>
   );
 }
 
@@ -70,7 +75,7 @@ const SwapInfo: FC<SwapInfoProps> = memo(({
   targetCurrency
 }) => {
   return (
-    <div>
+    <div className={classes.swapInfoRoot}>
       <p>
         You are selling
         <Tag>{`${supply}${formatCurrency(supplyCurrency)}`}</Tag>
@@ -92,18 +97,35 @@ interface SlippageInputAreaProps {
 }
 
 const SlippageInputArea: FC<SlippageInputAreaProps> = memo(() => {
-  const suggested = [0.001, 0.05, 0.1];
+  const suggestValues = [0.001, 0.05, 0.1];
+  const suggestedIndex = 1;
+
+  const handleClick = (num: number): void => {
+
+  }
+
+  const renderSuggest = (num: number): string => {
+    return `${num * 100}%${num === suggestValues[suggestedIndex] ? ' (suggested)' : ''}`;
+  }
 
   return (
-    <div>
-      <p>Limit addtion price slippage</p>
-      <div>
+    <div className={classes.slippageRoot}>
+      <p className={classes.title}>Limit addtion price slippage</p>
+      <TagGroup>
         {
-          suggested.map((suggest): ReactElement => {
-            return <Tag key={`suggest-${suggest}`}>{suggest}</Tag>;
+          suggestValues.map((suggest): ReactElement => {
+            return (
+              <Tag
+                key={`suggest-${suggest}`}
+                color='white'
+                onClick={() => handleClick(suggest) }
+              >
+                {renderSuggest(suggest)}
+              </Tag>
+            );
           })
         }
-      </div>
+      </TagGroup>
     </div>
   );
 });
@@ -151,7 +173,7 @@ export const SwapConsole: FC = memo(() => {
   };
 
   return (
-    <Card className={classes.root}>
+    <Card className={classes.root} gutter={false}>
       <div className={classes.main}>
         <InputArea
           inputName='supply'
@@ -185,21 +207,17 @@ export const SwapConsole: FC = memo(() => {
           Swap
         </TxButton>
       </div>
-      <div className={classes.information}>
-        <SwapInfo
-          slippage={0}
-          supply={form.values.supply}
-          supplyCurrency={supplyCurrency}
-          target={form.values.target}
-          targetCurrency={targetCurrency}
-        />
-      </div>
-      <div className={classes.slippage}>
-        <SlippageInputArea
-          onChange={setSlippage}
-          value={0}
-        />
-      </div>
+      <SwapInfo
+        slippage={0}
+        supply={form.values.supply}
+        supplyCurrency={supplyCurrency}
+        target={form.values.target}
+        targetCurrency={targetCurrency}
+      />
+      <SlippageInputArea
+        onChange={setSlippage}
+        value={0}
+      />
     </Card>
   );
 });
