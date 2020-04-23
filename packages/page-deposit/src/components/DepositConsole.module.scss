@@ -1,11 +1,19 @@
 .main {
   display: flex;
   align-items: flex-end;
-  justify-content: space-between;
 
   .addIcon {
+    flex: 0 0 25px;
     margin: 16px 23px;
   }
+
+  .txBtn {
+    margin-left: 24px;
+  }
+}
+
+.inputAreaRoot {
+  max-width: 400px;
 }
 
 .inputAreaTitle {
@@ -20,4 +28,19 @@
   & > .inputAreaBalance {
     font-weight: 400;
   }
+}
+
+.addon {
+  margin-top: 16px;
+  width: 400px;
+  list-style: none;
+  font-size: 16px;
+  line-height: 19px;
+  color: #999999;
+}
+
+.addonItem {
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
 }

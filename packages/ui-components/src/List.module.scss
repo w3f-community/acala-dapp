@@ -5,7 +5,19 @@
 }
 
 .listItem {
-  height: 32px;
   display: flex;
+  align-items: center;
   justify-content: space-between;
+  padding: 12.5px 24px;
+  border-bottom: 1px solid #ecf0f2;
+  font-size: 16px;
+  line-height: 24px;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:hover {
+    background: #f2f5f7;
+  }
 }

@@ -13,23 +13,15 @@ export const StakingTokeBalances: FC = () => {
 
     const tableConfig: TableItem<TableData>[] = [
       {
-        title: 'type',
-        render: (data: TableData) => {
-          if (data.token.eq(stakingPool.liquidCurrency)) {
-            return 'Liquid Token'
-          }
-          return 'Staking Token'
-        }
-      },
-      {
         title: 'token',
         dataIndex: 'token',
         render: (data: CurrencyId) => {
-          return <Token token={data} icon />
+          return <Token token={data} />
         }
       },
       {
         title: 'balance',
+        align: 'right',
         render: (data: TableData) => <AccountBalance token={data.token} />
       }
     ];
@@ -43,7 +35,7 @@ export const StakingTokeBalances: FC = () => {
     }
 
     return (
-      <Card>
+      <Card header='Balance' gutter={false}>
         <Table config={tableConfig} data={tableData} />
       </Card>
     );

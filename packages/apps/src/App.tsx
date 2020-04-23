@@ -14,6 +14,7 @@ const App: FC = () => {
         <ApiProvider
           ConnectError={<ConnectError />}
           Loading={null}
+          endpoint={'ws://127.0.0.1:9944/'}
         >
           <AccountProvider
             applicationName={'Acala Honzon Platfrom'}

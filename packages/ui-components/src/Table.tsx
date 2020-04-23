@@ -20,7 +20,7 @@ interface RawProps<T> {
 
 type Props<T> = {
   config: TableItem<T>[];
-  data: (T | null)[];
+  data: (T | any)[];
   rawProps?: RawProps<T>;
   showHeader?: boolean;
 };

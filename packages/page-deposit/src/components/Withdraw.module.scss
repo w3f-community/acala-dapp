@@ -1,0 +1,53 @@
+.main {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+
+  .arrowIcon {
+    margin: 23px;
+  }
+}
+
+.inputAreaRoot {
+  max-width: 400px;
+}
+
+.inputAreaTitle {
+  padding: 0 4px;
+  margin-bottom: 24px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 16px;
+  line-height: 19px;
+  font-weight: 300;
+
+  & > .inputAreaBalance {
+    font-weight: 400;
+  }
+}
+
+.addon {
+  margin-top: 16px;
+  width: 400px;
+  list-style: none;
+  font-size: 16px;
+  line-height: 19px;
+  color: #999999;
+}
+
+.addonItem {
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.output {
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  width: 400px;
+  height: 58px;
+  border: 1px solid #ecf0f2;
+  font-size: 24px;
+  line-height: 29px;
+}

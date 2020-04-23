@@ -1,11 +1,9 @@
 import React, { FC, useState } from 'react';
 
-import { Page } from '@honzon-platform/ui-components';
-import { Grid } from 'semantic-ui-react';
+import { Page, Grid } from '@honzon-platform/ui-components';
 import { SwapProvider } from '@honzon-platform/react-components';
 import { UserCard } from './components/UserCard';
 import { SystemCard } from './components/SystemCard';
-import { ACTION_TYPE } from './types';
 import { SelectAction } from './components/SelectAction';
 import { DepositProvider } from './components/Provider';
 import { Console } from './components/Console';
@@ -18,30 +16,24 @@ const PageDeposit: FC = () => {
       <SwapProvider>
         <Page.Content>
           <DepositProvider>
-            <Grid>
-              <Grid.Row columns={2}>
-                <Grid.Column>
+            <Grid container direction='column'>
+              <Grid item container direction='row'>
+                <Grid item>
                   <UserCard />
-                </Grid.Column>
-                <Grid.Column>
+                </Grid>
+                <Grid item>
                   <SystemCard />
-                </Grid.Column>
-              </Grid.Row>
-              <Grid.Row columns={1}>
-                <Grid.Column>
-                  <SelectAction />
-                </Grid.Column>
-              </Grid.Row>
-              <Grid.Row columns={1}>
-                <Grid.Column>
-                  <Console />
-                </Grid.Column>
-              </Grid.Row>
-              <Grid.Row columns={1}>
-                <Grid.Column>
-                  <PoolOverview />
-                </Grid.Column>
-              </Grid.Row>
+                </Grid>
+              </Grid>
+              <Grid item>
+                <SelectAction />
+              </Grid>
+              <Grid item>
+                <Console />
+              </Grid>
+              <Grid item>
+                <PoolOverview />
+              </Grid>
             </Grid>
           </DepositProvider>
         </Page.Content>

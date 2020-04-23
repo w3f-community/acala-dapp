@@ -6,10 +6,9 @@ import { Card, TableItem, Table } from '@honzon-platform/ui-components';
 import { useAccounts } from '@honzon-platform/react-hooks';
 
 import { DepositContext } from './Provider';
-import { ExchangeRate } from './ExchangeRate';
-import { DexPoolSize } from './DexPoolSize';
 import { AccountShare } from './AccountShare';
 import { AccountDexTokens } from './AccountDexTokens';
+import { DexPoolSize, DexExchangeRate } from '@honzon-platform/react-components';
 
 export const PoolOverview: FC = memo(() => {
   const { enabledCurrencyIds, baseCurrencyId } = useContext(DepositContext);
@@ -32,7 +31,7 @@ export const PoolOverview: FC = memo(() => {
       align: 'left',
       width: 3,
       render: (token: CurrencyId) => (
-          <ExchangeRate
+          <DexExchangeRate
             token={token}
             baseCurrencyId={baseCurrencyId}
           />

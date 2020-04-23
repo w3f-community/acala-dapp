@@ -9,7 +9,7 @@ import { useFormik } from 'formik';
 
 type REDEEM_TYPE = 'immediately' | 'target' | 'waitForUnbonding';
 
-export const RedeemManipulate: FC = () => {
+export const RedeemConsole: FC = () => {
   const { stakingPool, stakingPoolHelper } = useContext(StakingPoolContext);
   const [value, setValue] = useState<number>(0);
   const [target, setTarget] = useState<number>(0);

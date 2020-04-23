@@ -3,11 +3,17 @@ import { Grid } from 'semantic-ui-react';
 
 import { StakingTokeBalances } from './StakingTokenBalances';
 import { StakingManipulate } from './StakingManipulate';
-import { StakingPoolOverview } from './StakingPoolOverview';
+import { StakingPoolOverview } from './SystemInfo';
+import { SelectToken } from './SelectToken';
 
 export const Mint: FC = memo(() => {
   return (
     <Grid>
+      <Grid.Row columns={1}>
+        <Grid.Column>
+          <SelectToken />
+        </Grid.Column>
+      </Grid.Row>
       <Grid.Row columns={1}>
         <Grid.Column>
           <StakingManipulate />

@@ -1,8 +1,11 @@
 import React, { FC, PropsWithChildren, useState, useContext } from 'react';
 import { useAccounts, useApi } from '@honzon-platform/react-hooks';
 import { NotificationContext, Button } from '@honzon-platform/ui-components';
+import { BareProps } from '@honzon-platform/ui-components/types';
+import { FormatAddress } from './format';
 
-interface Props {
+interface Props extends BareProps {
+  disabled: boolean;
   section: string;
   method: string;
   params: any[];
@@ -12,6 +15,8 @@ interface Props {
 }
 
 export const TxButton: FC<PropsWithChildren<Props>> = ({
+  disabled,
+  className,
   children,
   method,
   onFailed,
@@ -54,20 +59,25 @@ export const TxButton: FC<PropsWithChildren<Props>> = ({
 
     const extrinsic = api.tx[section][method](...params);
     const notification = createNotification({
-      content: 'loading',
+      content: <FormatAddress address={extrinsic.hash.hash.toString()} />,
       placement: 'top right',
-      title: extrinsic.hash.hash
+      type: 'info',
+      title: `${section}: ${method}`
     });
 
     extrinsic.signAndSend(active.address, (result) => {
       if (result.isInBlock) {
         notification.update({
-          content: 'success',
+          type: 'success',
           removedDelay: 4000
         });
         _onSuccess();
       }
     }).catch(() => {
+        notification.update({
+          type: 'error',
+          removedDelay: 4000
+        });
       _onFailed();
     }).finally(() => {
       _onFinally();
@@ -76,7 +86,8 @@ export const TxButton: FC<PropsWithChildren<Props>> = ({
 
   return (
     <Button
-      disabled={isSending}
+      className={className}
+      disabled={disabled || isSending}
       loading={isSending}
       onClick={onClick}
       primary

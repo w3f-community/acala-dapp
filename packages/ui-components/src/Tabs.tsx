@@ -10,17 +10,23 @@ interface TabConfig {
 
 interface Props {
   config: TabConfig[];
+  style: 'normal' | 'button' | 'bar'
 }
 
-export const Tabs: FC<Props> = memo(({ config }) => {
+export const Tabs: FC<Props> = memo(({
+  config,
+  style = 'normal'
+}) => {
   const [active, setActive] = useState<number>(0);
 
   const onClick = (index: number): void => {
     setActive(index);
   };
 
+  console.log(style);
+
   return (
-    <div className={classes.tab}>
+    <div className={clsx(classes.root, classes[style])}>
       <div className={classes.tabTitleContent}>
         {
           config.map((item: TabConfig, index: number): ReactNode => {

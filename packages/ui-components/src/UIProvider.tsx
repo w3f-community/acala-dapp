@@ -1,6 +1,5 @@
 import React, { FC, PropsWithChildren, cloneElement, createElement, ReactElement } from 'react';
 
-import 'semantic-ui-css/semantic.min.css';
 import './styles/index.scss';
 import './styles/global.css';
 

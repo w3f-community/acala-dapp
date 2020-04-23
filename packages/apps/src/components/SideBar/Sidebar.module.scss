@@ -1,6 +1,7 @@
 @import "../../../../ui-components/src/styles/index.scss";
 
 .root {
+  z-index: 1;
   min-width: 240px;
   max-width: 240px;
   height: 100vh;

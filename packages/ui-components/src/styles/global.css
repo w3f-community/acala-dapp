@@ -27,3 +27,7 @@ p, ul {
   border-radius: 2px;
   color: #ffffff;
 }
+
+a {
+  text-decoration: none;
+}

@@ -6,14 +6,15 @@ import { ReactComponent as EmailSVG } from '@honzon-platform/apps/assets/email.s
 import { ReactComponent as LoanSVG } from '@honzon-platform/apps/assets/loan.svg';
 import { ReactComponent as ExchangeSVG } from '@honzon-platform/apps/assets/exchange.svg';
 import { ReactComponent as GovernanceSVG } from '@honzon-platform/apps/assets/governance.svg';
+import { ReactComponent as LiquidSVG } from '@honzon-platform/apps/assets/liquid.svg';
 
 import { SideBarConfig } from './types/sidebar';
 
 export const sideBarConfig: SideBarConfig = {
   products: [
     {
-      icon: <LoanSVG />,
-      name: 'Homa',
+      icon: <LiquidSVG />,
+      name: 'Liquid DOT',
       path: 'homa'
     },
     {

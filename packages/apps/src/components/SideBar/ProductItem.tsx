@@ -1,4 +1,4 @@
-import React, { cloneElement, forwardRef, memo } from 'react';
+import React, { cloneElement, memo } from 'react';
 import { NavLink } from 'react-router-dom';
 
 import { SideBarItem } from '@honzon-platform/apps/types/sidebar';

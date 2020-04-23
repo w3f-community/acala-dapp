@@ -1,3 +1,5 @@
+@import './styles/index.scss';
+
 .root {
   box-sizing: border-box;
   display: inline-block;
@@ -13,6 +15,12 @@
   &.white {
     border: 1px solid #e1e1e1;
     background: #ffffff;
+  }
+
+  &.primary {
+    border: 1px solid $color-primary;
+    background: $color-primary;
+    color: $color-white;
   }
 
   &.clickable {

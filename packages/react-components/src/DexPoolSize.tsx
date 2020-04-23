@@ -5,15 +5,16 @@ import { Fixed18 } from '@acala-network/app-util';
 
 import { QueryDexPool } from '@honzon-platform/react-query';
 import { FormatBalance } from '@honzon-platform/react-components';
+import { useApi } from '@honzon-platform/react-hooks';
 
 interface Props {
-  token: CurrencyId;
-  baseCurrencyId: CurrencyId;
+  token: string | CurrencyId;
 }
-export const DexPoolSize: FC<Props> = memo(({
-  baseCurrencyId,
-  token
-}) => {
+
+export const DexPoolSize: FC<Props> = memo(({ token }) => {
+  const { api } = useApi();
+  const baseCurrency = api.consts.dex.getBaseCurrencyId as CurrencyId;
+
   return (
     <QueryDexPool
       token={token}
@@ -21,7 +22,7 @@ export const DexPoolSize: FC<Props> = memo(({
         <FormatBalance
           pair={[
             { currency: token, balance: result.other },
-            { currency: baseCurrencyId, balance: result.base }
+            { currency: baseCurrency, balance: result.base }
           ]} 
           pairSymbol='/'
         />

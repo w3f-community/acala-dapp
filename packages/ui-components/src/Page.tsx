@@ -28,9 +28,9 @@ _Page.displayName = 'Page';
 
 const Content: FC<BareProps> = memo(({ children }) => {
   return (
-    <section className={classes.pageContent}>
+    <div className={classes.pageContent}>
       {children}
-    </section>
+    </div>
   );
 });
 

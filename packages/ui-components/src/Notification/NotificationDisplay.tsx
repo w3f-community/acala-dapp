@@ -1,8 +1,9 @@
 import React, { FC, PropsWithChildren, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import styled from 'styled-components';
 
+import classes from './NotificationDisplay.module.scss';
 import { NotificationConfig } from './types';
+import clsx from 'clsx';
 
 const NotificationPortal: FC<PropsWithChildren<{}>> = ({ children }) => {
   /* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */
@@ -20,24 +21,15 @@ const NotificationPortal: FC<PropsWithChildren<{}>> = ({ children }) => {
   return createPortal(children, $div);
 };
 
-const NotificationCardRoot = styled('div')`
-  margin: 8px 0 0 0;
-  padding: 16px;
-  width: 400px;
-  background: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 2px 20px rgba(1, 50, 206, 0.08);
-`;
-
 const NotificationCard: FC<NotificationConfig> = (config) => {
   return (
-    <NotificationCardRoot>
-      <div className='notification--card--icon'>{config.icon}</div>
-      <div className='notification--card--container'>
-        <div className='notification--card--title'>{config.title}</div>
-        <div className='notification--card--content'>{config.content}</div>
+    <div className={clsx(classes.root, classes[config.type || 'info'])}>
+      <div className={classes.icon}>{config.icon}</div>
+      <div className={classes.content}>
+        <div className={classes.title}>{config.title}</div>
+        <div className={classes.info}>{config.content}</div>
       </div>
-    </NotificationCardRoot>
+    </div>
   );
 };
 

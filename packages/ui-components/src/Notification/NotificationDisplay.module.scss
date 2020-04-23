@@ -1,0 +1,39 @@
+.root {
+  display: flex;
+  padding: 16px 20px;
+  margin-top: 26px;
+  border: 1px solid #87d068;
+    border-radius: 4px;
+
+  .icon {
+    flex-grow: 0;
+    flex-shrink: 0;
+    margin-right: 16px;
+  }
+
+  .title {
+    font-size: 16px;
+    line-height: 21px;
+  }
+
+  .info {
+    margin-top: 6px;
+    font-size: 12px;
+    line-height: 18px;
+  }
+
+  &.success {
+    background: lighten(#87d068, 50%);
+    border-color: #87d068;
+  }
+
+  &.error {
+    background: lighten(#ff5500, 50%);
+    border-color: #ff5500;
+  }
+
+  &.info {
+    background: lighten(#108ee9, 50%);
+    border-color: #108ee9;
+  }
+}

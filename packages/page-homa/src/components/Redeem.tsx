@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 
 import { RedeemManipulate } from './RedeemManipulate';
 import { StakingTokeBalances } from './StakingTokenBalances';
-import { StakingPoolOverview } from './StakingPoolOverview';
+import { StakingPoolOverview } from './SystemInfo';
 import { WithdrawUnbonded } from './WithdrawUnbonded';
 import { Grid } from 'semantic-ui-react';
 

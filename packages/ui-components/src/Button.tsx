@@ -1,8 +1,8 @@
 import React, { FC, memo } from 'react';
+import clsx from 'clsx';
 
 import { BareProps } from './types';
 import classes from './Button.module.scss';
-import clsx from 'clsx';
 
 interface Props extends BareProps {
   loading?: boolean;
@@ -23,6 +23,14 @@ export const Button: FC<Props> = memo(({
   normal = false,
   size = 'large'
 }) => {
+  const _onClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    // handle disabled status
+    if (disabled) {
+      return;
+    }
+    onClick && onClick(event);
+  }
+
   return (
     <button
       className={
@@ -32,11 +40,12 @@ export const Button: FC<Props> = memo(({
           classes[size],
           {
             [classes.primary]: primary,
-            [classes.normal]: normal
+            [classes.normal]: normal,
+            [classes.disabled]: disabled
           }
         )
       }
-      onClick={onClick}
+      onClick={_onClick}
     >
       {children}
     </button>

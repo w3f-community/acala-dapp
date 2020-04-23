@@ -1,29 +1,31 @@
 import React, { FC, memo } from 'react';
-import { CurrencyId } from '@acala-network/types/interfaces';
-import { Input } from 'semantic-ui-react';
+import clsx from 'clsx';
 
+import { CurrencyId } from '@acala-network/types/interfaces';
 import { useApi } from '@honzon-platform/react-hooks';
+import { BareProps } from '@honzon-platform/ui-components/types';
 
 import { Token } from './Token';
 import { TokenSelector } from './TokenSelector';
 import { getCurrencyIdFromName } from './utils';
 import classes from './BalanceInput.module.scss';
 
-interface Props {
+interface Props extends BareProps {
+  currencies?: (CurrencyId | string)[];
   enableTokenSelect?: boolean;
+  error?: boolean;
   id?: string;
   name?: string;
-  token: CurrencyId | string;
   onChange?: any;
   onTokenChange?: (token: CurrencyId) => void;
-  error?: boolean;
   placeholder?: string;
+  token: CurrencyId | string;
   value?: number;
-  currencies?: (CurrencyId | string)[]
 }
 
 export const BalanceInput: FC<Props> = memo(({
   currencies,
+  className,
   enableTokenSelect = false,
   error,
   id,
@@ -41,7 +43,15 @@ export const BalanceInput: FC<Props> = memo(({
   }
 
   return (
-    <div className={classes.root}>
+    <div className={
+      clsx(
+        className,
+        classes.root,
+        {
+          [classes.error]: error
+        }
+      )
+    }>
       <input 
         className={classes.input}
         id={id}

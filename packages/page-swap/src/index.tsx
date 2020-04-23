@@ -1,9 +1,9 @@
 import React, { FC } from 'react';
 
-import { Page } from '@honzon-platform/ui-components';
+import { Page, Grid } from '@honzon-platform/ui-components';
 import { SwapConsole } from './components/SwapConsole';
-import { Grid } from 'semantic-ui-react';
 import { SwapProvider, WalletBalanceCard } from '@honzon-platform/react-components';
+import { AllMarkets } from './components/AllMarkets';
 
 const PageSwap: FC = () => {
   return (
@@ -11,17 +11,16 @@ const PageSwap: FC = () => {
       <Page.Title title='Swap' />
       <SwapProvider>
         <Page.Content>
-          <Grid>
-            <Grid.Row columns={1}>
-              <Grid.Column>
-                <SwapConsole />
-              </Grid.Column>
-            </Grid.Row>
-            <Grid.Row columns={2}>
-              <Grid.Column>
-                <WalletBalanceCard />
-              </Grid.Column>
-            </Grid.Row>
+          <Grid direction='column'>
+            <Grid item>
+              <SwapConsole />
+            </Grid>
+            <Grid item>
+              <AllMarkets />
+            </Grid>
+            <Grid item>
+              <WalletBalanceCard />
+            </Grid>
           </Grid>
         </Page.Content>
       </SwapProvider>

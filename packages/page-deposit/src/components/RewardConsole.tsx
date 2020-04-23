@@ -59,13 +59,11 @@ export const RewardConsole: FC = memo(() => {
           token={otherCurrency}
           currencies={enabledCurrencyIds}
         />
-        <AddIcon className={classes.addIcon} />
-        <InputArea
-          value={form.values.base as any as number}
-          onChange={form.handleChange}
-          token={baseCurrencyId}
-        />
-        <TxButton>
+        <TxButton
+          method='withdrawIncentiveInterest'
+          section='dex'
+          params={[]}
+        >
           Deposit
         </TxButton>
       </div>

@@ -3,7 +3,7 @@ import { BareProps } from './types';
 import classes from './Tag.module.scss';
 import clsx from 'clsx';
 
-type TagColor = 'normal' | 'white';
+type TagColor = 'normal' | 'white' | 'primary';
 
 interface Props extends BareProps {
   color?: TagColor,

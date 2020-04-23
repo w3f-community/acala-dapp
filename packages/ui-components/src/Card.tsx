@@ -21,12 +21,21 @@ export const Card: React.FC<Props> = memo(({
   gutter = true
 }) => {
   return (
-    <div className={clsx(classes.root, className)}>
+    <section className={clsx(classes.root, className)}>
       { header ? <div className={clsx(headerClassName, classes.title)}>{header}</div> : null }
-      <div className={clsx(contentClassName, classes.content, { [classes.gutter]: gutter })}>
+      <div className={
+        clsx(
+          contentClassName,
+          classes.content,
+          {
+            [classes.gutter]: gutter,
+            [classes.noTitleContent]: !header && gutter
+          }
+        )
+      }>
         {children}
       </div>
-    </div>
+    </section>
   );
 });
 

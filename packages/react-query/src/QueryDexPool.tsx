@@ -5,7 +5,7 @@ import { DerivedDexPool } from '@acala-network/api-derive';
 import { useApi, useCall } from '@honzon-platform/react-hooks';
 
 interface Props extends BaseQueryElementProps<DerivedDexPool> {
-  token: CurrencyId;
+  token: string | CurrencyId;
 }
 
 export const QueryDexPool: FC<Props> = memo(({ token, render }) => {

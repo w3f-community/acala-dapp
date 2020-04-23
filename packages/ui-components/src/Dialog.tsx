@@ -47,7 +47,7 @@ export const Dialog: FC<Props> = memo(({
       <div className={classes.root}>
         { title ? <div>{title}</div> : null }
         <div>{content}</div>
-        <div>
+        <div className={classes.action}>
           { onCancel ? (
             <Button
               size='small'

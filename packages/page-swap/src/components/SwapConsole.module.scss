@@ -3,16 +3,22 @@
   background: #fafafa;
 }
 
-.title {
-  margin-bottom: 24px;
-  font-size: 16px;
-  color: #333333;
+.inputAreaRoot {
+  flex: 0 0 380px;
+
+  & .input {
+    width: 380px;
+  }
+
+  & .title {
+    margin-bottom: 24px;
+    font-size: 16px;
+    color: #333333;
+  }
 }
 
 .main {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
   padding: 24px;
   padding-bottom: 32px;
   border-radius: 12px;
@@ -35,11 +41,15 @@
 }
 
 .swapBtn {
-  min-width: 58px;
-  max-width: 58px;
+  margin: 42px 24px 0 24px;
+  flex: 0 0 58px;
   border-radius: 12px;
   background: #ffffff;
   border: 1px solid #173dc9;
+}
+
+.txBtn {
+  margin: 42px 0 0 27px;
 }
 
 .slippageRoot {
@@ -52,4 +62,13 @@
     font-weight: 500;
     color: #333333;
   }
+}
+
+.addon {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 16px;
+  font-size: 16px;
+  line-height: 19px;
+  color: #999999;
 }

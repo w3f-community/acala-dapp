@@ -50,6 +50,7 @@ export const Dropdown: FC<Props> = memo(({
         {options.map((item: DropdownOption) => {
           return (
             <li
+              key={`dropdown-${item.value}`}
               onClick={() => onItemSelect(item.value)}
               className={classes.menuItem}
             >

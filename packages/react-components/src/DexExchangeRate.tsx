@@ -5,15 +5,16 @@ import { Fixed18 } from '@acala-network/app-util';
 
 import { QueryDexPool } from '@honzon-platform/react-query';
 import { FormatBalance } from '@honzon-platform/react-components';
+import { useApi } from '@honzon-platform/react-hooks';
 
 interface Props {
-  token: CurrencyId;
-  baseCurrencyId: CurrencyId;
+  token: string | CurrencyId;
 }
-export const ExchangeRate: FC<Props> = memo(({
-  baseCurrencyId,
-  token
-}) => {
+
+export const DexExchangeRate: FC<Props> = memo(({ token }) => {
+  const { api } = useApi();
+  const baseCurrency = api.consts.dex.getBaseCurrencyId as CurrencyId;
+
   return (
         <QueryDexPool
           token={token}
@@ -22,7 +23,7 @@ export const ExchangeRate: FC<Props> = memo(({
               pair={[
                 { currency: token, balance: 1 },
                 { 
-                  currency: baseCurrencyId,
+                  currency: baseCurrency,
                   balance: Fixed18.fromRational(
                     result.base.toString(),
                     result.other.toString()
@@ -36,4 +37,4 @@ export const ExchangeRate: FC<Props> = memo(({
   );
 });
 
-ExchangeRate.displayName = 'ExchangeRate';
+DexExchangeRate.displayName = 'DexExchangeRate';

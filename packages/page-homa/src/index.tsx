@@ -1,31 +1,33 @@
 import React, { FC, ReactElement } from 'react';
 
-import { Page, Tabs } from '@honzon-platform/ui-components';
+import { Page, Tabs, ComingSoon } from '@honzon-platform/ui-components';
 import { StakingPoolProvider } from '@honzon-platform/react-components';
 
-import { Mint } from './components/Mint';
-import { Redeem } from './components/Redeem';
+import { Liquid } from './components/Liquid';
 
 const PageHoma: FC = () => {
   const tabsConfig = [
     {
       /* eslint-disable-next-line react/display-name */
-      render: (): ReactElement => <Mint />,
-      title: 'Mint'
+      render: (): ReactElement => <Liquid />,
+      title: 'Liquid Asset'
     },
     {
       /* eslint-disable-next-line react/display-name */
-      render: (): ReactElement => <Redeem />,
-      title: 'Redeem'
+      render: (): ReactElement => <ComingSoon />,
+      title: 'Vote for Validators'
     }
   ];
 
   return (
     <Page>
-      <Page.Title title={'Homa'} />
+      <Page.Title title={'Liquid Asset'} />
       <Page.Content>
         <StakingPoolProvider>
-          <Tabs config={tabsConfig} />
+          <Tabs
+            config={tabsConfig}
+            style='button'
+          />
         </StakingPoolProvider>
       </Page.Content>
     </Page>

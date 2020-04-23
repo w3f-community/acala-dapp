@@ -24,7 +24,7 @@
   }
 
   &.large {
-    min-width: 178px;
+    width: 178px;
     height: 58px;
     font-size: 24px;
     line-height: 29px;
@@ -35,5 +35,10 @@
     height: 32px;
     font-size: 16px;
     line-height: 19px;
+  }
+
+  &.disabled {
+    background: #eff1f7;
+    cursor: not-allowed;
   }
 }

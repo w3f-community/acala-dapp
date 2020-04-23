@@ -9,6 +9,7 @@ export interface NotificationConfig {
   content: ReactNode;
   placement: Placement;
   removedDelay?: number;
+  type?: 'info' | 'success' | 'error';
   remove: (delay?: number) => void;
   update: (config: Partial<NotificationConfig>) => void;
 }
@@ -16,6 +17,7 @@ export interface NotificationConfig {
 export interface PartialNotificationConfig {
   icon?: ReactNode;
   title?: ReactNode;
+  type?: 'info' | 'success' | 'error';
   content: ReactNode;
   placement: Placement;
 }

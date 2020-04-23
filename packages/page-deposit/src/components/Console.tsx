@@ -17,7 +17,7 @@ export const Console: FC = memo(() => {
   }
 
   if (action === 'reward') {
-    return <RewardConsole />
+    return <RewardConsole />;
   }
 
   return null;
