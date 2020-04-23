@@ -8,7 +8,7 @@ import classes from './Sidebar.module.scss';
 export const ProductItem: React.FC<SideBarItem> = memo(({ icon, name, path }) => {
   return (
     <NavLink to={path as string} className={classes.item}>
-      {cloneElement(icon, { className: 'sidebar__icon' })}
+      {cloneElement(icon)}
       {name}
     </NavLink>
   );

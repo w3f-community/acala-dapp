@@ -1,1 +1,0 @@
-@honzon-platform/react-components

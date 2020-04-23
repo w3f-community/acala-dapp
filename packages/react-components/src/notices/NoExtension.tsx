@@ -12,11 +12,12 @@ export const NoExtension: React.FC = memo(() => {
     <Dialog
       cancelText={undefined}
       confirmText='GET IT'
-      content='No polkadot{.js} extension found, please install it first!'
       onConfirm={handleGetExtensionBtnClick}
       title={null}
       visiable={true}
-    />
+    >
+      <p>{'No polkadot{.js} extension found, please install it first!'}</p>
+    </Dialog>
   );
 });
 

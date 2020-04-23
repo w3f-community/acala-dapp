@@ -1,7 +1,21 @@
 .root {
+  display: none;
   width: 480px;
   padding: 24px;
   background: #ffffff;
+
+  &.visiable {
+    display: block;
+  }
+
+  .title {
+    font-size: 24px;
+    line-height: 28px;
+  }
+
+  .content {
+    margin: 16px 0;
+  }
 }
 
 .mask {

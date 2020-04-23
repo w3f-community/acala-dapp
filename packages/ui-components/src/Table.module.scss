@@ -16,18 +16,35 @@
   border-bottom: 1px solid #ecf0f2;
   font-size: $font-m;
   color: $color-gray;
+
+  & > div {
+    display: flex;
+    align-items: center;
+  }
 }
 
 .headerCell.left, .cell.left {
   text-align: left;
+
+  & > div {
+    justify-content: flex-start;
+  }
 }
 
 .headerCell.right, .cell.right {
   text-align: right;
+
+  & > div {
+    justify-content: flex-end;
+  }
 }
 
 .headerCell.center, .cell.center {
   text-align: center;
+
+  & > div {
+    justify-content: center;
+  }
 }
 
 .row:last-child {

@@ -4,11 +4,10 @@ import { CurrencyId } from '@acala-network/types/interfaces';
 
 import { Card, TableItem, Table } from '@honzon-platform/ui-components';
 import { useAccounts } from '@honzon-platform/react-hooks';
+import { DexPoolSize, DexExchangeRate, DexReward, DexRewardRatio, DexUserShare } from '@honzon-platform/react-components';
 
 import { DepositContext } from './Provider';
-import { AccountShare } from './AccountShare';
 import { AccountDexTokens } from './AccountDexTokens';
-import { DexPoolSize, DexExchangeRate } from '@honzon-platform/react-components';
 
 export const PoolOverview: FC = memo(() => {
   const { enabledCurrencyIds, baseCurrencyId } = useContext(DepositContext);
@@ -31,10 +30,7 @@ export const PoolOverview: FC = memo(() => {
       align: 'left',
       width: 3,
       render: (token: CurrencyId) => (
-          <DexExchangeRate
-            token={token}
-            baseCurrencyId={baseCurrencyId}
-          />
+          <DexExchangeRate token={token} />
         )
     },
     {
@@ -42,10 +38,7 @@ export const PoolOverview: FC = memo(() => {
       align: 'left',
       width: 3,
       render: (token: CurrencyId) => (
-        <DexPoolSize
-          token={token}
-          baseCurrencyId={baseCurrencyId}
-        />
+        <DexPoolSize token={token} />
       )
     },
     {
@@ -53,18 +46,20 @@ export const PoolOverview: FC = memo(() => {
       align: 'left',
       width: 1,
       render: (token: CurrencyId) => (
-        <AccountShare
-          account={active!.address}
-          token={token}
-        />
-     
+        <DexUserShare token={token} />
       )
+    },
+    {
+      title: 'Reward Ratio',
+      align: 'right',
+      width: 1,
+      render: (token: CurrencyId) => <DexRewardRatio token={token} />,
     },
     {
       title: 'Reward',
       align: 'right',
       width: 1,
-      render: () => 'xx',
+      render: (token: CurrencyId) => <DexReward token={token} />,
     }
   ];
   return (

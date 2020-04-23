@@ -6,14 +6,14 @@ import { convertToFixed18, Fixed18 } from "@acala-network/app-util";
 interface BalanceConfig {
   type: 'balance';
   currency: CurrencyId;
-  max: number;
-  min: number;
+  max?: number;
+  min?: number;
 }
 
 interface NumberConfig {
   type: 'number';
-  max: number;
-  min: number;
+  max?: number;
+  min?: number;
 }
 
 type Config = {
@@ -37,8 +37,8 @@ export const useFormValidator = (configs: Config) => {
           (api.derive as any).currencies.balance(active!.address, config.currency).then((result: Amount) => {
             const _balance = convertToFixed18(result);
             const _value = Fixed18.fromNatural(value);
-            const _max = Fixed18.fromNatural(config.max);
-            const _min = Fixed18.fromNatural(config.min);
+            const _max = Fixed18.fromNatural(config.max !== undefined ? config.max : Number.MAX_VALUE);
+            const _min = Fixed18.fromNatural(config.min !== undefined ? config.min : Number.MIN_VALUE);
 
             if (!numberPattern.test(value)) {
               error[key] = 'Not a validate number';
@@ -60,8 +60,8 @@ export const useFormValidator = (configs: Config) => {
 
         if (config.type === 'number') {
           const _value = Fixed18.fromNatural(value);
-          const _max = Fixed18.fromNatural(config.max);
-          const _min = Fixed18.fromNatural(config.min);
+          const _max = Fixed18.fromNatural(config.max !== undefined ? config.max : Number.MAX_VALUE);
+          const _min = Fixed18.fromNatural(config.min !== undefined ? config.min : Number.MIN_VALUE);
 
           if (!numberPattern.test(value.toString())) {
             error[key] = 'Not a validate number';

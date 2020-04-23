@@ -1,88 +1,95 @@
 import React, { FC, memo, ReactElement } from 'react';
 
-import { Table, TableItem, Card } from '@honzon-platform/ui-components';
-import { QueryAllPrices, QueryBalance } from '@honzon-platform/react-query';
-import { DerivedPrice } from '@acala-network/api-derive';
+import { CurrencyId } from '@acala-network/types/interfaces';
+import { Table, TableItem, Card, Button } from '@honzon-platform/ui-components';
+import { useAccounts, useApi } from '@honzon-platform/react-hooks';
+
 import { Token } from '../Token';
-import { convertToFixed18 } from '@acala-network/app-util';
-import { useAccounts } from '@honzon-platform/react-hooks';
+import { UserBalance } from '../UserBalance';
+import { Price } from '../Price';
+import { getAllCurrencyIds } from '../utils';
 
-import { getValueFromTimestampValue } from '../utils';
+type TableData = CurrencyId[];
 
-type TableData = DerivedPrice;
+type TableShowCellType = 'token' | 'balance' | 'price' | 'amount' | 'action';
 
-export const WalletBalanceCard: FC = memo(() => {
+interface Props {
+  title?: string;
+  showHeader?: boolean;
+  showCell?: TableShowCellType[];
+}
+
+export const WalletBalanceCard: FC<Props> = memo(({
+  title,
+  showHeader = false,
+  showCell = ['token', 'balance', 'amount']
+}) => {
+  const { api } = useApi();
   const { active } = useAccounts();
 
   if (!active) {
     return null;
   }
 
-  const tableConfig: TableItem<TableData>[] = [
+  const _tableConfig: TableItem<TableData>[] = [
     {
+      key: 'token',
       align: 'left',
-      dataIndex: 'token',
-      render: function cell (token): ReactElement {
-        return <Token token={token} />;
-      },
+      /* eslint-disable-next-line react/display-name */
+      render: (token: CurrencyId) => <Token token={token} />,
       title: 'Token'
     },
     {
+      key: 'balance',
       align: 'center',
-      render: function cell (data): ReactElement {
-        return (
-          <QueryBalance
-            account={active.address}
-            /* eslint-disable-next-line react/display-name */
-            render={(result): ReactElement => <p>{convertToFixed18(result).toNumber()}</p>}
-            token={data.token}
-          />
-        );
-      },
-      title: 'Token'
+      /* eslint-disable-next-line react/display-name */
+      render: (token: CurrencyId) => <UserBalance token={token} />,
+      title: 'Balance'
     },
     {
+      key: 'price',
       align: 'right',
       /* eslint-disable-next-line react/display-name */
-      render: function (data): ReactElement {
-        return (
-          <QueryBalance
-            account={active.address}
-            /* eslint-disable-next-line react/display-name */
-            render={(result): ReactElement => (
-              <p>
-                {
-                  convertToFixed18(result)
-                    .mul(
-                      convertToFixed18(getValueFromTimestampValue(data.price))
-                    )
-                    .toNumber()
-                }
-              </p>
-            )}
-            token={data.token}
-          />
-        );
-      },
+      render: (token) => <Price token={token} />,
+      title: 'Price'
+    },
+    {
+      key: 'amount',
+      align: 'right',
+      /* eslint-disable-next-line react/display-name */
+      render: (token: CurrencyId) => (
+        <UserBalance
+          token={token}
+          withPrice
+        />
+      ),
       title: 'Amount'
+    },
+    {
+      key: 'action',
+      align: 'right',
+      title: 'Action',
+      render: () => {
+        return (
+          <Button size='small' >
+            Transfer
+          </Button>
+        );
+      }
     }
   ];
-
+  const tableConfig = _tableConfig.filter((item) => showCell.includes(item.key!));
+  const allToken = getAllCurrencyIds(api);
+  console.log(allToken);
   return (
     <Card
-      header='Wallet Balance'
+      header={title || 'Wallet Balance'}
       gutter={false}
     >
-      <QueryAllPrices
-        /* eslint-disable-next-line react/display-name */
-        render={(price): ReactElement => {
-          return (
-            <Table
-              config={tableConfig}
-              data={price}
-            />
-          );
-        }}
+      <Table
+        showHeader={showHeader}
+        config={tableConfig}
+        data={allToken}
       />
     </Card>
   );

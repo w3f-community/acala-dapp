@@ -1,18 +1,12 @@
-import { FC, useState, useEffect, memo } from 'react';
+import { useState, useEffect } from 'react';
+
 import { DerivedStakingPool } from '@acala-network/api-derive';
-
-import { useApi } from '@honzon-platform/react-hooks/useApi';
-import { useCall } from '@honzon-platform/react-hooks/useCall';
-
-import { BaseQueryElementProps } from './type';
 import { StakingPoolHelper } from '@acala-network/app-util';
 
-type Props = BaseQueryElementProps<{
-  stakingPool: DerivedStakingPool;
-  stakingPoolHelper: StakingPoolHelper;
-}>;
+import { useApi } from './useApi';
+import { useCall } from './useCall';
 
-export const QueryStakingPool: FC<Props> = memo(({ render }) => {
+export const useStakingPool = () => {
   const { api } = useApi();
   const [stakingPoolHelper, setStakingPoolHelper] = useState<StakingPoolHelper>(null as any as StakingPoolHelper);
   // FIXME: need fix api-derive type
@@ -37,10 +31,6 @@ export const QueryStakingPool: FC<Props> = memo(({ render }) => {
   }, [stakingPool]);
 
   if (stakingPool && stakingPoolHelper) {
-    return render({ stakingPool, stakingPoolHelper });
+    return { stakingPool, stakingPoolHelper };
   }
-
-  return null;
-});
-
-QueryStakingPool.displayName = 'QueryStakingPool';
+};

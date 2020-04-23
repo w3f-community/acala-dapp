@@ -1,14 +1,18 @@
 import React, { FC, memo } from 'react';
 import { Fixed18 } from '@acala-network/app-util';
+import { BareProps } from '@honzon-platform/ui-components/types';
 
-interface Props {
+interface Props extends BareProps {
   data: Fixed18;
-  format?: 'percentage' | 'number'
+  format?: 'percentage' | 'number';
+  prefix?: string;
 }
 
 export const FormatFixed18: FC<Props> = memo(({
+  className,
   data,
-  format = 'number'
+  prefix,
+  format = 'number',
 }) => {
   if (!data) {
     return null;
@@ -24,14 +28,17 @@ export const FormatFixed18: FC<Props> = memo(({
     }
 
     if (format === 'percentage') {
-      return data.toNumber() * 100 + '%';
+      return data.mul(Fixed18.fromNatural(100)).toNumber() + '%';
     }
 
     return '';
   };
 
   return (
-    <span>{getRenderText()}</span>
+    <span className={className}>
+      {prefix ? prefix : null}
+      {getRenderText()}
+    </span>
   );
 });
 

@@ -1,8 +1,18 @@
 import React, { FC, memo } from 'react';
+import { BareProps } from '@honzon-platform/ui-components/types';
 
-export const FormatAddress: FC<{ address: string }> = memo(({ address }) => {
+interface Props extends BareProps {
+  address: string
+}
+
+export const FormatAddress: FC<Props> = memo(({
+  address,
+  className
+}) => {
   return (
-    <span>{address.replace(/(\w{6})\w*?(\w{12}$)/, '$1......$2')}</span>
+    <span className={className}>
+      {address.replace(/(\w{6})\w*?(\w{12}$)/, '$1......$2')}
+    </span>
   );
 });
 

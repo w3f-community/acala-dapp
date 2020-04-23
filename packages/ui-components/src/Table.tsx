@@ -7,6 +7,7 @@ import { randomID } from './utils';
 type CellAlign = 'left' | 'right' | 'center';
 
 export type TableItem<T> = {
+  key?: string;
   title: string;
   dataIndex?: string;
   width?: number;
@@ -112,11 +113,13 @@ export function Table<T extends { [k: string]: any }> ({
                       }
                     )
                   }
-                  key={`table-cell-${randomId.current}-${index}-${configIndex}`}
+                  key={`table-cell-${randomId.current}-${index}-${configData.key || configIndex}`}
                 >
-                  {
-                    renderItem(configData, item, configIndex)
-                  }
+                  <div>
+                    {
+                      renderItem(configData, item, configIndex)
+                    }
+                  </div>
                 </td>
               ))}
             </tr>

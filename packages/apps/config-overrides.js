@@ -13,6 +13,7 @@ module.exports = override(function(config, env) {
             if (loader.test && loader.test.toString().includes('tsx')) {
                 loader.include = [
                     path.resolve(__dirname, './src'),
+                    path.resolve(__dirname, '../page-wallet/src'),
                     path.resolve(__dirname, '../page-deposit/src'),
                     path.resolve(__dirname, '../page-homa/src'),
                     path.resolve(__dirname, '../page-loan/src'),
@@ -20,7 +21,6 @@ module.exports = override(function(config, env) {
                     path.resolve(__dirname, '../react-components/src'),
                     path.resolve(__dirname, '../react-environment/src'),
                     path.resolve(__dirname, '../react-hooks/src'),
-                    path.resolve(__dirname, '../react-query/src'),
                     path.resolve(__dirname, '../ui-components/src')
                 ]
             }
@@ -32,6 +32,7 @@ module.exports = override(function(config, env) {
     );
     config.resolve.alias = {
         "@honzon-platform/apps": path.resolve(__dirname, "src"),
+        "@honzon-platform/page-wallet": path.resolve(__dirname, "../page-wallet/src"),
         "@honzon-platform/page-deposit": path.resolve(__dirname, "../page-deposit/src"),
         "@honzon-platform/page-homa": path.resolve(__dirname, "../page-homa/src"),
         "@honzon-platform/page-loan": path.resolve(__dirname, "../page-loan/src"),
@@ -39,7 +40,6 @@ module.exports = override(function(config, env) {
         "@honzon-platform/react-components": path.resolve(__dirname, "../react-components/src"),
         "@honzon-platform/react-environment": path.resolve(__dirname, "../react-environment/src"),
         "@honzon-platform/react-hooks": path.resolve(__dirname, "../react-hooks/src"),
-        "@honzon-platform/react-query": path.resolve(__dirname, "../react-query/src"),
         "@honzon-platform/ui-components": path.resolve(__dirname, "../ui-components/src")
     };
     return config;

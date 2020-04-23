@@ -3,22 +3,22 @@ import { noop } from 'lodash';
 import { useFormik } from 'formik';
 
 import { CurrencyId } from '@acala-network/types/interfaces';
-import { Vec } from '@polkadot/types';
 
-import { Card } from '@honzon-platform/ui-components';
-import { useAccounts, useDexExchangeRate } from '@honzon-platform/react-hooks';
-import { BalanceInput, AccountBalance, TxButton, numToFixed18Inner, DexExchangeRate, DexPoolSize } from '@honzon-platform/react-components';
+import { Card, nextTick } from '@honzon-platform/ui-components';
+import { useAccounts, useDexExchangeRate, useFormValidator } from '@honzon-platform/react-hooks';
+import { BalanceInput, TxButton, numToFixed18Inner, DexExchangeRate, DexPoolSize, DexUserShare, UserBalance } from '@honzon-platform/react-components';
 
 import classes from './DepositConsole.module.scss';
 import { ReactComponent as AddIcon } from '../assets/add.svg';
 import { DepositContext } from './Provider';
-import { AccountShare } from './AccountShare';
 import { Fixed18 } from '@acala-network/app-util';
 
 interface InputAreaProps {
+  disabled?: boolean;
+  error: any;
   id: string;
   name: string;
-  currencies?: Vec<CurrencyId>;
+  currencies?: (CurrencyId | string)[];
   value: number;
   onChange: (event: React.ChangeEvent<any>) => void
   token: CurrencyId;
@@ -26,6 +26,8 @@ interface InputAreaProps {
 }
 
 const InputArea: FC<InputAreaProps> = memo(({
+  disabled,
+  error,
   id,
   name,
   currencies,
@@ -38,9 +40,10 @@ const InputArea: FC<InputAreaProps> = memo(({
     <div className={classes.inputAreaRoot}>
       <div className={classes.inputAreaTitle}>
         <p>Deposit</p>
-        {token? <p className={classes.inputAreaBalance}>Balance: <AccountBalance token={token} /> </p> : null}
+        {token? <p className={classes.inputAreaBalance}>Balance: <UserBalance token={token} /> </p> : null}
       </div>
       <BalanceInput
+        disabled={disabled}
         id={id}
         name={name}
         currencies={currencies}
@@ -49,6 +52,7 @@ const InputArea: FC<InputAreaProps> = memo(({
         token={token}
         value={value}
         onTokenChange={onTokenChange}
+        error={!!error}
       />
     </div>
   );
@@ -60,27 +64,50 @@ export const DepositConsole: FC = memo(() => {
   const { enabledCurrencyIds, baseCurrencyId } = useContext(DepositContext);
   const [otherCurrency, setOtherCurrency] = useState<CurrencyId>(enabledCurrencyIds[0]);
   const { rate } = useDexExchangeRate(otherCurrency);
+  const validator = useFormValidator({
+    other: {
+      type: 'balance',
+      currency: otherCurrency,
+      min: 0
+    },
+    base: {
+      type: 'balance',
+      currency: baseCurrencyId,
+      min: 0
+    }
+  });
   const form = useFormik({
     initialValues: {
       other: '',
       base: '',
     },
+    validate: validator,
     onSubmit: noop,
   });
   const handleOtherInput = (event: React.ChangeEvent<any>): void => {
     const value = Number(event.target.value);
     form.handleChange(event);
-    form.setFieldValue('base', Fixed18.fromNatural(value).mul(rate).toNumber());
+    nextTick(() => { form.setFieldValue('base', Fixed18.fromNatural(value).mul(rate).toNumber()) });
   };
   const handleSuccess = () => {
     // reset form
     form.resetForm();
+  };
+  const checkDisabled = () => {
+    if (!(form.values.base && form.values.other)) {
+      return true;
+    }
+    if (form.errors.base || form.errors.other) {
+      return true;
+    }
+    return false;
   };
 
   return (
     <Card>
       <div className={classes.main}>
         <InputArea
+          error={form.errors.other}
           id={'other'}
           name={'other'}
           value={form.values.other as any as number}
@@ -88,17 +115,19 @@ export const DepositConsole: FC = memo(() => {
           token={otherCurrency}
           currencies={enabledCurrencyIds}
           onTokenChange={setOtherCurrency}
-     
         />
         <AddIcon className={classes.addIcon} />
         <InputArea
+          error={form.errors.base}
           id={'base'}
           name={'base'}
           value={form.values.base as any as number}
           onChange={form.handleChange}
+          currencies={[baseCurrencyId]}
           token={baseCurrencyId}
         />
         <TxButton
+          disabled={checkDisabled()}
           className={classes.txBtn}
           section='dex'
           method='addLiquidity'
@@ -118,24 +147,15 @@ export const DepositConsole: FC = memo(() => {
         <ul className={classes.addon}>
           <li className={classes.addonItem}>
             <span>Exchange Rate</span>
-            <DexExchangeRate
-              token={otherCurrency}
-              baseCurrencyId={baseCurrencyId}
-            />
+            <DexExchangeRate token={otherCurrency} />
           </li>
           <li className={classes.addonItem}>
             <span>Current Pool Size</span>
-            <DexPoolSize 
-              token={otherCurrency}
-              baseCurrencyId={baseCurrencyId}
-            />
+            <DexPoolSize token={otherCurrency} />
           </li>
           <li className={classes.addonItem}>
             <span>Your Pool Share(%)</span>
-            <AccountShare
-              token={otherCurrency}
-              account={active!.address}
-            />
+            <DexUserShare token={otherCurrency} />
           </li>
         </ul>
       </div>

@@ -4,6 +4,7 @@ import { DerivedStakingPool } from '@acala-network/api-derive';
 
 import { QueryStakingPool } from '@honzon-platform/react-query';
 import { StakingPoolHelper } from '@acala-network/app-util';
+import { useStakingPool } from '@honzon-platform/react-hooks';
 
 interface ContextData {
   stakingPool: DerivedStakingPool;
@@ -13,16 +14,17 @@ interface ContextData {
 export const StakingPoolContext = createContext<ContextData>({} as ContextData);
 
 export const StakingPoolProvider: FC = memo(({ children }) => {
+
+  const result = useStakingPool();
+
+  if (!result) {
+    return null;
+  }
+
   return (
-    <QueryStakingPool
-      render={
-        (result): ReactElement => (
-          <StakingPoolContext.Provider value={result}>
-            {children}
-          </StakingPoolContext.Provider>
-        )
-      }
-    />
+    <StakingPoolContext.Provider value={result}>
+      {children}
+    </StakingPoolContext.Provider>
   );
 });
 

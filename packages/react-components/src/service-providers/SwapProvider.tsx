@@ -96,8 +96,6 @@ export const SwapProvider: FC<PropsWithChildren<{}>> = memo(({ children }) => {
       return '' as any as number;
     }
 
-    console.log(supplyCurrency.toString(), targetCurrency.toString());
-
     if (!supplyCurrency.eq(baseCurrency) && targetCurrency.eq(baseCurrency)) {
       // other to base
       return calcTargetInOtherToBase(

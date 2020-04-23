@@ -1,0 +1,32 @@
+.root {
+  .list {
+    list-style: none;
+    border-radius: 2px;
+    border: 1px solid #ecf0f2;
+  }
+
+  .item {
+    display: flex;
+    font-size: 16px;
+    line-height: 19px;
+    padding: 14px 16px;
+
+    border-bottom: 1px solid #ecf0f2;
+
+    &:last-child {
+      border: none;
+    }
+  }
+
+  .icon {
+    margin-right: 16px;
+  }
+
+  .account {
+    flex: 1;
+  }
+
+  .checked {
+    width: 16px;
+  }
+}

@@ -23,8 +23,6 @@ export const Tabs: FC<Props> = memo(({
     setActive(index);
   };
 
-  console.log(style);
-
   return (
     <div className={clsx(classes.root, classes[style])}>
       <div className={classes.tabTitleContent}>

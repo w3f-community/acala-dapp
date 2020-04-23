@@ -1,6 +1,6 @@
 import React, { ReactNode, FC, useState, useEffect } from 'react';
 import { ApiPromise, WsProvider } from '@polkadot/api';
-import { options } from '@acala-network/api';
+import { options } from '@acala-network/api/build';
 
 const DEFAULT_ENDPOINT = 'wss://node-6655590520181506048.jm.onfinality.io/ws?apikey=5fb96acf-6839-484f-9f3d-8784f26df699';
 

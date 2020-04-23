@@ -3,7 +3,7 @@ import { noop } from 'lodash';
 import { Card, Button } from '@honzon-platform/ui-components';
 import { CurrencyId } from '@acala-network/types/interfaces';
 import { Vec } from '@polkadot/types';
-import { BalanceInput, AccountBalance, TxButton } from '@honzon-platform/react-components';
+import { BalanceInput, TxButton, UserBalance } from '@honzon-platform/react-components';
 import { useFormik } from 'formik';
 import { DepositContext } from './Provider';
 import { ReactComponent as AddIcon } from '../assets/add.svg';
@@ -26,7 +26,13 @@ const InputArea: FC<InputAreaProps> = memo(({
     <div className={classes.inputAreaRoot}>
       <div className={classes.inputAreaTitle}>
         <p>Deposit</p>
-        {token? <p className={classes.inputAreaBalance}>Balance: <AccountBalance token={token} /> </p> : null}
+        {
+          token? (
+            <p className={classes.inputAreaBalance}>
+              Balance: <UserBalance token={token} />
+            </p>
+          ) : null
+        }
       </div>
       <BalanceInput
         currencies={currencies}

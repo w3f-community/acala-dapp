@@ -4,20 +4,19 @@ import { DerivedPrice } from '@acala-network/api-derive';
 import { TimestampedValue } from '@orml/types/interfaces';
 import { convertToFixed18 } from '@acala-network/app-util';
 import { Codec } from '@polkadot/types/types';
+import { CurrencyId } from '@acala-network/types/interfaces';
 
 import { QueryAllPrices } from '@honzon-platform/react-query';
 import { Table, TableItem, Card } from '@honzon-platform/ui-components';
-import { CurrencyId } from '@acala-network/types/interfaces';
+import { usePrice } from '@honzon-platform/react-hooks';
+
 import { formatCurrency } from '../utils';
 import { FormatFixed18 } from '../format';
 
-interface Props {
-  data: DerivedPrice[];
-}
-
 type TableData = DerivedPrice;
 
-const PricesList: FC<Props> = memo(({ data }) => {
+const PricesList: FC = () => {
+  const data = usePrice() as DerivedPrice[];
   const tableConfig: TableItem<TableData>[] = [
     {
       dataIndex: 'token',
@@ -41,22 +40,23 @@ const PricesList: FC<Props> = memo(({ data }) => {
     }
   ];
 
+  if (!data) {
+    return null;
+  }
   return (
     <Table
       config={tableConfig}
       data={data}
     />
   );
-});
+};
 
 PricesList.displayName = 'PricesFeedCardList';
 
 export const PricesFeedCard: FC = memo(() => {
   return (
     <Card header='Price Feed'>
-      <QueryAllPrices render={(result): ReactElement => {
-        return <PricesList data={result}/>;
-      }}/>
+      <PricesList />;
     </Card>
   );
 });

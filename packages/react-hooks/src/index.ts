@@ -11,5 +11,14 @@ export * from './useFormValidator';
 export * from './useModal';
 export * from './useBalance';
 
+// currency
+export * from './usePrice';
+
 // dex
 export * from './useDexExchangeRate';
+export * from './useDexShare';
+export * from './useDexReward';
+export * from './useDexPool';
+
+// homa
+export * from './useStakingPool';

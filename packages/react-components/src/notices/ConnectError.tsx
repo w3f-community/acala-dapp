@@ -8,11 +8,12 @@ export const ConnectError: FC = memo(() => {
     <Dialog
       cancelText={undefined}
       confirmText='Retry'
-      content='Network Error, Please Retry Later!'
       onConfirm={handleRetry}
       title={null}
       visiable={true}
-    />
+    >
+      <p>Network Error, Please Retry Later!</p>
+    </Dialog>
   );
 });
 

@@ -18,6 +18,8 @@
     "paths": {
       "@honzon-platform/apps/*": ["apps/src/*"],
       "@honzon-platform/apps": ["apps/src"],
+      "@honzon-platform/page-wallet": ["page-wallet/src"],
+      "@honzon-platform/page-wallet/*": ["page-wallet/src/*"],
       "@honzon-platform/page-homa": ["page-homa/src"],
       "@honzon-platform/page-homa/*": ["page-homa/src/*"],
       "@honzon-platform/page-loan": ["page-loan/src"],
@@ -32,8 +34,6 @@
       "@honzon-platform/react-environment": ["react-environment/src"],
       "@honzon-platform/react-components/*": ["react-components/src/*"],
       "@honzon-platform/react-components": ["react-components/src"],
-      "@honzon-platform/react-query/*": ["react-query/src/*"],
-      "@honzon-platform/react-query": ["react-query/src"],
       "@honzon-platform/ui-components/*": ["ui-components/src/*"],
       "@honzon-platform/ui-components": ["ui-components/src"]
     },

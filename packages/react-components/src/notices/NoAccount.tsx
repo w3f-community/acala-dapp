@@ -8,11 +8,14 @@ export const NoAccount: FC = memo(() => {
     <Dialog
       cancelText={undefined}
       confirmText='Retry'
-      content='No account found, please add account in your wallet extension or unlock it!'
       onConfirm={handleRetry}
       title={null}
       visiable={true}
-    />
+    >
+      <p>
+        No account found, please add account in your wallet extension or unlock it!
+      </p>
+    </Dialog>
   );
 });
 

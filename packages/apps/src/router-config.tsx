@@ -4,6 +4,7 @@ import PageDeposit from '@honzon-platform/page-deposit';
 import PageLoan from '@honzon-platform/page-loan';
 import PageHoma from '@honzon-platform/page-homa';
 import PageSwap from '@honzon-platform/page-swap';
+import PageWallet from '@honzon-platform/page-wallet';
 
 import { MainLayout } from './layouts/Main';
 import { sideBarConfig } from './sidebar-config';
@@ -18,8 +19,12 @@ export const config: RouterConfigData[] = [
   {
     children: [
       {
+        element: <PageWallet />,
+        path: 'wallet'
+      },
+      {
         element: <PageDeposit />,
-        path: 'deposit',
+        path: 'deposit'
       },
       {
         element: <PageLoan />,

@@ -33,7 +33,7 @@ export const FormatBalance: FC<Props> = memo(({
   const renderBalance = (data: BalancePair, index: number) => {
     return (
       <span key={`${_id}-${index}`}>
-        {data.balance ? formatBalance(data.balance).toString() : null}
+        {data.balance ? formatBalance(data.balance).toString() : '0'}
         {data.currency ? <span>{' '}{formatCurrency(data.currency)}</span> : null}
         {(pairSymbol && index != pairLength - 1) ? <span>{' '}{pairSymbol}{' '}</span> : null}
       </span>

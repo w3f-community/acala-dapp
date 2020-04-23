@@ -14,6 +14,7 @@ interface Props extends BareProps {
   currencies?: (CurrencyId | string)[];
   enableTokenSelect?: boolean;
   error?: boolean;
+  disabled?: boolean;
   id?: string;
   name?: string;
   onChange?: any;
@@ -26,6 +27,7 @@ interface Props extends BareProps {
 export const BalanceInput: FC<Props> = memo(({
   currencies,
   className,
+  disabled = false,
   enableTokenSelect = false,
   error,
   id,
@@ -53,6 +55,7 @@ export const BalanceInput: FC<Props> = memo(({
       )
     }>
       <input 
+        disabled={disabled}
         className={classes.input}
         id={id}
         name={name}

@@ -4,16 +4,17 @@ import { createPortal } from 'react-dom';
 import { BareProps } from './types';
 import classes from './Dialog.module.scss';
 import { Button } from './Button';
+import clsx from 'clsx';
 
 interface Props extends BareProps {
   visiable: boolean;
-  title: ReactNode;
-  content: ReactNode;
+  title?: ReactNode;
+  action?: ReactNode;
   confirmText?: string | null;
   cancelText?: string | null;
-  onClose?: () => void;
   onConfirm?: () => void;
   onCancel?: () => void;
+  showCancel?: boolean;
 }
 
 const DialogPortal:FC<BareProps> = ({children}) => {
@@ -35,36 +36,54 @@ const DialogPortal:FC<BareProps> = ({children}) => {
 export const Dialog: FC<Props> = memo(({
   cancelText = 'Cancel',
   confirmText = 'Confrim',
-  content,
+  className,
+  children,
   onCancel,
-  onClose,
   onConfirm,
   title,
-  visiable
+  visiable = true,
+  action,
+  showCancel = false 
 }) => {
+  if (!visiable) {
+    return null;
+  }
+
   return (
     <DialogPortal>
-      <div className={classes.root}>
-        { title ? <div>{title}</div> : null }
-        <div>{content}</div>
-        <div className={classes.action}>
-          { onCancel ? (
-            <Button
-              size='small'
-              onClick={onCancel}
-            >
-              {cancelText}
-            </Button>
-          ) : null }
-          { onConfirm ? (
-            <Button
-              size='small'
-              onClick={onConfirm}
-            >
-              {confirmText}
-            </Button>
-          ) : null }
-        </div>
+      <div className={
+        clsx(
+          classes.root,
+          className,
+          {
+            [classes.visiable]: visiable
+          }
+        )
+      }>
+        { title ? <div className={classes.title}>{title}</div> : null }
+        <div className={classes.content}>{children}</div>
+        {
+          action ? action : (
+            <div className={classes.action}>
+              { showCancel ? (
+                <Button
+                  size='small'
+                  onClick={onCancel}
+                >
+                  {cancelText}
+                </Button>
+              ) : null }
+              { onConfirm ? (
+                <Button
+                  size='small'
+                  onClick={onConfirm}
+                >
+                  {confirmText}
+                </Button>
+              ) : null }
+            </div>
+          )
+        }
       </div>
     </DialogPortal>
   );
