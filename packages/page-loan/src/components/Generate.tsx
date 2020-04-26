@@ -1,13 +1,16 @@
 import React, { useContext, ChangeEvent } from 'react';
 import { noop } from 'lodash';
-import { BalanceInput, UserBalance, getStableCurrencyId, Token, FormatFixed18, Price, LoanInterestRate, getValueFromTimestampValue } from '@honzon-platform/react-components';
-import { createProviderContext } from './CreateProvider';
 import { useFormik } from 'formik';
-import { useApi, useLoan } from '@honzon-platform/react-hooks';
-import classes from './Generate.module.scss';
-import { Button, List, ListConfig } from '@honzon-platform/ui-components';
+
 import { CurrencyId, Rate } from '@acala-network/types/interfaces';
 import { convertToFixed18, Fixed18 } from '@acala-network/app-util';
+
+import { BalanceInput, UserBalance, getStableCurrencyId, Token, FormatFixed18, Price, LoanInterestRate, getValueFromTimestampValue } from '@honzon-platform/react-components';
+import { useApi, useLoan } from '@honzon-platform/react-hooks';
+import { Button, List, ListConfig } from '@honzon-platform/ui-components';
+
+import { createProviderContext } from './CreateProvider';
+import classes from './Generate.module.scss';
 
 const Overview = ({ data }: any) => {
   const listConfig: ListConfig[] = [
@@ -76,6 +79,7 @@ const Overview = ({ data }: any) => {
       }
     }
   ];
+
   return (
     <div className={classes.overview}>
       <List
@@ -89,7 +93,7 @@ const Overview = ({ data }: any) => {
 
 export const Generate = () => {
   const { api } = useApi();
-  const { selectedToken } = useContext(createProviderContext);
+  const { selectedToken, setDeposit, setGenerate, setStep } = useContext(createProviderContext);
   const stableCurrencyId = getStableCurrencyId(api);
   const { currentLoanType, currentUserLoanHelper, collateralPrice } = useLoan(selectedToken);
 
@@ -101,7 +105,11 @@ export const Generate = () => {
     onSubmit: noop
   });
 
-  const onDepositChange = (event: ChangeEvent<any>) => {
+  const handleDepositChange = (event: ChangeEvent<any>) => {
+    const data = Number(event.target.value);
+    currentUserLoanHelper.collaterals = currentUserLoanHelper.collaterals.add(
+      Fixed18.fromNatural(data || 0)
+    );
     form.handleChange(event);
   };
 
@@ -119,16 +127,22 @@ export const Generate = () => {
     liquidationPenalty: convertToFixed18(currentLoanType? currentLoanType.liquidationPenalty : 0)
   };
 
-  const onNext = () => {
+  const handleNext = (): void => {
+    setDeposit(form.values.deposit);
+    setGenerate(form.values.generate);
+    setStep('confirm');
+  };
 
-  }
+  const handlePrevious = (): void => {
+    setStep('select');
+  };
 
   const checkDisabled = () => {
     if (!form.values.deposit || !form.values.generate) {
       return true;
     }
     return false;
-  }
+  };
 
   return (
     <div className={classes.root}>
@@ -143,7 +157,7 @@ export const Generate = () => {
             name='deposit'
             token={selectedToken}
             value={form.values.deposit}
-            onChange={onDepositChange}
+            onChange={handleDepositChange}
           />
           <div className={classes.addon}>
             <span>Max to Lock</span>
@@ -171,17 +185,21 @@ export const Generate = () => {
       <div className={classes.action}>
         <Button
           size='small'
+          onClick={handlePrevious}
+          normal
         >
           Previous
         </Button>
         <Button
           size='small'
+          normal
         >
           Cancel
         </Button>
         <Button
           size='small'
           disabled={checkDisabled()}
+          onClick={handleNext}
         >
           Next
         </Button>

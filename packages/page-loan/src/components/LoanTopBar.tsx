@@ -1,11 +1,13 @@
 import React, { FC, memo, useContext } from 'react';
 import clsx from 'clsx';
-import { LoanContext, Token, LoanCollateralRate } from '@honzon-platform/react-components';
+import { Token, LoanCollateralRate, LoanProvider } from '@honzon-platform/react-components';
 import { CurrencyId } from '@acala-network/types/interfaces';
 
 import { ReactComponent as OverviewIcon } from '../assets/overview.svg';
 import { ReactComponent as AddIcon } from '../assets/add.svg';
 import classes from './LoanTopBar.module.scss';
+import { useLoan, useAllLoans } from '@honzon-platform/react-hooks';
+import { LoanContext } from './LoanProvider';
 
 interface LoanItemProps {
   token: CurrencyId | string;
@@ -14,8 +16,12 @@ interface LoanItemProps {
 const LoanItem: FC<LoanItemProps> = memo(({
   token
 }) => {
+  const { setCurrentTab } = useContext(LoanContext);
   return (
-    <div className={classes.item}>
+    <div
+      className={classes.item}
+      onClick={() => setCurrentTab(token)}
+    >
       <Token
         className={classes.icon}
         token={token}
@@ -39,13 +45,14 @@ const LoanItem: FC<LoanItemProps> = memo(({
 
 LoanItem.displayName = 'LoanItem';
 
-interface OverviewProps {
+const LoanOverview: FC = () => {
+  const { showOverview } = useContext(LoanContext);
 
-}
-
-const LoanOverview: FC<OverviewProps> = ({}) => {
   return (
-    <div className={clsx(classes.item, classes.overview)}>
+    <div
+      className={clsx(classes.item, classes.overview)}
+      onClick={showOverview}
+    >
       <div className={classes.icon}>
         <OverviewIcon />
       </div>
@@ -56,17 +63,13 @@ const LoanOverview: FC<OverviewProps> = ({}) => {
   );
 };
 
-interface LoanAddProps {
-  onClick: () => void;
-}
+const LoanAdd: FC = () => {
+  const { showCreate } = useContext(LoanContext);
 
-const LoanAdd: FC<LoanAddProps> = ({
-  onClick
-}) => {
   return (
     <div
       className={clsx(classes.item, classes.add)}
-      onClick={onClick}
+      onClick={showCreate}
     >
       <div className={classes.icon}>
         <AddIcon />
@@ -78,23 +81,21 @@ const LoanAdd: FC<LoanAddProps> = ({
   );
 }
 
-interface LoanTopBarProps {
-  onClickCreate: () => void;
-  onClickOverview: () => void;
-}
+export const LoanTopBar: FC = () => {
+  const { loans } = useAllLoans({ filterEmpty: true });
 
-export const LoanTopBar: FC<LoanTopBarProps> = memo(({
-  onClickCreate,
-  onClickOverview,
-}) => {
-  const { loans } = useContext(LoanContext);
   return (
     <div className={classes.root}>
       <LoanOverview />
-      {loans.map((item) => <LoanItem token={item.token} />)}
-      <LoanAdd onClick={onClickCreate} />
+      {
+        loans.map((item) => (
+          <LoanItem
+            key={`loan-top-bar-${item.token}`}
+            token={item.token}
+          />
+        ))
+      }
+      <LoanAdd />
     </div>
   );
-});
-
-LoanTopBar.displayName = 'LoanTopBar';
+};

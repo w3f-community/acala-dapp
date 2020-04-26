@@ -58,7 +58,7 @@ export const Grid: FC<Props> = memo(({
           className,
           {
             [classes.root]: container,
-            [classes[direction]]: container
+            [classes[direction]]: container,
           }
         )
       }

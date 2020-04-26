@@ -1,32 +1,29 @@
-import React, { FC, memo, useState } from 'react';
+import React, { FC, memo, useContext } from 'react';
+
 import { Page, Grid } from '@honzon-platform/ui-components';
-import { PricesFeedCard, LoanProvider } from '@honzon-platform/react-components';
+import { PricesFeedCard } from '@honzon-platform/react-components';
+
 import { LoanTopBar } from './components/LoanTopBar';
 import { WalletBalanceBar } from './components/WalletBalanceBar';
 import { CreateConsole } from './components/CreateConsole';
+import { LoanProvider, LoanContext } from './components/LoanProvider';
+import { LoanConsole } from './components/LoanConsole';
+import { SystemInfoCard } from './components/SystemInfoCard';
+import { CollateralCard } from './components/CollateralCard';
 
-const PageLoan: FC = memo(() => {
-  const [createStatus, setCreataeStatus] = useState<boolean>(true);
-  const showCreate = () => {
-    setCreataeStatus(true);
-  };
-  const showOverview = () => {
-    setCreataeStatus(true);
-  };
+const Inner: FC = () => {
+  const { currentTab } = useContext(LoanContext);
 
   return (
     <Page>
       <Page.Title title='Self Serviced Loan' />
         <Page.Content>
-          <LoanProvider>
             <Grid direction='column'>
               {
-                !createStatus ? (
+                currentTab !== 'create'
+                ? (
                   <Grid item>
-                    <LoanTopBar
-                      onClickCreate={showCreate}
-                      onClickOverview={showOverview}
-                    />
+                    <LoanTopBar />
                   </Grid>
                 ) : null
               }
@@ -36,9 +33,19 @@ const PageLoan: FC = memo(() => {
                     <WalletBalanceBar />
                   </Grid>
                   {
-                    createStatus ? (
+                    currentTab === 'create'
+                    ? (
                       <Grid item>
                         <CreateConsole />
+                      </Grid>
+                    ) : null
+                  }
+                  {
+                    currentTab !== 'create'
+                    && currentTab !== 'overview'
+                    ? (
+                      <Grid item>
+                        <LoanConsole />
                       </Grid>
                     ) : null
                   }
@@ -47,15 +54,26 @@ const PageLoan: FC = memo(() => {
                   <Grid item>
                     <PricesFeedCard />
                   </Grid>
+                  <Grid item>
+                    <SystemInfoCard />
+                  </Grid>
+                  <Grid item>
+                    <CollateralCard />
+                  </Grid>
                 </Grid>
               </Grid>
             </Grid>
-          </LoanProvider>
         </Page.Content>
     </Page>
   );
-});
+};
 
-PageLoan.displayName = 'PageLoan';
+const PageLoan: FC = () => {
+  return (
+    <LoanProvider>
+      <Inner />
+    </LoanProvider>
+  );
+};
 
 export default PageLoan;

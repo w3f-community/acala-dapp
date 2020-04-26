@@ -6,7 +6,6 @@ import { Vec } from '@polkadot/types';
 import { Card } from '@honzon-platform/ui-components';
 import { CurrencyId, Share } from '@acala-network/types/interfaces';
 import { BalanceInput, TxButton, numToFixed18Inner, DexExchangeRate, DexPoolSize, DexUserShare } from '@honzon-platform/react-components';
-import { QueryDexShare } from '@honzon-platform/react-query';
 import { useAccounts, useFormValidator, useDexShare } from '@honzon-platform/react-hooks';
 import { convertToFixed18 } from '@acala-network/app-util';
 

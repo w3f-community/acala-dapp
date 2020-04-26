@@ -18,7 +18,10 @@ export const WalletBalanceBar: FC = () => {
         {
           allToken.map((item) => {
             return (
-              <li className={classes.item}>
+              <li
+                key={`wallet-balance-bar-${item}`}
+                className={classes.item}
+              >
                 <div className={classes.token}>
                   <Token
                     token={item}

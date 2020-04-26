@@ -6,6 +6,7 @@ import { Generate } from './Generate';
 import { CreateProvider, createProviderContext } from './CreateProvider';
 import { useApi } from '@honzon-platform/react-hooks';
 import { getStableCurrencyId } from '@honzon-platform/react-components';
+import { Confirm } from './Confirm';
 
 
 const Inner: FC = () => {
@@ -54,6 +55,7 @@ const Inner: FC = () => {
       <p className={classes.tips}>{renderTips()}</p>
       {step === 'select' ? <SelectCollateral /> : null}
       {step === 'generate' ? <Generate /> : null}
+      {step === 'confirm' ? <Confirm /> : null}
     </Card>
   );
 };

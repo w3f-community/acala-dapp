@@ -2,7 +2,6 @@ import React, { createContext, FC, memo, ReactElement } from 'react';
 
 import { DerivedStakingPool } from '@acala-network/api-derive';
 
-import { QueryStakingPool } from '@honzon-platform/react-query';
 import { StakingPoolHelper } from '@acala-network/app-util';
 import { useStakingPool } from '@honzon-platform/react-hooks';
 

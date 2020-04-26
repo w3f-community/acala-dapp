@@ -18,9 +18,17 @@ export const SelectCollateral: FC = () => {
     setSelected(token);
   };
 
-  const onNext = () => {
+  const handleNext = () => {
     setStep('generate');
     setSelectedToken(selected);
+  };
+
+  const checkDisabled = () => {
+    if (!selected) {
+      return true;
+    }
+
+    return false;
   };
 
   const tableConfig: TableItem<DerivedLoanType>[] = [
@@ -91,12 +99,19 @@ export const SelectCollateral: FC = () => {
     },
   ];
 
+  const handleRowClick = (_event: any, data: DerivedLoanType) => {
+    setSelected(data.token as CurrencyId);
+  };
+
   return (
     <div className={classes.root}>
       <Table
         showHeader
         config={tableConfig}
         data={loanTypes}
+        rawProps={{
+          onClick: handleRowClick
+        }}
       />
       <div className={classes.action}>
         <Button
@@ -108,7 +123,8 @@ export const SelectCollateral: FC = () => {
         <Button
           size='small'
           primary
-          onClick={onNext}
+          disabled={checkDisabled()}
+          onClick={handleNext}
         >
           Next
         </Button>

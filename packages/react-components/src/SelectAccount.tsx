@@ -2,7 +2,7 @@ import React, { useEffect, useState, memo } from 'react';
 import { noop } from 'lodash';
 
 import { AnyFunction } from '@polkadot/types/types';
-import Identicon from '@polkadot/ui-identicon';
+import Identicon from '@polkadot/react-identicon';
 import { useAccounts, useApi, useModal } from '@honzon-platform/react-hooks';
 import { Dialog } from '@honzon-platform/ui-components';
 

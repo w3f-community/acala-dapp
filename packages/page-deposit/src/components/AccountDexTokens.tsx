@@ -4,7 +4,6 @@ import { CurrencyId, AccountId } from '@acala-network/types/interfaces';
 import { convertToFixed18, Fixed18 } from '@acala-network/app-util';
 
 import { FormatBalance } from '@honzon-platform/react-components';
-import { QueryDexPool, QueryDexShare } from '@honzon-platform/react-query';
 import { BareProps } from '@honzon-platform/ui-components/types';
 import { useDexPool, useDexShare } from '@honzon-platform/react-hooks';
 

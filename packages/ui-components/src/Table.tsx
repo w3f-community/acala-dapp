@@ -30,7 +30,7 @@ export function Table<T extends { [k: string]: any }> ({
   config,
   data,
   rawProps,
-  showHeader = false
+  showHeader = false,
 }: Props<T>): ReactElement {
   const randomId = useRef<string>(randomID());
 
