@@ -22,3 +22,6 @@ export * from './useDexPool';
 
 // homa
 export * from './useStakingPool';
+
+// loan
+export * from './useLoan';

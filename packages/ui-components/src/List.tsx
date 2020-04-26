@@ -1,5 +1,6 @@
 import React, { FC, ReactNode, memo } from 'react';
 import classes from './List.module.scss';
+import clsx from 'clsx';
 
 type ListData = {
   [k in string]: any
@@ -14,9 +15,14 @@ export interface ListConfig {
 interface Props {
   config: ListConfig[];
   data: ListData;
+  itemClassName?: string;
 }
 
-export const List: FC<Props> = memo(({ config, data }) => {
+export const List: FC<Props> = memo(({
+  config,
+  data,
+  itemClassName
+}) => {
   return (
     <ul className={classes.root}>
       {
@@ -25,7 +31,7 @@ export const List: FC<Props> = memo(({ config, data }) => {
 
           return (
             <li
-              className={classes.listItem}
+              className={clsx(classes.listItem,  itemClassName)}
               key={`list-${key}-${index}`}
             >
               <div>{_config.title}</div>

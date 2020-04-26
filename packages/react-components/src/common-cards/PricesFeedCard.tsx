@@ -1,16 +1,14 @@
-import React, { FC, memo, ReactElement, ReactNode } from 'react';
+import React, { FC, memo, ReactNode } from 'react';
 
 import { DerivedPrice } from '@acala-network/api-derive';
 import { TimestampedValue } from '@orml/types/interfaces';
 import { convertToFixed18 } from '@acala-network/app-util';
-import { Codec } from '@polkadot/types/types';
 import { CurrencyId } from '@acala-network/types/interfaces';
 
-import { QueryAllPrices } from '@honzon-platform/react-query';
 import { Table, TableItem, Card } from '@honzon-platform/ui-components';
 import { usePrice } from '@honzon-platform/react-hooks';
 
-import { formatCurrency } from '../utils';
+import { formatCurrency, getValueFromTimestampValue } from '../utils';
 import { FormatFixed18 } from '../format';
 
 type TableData = DerivedPrice;
@@ -23,18 +21,19 @@ const PricesList: FC = () => {
       render (data: CurrencyId): ReactNode {
         return `${formatCurrency(data)} in USD`;
       },
+      align: 'left',
       title: 'Currency'
     },
     {
       dataIndex: 'price',
+      align: 'right',
       render (data: TimestampedValue): ReactNode {
-        let _value: Codec = data.value;
-
-        if (Reflect.has(data.value, 'value')) {
-          _value = (data.value as any).value as Codec;
-        }
-
-        return <FormatFixed18 data={convertToFixed18(_value)} />;
+        return (
+          <FormatFixed18
+            data={convertToFixed18(getValueFromTimestampValue(data))}
+            prefix='$'
+          />
+        );
       },
       title: 'Price'
     }
@@ -55,8 +54,8 @@ PricesList.displayName = 'PricesFeedCardList';
 
 export const PricesFeedCard: FC = memo(() => {
   return (
-    <Card header='Price Feed'>
-      <PricesList />;
+    <Card header='Price Feed' gutter={false}>
+      <PricesList />
     </Card>
   );
 });

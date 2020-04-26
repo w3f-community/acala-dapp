@@ -1,0 +1,12 @@
+.root {
+  .action {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 18px;
+    padding: 0 24px;
+
+    & > button {
+      margin-left: 20px;
+    }
+  }
+}

@@ -3,7 +3,7 @@ import React, { FC } from 'react';
 import { Page, Grid } from '@honzon-platform/ui-components';
 
 import { UserCard } from './components/UserCard';
-import { WalletBalanceCard } from '@honzon-platform/react-components';
+import { WalletBalanceCard, AirDrop } from '@honzon-platform/react-components';
 
 const PageWallet: FC = () => {
   return (
@@ -20,6 +20,9 @@ const PageWallet: FC = () => {
               showHeader
               showCell={['token', 'amount', 'price', 'balance', 'action']}
             />
+          </Grid>
+          <Grid item>
+            <AirDrop />
           </Grid>
         </Grid>
       </Page.Content>

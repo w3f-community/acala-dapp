@@ -8,6 +8,7 @@ import { Token } from '../Token';
 import { UserBalance } from '../UserBalance';
 import { Price } from '../Price';
 import { getAllCurrencyIds } from '../utils';
+import { TransferButton } from '../TransferButton';
 
 type TableData = CurrencyId[];
 
@@ -69,18 +70,13 @@ export const WalletBalanceCard: FC<Props> = memo(({
       key: 'action',
       align: 'right',
       title: 'Action',
-      render: () => {
-        return (
-          <Button size='small' >
-            Transfer
-          </Button>
-        );
-      }
+      /* eslint-disable-next-line react/display-name */
+      render: (token: CurrencyId) => <TransferButton token={token} />
     }
   ];
   const tableConfig = _tableConfig.filter((item) => showCell.includes(item.key!));
   const allToken = getAllCurrencyIds(api);
-  console.log(allToken);
+
   return (
     <Card
       header={title || 'Wallet Balance'}

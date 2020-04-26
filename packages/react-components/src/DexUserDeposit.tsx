@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import AccountId from '@polkadot/types/generic/AccountId';
 import { CurrencyId } from '@acala-network/types/interfaces';
-import { useCall, usePrice } from '@honzon-platform/react-hooks';
+import { useCall, usePrice, useDexShare } from '@honzon-platform/react-hooks';
 import { DerivedPrice } from '@acala-network/api-derive';
 import { useApi } from '@honzon-platform/react-hooks';
 import { useAccounts } from '@honzon-platform/react-hooks';
@@ -22,4 +22,11 @@ export const DexUserDeposit: FC<Props> = ({
   const { api } = useApi();
   const { active } = useAccounts();
   const price = usePrice();
+  const {} = useDexShare();
+
+  if (withPrice) {
+
+  }
+
+  return ();
 }

@@ -20,13 +20,15 @@ export const UserCard: FC = memo(() => {
           <Identicon
             className={classes.icon}
             value={active.address}
-            size={48}
+            size={64}
+            theme='substrate'
           />
           <div>
             <p className={classes.name}>{active.meta.name || 'User'}</p>
             <FormatAddress
               className={classes.address}
               address={active.address}
+              withFullAddress
             />
           </div>
         </div>
@@ -35,7 +37,7 @@ export const UserCard: FC = memo(() => {
   }
 
   return (
-    <Card className={classes.root}>
+    <Card className={classes.root} gutter={false}>
     { active ? renderContent() : <Loading /> }
     </Card>
   );

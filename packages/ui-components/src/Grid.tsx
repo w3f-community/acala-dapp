@@ -66,10 +66,15 @@ export const Grid: FC<Props> = memo(({
     >
     {
       React.Children.map(children, (node) => {
+        if (!node) {
+          return null;
+        }
+
         const _props = {
           pDirection: direction,
           pGutter: gutter
         } as any;
+
         return React.cloneElement(node as ReactElement, _props);
       })
     }

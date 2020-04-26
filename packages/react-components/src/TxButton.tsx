@@ -5,6 +5,7 @@ import { BareProps } from '@honzon-platform/ui-components/types';
 import { FormatAddress } from './format';
 
 interface Props extends BareProps {
+  size?: 'small' | 'large';
   disabled: boolean;
   section: string;
   method: string;
@@ -23,7 +24,8 @@ export const TxButton: FC<PropsWithChildren<Props>> = ({
   onFinally,
   onSuccess,
   params,
-  section
+  section,
+  size
 }) => {
   const { api } = useApi();
   const { active } = useAccounts();
@@ -90,6 +92,7 @@ export const TxButton: FC<PropsWithChildren<Props>> = ({
       disabled={disabled || isSending}
       loading={isSending}
       onClick={onClick}
+      size={size}
       primary
     >
       {children}

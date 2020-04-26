@@ -1,0 +1,53 @@
+.root {
+  .header {
+    font-size: 20px;
+    line-height: 24px;
+    border: none;
+  }
+
+  .content {
+    display: flex;
+    list-style: none;
+    padding-bottom: 24px;
+  }
+
+  .item {
+    box-sizing: border-box;
+    position: relative;
+    padding: 0 24.5px;
+    min-width: 140px;
+
+    &:first-child {
+      padding-left: 0;
+    }
+
+    &:first-child::before {
+      display: none;
+    }
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      width: 1px;
+      height: 30px;
+      background: #d8d8d8;
+      transform: translate3d(0, -50%, 0);
+    }
+  }
+
+  .token {
+    display: flex;
+    font-size: 16px;
+    line-height: 19px;
+    color: #999999;
+  }
+
+  .amount {
+    margin-top: 8px;
+    font-size: 16px;
+    line-height: 19px;
+    color: #333333;
+  }
+}

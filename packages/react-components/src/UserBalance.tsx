@@ -21,7 +21,8 @@ export const UserBalance: FC<Props> = memo(({
   account,
   className,
   token,
-  withPrice = false
+  withPrice = false,
+  withIcon = true
 }) => {
   const { api } = useApi();
   const { active } = useAccounts();
@@ -36,7 +37,7 @@ export const UserBalance: FC<Props> = memo(({
 
   if (withPrice) {
     const _amount = convertToFixed18(getValueFromTimestampValue(price.price)).mul(convertToFixed18(result));
-    console.log(price);
+
     return (
       <FormatFixed18
         prefix='$'
@@ -50,7 +51,7 @@ export const UserBalance: FC<Props> = memo(({
     <FormatBalance
       className={className}
       balance={convertToFixed18(result)}
-      currency={token}
+      currency={withIcon ? token : ''}
     />
   );
 });

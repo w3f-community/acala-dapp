@@ -20,7 +20,8 @@
   }
 
   &.normal {
-    background: $color-white;
+    background: #ecf0f2;
+    color: #333333;
   }
 
   &.large {
@@ -33,12 +34,13 @@
   &.small {
     min-width: 80px;
     height: 32px;
-    font-size: 16px;
-    line-height: 19px;
+    font-size: 12px;
+    line-height: 14px;
   }
 
   &.disabled {
     background: #eff1f7;
+    color: #333333;
     cursor: not-allowed;
   }
 }

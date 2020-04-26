@@ -13,6 +13,7 @@ import { ReactComponent as EthIcon } from './assets/coins-icon/eth.svg';
 interface Props extends BareProps {
   token: CurrencyId | string;
   icon?: boolean;
+  name?: boolean;
   upper?: boolean;
 }
 
@@ -28,6 +29,7 @@ export const Token: FC<Props> = memo(({
   className,
   icon,
   token,
+  name = true,
   upper = true
 }) => {
   if (!token) {
@@ -53,7 +55,7 @@ export const Token: FC<Props> = memo(({
           </span>
         ) : null
       }
-      {formatCurrency(token, upper)}
+      {name ? formatCurrency(token, upper) : null}
     </div>
   );
 });

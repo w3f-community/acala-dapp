@@ -29,6 +29,9 @@ export const numToFixed18Inner = (num: number | string): string => {
 };
 
 export const tokenEq = (base: CurrencyId | string, target: CurrencyId | string): boolean => {
+  if (!target || !base) {
+    return false;
+  }
   return base.toString().toUpperCase() === target.toString().toUpperCase();
 };
 
@@ -48,6 +51,10 @@ export const getAllCurrencyIds = (api: ApiPromise): CurrencyId[] => {
     return api.registry.createType('CurrencyId' as any, name) as CurrencyId;
   });
 };
+
+export const getStableCurrencyId = (api: ApiPromise): CurrencyId => {
+  return api.consts.cdpEngine.getStableCurrencyId as CurrencyId;
+}
 
 export const getCurrencyIdFromName = (api: ApiPromise, name: string): CurrencyId => {
   const CurrencyId = api.registry.createType('CurrencyId' as any);

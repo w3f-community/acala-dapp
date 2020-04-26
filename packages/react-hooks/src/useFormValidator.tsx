@@ -16,12 +16,18 @@ interface NumberConfig {
   min?: number;
 }
 
-type Config = {
-  [k in string]: BalanceConfig | NumberConfig;
+interface StringConfig {
+  type: 'string';
+  pattern?: RegExp;
+  max?: number;
+  min?: number;
 }
 
-export const useFormValidator = (configs: Config) => {
-  const { api } = useApi();
+type Config = {
+  [k in string]: BalanceConfig | NumberConfig | StringConfig;
+}
+
+export const useFormValidator = (configs: Config) => { const { api } = useApi();
   const { active } = useAccounts();
   const numberPattern = /^\-?([1-9]\d*|0)(\.\d{1,5})?$/;
 
@@ -73,6 +79,21 @@ export const useFormValidator = (configs: Config) => {
 
           if (_value.isLessThan(_min)) {
             error[key] = `Value is less than ${config.min}`;
+          }
+        }
+
+        if (config.type === 'string') {
+          const length = (value as string).length;
+
+          if (config.pattern !== undefined && !config.pattern.test(value)) {
+            error[key] = `Value is not a validate string`;
+          }
+
+          if (config.max !== undefined && length > config.max) {
+            error[key] = `Value is more than ${config.max}`
+          }
+          if (config.min !== undefined && length < config.min) {
+            error[key] = `Value is less than ${config.max}`
           }
         }
       });

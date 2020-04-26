@@ -13,16 +13,6 @@ import { SideBarConfig } from './types/sidebar';
 export const sideBarConfig: SideBarConfig = {
   products: [
     {
-      icon: <LiquidSVG />,
-      name: 'Liquid DOT',
-      path: 'homa'
-    },
-    {
-      icon: <DepositSVG />,
-      name: 'Deposit & Earn',
-      path: 'deposit'
-    },
-    {
       icon: <LoanSVG />,
       name: 'Self Serviced Loan',
       path: 'loan'
@@ -31,6 +21,16 @@ export const sideBarConfig: SideBarConfig = {
       icon: <ExchangeSVG />,
       name: 'Exchange',
       path: 'swap'
+    },
+    {
+      icon: <DepositSVG />,
+      name: 'Deposit & Earn',
+      path: 'deposit'
+    },
+    {
+      icon: <LiquidSVG />,
+      name: 'Liquid DOT',
+      path: 'homa'
     },
     {
       icon: <GovernanceSVG />,
