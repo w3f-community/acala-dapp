@@ -3,7 +3,25 @@
   align-items: flex-end;
   justify-content: space-between;
 
+  .txBtn {
+    margin-left: 24px;
+  }
+
   & > .inputAreaRoot {
-    flex: 0 0 866px;
+    flex: 1;
+  }
+
+  .inputAreaTitle {
+    padding: 0 4px;
+    margin-bottom: 24px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 16px;
+    line-height: 19px;
+    font-weight: 300;
+  
+    & > .inputAreaBalance {
+      font-weight: 400;
+    }
   }
 }

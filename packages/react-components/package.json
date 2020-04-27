@@ -12,7 +12,7 @@
     "@acala-network/app-util": "beta",
     "@acala-network/types": "beta",
     "@honzon-platform/react-hooks": "^0.2.0",
-    "@polkadot/api": "^1.9.0-beta.22  ",
+    "@polkadot/api": "^~1.10.1  ",
     "@polkadot/react-identicon": "^0.52.1",
     "rxjs": "^6.5.3"
   }

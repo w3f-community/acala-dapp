@@ -1,6 +1,7 @@
 import React, { FC, memo } from 'react';
 import { Card, Tabs } from '@honzon-platform/ui-components';
 import { StakingConsolee } from './StakingConsole';
+import { RedeemConsole } from './RedeemConsole';
 
 export const Console: FC = memo(() => {
   const config = [
@@ -13,7 +14,7 @@ export const Console: FC = memo(() => {
     {
       title: 'Redeem',
       render: () => {
-        return <p>redeem</p>
+        return <RedeemConsole />
       }
     }
   ];

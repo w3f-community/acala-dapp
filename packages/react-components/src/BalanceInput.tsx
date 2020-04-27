@@ -74,7 +74,12 @@ export const BalanceInput: FC<Props> = memo(({
               currencies={currencies}
             />
           )
-          : <Token token={token} />
+          : (
+            <Token
+              className={classes.token}
+              token={token}
+            />
+          )
       }
     </div>
   );

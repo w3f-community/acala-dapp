@@ -1,12 +1,18 @@
-import React, { FC, memo } from 'react';
+import React, { FC } from 'react';
 import classes from './Loading.module.scss';
 
-export const Loading: FC = memo(() => {
+export const Loading: FC = () => {
   return (
     <div className={classes.root}>
       <div className={classes.loader} />
     </div>
   );
-});
+};
 
-Loading.displayName = 'Loading';
+export const FullLoading: FC = () => {
+  return (
+    <div className={classes.fullscreen}>
+      <Loading/>
+    </div>
+  );
+}

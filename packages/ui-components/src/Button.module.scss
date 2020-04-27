@@ -8,6 +8,7 @@
   font-weight: 500;
   color: $color-white;
   cursor: pointer;
+  transition:  background 200ms;
 
   // clear default apperance
   border: none;
@@ -17,6 +18,10 @@
 
   &.primary {
     background: $color-primary;
+  }
+
+  &.primary:hover {
+    background: $color-primary-hover;
   }
 
   &.normal {
@@ -39,6 +44,12 @@
   }
 
   &.disabled {
+    background: #eff1f7;
+    color: #333333;
+    cursor: not-allowed;
+  }
+
+  &.disabled:hover {
     background: #eff1f7;
     color: #333333;
     cursor: not-allowed;

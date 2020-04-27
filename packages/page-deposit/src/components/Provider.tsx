@@ -17,7 +17,7 @@ export const DepositContext = createContext<DepositContextData>({} as DepositCon
 
 export const DepositProvider: FC<BareProps> = memo(({ children }) => {
   const { api } = useApi();
-  const [action, _setAction] = useState<ACTION_TYPE>('deposit');
+  const [action, _setAction] = useState<ACTION_TYPE>('reward');
   const setActiveAction = (type: ACTION_TYPE): void => {
     _setAction(type);
   };

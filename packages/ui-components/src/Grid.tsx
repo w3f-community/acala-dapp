@@ -3,6 +3,7 @@ import clsx from 'clsx';
 
 import { BareProps } from './types';
 import classes from './Grid.module.scss';
+import { jsxAttribute } from '@babel/types';
 
 interface Props extends BareProps {
   container?: boolean;
@@ -10,11 +11,14 @@ interface Props extends BareProps {
   flex?: number;
   direction?: 'column' | 'row';
   gutter?: number;
+  justifyContent?: 'center' | 'flex-start' | 'flex-end' | 'space-between' | 'space-around',
+  alignItems?: 'center' | 'flex-start' | 'flex-end',
   pDirection?: 'column' | 'row';
   pGutter?: number;
 }
 
 export const Grid: FC<Props> = memo(({
+  alignItems,
   children,
   className,
   direction = 'row',
@@ -22,6 +26,7 @@ export const Grid: FC<Props> = memo(({
   flex = 1,
   item,
   container,
+  justifyContent,
   pDirection,
   pGutter
 }) => {
@@ -48,6 +53,14 @@ export const Grid: FC<Props> = memo(({
       _style.flex = flex;
     }
 
+    if (justifyContent) {
+      _style.justifyContent = justifyContent;
+    }
+
+    if (alignItems) {
+      _style.alignItems = alignItems;
+    }
+
     return _style;
   }
 
@@ -68,6 +81,10 @@ export const Grid: FC<Props> = memo(({
       React.Children.map(children, (node) => {
         if (!node) {
           return null;
+        }
+
+        if (item && !container) {
+          return node;
         }
 
         const _props = {

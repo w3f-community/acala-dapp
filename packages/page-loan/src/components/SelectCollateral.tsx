@@ -4,12 +4,12 @@ import { LoanContext, Token, tokenEq, LoanInterestRate, FormatFixed18, UserBalan
 import { DerivedLoanType } from '@acala-network/api-derive';
 import { CurrencyId, Rate } from '@acala-network/types/interfaces';
 import { convertToFixed18 } from '@acala-network/app-util';
-import { useAccounts } from '@honzon-platform/react-hooks';
+import { useAccounts, useAllLoans } from '@honzon-platform/react-hooks';
 import classes from './SelectCollateral.module.scss';
 import { createProviderContext } from './CreateProvider';
 
 export const SelectCollateral: FC = () => {
-  const { loanTypes } = useContext(LoanContext);
+  const { loanTypes } = useAllLoans({ filterEmpty: false });
   const [selected, setSelected] = useState<CurrencyId>(null as any as CurrencyId);
   const { active } = useAccounts();
   const { setStep, setSelectedToken } = useContext(createProviderContext);

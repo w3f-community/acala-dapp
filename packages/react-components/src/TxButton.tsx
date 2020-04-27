@@ -61,6 +61,7 @@ export const TxButton: FC<PropsWithChildren<Props>> = ({
 
     const extrinsic = api.tx[section][method](...params);
     const notification = createNotification({
+      icon: 'loading',
       content: <FormatAddress address={extrinsic.hash.hash.toString()} />,
       placement: 'top right',
       type: 'info',
@@ -70,6 +71,7 @@ export const TxButton: FC<PropsWithChildren<Props>> = ({
     extrinsic.signAndSend(active.address, (result) => {
       if (result.isInBlock) {
         notification.update({
+          icon: 'success',
           type: 'success',
           removedDelay: 4000
         });
@@ -77,6 +79,7 @@ export const TxButton: FC<PropsWithChildren<Props>> = ({
       }
     }).catch(() => {
         notification.update({
+          icon: 'error',
           type: 'error',
           removedDelay: 4000
         });

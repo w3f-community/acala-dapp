@@ -95,7 +95,7 @@ export const WithdrawConsole: FC = memo(() => {
           error={form.errors.share}
           id='share'
           name='share'
-          value={form.values.share as any as number}
+          value={form.values.share}
           onChange={form.handleChange}
           token={otherCurrency}
           currencies={enabledCurrencyIds}

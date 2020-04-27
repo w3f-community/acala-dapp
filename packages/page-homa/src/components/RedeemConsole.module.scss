@@ -1,0 +1,26 @@
+.root {
+  .txBtn {
+    width: 250px;
+    height: 40px;
+    font-size: 16px;
+    line-height: 19px;
+  }
+
+  .select {
+    .item {
+      margin-top: 16px;
+    }
+  }
+
+  .targetInput {
+    display: flex;
+
+    .input {
+      margin: 0 8px;
+      width: 64px;
+      height: 24px;
+      font-size: 16px;
+      line-height: 18px;
+    }
+  }
+}

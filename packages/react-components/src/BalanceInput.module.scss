@@ -31,3 +31,12 @@
   border-left: 1px solid #ecf0f2;
   border-radius: 0;
 }
+
+.token {
+  flex-grow: 0;
+  flex-shrink: 0;
+  border: none;
+  border-left: 1px solid #ecf0f2;
+  border-radius: 0;
+  padding: 0 16px;
+}

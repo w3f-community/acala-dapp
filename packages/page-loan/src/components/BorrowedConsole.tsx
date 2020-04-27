@@ -5,6 +5,7 @@ import { Token, FormatBalance, getStableCurrencyId } from '@honzon-platform/reac
 import { useLoan, useApi } from '@honzon-platform/react-hooks';
 
 import classes from './LoanConsole.module.scss';
+import { LonaActionButton } from './LoanActionButton';
 
 interface Props {
   token: CurrencyId | string;
@@ -17,13 +18,33 @@ export const BorrowedConsole: FC<Props> = ({
   const { currentUserLoanHelper } = useLoan(token);
   const stableCurrency = getStableCurrencyId(api);
 
+  const checkCanPayBackDisabled = (): boolean => {
+    if (!currentUserLoanHelper.canPayBack) {
+      return true;
+    }
+    if (currentUserLoanHelper.canPayBack.isZero()) {
+      return true;
+    }
+    return false;
+  };
+
+  const checkCanGenerateDisabled = (): boolean => {
+    if (!currentUserLoanHelper.canGenerate) {
+      return true;
+    }
+    if (currentUserLoanHelper.canGenerate.isZero()) {
+      return true;
+    }
+    return false;
+  };
+
   return (
     <Card
       className={classes.console}
       headerClassName={classes.header}
       header={(
         <>
-          <p>{'Borrow '} <Token token={token} /></p>
+          <div>{'Borrow '} <Token token={token} /></div>
           <FormatBalance
             currency={stableCurrency}
             balance={currentUserLoanHelper.debitAmount}
@@ -40,11 +61,16 @@ export const BorrowedConsole: FC<Props> = ({
               balance={currentUserLoanHelper.canPayBack}
             />
           </div>
-          <Button
+          <LonaActionButton
             className={classes.itemAction}
-          >
-            Payback
-          </Button>
+            disabled={checkCanPayBackDisabled()}
+            type='payback'
+            text='Payback'
+            token={token}
+            max={
+              currentUserLoanHelper.canPayBack?.toNumber()
+            }
+          />
         </div>
         <div className={classes.item}>
           <div className={classes.itemContent}>
@@ -55,11 +81,14 @@ export const BorrowedConsole: FC<Props> = ({
               balance={currentUserLoanHelper.canGenerate}
             />
           </div>
-          <Button
+          <LonaActionButton
             className={classes.itemAction}
-          >
-            Payback
-          </Button>
+            disabled={checkCanGenerateDisabled()}
+            type='generate'
+            text='Generate'
+            token={token}
+            max={currentUserLoanHelper.canGenerate?.toNumber()}
+          />
         </div>
     </Card>
   );

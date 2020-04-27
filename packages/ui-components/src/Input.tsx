@@ -11,6 +11,7 @@ interface Props extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size' | 'pr
 }
 
 export const Input: FC<Props> = ({
+  className,
   error,
   size = 'normal',
   suffix,
@@ -22,6 +23,7 @@ export const Input: FC<Props> = ({
       className={
         clsx(
           classes.root,
+          className,
           {
             [classes.error]: error
           }

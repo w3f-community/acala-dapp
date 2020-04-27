@@ -4,7 +4,7 @@ type Placement = 'top left' | 'top right' | 'bottom left' | 'bottom right';
 
 export interface NotificationConfig {
   id: number;
-  icon?: ReactNode;
+  icon?: ReactNode | 'loading' | 'success' | 'failed';
   title?: ReactNode;
   content: ReactNode;
   placement: Placement;
@@ -15,7 +15,7 @@ export interface NotificationConfig {
 }
 
 export interface PartialNotificationConfig {
-  icon?: ReactNode;
+  icon?: Omit<ReactNode, 'string'> | 'loading' | 'success' | 'failed';
   title?: ReactNode;
   type?: 'info' | 'success' | 'error';
   content: ReactNode;

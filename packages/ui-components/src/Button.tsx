@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { BareProps } from './types';
 import classes from './Button.module.scss';
 
-interface Props extends BareProps {
+export interface ButtonProps extends BareProps {
   loading?: boolean;
   disabled?: boolean;
   onClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
@@ -13,13 +13,13 @@ interface Props extends BareProps {
   size?: 'large' | 'small'
 }
 
-export const Button: FC<Props> = memo(({
+export const Button: FC<ButtonProps> = memo(({
   children,
   className,
   loading,
   disabled,
   onClick,
-  primary = true,
+  primary = false,
   normal = false,
   size = 'large'
 }) => {

@@ -2,7 +2,7 @@ import React, { FC, useContext } from 'react';
 import { FormatBalance, getStableCurrencyId, FormatFixed18, TxButton, numToFixed18Inner } from '@honzon-platform/react-components';
 import { createProviderContext } from './CreateProvider';
 import { useLoan, useApi } from '@honzon-platform/react-hooks';
-import { Fixed18 } from '@acala-network/app-util';
+import { Fixed18, USDToDebit, stableCoinToDebit } from '@acala-network/app-util';
 import { List, Button } from '@honzon-platform/ui-components';
 import classes from './Confirm.module.scss';
 
@@ -92,9 +92,24 @@ export const Confirm: FC = () => {
   const checkDisabled = (): boolean => {
     return false;
   };
-  console.log(selectedToken);
+
+  const getParams = () => {
+    const _params = [
+      selectedToken,
+      numToFixed18Inner(deposit),
+      '0'
+    ];
+    if (currentLoanType) {
+      _params[2] = stableCoinToDebit(
+        Fixed18.fromNatural(generate),
+        currentUserLoanHelper.debitExchangeRate,
+      ).innerToString();
+    }
+    return _params;
+  }
+
   return (
-    <div>
+    <div className={classes.root}>
       <List
         config={listConfig}
         data={data}
@@ -117,7 +132,7 @@ export const Confirm: FC = () => {
           size='small'
           section='honzon'
           method='adjustLoan'
-          params={[selectedToken, numToFixed18Inner(deposit), numToFixed18Inner(generate)]}
+          params={getParams()}
         >
           Confirm
         </TxButton>

@@ -5,7 +5,7 @@ import { convertToFixed18, Fixed18 } from "@acala-network/app-util";
 
 interface BalanceConfig {
   type: 'balance';
-  currency: CurrencyId;
+  currency?: CurrencyId;
   max?: number;
   min?: number;
 }
@@ -39,7 +39,7 @@ export const useFormValidator = (configs: Config) => { const { api } = useApi();
         const config = configs[key];
         const value = values[key];
 
-        if (config.type === 'balance') {
+        if (config.type === 'balance' && config.currency) {
           (api.derive as any).currencies.balance(active!.address, config.currency).then((result: Amount) => {
             const _balance = convertToFixed18(result);
             const _value = Fixed18.fromNatural(value);

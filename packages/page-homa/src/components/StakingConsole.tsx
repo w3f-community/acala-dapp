@@ -1,18 +1,28 @@
 import React, { FC, useContext, useCallback } from 'react';
 import { noop } from 'lodash';
 import { useFormik } from 'formik';
-import { Fixed18, StakingPoolHelper } from '@acala-network/app-util';
+import { Fixed18 } from '@acala-network/app-util';
 
 import { Grid, List } from '@honzon-platform/ui-components';
 import { StakingPoolContext, TxButton, BalanceInput, formatCurrency, numToFixed18Inner } from "@honzon-platform/react-components";
+import { useFormValidator } from '@honzon-platform/react-hooks';
+
+import classes from './StakingConsole.module.scss';
 
 export const StakingConsolee: FC = () => {
   const { stakingPool, stakingPoolHelper } = useContext(StakingPoolContext);
+  const validator = useFormValidator({
+    stakingBalance: {
+      type: 'balance',
+      currency: stakingPool.stakingCurrency
+    }
+  });
   const form = useFormik({
     initialValues: {
-      stakingBalance: '',
+      stakingBalance: '' as any as number,
     },
-    onSubmit: noop // no need submit
+    validate: validator,
+    onSubmit: noop
   });
   const resetForm = useCallback(() => {
     form.resetForm();
@@ -38,10 +48,22 @@ export const StakingConsolee: FC = () => {
       title: 'Estimated Profit / Era',
       render: (value: any) => `${value} ${formatCurrency(stakingPool.stakingCurrency)}`
     }
-  ]
+  ];
+  const checkDisabled = () => {
+    if (!form.values.stakingBalance) {
+      return true;
+    }
+    if (form.errors.stakingBalance) {
+      return true;
+    }
+    return false;
+  };
 
   return (
-    <Grid direction='column'>
+    <Grid
+      direction='column'
+      className={classes.root}
+    >
       <Grid item>
         <p>Deposit DOT & Mint Liquidt DOT (L-DOT). Your DOTs will be staked to earn returns, meanwhile you can use, trade and invest L-DOT balance in your wallet.</p>
       </Grid>
@@ -54,8 +76,10 @@ export const StakingConsolee: FC = () => {
             token={stakingPool.stakingCurrency}
           />
       </Grid>
-      <Grid item>
+      <Grid container item justifyContent='center'>
         <TxButton
+          className={classes.txBtn}
+          disabled={checkDisabled()}
           section='homa'
           method='mint'
           params={[numToFixed18Inner(form.values.stakingBalance)]}
