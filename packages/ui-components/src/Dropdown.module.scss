@@ -7,6 +7,15 @@
   border-radius: 13px;
   border: 1px solid $color-primary;
   background: #ffffff;
+
+  &.small {
+    height: 32px;
+    width: 110px;
+
+    .activeRoot:after {
+      height: 22px;
+    }
+  }
   
   & > .menu {
     display: none;
@@ -32,6 +41,7 @@
       margin-right: 8px;
     }
   }
+
   & > .activeAction {
     display: flex;
     justify-content: center;
@@ -60,7 +70,6 @@
   list-style: none;
   width: 220px;
   margin: 0;
-  padding: 16px 0;
   background: #ffffff;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
   cursor: pointer;

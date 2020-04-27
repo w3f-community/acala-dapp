@@ -4,11 +4,7 @@
 }
 
 .inputAreaRoot {
-  flex: 0 0 380px;
-
-  & .input {
-    width: 380px;
-  }
+  width: 380px;
 
   & .title {
     margin-bottom: 24px;
@@ -49,6 +45,7 @@
 }
 
 .txBtn {
+  flex-shrink: 0;
   margin: 42px 0 0 27px;
 }
 

@@ -1,22 +1,31 @@
-import React, { FC, useContext, useCallback } from 'react';
+import React, { FC, useContext, useCallback, useState } from 'react';
 import { noop } from 'lodash';
 import { useFormik } from 'formik';
-import { Fixed18 } from '@acala-network/app-util';
+import clsx from 'clsx';
 
+import { Fixed18 } from '@acala-network/app-util';
 import { Grid, List, Radio, Input } from '@honzon-platform/ui-components';
-import { StakingPoolContext, TxButton, BalanceInput, formatCurrency, numToFixed18Inner } from "@honzon-platform/react-components";
+import { StakingPoolContext, TxButton, BalanceInput, numToFixed18Inner, formtDuration, FormatBalance } from "@honzon-platform/react-components";
 import { useFormValidator } from '@honzon-platform/react-hooks';
 
 import classes from './RedeemConsole.module.scss';
+import { TargetRedeemList } from './TargetRedeemList';
+
+type RedeemType = 'Immediately' | 'Target' | 'WaitForUnbonding';
 
 export const RedeemConsole: FC = () => {
-  const { stakingPool, stakingPoolHelper } = useContext(StakingPoolContext);
+  const { stakingPool, stakingPoolHelper, unbondingDuration } = useContext(StakingPoolContext);
   const validator = useFormValidator({
-    stakingBalance: {
+    amount: {
       type: 'balance',
       currency: stakingPool.stakingCurrency
+    },
+    target: {
+      type: 'number',
+      min: stakingPoolHelper.currentEra
     }
   });
+  const [redeemType, setRedeemType] = useState<RedeemType>('Immediately');
   const form = useFormik({
     initialValues: {
       amount: '' as any as number,
@@ -25,6 +34,7 @@ export const RedeemConsole: FC = () => {
     validate: validator,
     onSubmit: noop
   });
+
   const resetForm = useCallback(() => {
     form.resetForm();
   }, []);
@@ -33,25 +43,52 @@ export const RedeemConsole: FC = () => {
     return null;
   }
 
-  const estimated = {
+  const getTargetEra = () => {
+    if (redeemType === 'Immediately') {
+      return stakingPoolHelper.currentEra;
+    }
+
+    if (redeemType === 'Target') {
+      return form.values.target;
+    }
+
+    if (redeemType === 'WaitForUnbonding') {
+      return stakingPool.currentEra.toNumber() + stakingPool.bondingDuration.toNumber();
+    }
+
+    return stakingPoolHelper.currentEra;
+  }
+
+  const info = {
     receivedLiquidToken: Fixed18.fromNatural(form.values.amount),
     climeFee: stakingPoolHelper.claimFee(
-      Fixed18.fromNatural(form.values.amount), form.values.target
+      Fixed18.fromNatural(form.values.amount), getTargetEra()
     ),
   };
 
   const listConfig = [
     {
       key: 'Redeemed',
-      title: 'Mint',
-      render: (value: any) => `${value.toNumber()} ${formatCurrency(stakingPool.liquidCurrency)}`
+      title: 'Redeemed',
+      render: (value: any) => (
+        <FormatBalance
+          balance={value}
+          currency={stakingPool.liquidCurrency}
+        />
+      )
     },
     {
-      key: 'depositStakingToken',
+      key: 'climeFee',
       title: 'Claim Fee',
-      render: (value: any) => `${value} ${formatCurrency(stakingPool.stakingCurrency)}`
+      render: (value: Fixed18) => (
+        <FormatBalance
+          balance={value}
+          currency={stakingPool.liquidCurrency}
+        />
+      )
     }
   ];
+
   const checkDisabled = () => {
     if (!form.values.amount) {
       return true;
@@ -60,6 +97,21 @@ export const RedeemConsole: FC = () => {
       return true;
     }
     return false;
+  };
+
+  const getParams = () => {
+    const _params = [
+      numToFixed18Inner(form.values.amount),
+      redeemType as any
+    ];
+    
+    if (redeemType === 'Target') {
+      _params[1] = {
+        Target: form.values.target
+      };
+    }
+
+    return _params;
   };
 
   return (
@@ -71,54 +123,75 @@ export const RedeemConsole: FC = () => {
         <p>Withdraw deposit and interest</p>
       </Grid>
       <Grid item>
-          <BalanceInput
-            id='amount'
-            name='amount'
-            value={form.values.amount}
-            onChange={form.handleChange}
-            token={stakingPool.liquidCurrency}
-          />
-      </Grid>
-      <div className={classes.select}>
-        <Radio
-          className={classes.item}
-          label='Redeem Now'
+        <BalanceInput
+          id='amount'
+          name='amount'
+          value={form.values.amount}
+          onChange={form.handleChange}
+          token={stakingPool.liquidCurrency}
         />
-        <Radio
-          className={classes.item}
-          label={(
-            <div className={classes.targetInput}>
-              <span>Redeem in</span>
-              <Input
-                className={classes.input}
-                id='target'
-                name='target'
-                value={form.values.target}
-                onChange={form.handleChange}
-              />
-              ERA
-            </div>
-          )}
-        />
-        <Radio
-          className={classes.item}
-          label='Redeem & Wait for Unbounding Period'
-        />
-      </div>
-      <Grid container item justifyContent='center'>
-        <TxButton
-          className={classes.txBtn}
-          disabled={checkDisabled()}
-          section='homa'
-          method='mint'
-          params={[numToFixed18Inner(form.values.stakingBalance)]}
-          onFinally={resetForm}
-        >
-          Redeem
-        </TxButton>
       </Grid>
       <Grid item>
-        <List data={estimated} config={listConfig} />
+        <div className={classes.select}>
+          <Radio
+            checked={redeemType === 'Immediately'}
+            className={classes.item}
+            label='Redeem Now'
+            onClick={() => setRedeemType('Immediately')}
+          />
+          <Radio
+            checked={redeemType === 'Target'}
+            className={classes.item}
+            label={(
+              <div className={classes.targetInput}>
+                <span>Redeem in</span>
+                <TargetRedeemList
+                  className={classes.select}
+                  selected
+                  onChange={() => {}}
+                />
+                ERA
+            </div>
+            )}
+            onClick={() => setRedeemType('Target')}
+          />
+          <Radio
+            checked={redeemType === 'WaitForUnbonding'}
+            onClick={() => setRedeemType('WaitForUnbonding')}
+            className={classes.item}
+            label='Redeem & Wait for Unbounding Period'
+          />
+        </div>
+      </Grid>
+      <Grid item>
+        <p>
+        Current Era = {stakingPoolHelper.currentEra} Unbounding Period = {formtDuration(unbondingDuration)} Days, Era {stakingPoolHelper.bondingDuration}
+        </p>
+      </Grid>
+      <Grid container item justifyContent='center'>
+        <Grid item>
+          <TxButton
+            className={classes.txBtn}
+            disabled={checkDisabled()}
+            section='homa'
+            method='redeem'
+            params={getParams()}
+            onSuccess={resetForm}
+          >
+            Redeem
+        </TxButton>
+        </Grid>
+      </Grid>
+      <Grid
+        item
+        className={clsx(
+          classes.info,
+          {
+            [classes.show]: !!form.values.amount
+          }
+        )}
+        >
+        <List data={info} config={listConfig} />
       </Grid>
     </Grid>
   );

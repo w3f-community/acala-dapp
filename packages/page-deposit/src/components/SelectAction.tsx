@@ -1,5 +1,5 @@
 import React, { FC, memo, useContext } from 'react';
-import { DropdownOption, Dropdown } from '@honzon-platform/ui-components';
+import { DropdownConfig, Dropdown } from '@honzon-platform/ui-components';
 
 import { ReactComponent as DepositIcon } from '../assets/deposit.svg';
 import { ReactComponent as WithdrawIcon } from '../assets/withdraw.svg';
@@ -8,7 +8,7 @@ import { DepositContext } from './Provider';
 
 export const SelectAction: FC = memo(() => {
   const { action, setActiveAction } = useContext(DepositContext);
-  const options: DropdownOption[] = [
+  const config: DropdownConfig[] = [
     {
       value: 'deposit',
       render: () => (
@@ -41,7 +41,7 @@ export const SelectAction: FC = memo(() => {
     <Dropdown
       onChange={setActiveAction}
       value={action}
-      options={options}
+      config={config}
       placeholder=''
     />
   );

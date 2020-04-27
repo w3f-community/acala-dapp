@@ -14,13 +14,21 @@
 
   .targetInput {
     display: flex;
+    align-items: center;
 
-    .input {
+    .select {
       margin: 0 8px;
-      width: 64px;
-      height: 24px;
-      font-size: 16px;
-      line-height: 18px;
+    }
+  }
+
+  .info {
+    height: 0;
+    opacity: 0;
+    transition: all 200ms ease-in-out;
+
+    &.show {
+      height: auto;
+      opacity: 1;
     }
   }
 }

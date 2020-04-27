@@ -3,11 +3,13 @@ import React, { createContext, FC, memo, ReactElement } from 'react';
 import { DerivedStakingPool } from '@acala-network/api-derive';
 
 import { StakingPoolHelper } from '@acala-network/app-util';
-import { useStakingPool } from '@honzon-platform/react-hooks';
+import { useStakingPool, FreeItem } from '@honzon-platform/react-hooks';
 
 interface ContextData {
   stakingPool: DerivedStakingPool;
   stakingPoolHelper: StakingPoolHelper;
+  unbondingDuration: number;
+  freeList: FreeItem[]
 }
 
 export const StakingPoolContext = createContext<ContextData>({} as ContextData);

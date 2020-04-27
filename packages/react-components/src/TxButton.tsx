@@ -1,5 +1,5 @@
 import React, { FC, PropsWithChildren, useState, useContext } from 'react';
-import { useAccounts, useApi } from '@honzon-platform/react-hooks';
+import { useAccounts, useApi, useNotification } from '@honzon-platform/react-hooks';
 import { NotificationContext, Button } from '@honzon-platform/ui-components';
 import { BareProps } from '@honzon-platform/ui-components/types';
 import { FormatAddress } from './format';
@@ -30,7 +30,7 @@ export const TxButton: FC<PropsWithChildren<Props>> = ({
   const { api } = useApi();
   const { active } = useAccounts();
   const [isSending, setIsSending] = useState<boolean>(false);
-  const { createNotification } = useContext(NotificationContext);
+  const { createNotification } = useNotification();
 
   const _onFailed = (): void => {
     setIsSending(false);

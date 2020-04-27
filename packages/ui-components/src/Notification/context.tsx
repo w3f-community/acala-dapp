@@ -3,7 +3,7 @@ import { NotificationConfig, PartialNotificationConfig } from './types';
 
 type CreateNotification = (config: PartialNotificationConfig) => NotificationConfig;
 
-interface NotificationContextData {
+export interface NotificationContextData {
   createNotification: CreateNotification;
 }
 

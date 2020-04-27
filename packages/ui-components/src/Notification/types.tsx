@@ -20,4 +20,5 @@ export interface PartialNotificationConfig {
   type?: 'info' | 'success' | 'error';
   content: ReactNode;
   placement: Placement;
+  removedDelay?: number;
 }

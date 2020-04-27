@@ -7,6 +7,10 @@
   "homepage": "https://github.com/AcalaNetwork/honzon-platform#readme",
   "license": "Apache-2.0",
   "dependencies": {
-    "@polkadot/react-identicon": "^0.52.1"
+    "@polkadot/react-identicon": "^0.52.1",
+    "react-copy-to-clipboard": "^5.0.2"
+  },
+  "devDependencies": {
+    "@types/react-copy-to-clipboard": "^4.3.0"
   }
 }

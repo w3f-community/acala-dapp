@@ -5,26 +5,29 @@ import { ReactComponent as ArrowDownIcon } from './assets/arrow-down.svg';
 import { BareProps } from './types';
 import classes from './Dropdown.module.scss';
 
-export interface DropdownOption {
-  value: string;
+export interface DropdownConfig {
+  value: any;
   render: () => ReactNode;
 }
 
 interface Props extends BareProps {
-  value?: string;
+  size: 'small' | 'normal';
+  value?: any;
   onChange: (value: string | any) => void;
-  placeholder: string;
-  options: DropdownOption[];
+  placeholder?: string;
+  config: DropdownConfig[];
 }
 
 export const Dropdown: FC<Props> = memo(({
+  className,
+  config,
+  size = 'normal',
   value,
   placeholder,
   onChange,
-  options
 }) => {
   const [open, setOpen] = useState<boolean>(false);
-  const active = options.find((data: DropdownOption) => data.value === value);
+  const active = config.find((data: DropdownConfig) => data.value === value);
   const closeMenu = (): void => {
     setOpen(false);
   };
@@ -34,10 +37,20 @@ export const Dropdown: FC<Props> = memo(({
   const onItemSelect = (value: string): void => {
     onChange(value);
     closeMenu();
-  }
+  };
 
   return (
-    <div className={clsx(classes.root, { [classes.open]: open})}>
+    <div
+      className={
+        clsx(classes.root,
+          className,
+          {
+            [classes.open]: open,
+            [classes.small]: size === 'small'
+          }
+        )
+      }
+    >
       <div className={classes.activeRoot} onClick={toggleMenu}>
         <div className={classes.activeContent}>
           {active ? active.render() : placeholder}
@@ -47,7 +60,7 @@ export const Dropdown: FC<Props> = memo(({
         </div>
       </div>
       <ul className={classes.menu}>
-        {options.map((item: DropdownOption) => {
+        {config.map((item: DropdownConfig) => {
           return (
             <li
               key={`dropdown-${item.value}`}

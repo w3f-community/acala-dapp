@@ -9,6 +9,7 @@
   "dependencies": {
     "@acala-network/api": "beta",
     "@honzon-platform/react-environment": "^0.2.0",
+    "@honzon-platform/ui-components": "^0.2.0",
     "@polkadot/api": "^~1.10.1  ",
     "@polkadot/extension-dapp": "^0.23.1",
     "rxjs": "^6.5.3"

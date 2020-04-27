@@ -1,10 +1,11 @@
 import React, { FC, useContext, useCallback } from 'react';
 import { noop } from 'lodash';
 import { useFormik } from 'formik';
-import { Fixed18 } from '@acala-network/app-util';
+import clsx from 'clsx';
 
+import { Fixed18 } from '@acala-network/app-util';
 import { Grid, List } from '@honzon-platform/ui-components';
-import { StakingPoolContext, TxButton, BalanceInput, formatCurrency, numToFixed18Inner } from "@honzon-platform/react-components";
+import { StakingPoolContext, TxButton, BalanceInput, formatCurrency, numToFixed18Inner, FormatBalance } from "@honzon-platform/react-components";
 import { useFormValidator } from '@honzon-platform/react-hooks';
 
 import classes from './StakingConsole.module.scss';
@@ -41,21 +42,34 @@ export const StakingConsolee: FC = () => {
     {
       key: 'receivedLiquidToken',
       title: 'Mint',
-      render: (value: any) => `${value.toNumber()} ${formatCurrency(stakingPool.liquidCurrency)}`
+      render: (value: any) => (
+        <FormatBalance
+          balance={value}
+          currency={stakingPool.liquidCurrency}
+        />
+      )
     },
     {
       key: 'depositStakingToken',
       title: 'Estimated Profit / Era',
-      render: (value: any) => `${value} ${formatCurrency(stakingPool.stakingCurrency)}`
+      render: (value: any) => (
+        <FormatBalance
+          balance={value}
+          currency={stakingPool.stakingCurrency}
+        />
+      )
     }
   ];
+
   const checkDisabled = () => {
     if (!form.values.stakingBalance) {
       return true;
     }
+
     if (form.errors.stakingBalance) {
       return true;
     }
+
     return false;
   };
 
@@ -74,6 +88,7 @@ export const StakingConsolee: FC = () => {
             value={form.values.stakingBalance}
             onChange={form.handleChange}
             token={stakingPool.stakingCurrency}
+            error={!!form.errors.stakingBalance}
           />
       </Grid>
       <Grid container item justifyContent='center'>
@@ -83,13 +98,23 @@ export const StakingConsolee: FC = () => {
           section='homa'
           method='mint'
           params={[numToFixed18Inner(form.values.stakingBalance)]}
-          onFinally={resetForm}
+          onSuccess={resetForm}
         >
           Deposit
         </TxButton>
       </Grid>
-      <Grid item>
-        <List data={estimated} config={listConfig} />
+      <Grid
+        item
+        className={
+          clsx(classes.estimated, {
+            [classes.show]: !!form.values.stakingBalance
+          })
+        }
+      >
+        <List
+          data={estimated}
+          config={listConfig}
+        />
       </Grid>
     </Grid>
   );

@@ -1,8 +1,17 @@
 import { Codec } from '@polkadot/types/types';
+import * as dayjs from 'dayjs'
+import duration from 'dayjs/plugin/duration';
+
 import { CurrencyId } from '@acala-network/types/interfaces';
 import { Fixed18 } from '@acala-network/app-util';
-import { TimestampedValue } from '@orml/types/interfaces';
 import { ApiPromise } from '@polkadot/api';
+import { TimestampedValue } from '@open-web3/orml-types/interfaces';
+
+dayjs.extend(duration);
+
+export const thousandth = (num: number): string => {
+  return num.toLocaleString();
+};
 
 export const formatCurrency = (currency: CurrencyId | string, upper = true): string => {
   const inner = currency.toString();
@@ -61,3 +70,8 @@ export const getCurrencyIdFromName = (api: ApiPromise, name: string): CurrencyId
 
   return new CurrencyId(name);
 };
+
+export const formtDuration = (duration: number): number => {
+  const DAY =  1000 * 60 * 60 * 24;
+  return Fixed18.fromRational(duration, DAY).toNumber();
+}

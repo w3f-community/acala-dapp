@@ -39,6 +39,10 @@ export const useFormValidator = (configs: Config) => { const { api } = useApi();
         const config = configs[key];
         const value = values[key];
 
+        if (!value) {
+          resolve('');
+        }
+
         if (config.type === 'balance' && config.currency) {
           (api.derive as any).currencies.balance(active!.address, config.currency).then((result: Amount) => {
             const _balance = convertToFixed18(result);

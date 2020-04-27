@@ -57,6 +57,7 @@ export const TransferButton: FC<Props> = memo(({
       <Button
         size='small'
         onClick={toggle}
+        primary
       >
         {children ? children : 'Transfer'}
       </Button>

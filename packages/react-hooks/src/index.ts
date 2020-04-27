@@ -10,6 +10,7 @@ export * from './useStateWithCallback';
 export * from './useFormValidator';
 export * from './useModal';
 export * from './useBalance';
+export * from './useNotification';
 
 // currency
 export * from './usePrice';

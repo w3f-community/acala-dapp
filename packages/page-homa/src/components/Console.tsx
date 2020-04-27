@@ -1,4 +1,4 @@
-import React, { FC, memo } from 'react';
+import React, { FC, memo, ReactElement } from 'react';
 import { Card, Tabs } from '@honzon-platform/ui-components';
 import { StakingConsolee } from './StakingConsole';
 import { RedeemConsole } from './RedeemConsole';
@@ -7,15 +7,11 @@ export const Console: FC = memo(() => {
   const config = [
     {
       title: 'Mint & Stake',
-      render: () => {
-        return <StakingConsolee />;
-      }
+      render: (): ReactElement => <StakingConsolee />
     },
     {
       title: 'Redeem',
-      render: () => {
-        return <RedeemConsole />
-      }
+      render: (): ReactElement => <RedeemConsole />
     }
   ];
 

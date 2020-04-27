@@ -7,7 +7,7 @@ import { CurrencyId } from '@acala-network/types/interfaces';
 import { BareProps } from '@honzon-platform/ui-components/types';
 import { randomID } from '@honzon-platform/ui-components';
 
-import { formatBalance, formatCurrency } from '../utils';
+import { formatBalance, formatCurrency, thousandth } from '../utils';
 
 interface BalancePair {
   balance?: BalanceType | Fixed18 | number;
@@ -30,15 +30,17 @@ export const FormatBalance: FC<Props> = memo(({
 }) => {
   const pairLength = pair ? pair.length : 0;
   const _id = useRef(randomID());
+
   const renderBalance = (data: BalancePair, index: number) => {
     return (
       <span key={`${_id}-${index}`}>
-        {data.balance ? formatBalance(data.balance).toString() : '0'}
+        {data.balance ? thousandth(formatBalance(data.balance).toNumber()) : '0'}
         {data.currency ? <span>{' '}{formatCurrency(data.currency)}</span> : null}
         {(pairSymbol && index != pairLength - 1) ? <span>{' '}{pairSymbol}{' '}</span> : null}
       </span>
     );
-  }
+  };
+
   return (
     <span className={className}>
       {

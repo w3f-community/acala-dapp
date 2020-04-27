@@ -23,7 +23,7 @@ export const Grid: FC<Props> = memo(({
   className,
   direction = 'row',
   gutter = 24,
-  flex = 1,
+  flex,
   item,
   container,
   justifyContent,
@@ -50,7 +50,8 @@ export const Grid: FC<Props> = memo(({
     }
 
     if (flex) {
-      _style.flex = flex;
+      console.log(flex);
+      _style.flex = `0 0 ${100 / 24 * flex}%`;
     }
 
     if (justifyContent) {

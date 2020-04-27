@@ -1,7 +1,6 @@
 import React, { FC, memo, ReactNode } from 'react';
 
 import { DerivedPrice } from '@acala-network/api-derive';
-import { TimestampedValue } from '@orml/types/interfaces';
 import { convertToFixed18 } from '@acala-network/app-util';
 import { CurrencyId } from '@acala-network/types/interfaces';
 
@@ -10,6 +9,7 @@ import { usePrice } from '@honzon-platform/react-hooks';
 
 import { formatCurrency, getValueFromTimestampValue } from '../utils';
 import { FormatFixed18 } from '../format';
+import { TimestampedValue } from '@open-web3/orml-types/interfaces';
 
 type TableData = DerivedPrice;
 

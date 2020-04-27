@@ -28,7 +28,7 @@ const Inner: FC = () => {
                 ) : null
               }
               <Grid item container direction='row'>
-                <Grid container item flex={2} direction='column'>
+                <Grid container item flex={16} direction='column'>
                   <Grid item>
                     <WalletBalanceBar />
                   </Grid>
@@ -50,7 +50,7 @@ const Inner: FC = () => {
                     ) : null
                   }
                 </Grid>
-                <Grid container item flex={1} direction='column'>
+                <Grid container item flex={8} direction='column'>
                   <Grid item>
                     <PricesFeedCard />
                   </Grid>

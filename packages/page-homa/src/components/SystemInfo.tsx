@@ -1,4 +1,4 @@
-import React, { FC, useContext, useEffect, useState } from 'react';
+import React, { FC, useContext, useEffect, useState, ReactNode } from 'react';
 import { noop } from 'lodash';
 
 import { Card, ListConfig, List } from '@honzon-platform/ui-components';
@@ -17,17 +17,37 @@ export const SystemInfo: FC = () => {
     {
       key: 'liquidExchangeRate',
       title: `Exchange Rate (${formatCurrency(stakingPool.stakingCurrency)} / ${formatCurrency(stakingPool.liquidCurrency)})`,
-      render: (data) => <FormatFixed18 data={data} />
+      render: (data): ReactNode => <FormatFixed18 data={data} />
+    },
+    {
+      key: 'currentRatio',
+      title: 'Current Bonding Ratio',
+      render: (data): ReactNode => (
+        <FormatFixed18
+          data={data}
+          format='percentage'
+        />
+      )
     },
     {
       key: 'maxRatio',
       title: 'Max Bonding Ratio',
-      render: (data) => <FormatFixed18 data={data} />
+      render: (data): ReactNode => (
+        <FormatFixed18
+          data={data}
+          format='percentage'
+        />
+      )
     },
     {
       key: 'minRatio',
       title: 'Min Bonding Ratio',
-      render: (data) => <FormatFixed18 data={data} />
+      render: (data): ReactNode => (
+        <FormatFixed18
+          data={data}
+          format='percentage'
+        />
+      )
     },
   ];
 
@@ -36,7 +56,8 @@ export const SystemInfo: FC = () => {
   }
 
   const listData = {
-    liquidExchangeRate: convertToFixed18(stakingPoolHelper.liquidExchangeRate),
+    liquidExchangeRate: stakingPoolHelper.liquidExchangeRate,
+    currentRatio: stakingPoolHelper.communalBondedRatio,
     maxRatio: convertToFixed18(stakingPool.maxBondRatio),
     minRatio: convertToFixed18(stakingPool.minBondRatio)
   };

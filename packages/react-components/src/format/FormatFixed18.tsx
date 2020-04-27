@@ -1,10 +1,11 @@
 import React, { FC, memo } from 'react';
 import { Fixed18 } from '@acala-network/app-util';
 import { BareProps } from '@honzon-platform/ui-components/types';
+import { thousandth } from '../utils';
 
 interface Props extends BareProps {
   data: Fixed18;
-  format?: 'percentage' | 'number';
+  format?: 'percentage' | 'number' | 'thousandth';
   prefix?: string;
 }
 
@@ -12,7 +13,7 @@ export const FormatFixed18: FC<Props> = memo(({
   className,
   data,
   prefix,
-  format = 'number',
+  format = 'thousandth',
 }) => {
   if (!data) {
     return null;
@@ -25,6 +26,10 @@ export const FormatFixed18: FC<Props> = memo(({
 
     if (format === 'number') {
       return data.toString();
+    }
+
+    if (format === 'thousandth') {
+      return thousandth(data.toNumber());
     }
 
     if (format === 'percentage') {

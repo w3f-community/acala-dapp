@@ -13,10 +13,10 @@ export const Liquid: FC = memo(() => {
         <SelectToken />
       </Grid>
       <Grid item container>
-        <Grid item>
+        <Grid item flex={14}>
           <Console />
         </Grid>
-        <Grid item container direction='column'>
+        <Grid item container direction='column' flex={10}>
             <Grid item>
               <StakingTokeBalances />
             </Grid>

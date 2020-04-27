@@ -7,7 +7,7 @@ import { StakingPoolContext, formatCurrency } from '@honzon-platform/react-compo
 export const SelectToken: FC = memo(() => {
   const { stakingPool } = useContext(StakingPoolContext);
   const DEFAULT_VALUE= 'default';
-  const options = [
+  const config = [
     {
       value: DEFAULT_VALUE,
       render: (): string => {
@@ -17,7 +17,7 @@ export const SelectToken: FC = memo(() => {
   ]
   return (
     <Dropdown
-      options={options}
+      config={config}
       onChange={noop}
       placeholder={''}
       value={DEFAULT_VALUE}

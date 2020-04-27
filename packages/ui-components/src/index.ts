@@ -7,6 +7,7 @@ export * from './Grid';
 export * from './Loading';
 export * from './List';
 export * from './Input';
+export * from './Icon';
 export * from './Notification';
 export * from './Page';
 export * from './Radio';

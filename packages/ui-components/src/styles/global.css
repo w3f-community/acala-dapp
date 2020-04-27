@@ -31,3 +31,7 @@ p, ul {
 a {
   text-decoration: none;
 }
+
+input {
+  min-width: 0;
+}
