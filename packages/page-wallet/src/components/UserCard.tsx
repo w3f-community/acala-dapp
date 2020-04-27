@@ -20,9 +20,8 @@ export const UserCard: FC = memo(() => {
     const handleCopy = (): void => {
       createNotification({
         icon: 'success',
-        title: 'Copy Success',
         type: 'success',
-        content: '',
+        title: 'Copy Success',
         removedDelay: 2000,
         placement: 'top right',
       });

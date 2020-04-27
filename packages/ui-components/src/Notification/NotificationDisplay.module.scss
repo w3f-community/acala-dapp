@@ -1,9 +1,12 @@
+@import '../styles/index.scss';
+
 .root {
   display: flex;
   padding: 16px 20px;
   margin-top: 26px;
   border: 1px solid #87d068;
-    border-radius: 4px;
+  border-radius: 4px;
+  box-shadow: $shadow;
 
   .icon {
     flex-grow: 0;
@@ -20,6 +23,15 @@
     margin-top: 6px;
     font-size: 12px;
     line-height: 18px;
+  }
+
+  &.noContent .info {
+    display: none;
+  }
+
+  &.noContent .content {
+    display: flex;
+    align-items: center;
   }
 
   &.success {

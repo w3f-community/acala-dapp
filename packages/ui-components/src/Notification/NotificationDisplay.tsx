@@ -46,8 +46,19 @@ const NotificationCard: FC<NotificationConfig> = (config) => {
 
     return config.icon;
   };
+
   return (
-    <div className={clsx(classes.root, classes[config.type || 'info'])}>
+    <div
+      className={
+        clsx(
+          classes.root,
+          classes[config.type || 'info'],
+          {
+            [classes.noContent]: !config.content
+          }
+        )
+      }
+    >
       <div className={classes.icon}>{renderIcon()}</div>
       <div className={classes.content}>
         <div className={classes.title}>{config.title}</div>

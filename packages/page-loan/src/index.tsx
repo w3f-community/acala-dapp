@@ -10,6 +10,7 @@ import { LoanProvider, LoanContext } from './components/LoanProvider';
 import { LoanConsole } from './components/LoanConsole';
 import { SystemInfoCard } from './components/SystemInfoCard';
 import { CollateralCard } from './components/CollateralCard';
+import { Overview } from './components/Overview';
 
 const Inner: FC = () => {
   const { currentTab } = useContext(LoanContext);
@@ -32,6 +33,14 @@ const Inner: FC = () => {
                   <Grid item>
                     <WalletBalanceBar />
                   </Grid>
+                  {
+                    currentTab === 'overview'
+                    ? (
+                      <Grid item>
+                        <Overview />
+                      </Grid>
+                    ) : null
+                  }
                   {
                     currentTab === 'create'
                     ? (

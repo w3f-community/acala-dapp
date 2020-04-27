@@ -3,10 +3,10 @@ import { noop } from 'lodash';
 import { useFormik } from 'formik';
 
 import { CurrencyId, Rate } from '@acala-network/types/interfaces';
-import { convertToFixed18, Fixed18 } from '@acala-network/app-util';
+import { convertToFixed18, Fixed18, calcCanGenerate } from '@acala-network/app-util';
 
 import { BalanceInput, UserBalance, getStableCurrencyId, Token, FormatFixed18, Price, LoanInterestRate, getValueFromTimestampValue } from '@honzon-platform/react-components';
-import { useApi, useLoan } from '@honzon-platform/react-hooks';
+import { useApi, useLoan, useFormValidator } from '@honzon-platform/react-hooks';
 import { Button, List, ListConfig } from '@honzon-platform/ui-components';
 
 import { createProviderContext } from './CreateProvider';
@@ -96,14 +96,26 @@ export const Generate = () => {
   const { selectedToken, setDeposit, setGenerate, setStep } = useContext(createProviderContext);
   const stableCurrencyId = getStableCurrencyId(api);
   const { currentLoanType, currentUserLoanHelper, collateralPrice } = useLoan(selectedToken);
-
+  const validator = useFormValidator({
+    deposit: {
+      type: 'balance',
+      currency: selectedToken,
+      min: 0
+    },
+    generate: {
+      type: 'number',
+      max: currentUserLoanHelper.canGenerate ? currentUserLoanHelper.canGenerate.toNumber() : 0
+    }
+  });
   const form = useFormik({
     initialValues: {
       deposit: '' as any as number,
       generate: '' as any as number
     },
+    validate: validator,
     onSubmit: noop
   });
+
 
   const handleDepositChange = (event: ChangeEvent<any>) => {
     const data = Number(event.target.value);
@@ -141,8 +153,13 @@ export const Generate = () => {
     if (!form.values.deposit || !form.values.generate) {
       return true;
     }
+    if (form.errors.deposit || form.errors.generate) {
+      return true;
+    }
     return false;
   };
+
+  console.log(form.errors);
 
   return (
     <div className={classes.root}>
@@ -153,6 +170,7 @@ export const Generate = () => {
           </p>
           <BalanceInput
             className={classes.input}
+            error={!!form.errors.deposit}
             id='deposit'
             name='deposit'
             token={selectedToken}
@@ -168,13 +186,13 @@ export const Generate = () => {
             className={classes.input}
             id='generate'
             name='generate'
-            token={selectedToken}
+            token={stableCurrencyId}
             value={form.values.generate}
             onChange={form.handleChange}
           />
           <div className={classes.addon}>
             <span>Max to borrow</span>
-            <UserBalance token={selectedToken} />
+            <UserBalance token={stableCurrencyId} />
           </div>
         </div>
         <Overview data={overview} />
@@ -200,6 +218,7 @@ export const Generate = () => {
           size='small'
           disabled={checkDisabled()}
           onClick={handleNext}
+          primary
         >
           Next
         </Button>

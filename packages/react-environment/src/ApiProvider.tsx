@@ -1,14 +1,13 @@
-import React, { ReactNode, FC, useState, useEffect } from 'react';
+import React, { ReactNode, FC, useState, useEffect, useContext } from 'react';
 import { ApiPromise, WsProvider } from '@polkadot/api';
 import { options } from '@acala-network/api';
 
-const DEFAULT_ENDPOINT = 'wss://node-6655590520181506048.jm.onfinality.io/ws?apikey=5fb96acf-6839-484f-9f3d-8784f26df699';
 
 const CONNECT_TIMEOUT = 1000 * 60; // one minute
 
 interface ApiProps {
+  endpoint: string;
   children: ReactNode;
-  endpoint?: string;
   Loading?: ReactNode;
   ConnectError?: ReactNode;
 }
@@ -23,9 +22,7 @@ export interface ApiData {
   api: ApiPromise;
   connected: boolean;
   error: boolean;
-  endpoint: string;
   loading: boolean;
-  setEndpoint: (enpoint: string) => void;
 }
 
 export const ApiContext = React.createContext<ApiData>(
@@ -43,7 +40,7 @@ export const ApiContext = React.createContext<ApiData>(
  * ```
  */
 export const ApiProvider: FC<ApiProps> = ({
-  endpoint = DEFAULT_ENDPOINT,
+  endpoint,
   children,
   ConnectError,
   Loading
@@ -51,10 +48,7 @@ export const ApiProvider: FC<ApiProps> = ({
   const [connectStatus, setConnectStatus] = useState<ConnectStatus>(
     {} as ConnectStatus
   );
-  const [_endpoint, _setEndpoint] = useState<string>(endpoint);
   const [api, setApi] = useState<ApiPromise>({} as ApiPromise);
-
-  const setEndpoint = (endpoint: string): void => _setEndpoint(endpoint);
 
   const renderContent = (): ReactNode => {
     if (connectStatus.loading && Loading) {
@@ -77,10 +71,14 @@ export const ApiProvider: FC<ApiProps> = ({
   };
 
   useEffect(() => {
+    if (!endpoint) {
+      return;
+    }
+
     // reset connect status
     setConnectStatus({ connected: false, error: false, loading: true });
     // content endpoint
-    const provider = new WsProvider(_endpoint);
+    const provider = new WsProvider(endpoint);
     const timeout = (time: number): Promise<void> =>
       new Promise((resolve, reject) => setTimeout(() => { reject(new Error('timeout')); }, time));
 
@@ -96,7 +94,7 @@ export const ApiProvider: FC<ApiProps> = ({
       .catch(() => {
         setConnectStatus({ connected: false, error: true, loading: false });
       });
-  }, [_endpoint]);
+  }, [endpoint]);
 
   useEffect(() => {
     if (!connectStatus.connected) return;
@@ -114,8 +112,6 @@ export const ApiProvider: FC<ApiProps> = ({
     <ApiContext.Provider
       value={{
         api,
-        endpoint: _endpoint,
-        setEndpoint,
         ...connectStatus
       }}
     >

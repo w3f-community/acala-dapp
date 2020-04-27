@@ -1,3 +1,5 @@
+@import './styles/index.scss';
+
 .root {
   display: none;
   width: 480px;
@@ -19,7 +21,7 @@
 }
 
 .mask {
-  z-index: 999;
+  z-index: $middle;
   display: flex;
   align-items: center;
   justify-content: center;

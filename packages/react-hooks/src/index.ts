@@ -4,6 +4,7 @@ export * from './useApi';
 export * from './useCall';
 export * from './useIsAppReady';
 export * from './useStorage';
+export * from './useAppSetting';
 
 // common
 export * from './useStateWithCallback';
