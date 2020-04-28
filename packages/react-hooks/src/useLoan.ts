@@ -1,3 +1,4 @@
+import { isEmpty } from 'lodash';
 import { useApi } from "./useApi";
 import { useAccounts } from "./useAccounts";
 import { useRef } from "react";
@@ -40,12 +41,11 @@ export const useLoan = (token: CurrencyId | string) => {
   const currentLoanTypeRef = useRef<DerivedLoanType>({} as DerivedLoanType);
   const loans = useCall<DerivedUserLoan[]>((api.derive as any).loan.allLoans, [active ? active.address : '']) || [];
   const loanTypes = useCall<DerivedLoanType[]>((api.derive as any).loan.allLoanTypes, []) || [];
-  const loanOverviews = useCall<DerivedLoanOverView[]>((api.derive as any).loan.allLoanOverviews, []) || [];
   const prices = usePrice() as DerivedPrice[] || [];
 
   const stableCoinPrice = prices.find((item): boolean => tokenEq(
     item.token,
-    api.consts.cdpEngine.getStableCurrencyId as any as CurrencyId
+    api.consts.cdpEngine.getStableCurrencyId as CurrencyId
   ));
   const currentUserLoan = loans.find((item): boolean => tokenEq(item.token, token));
   const currentLoanType = loanTypes.find((item): boolean => tokenEq(item.token, token));
@@ -54,6 +54,8 @@ export const useLoan = (token: CurrencyId | string) => {
   if (currentUserLoan && currentLoanType && collateralPrice && stableCoinPrice) {
     currentUserLoanRef.current = currentUserLoan;
     currentLoanTypeRef.current = currentLoanType;
+
+    console.log(currentLoanType);
     currentUserLoanHelperRef.current = new LoanHelper({
       collateralPrice: getValueFromTimestampValue(collateralPrice.price),
       collaterals: currentUserLoan.collaterals,

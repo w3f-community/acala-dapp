@@ -3,7 +3,6 @@ import clsx from 'clsx';
 
 import { BareProps } from './types';
 import classes from './Grid.module.scss';
-import { jsxAttribute } from '@babel/types';
 
 interface Props extends BareProps {
   container?: boolean;
@@ -50,8 +49,7 @@ export const Grid: FC<Props> = memo(({
     }
 
     if (flex) {
-      console.log(flex);
-      _style.flex = `0 0 ${100 / 24 * flex}%`;
+      _style.width = `${100 / 24 * flex}%`;
     }
 
     if (justifyContent) {

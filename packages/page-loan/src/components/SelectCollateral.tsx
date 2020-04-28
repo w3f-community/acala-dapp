@@ -1,18 +1,20 @@
 import React, { FC, useContext, useState } from 'react';
 import { Table, TableItem, Radio, Button } from '@honzon-platform/ui-components';
-import { LoanContext, Token, tokenEq, LoanInterestRate, FormatFixed18, UserBalance } from '@honzon-platform/react-components';
+import { Token, tokenEq, LoanInterestRate, FormatFixed18, UserBalance } from '@honzon-platform/react-components';
 import { DerivedLoanType } from '@acala-network/api-derive';
 import { CurrencyId, Rate } from '@acala-network/types/interfaces';
 import { convertToFixed18 } from '@acala-network/app-util';
 import { useAccounts, useAllLoans } from '@honzon-platform/react-hooks';
 import classes from './SelectCollateral.module.scss';
 import { createProviderContext } from './CreateProvider';
+import { LoanContext } from './LoanProvider';
 
 export const SelectCollateral: FC = () => {
   const { loanTypes } = useAllLoans({ filterEmpty: false });
   const [selected, setSelected] = useState<CurrencyId>(null as any as CurrencyId);
   const { active } = useAccounts();
   const { setStep, setSelectedToken } = useContext(createProviderContext);
+  const { cancelCurrentTab } = useContext(LoanContext);
 
   const onSelect = (token: CurrencyId) => {
     setSelected(token);
@@ -117,6 +119,7 @@ export const SelectCollateral: FC = () => {
         <Button
           size='small'
           normal
+          onClick={cancelCurrentTab}
         >
           Cancel
         </Button>

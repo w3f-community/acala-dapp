@@ -6,9 +6,10 @@ import { BareProps } from '@honzon-platform/ui-components/types';
 import classes from './Token.module.scss';
 import { formatCurrency } from './utils';
 import { ReactComponent as AUSDIcon } from './assets/coins-icon/aUSD.svg';
-import { ReactComponent as BtcIcon } from './assets/coins-icon/btc.svg';
-import { ReactComponent as DotIcon } from './assets/coins-icon/dot.svg';
-import { ReactComponent as EthIcon } from './assets/coins-icon/eth.svg';
+import { ReactComponent as BtcIcon } from './assets/coins-icon/BTC.svg';
+import { ReactComponent as DotIcon } from './assets/coins-icon/DOT.svg';
+import { ReactComponent as LDotIcon } from './assets/coins-icon/LDOT.svg';
+import { ReactComponent as EthIcon } from './assets/coins-icon/ETH.svg';
 
 interface Props extends BareProps {
   token: CurrencyId | string;
@@ -21,7 +22,7 @@ const ICON_CONFIG = {
   ausd: AUSDIcon,
   dot: DotIcon,
   eth: EthIcon,
-  ldot: DotIcon,
+  ldot: LDotIcon,
   xbtc: BtcIcon
 };
 

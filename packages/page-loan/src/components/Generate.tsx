@@ -1,16 +1,17 @@
-import React, { useContext, ChangeEvent } from 'react';
+import React, { useContext, ChangeEvent, useState } from 'react';
 import { noop } from 'lodash';
 import { useFormik } from 'formik';
 
 import { CurrencyId, Rate } from '@acala-network/types/interfaces';
 import { convertToFixed18, Fixed18, calcCanGenerate } from '@acala-network/app-util';
 
-import { BalanceInput, UserBalance, getStableCurrencyId, Token, FormatFixed18, Price, LoanInterestRate, getValueFromTimestampValue } from '@honzon-platform/react-components';
+import { BalanceInput, UserBalance, getStableCurrencyId, Token, FormatFixed18, Price, LoanInterestRate, getValueFromTimestampValue, FormatBalance } from '@honzon-platform/react-components';
 import { useApi, useLoan, useFormValidator } from '@honzon-platform/react-hooks';
 import { Button, List, ListConfig } from '@honzon-platform/ui-components';
 
 import { createProviderContext } from './CreateProvider';
 import classes from './Generate.module.scss';
+import { LoanContext } from './LoanProvider';
 
 const Overview = ({ data }: any) => {
   const listConfig: ListConfig[] = [
@@ -94,7 +95,9 @@ const Overview = ({ data }: any) => {
 export const Generate = () => {
   const { api } = useApi();
   const { selectedToken, setDeposit, setGenerate, setStep } = useContext(createProviderContext);
+  const { cancelCurrentTab } = useContext(LoanContext);
   const stableCurrencyId = getStableCurrencyId(api);
+  const [canGenerate, setCanGenerate] = useState<number>(0);
   const { currentLoanType, currentUserLoanHelper, collateralPrice } = useLoan(selectedToken);
   const validator = useFormValidator({
     deposit: {
@@ -104,7 +107,7 @@ export const Generate = () => {
     },
     generate: {
       type: 'number',
-      max: currentUserLoanHelper.canGenerate ? currentUserLoanHelper.canGenerate.toNumber() : 0
+      max: canGenerate
     }
   });
   const form = useFormik({
@@ -122,6 +125,7 @@ export const Generate = () => {
     currentUserLoanHelper.collaterals = currentUserLoanHelper.collaterals.add(
       Fixed18.fromNatural(data || 0)
     );
+    setCanGenerate(currentUserLoanHelper.canGenerate && currentUserLoanHelper.canGenerate.toNumber());
     form.handleChange(event);
   };
 
@@ -192,7 +196,10 @@ export const Generate = () => {
           />
           <div className={classes.addon}>
             <span>Max to borrow</span>
-            <UserBalance token={stableCurrencyId} />
+            <FormatBalance 
+              balance={canGenerate}
+              currency={stableCurrencyId}
+            />
           </div>
         </div>
         <Overview data={overview} />
@@ -211,6 +218,7 @@ export const Generate = () => {
         <Button
           size='small'
           normal
+          onClick={cancelCurrentTab}
         >
           Cancel
         </Button>

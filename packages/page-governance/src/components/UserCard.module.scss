@@ -1,0 +1,42 @@
+.root {
+  display: flex;
+  padding: 18px 0 18px 24px;
+  width: 548px;
+}
+
+.content {
+  width: 100%;
+  display: flex;
+  align-items: center;
+
+  .icon {
+    margin-right: 24px;
+  }
+
+  .info {
+    flex: 1;
+  }
+
+  .name {
+    font-size: 20px;
+    line-height: 24px;
+  }
+
+  .address {
+    display: block;
+    margin-top: 14px;
+    font-size: 14px;
+    line-height: 16px;
+    color: #999999;
+  }
+
+  .copy {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 67px;
+    height: 75px;
+    border-left: 1px solid #ecf0f2;
+    cursor: pointer;
+  }
+}

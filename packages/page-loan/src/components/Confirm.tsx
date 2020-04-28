@@ -1,14 +1,17 @@
 import React, { FC, useContext } from 'react';
+import { isEmpty } from 'lodash';
 import { FormatBalance, getStableCurrencyId, FormatFixed18, TxButton, numToFixed18Inner } from '@honzon-platform/react-components';
 import { createProviderContext } from './CreateProvider';
 import { useLoan, useApi } from '@honzon-platform/react-hooks';
 import { Fixed18, USDToDebit, stableCoinToDebit } from '@acala-network/app-util';
 import { List, Button } from '@honzon-platform/ui-components';
 import classes from './Confirm.module.scss';
+import { LoanContext } from './LoanProvider';
 
 export const Confirm: FC = () => {
   const { api } = useApi();
   const { generate, deposit, selectedToken } = useContext(createProviderContext);
+  const { cancelCurrentTab } = useContext(LoanContext);
   const { currentLoanType, currentUserLoanHelper } = useLoan(selectedToken);
   const stableCurrency = getStableCurrencyId(api);
   const listConfig = [
@@ -99,7 +102,7 @@ export const Confirm: FC = () => {
       numToFixed18Inner(deposit),
       '0'
     ];
-    if (currentLoanType) {
+    if (!isEmpty(currentLoanType) && !isEmpty(currentUserLoanHelper)) {
       _params[2] = stableCoinToDebit(
         Fixed18.fromNatural(generate),
         currentUserLoanHelper.debitExchangeRate,
@@ -124,6 +127,7 @@ export const Confirm: FC = () => {
         <Button
           size='small'
           normal
+          onClick={cancelCurrentTab}
         >
           Cancel
         </Button>
