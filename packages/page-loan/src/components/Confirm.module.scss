@@ -1,6 +1,16 @@
 .root {
+  padding: 24px;
+
+  .listItem {
+    border: none;
+  }
   .action {
     display: flex;
+    margin-top: 24px;
     justify-content: flex-end;
+
+    & > button {
+      margin-left: 20px;
+    }
   }
 }

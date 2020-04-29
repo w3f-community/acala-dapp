@@ -26,8 +26,8 @@ export const List: FC<Props> = memo(({
   return (
     <ul className={classes.root}>
       {
-        Object.keys(data).map((key, index) => {
-          const _config = config[index];
+        config.map((_config, index): ReactNode => {
+          const { key } = _config;
 
           return (
             <li

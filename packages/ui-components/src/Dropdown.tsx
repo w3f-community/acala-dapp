@@ -16,6 +16,7 @@ interface Props extends BareProps {
   onChange: (value: string | any) => void;
   placeholder?: string;
   config: DropdownConfig[];
+  error: boolean;
 }
 
 export const Dropdown: FC<Props> = memo(({

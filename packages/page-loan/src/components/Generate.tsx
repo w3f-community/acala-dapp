@@ -3,11 +3,11 @@ import { noop } from 'lodash';
 import { useFormik } from 'formik';
 
 import { CurrencyId, Rate } from '@acala-network/types/interfaces';
-import { convertToFixed18, Fixed18, calcCanGenerate } from '@acala-network/app-util';
+import { convertToFixed18, Fixed18, stableCoinToDebit, calcCanGenerate, collateralToUSD } from '@acala-network/app-util';
 
-import { BalanceInput, UserBalance, getStableCurrencyId, Token, FormatFixed18, Price, LoanInterestRate, getValueFromTimestampValue, FormatBalance } from '@honzon-platform/react-components';
-import { useApi, useLoan, useFormValidator } from '@honzon-platform/react-hooks';
-import { Button, List, ListConfig } from '@honzon-platform/ui-components';
+import { BalanceInput, UserBalance, getStableCurrencyId, Token, FormatFixed18, Price, LoanInterestRate, FormatBalance, formatCurrency } from '@honzon-platform/react-components';
+import { useApi, useLoan, useFormValidator, getFormValidator, useAccounts } from '@honzon-platform/react-hooks';
+import { Button, List, ListConfig, nextTick } from '@honzon-platform/ui-components';
 
 import { createProviderContext } from './CreateProvider';
 import classes from './Generate.module.scss';
@@ -36,24 +36,15 @@ const Overview = ({ data }: any) => {
     },
     {
       key: 'collateral',
-      title: 'DOT Price',
-      render: (token: CurrencyId) => {
-        return <Price token={token} />;
-      }
+      title: `${formatCurrency(data.collateral)} Price`,
+      render: (data: CurrencyId) => <Price token={data} />
     },
     {
-      key: 'x',
+      key: 'collateral',
       title: 'Interest Rate',
       render: (token: CurrencyId) => {
         return <LoanInterestRate token={token} />
       }
-    },
-    {
-      key: 'liquidationPrice',
-      title: 'Liquidation Price',
-      render: (data: Fixed18) => {
-        return <FormatFixed18 data={data} />;
-      },
     },
     {
       key: 'liquidationRatio',
@@ -94,21 +85,15 @@ const Overview = ({ data }: any) => {
 
 export const Generate = () => {
   const { api } = useApi();
+  const { active } = useAccounts();
   const { selectedToken, setDeposit, setGenerate, setStep } = useContext(createProviderContext);
   const { cancelCurrentTab } = useContext(LoanContext);
   const stableCurrencyId = getStableCurrencyId(api);
   const [canGenerate, setCanGenerate] = useState<number>(0);
-  const { currentLoanType, currentUserLoanHelper, collateralPrice } = useLoan(selectedToken);
+  const { currentLoanType, currentUserLoanHelper, setCollateral, setDebitStableCoin } = useLoan(selectedToken);
   const validator = useFormValidator({
-    deposit: {
-      type: 'balance',
-      currency: selectedToken,
-      min: 0
-    },
-    generate: {
-      type: 'number',
-      max: canGenerate
-    }
+    deposit: { type: 'balance', currency: selectedToken, min: 0 },
+    generate: { type: 'number', max: canGenerate, min: 0 }
   });
   const form = useFormik({
     initialValues: {
@@ -121,26 +106,35 @@ export const Generate = () => {
 
 
   const handleDepositChange = (event: ChangeEvent<any>) => {
-    const data = Number(event.target.value);
-    currentUserLoanHelper.collaterals = currentUserLoanHelper.collaterals.add(
-      Fixed18.fromNatural(data || 0)
+    const data = Number(event.target.value) || 0;
+    setCollateral(data);
+    setCanGenerate(
+      calcCanGenerate(
+        collateralToUSD(
+          Fixed18.fromNatural(data),
+          currentUserLoanHelper.collateralPrice
+        ),
+        Fixed18.ZERO,
+        currentUserLoanHelper.requiredCollateralRatio,
+        currentUserLoanHelper.stableCoinPrice
+      ).toNumber()
     );
-    setCanGenerate(currentUserLoanHelper.canGenerate && currentUserLoanHelper.canGenerate.toNumber());
+    form.handleChange(event);
+  };
+
+  const handleGenerageChange = (event: ChangeEvent<any>) => {
+    const data = Number(event.target.value) || 0;
+    setDebitStableCoin(data);
     form.handleChange(event);
   };
 
   const overview = {
     collateral: selectedToken,
     collateralRatio: currentUserLoanHelper.collateralRatio,
-    collateralPrice: convertToFixed18(
-      collateralPrice
-      ? getValueFromTimestampValue(collateralPrice.price)
-      : 0
-    ),
     interestRate: currentUserLoanHelper.stableFeeAPR,
     liquidationPrice: currentUserLoanHelper.liquidationPrice,
-    liquidationRatio: convertToFixed18(currentLoanType ? currentLoanType.liquidationRatio : 0),
-    liquidationPenalty: convertToFixed18(currentLoanType? currentLoanType.liquidationPenalty : 0)
+    liquidationRatio: currentUserLoanHelper.liquidationRatio,
+    liquidationPenalty: convertToFixed18(currentLoanType ? currentLoanType.liquidationPenalty : 0)
   };
 
   const handleNext = (): void => {
@@ -162,8 +156,6 @@ export const Generate = () => {
     }
     return false;
   };
-
-  console.log(form.errors);
 
   return (
     <div className={classes.root}>
@@ -188,15 +180,16 @@ export const Generate = () => {
           <p className={classes.title}>How much {stableCurrencyId.toString()} would you like to borrow?</p>
           <BalanceInput
             className={classes.input}
+            error={!!form.errors.generate}
             id='generate'
             name='generate'
             token={stableCurrencyId}
             value={form.values.generate}
-            onChange={form.handleChange}
+            onChange={handleGenerageChange}
           />
           <div className={classes.addon}>
             <span>Max to borrow</span>
-            <FormatBalance 
+            <FormatBalance
               balance={canGenerate}
               currency={stableCurrencyId}
             />

@@ -16,6 +16,10 @@ export const thousandth = (num: number): string => {
 export const formatCurrency = (currency: CurrencyId | string, upper = true): string => {
   const inner = currency.toString();
 
+  if (inner.toUpperCase() === 'AUSD') {
+    return upper ? 'aUSD' : 'ausd';
+  }
+
   return upper ? inner.toUpperCase() : inner.toLowerCase();
 };
 
@@ -46,7 +50,7 @@ export const tokenEq = (base: CurrencyId | string, target: CurrencyId | string):
 
 // FIXME: a trick to get value from TimestampedValue, need to fix
 export const getValueFromTimestampValue = (origin: TimestampedValue): Codec => {
-  if (Reflect.has(origin.value, 'value')) {
+  if (origin && Reflect.has(origin.value, 'value')) {
     return (origin.value as any).value;
   }
 

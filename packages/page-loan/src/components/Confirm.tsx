@@ -1,18 +1,18 @@
-import React, { FC, useContext } from 'react';
+import React, { FC, useContext, useEffect } from 'react';
 import { isEmpty } from 'lodash';
 import { FormatBalance, getStableCurrencyId, FormatFixed18, TxButton, numToFixed18Inner } from '@honzon-platform/react-components';
 import { createProviderContext } from './CreateProvider';
 import { useLoan, useApi } from '@honzon-platform/react-hooks';
-import { Fixed18, USDToDebit, stableCoinToDebit } from '@acala-network/app-util';
+import { Fixed18, stableCoinToDebit, convertToFixed18 } from '@acala-network/app-util';
 import { List, Button } from '@honzon-platform/ui-components';
 import classes from './Confirm.module.scss';
 import { LoanContext } from './LoanProvider';
 
 export const Confirm: FC = () => {
   const { api } = useApi();
-  const { generate, deposit, selectedToken } = useContext(createProviderContext);
+  const { generate, deposit, selectedToken, setStep } = useContext(createProviderContext);
   const { cancelCurrentTab } = useContext(LoanContext);
-  const { currentLoanType, currentUserLoanHelper } = useLoan(selectedToken);
+  const { currentLoanType, currentUserLoanHelper, setCollateral, setDebitStableCoin } = useLoan(selectedToken);
   const stableCurrency = getStableCurrencyId(api);
   const listConfig = [
     {
@@ -76,6 +76,18 @@ export const Confirm: FC = () => {
       title: 'Liquidation Fee'
     },
     {
+      key: 'liuqidationPrice',
+      render: (data: Fixed18) => {
+        return (
+          <FormatFixed18
+            data={data}
+            format='percentage'
+          />
+        );
+      },
+      title: 'Liquidation Price'
+    },
+    {
       key: 'interestRate',
       render: (data: Fixed18) => {
         return (
@@ -88,8 +100,13 @@ export const Confirm: FC = () => {
       title: 'Interest Rate'
     }
   ];
-  const data = {
 
+  const data = {
+    collateralizationRatio: currentUserLoanHelper.collateralRatio,
+    liquidationRatio: currentUserLoanHelper.liquidationRatio,
+    liquidationFee: currentLoanType ? convertToFixed18(currentLoanType.liquidationPenalty) : 0,
+    liuqidationPrice: currentUserLoanHelper.liquidationPrice,
+    interestRate: currentUserLoanHelper.stableFeeAPR,
   };
 
   const checkDisabled = (): boolean => {
@@ -111,16 +128,29 @@ export const Confirm: FC = () => {
     return _params;
   }
 
+  useEffect(() => {
+    if (generate && deposit) {
+      setCollateral(deposit);
+      setDebitStableCoin(generate);
+    }
+  }, [generate, deposit]);
+
+  const handlePrevious = () => {
+    setStep('generate');
+  }
+
   return (
     <div className={classes.root}>
       <List
         config={listConfig}
         data={data}
+        itemClassName={classes.listItem}
       />
       <div className={classes.action}>
         <Button
           size='small'
           normal
+          onClick={handlePrevious}
         >
           Previous
         </Button>

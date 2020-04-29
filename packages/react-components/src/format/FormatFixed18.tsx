@@ -33,7 +33,7 @@ export const FormatFixed18: FC<Props> = memo(({
     }
 
     if (format === 'percentage') {
-      return data.mul(Fixed18.fromNatural(100)).toNumber() + '%';
+      return data.mul(Fixed18.fromNatural(100)).toNumber(2, 3) + '%';
     }
 
     return '';

@@ -19,7 +19,7 @@ const Routes: FC<Props> = ({ config }) => {
 export const RouterProvider: FC<Props> = ({ config }) => {
   config.forEach((item) => {
     if (item.children) {
-      item.element = cloneElement(item.element, { children: <Routes config={item.children} /> });
+      item.element = cloneElement(item.element!, { children: <Routes config={item.children} /> });
     }
   });
 

@@ -19,7 +19,7 @@ export const Price: FC<Props> = memo(({
 }) => {
   const price = usePrice(token) as DerivedPrice;
 
-  if (!price) {
+  if (!price || !price.price) {
     return null;
   }
 

@@ -27,6 +27,7 @@ export const Step: FC<Props> = memo(({
         config.map((item, index) => {
           return (
             <li
+              key={`step-${item.index}-${item.text}`}
               className={clsx(
                 classes.item,
                 {

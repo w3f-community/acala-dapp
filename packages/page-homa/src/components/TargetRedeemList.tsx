@@ -32,11 +32,11 @@ export const TargetRedeemList: FC<Props> = ({
 
   return (
     <Dropdown
+      config={config}
       className={className}
       value={value}
       size='small'
       onChange={onChange}
-      config={config}
     />
   );
 };

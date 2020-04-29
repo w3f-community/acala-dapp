@@ -2,6 +2,8 @@ import { useApi } from "./useApi";
 import { useAccounts } from "./useAccounts";
 import { CurrencyId, Amount } from "@acala-network/types/interfaces";
 import { convertToFixed18, Fixed18 } from "@acala-network/app-util";
+import { ApiPromise } from "@polkadot/api";
+import { InjectedAccountWithMeta } from "@polkadot/extension-inject/types";
 
 interface BalanceConfig {
   type: 'balance';
@@ -27,8 +29,7 @@ type Config = {
   [k in string]: BalanceConfig | NumberConfig | StringConfig;
 }
 
-export const useFormValidator = (configs: Config) => { const { api } = useApi();
-  const { active } = useAccounts();
+export const getFormValidator = (configs: Config, api: ApiPromise, active: InjectedAccountWithMeta) => {
   const numberPattern = /^\-?([1-9]\d*|0)(\.\d{1,5})?$/;
 
   return (values: any) => {
@@ -102,3 +103,9 @@ export const useFormValidator = (configs: Config) => { const { api } = useApi();
     });
   }
 };
+
+export const useFormValidator = (configs: Config) => {
+  const { api } = useApi();
+  const { active } = useAccounts();
+  return getFormValidator(configs, api, active!);
+}

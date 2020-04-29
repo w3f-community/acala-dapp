@@ -11,8 +11,9 @@ import { sideBarConfig } from './sidebar-config';
 
 export interface RouterConfigData {
   children?: RouterConfigData[];
-  element: ReactElement;
+  element?: ReactElement;
   path: string;
+  redirectTo?: string;
 }
 
 export const config: RouterConfigData[] = [
@@ -37,9 +38,13 @@ export const config: RouterConfigData[] = [
       {
         element: <PageSwap />,
         path: 'swap'
+      },
+      {
+        redirectTo: 'wallet',
+        path: ''
       }
     ],
     element: <MainLayout sideBarProps={{ config: sideBarConfig }} />,
     path: '/'
-  }
+  },
 ];
