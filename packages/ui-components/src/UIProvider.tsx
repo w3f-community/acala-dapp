@@ -4,5 +4,5 @@ import './styles/index.scss';
 import './styles/global.css';
 
 export const UIProvider: FC<PropsWithChildren<{}>> = ({ children }) => {
-  return cloneElement(children as ReactElement);
+  return children;
 };

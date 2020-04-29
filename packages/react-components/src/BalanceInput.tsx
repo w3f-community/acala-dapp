@@ -9,6 +9,7 @@ import { Token } from './Token';
 import { TokenSelector } from './TokenSelector';
 import { getCurrencyIdFromName } from './utils';
 import classes from './BalanceInput.module.scss';
+import { Button } from '@honzon-platform/ui-components';
 
 interface Props extends BareProps {
   currencies?: (CurrencyId | string)[];
@@ -22,6 +23,8 @@ interface Props extends BareProps {
   placeholder?: string;
   token: CurrencyId | string;
   value?: number;
+  showMaxBtn?: boolean;
+  max?: number;
 }
 
 export const BalanceInput: FC<Props> = memo(({
@@ -31,6 +34,8 @@ export const BalanceInput: FC<Props> = memo(({
   enableTokenSelect = false,
   error,
   id,
+  max = 0,
+  showMaxBtn = true,
   name,
   onChange,
   onTokenChange,
@@ -64,6 +69,17 @@ export const BalanceInput: FC<Props> = memo(({
         type='number'
         value={value}
       />
+      {
+        showMaxBtn ? (
+          <Button
+            className={classes.maxBtn}
+            type='ghost'
+            color='primary'
+          >
+            max
+          </Button>
+          ): null
+      }
       {
         enableTokenSelect
           ? (

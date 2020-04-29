@@ -68,7 +68,7 @@ function SwapBtn ({ onClick }: SwapBtn): ReactElement {
     <Button
       className={classes.swapBtn}
       onClick={onClick}
-      normal
+      color='normal'
     >
       <SwapIcon />
     </Button>
@@ -202,6 +202,7 @@ export const SwapConsole: FC = memo(() => {
           error={form.errors.target}
         />
         <TxButton
+          size='large'
           className={classes.txBtn}
           method='swapCurrency'
           params={

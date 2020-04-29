@@ -103,6 +103,7 @@ export const LonaActionButton: FC<Props> = ({
   return (
     <>
       <Button
+        color='primary'
         onClick={handleClick}
         {...other}
       >
@@ -124,7 +125,6 @@ export const LonaActionButton: FC<Props> = ({
         <div className={classes.action}>
           <Button
             size='small'
-            normal
             onClick={close}
           >
             Cancel

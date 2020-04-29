@@ -2,30 +2,35 @@ import React, { FC, memo } from 'react';
 import clsx from 'clsx';
 
 import { BareProps } from './types';
+import { Loading } from './Loading';
 import classes from './Button.module.scss';
+
+type ButtonType = 'normal' | 'ghost';
+type ButtonColor = 'normal' | 'primary' | 'danger';
+type ButtonSize = 'small' | 'middle' | 'large';
 
 export interface ButtonProps extends BareProps {
   loading?: boolean;
   disabled?: boolean;
   onClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
-  primary?: boolean;
-  normal?: boolean;
-  size?: 'large' | 'small'
+  type?: ButtonType;
+  color?: ButtonColor;
+  size?: ButtonSize;
 }
 
 export const Button: FC<ButtonProps> = memo(({
   children,
   className,
-  loading,
+  color = 'normal',
   disabled,
+  loading,
   onClick,
-  primary = false,
-  normal = false,
-  size = 'large'
+  size = 'middle',
+  type = 'normal'
 }) => {
   const _onClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    // handle disabled status
-    if (disabled) {
+    // handle disabled/loading status
+    if (disabled || loading) {
       return;
     }
     onClick && onClick(event);
@@ -38,15 +43,16 @@ export const Button: FC<ButtonProps> = memo(({
           className,
           classes.root,
           classes[size],
+          classes['type-' + type],
+          classes['color-' + color],
           {
-            [classes.primary]: primary,
-            [classes.normal]: normal,
             [classes.disabled]: disabled
           }
         )
       }
       onClick={_onClick}
     >
+      { loading ? <Loading /> : null }
       {children}
     </button>
   );

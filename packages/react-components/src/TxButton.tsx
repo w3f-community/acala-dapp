@@ -96,7 +96,7 @@ export const TxButton: FC<PropsWithChildren<Props>> = ({
       loading={isSending}
       onClick={onClick}
       size={size}
-      primary
+      color='primary'
     >
       {children}
     </Button>

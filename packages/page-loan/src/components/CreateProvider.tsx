@@ -2,7 +2,7 @@ import React, { createContext, useState, FC } from 'react';
 import { BareProps } from '@honzon-platform/ui-components/types';
 import { CurrencyId } from '@acala-network/types/interfaces';
 
-type CREATE_STEP = 'select' | 'generate' | 'confirm';
+type CREATE_STEP = 'select' | 'generate' | 'confirm' | 'success';
 
 export interface ProviderData {
   step: CREATE_STEP;

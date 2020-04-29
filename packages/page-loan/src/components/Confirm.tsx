@@ -126,7 +126,11 @@ export const Confirm: FC = () => {
       ).innerToString();
     }
     return _params;
-  }
+  };
+
+  const handleSuccess = () => {
+    setStep('success');
+  };
 
   useEffect(() => {
     if (generate && deposit) {
@@ -149,14 +153,12 @@ export const Confirm: FC = () => {
       <div className={classes.action}>
         <Button
           size='small'
-          normal
           onClick={handlePrevious}
         >
           Previous
         </Button>
         <Button
           size='small'
-          normal
           onClick={cancelCurrentTab}
         >
           Cancel
@@ -167,6 +169,7 @@ export const Confirm: FC = () => {
           section='honzon'
           method='adjustLoan'
           params={getParams()}
+          onSuccess={handleSuccess}
         >
           Confirm
         </TxButton>

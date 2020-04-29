@@ -16,7 +16,8 @@ interface Props extends BareProps {
   onChange: (value: string | any) => void;
   placeholder?: string;
   config: DropdownConfig[];
-  error: boolean;
+  error?: boolean;
+  border?: boolean;
 }
 
 export const Dropdown: FC<Props> = memo(({
@@ -26,15 +27,19 @@ export const Dropdown: FC<Props> = memo(({
   value,
   placeholder,
   onChange,
+  border = true
 }) => {
   const [open, setOpen] = useState<boolean>(false);
   const active = config.find((data: DropdownConfig) => data.value === value);
+
   const closeMenu = (): void => {
     setOpen(false);
   };
+
   const toggleMenu = (): void => {
     setOpen(!open);
   };
+
   const onItemSelect = (value: string): void => {
     onChange(value);
     closeMenu();
@@ -47,7 +52,9 @@ export const Dropdown: FC<Props> = memo(({
           className,
           {
             [classes.open]: open,
-            [classes.small]: size === 'small'
+            [classes.small]: size === 'small',
+            [classes.border]: border,
+            [classes.normal]: !border
           }
         )
       }

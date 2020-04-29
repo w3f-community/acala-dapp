@@ -1,4 +1,4 @@
-import React, { FC, memo, useContext } from 'react';
+import React, { FC, useContext } from 'react';
 
 import { Page, Grid } from '@honzon-platform/ui-components';
 import { PricesFeedCard } from '@honzon-platform/react-components';

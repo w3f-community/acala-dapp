@@ -9,7 +9,11 @@ import { tokenEq, getValueFromTimestampValue } from "@honzon-platform/react-comp
 import { CurrencyId } from "@acala-network/types/interfaces";
 import { LoanHelper, convertToFixed18, Fixed18, stableCoinToDebit } from "@acala-network/app-util";
 
-const filterEmptyLoan = (loans: DerivedUserLoan[]) => {
+const filterEmptyLoan = (loans: DerivedUserLoan[] | null): DerivedUserLoan[] | null => {
+  if (loans === null) {
+    return null;
+  }
+
   return loans.filter((item) => {
     return !(item.collaterals.isEmpty && item.debits.isEmpty);
   });
@@ -22,7 +26,7 @@ interface UseAllLoansConfig {
 export const useAllLoans = ({ filterEmpty }: UseAllLoansConfig) => {
   const { api } = useApi();
   const { active } = useAccounts();
-  const loans = useCall<DerivedUserLoan[]>((api.derive as any).loan.allLoans, [active ? active.address : '']) || [];
+  const loans = useCall<DerivedUserLoan[]>((api.derive as any).loan.allLoans, [active ? active.address : '']) || null;
   const loanTypes = useCall<DerivedLoanType[]>((api.derive as any).loan.allLoanTypes, []) || [];
   const loanOverviews = useCall<DerivedLoanOverView[]>((api.derive as any).loan.allLoanOverviews, []) || [];
 
@@ -62,7 +66,7 @@ export const useLoan = (token: CurrencyId | string) => {
       currentUserLoanRef.current = currentUserLoan;
       currentLoanTypeRef.current = currentLoanType;
 
-      const _collateral = convertToFixed18(currentUserLoan.debits).add(Fixed18.fromNatural(collateral));
+      const _collateral = convertToFixed18(currentUserLoan.collaterals).add(Fixed18.fromNatural(collateral));
       const _debit = convertToFixed18(currentUserLoan.debits).add(
         stableCoinToDebit(
           Fixed18.fromNatural(debitStableCoin),

@@ -9,33 +9,38 @@
   &.error {
     border-color: #ff5500;
   }
-}
 
-.input {
-  flex: 1;
-  font-size: 24px;
-  color: #333333;
+  .input {
+    flex: 1;
+    font-size: 24px;
+    color: #333333;
 
-  // clear default apperance
-  appearance: none;
-  box-shadow: none;
-  outline: none;
-  border: none;
-}
+    // clear default apperance
+    appearance: none;
+    box-shadow: none;
+    outline: none;
+    border: none;
+  }
 
-.tokenSelector {
-  flex-grow: 0;
-  flex-shrink: 0;
-  border: none;
-  border-left: 1px solid #ecf0f2;
-  border-radius: 0;
-}
+  .tokenSelector {
+    flex-grow: 0;
+    flex-shrink: 0;
+    border: none;
+    border-left: 1px solid #ecf0f2;
+    border-radius: 0;
+  }
 
-.token {
-  flex-grow: 0;
-  flex-shrink: 0;
-  border: none;
-  border-left: 1px solid #ecf0f2;
-  border-radius: 0;
-  padding: 0 16px;
+  .token {
+    flex-grow: 0;
+    flex-shrink: 0;
+    border: none;
+    border-left: 1px solid #ecf0f2;
+    border-radius: 0;
+    padding: 0 16px;
+  }
+
+  .maxBtn {
+    min-width: 0;
+    height: auto;
+  }
 }

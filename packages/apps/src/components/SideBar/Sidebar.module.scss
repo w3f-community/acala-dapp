@@ -1,6 +1,8 @@
 @import "../../../../ui-components/src/styles/index.scss";
 
 .root {
+  display: flex;
+  flex-direction: column;
   z-index: 1;
   min-width: 240px;
   max-width: 240px;
@@ -54,8 +56,11 @@
   color: #abb4d1;
 }
 
+.products {
+  flex: 1;
+}
+
 .social {
-  margin-top: 235px;
 
   & .item {
     height: 38px;

@@ -21,6 +21,7 @@ export const CollateralizationCard: FC<Props> = ({
         <FormatFixed18
           data={data}
           format='percentage'
+          primary
         />
       ),
       title: 'Current Ratio'

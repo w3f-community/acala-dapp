@@ -118,14 +118,14 @@ export const SelectCollateral: FC = () => {
       <div className={classes.action}>
         <Button
           size='small'
-          normal
+          color='normal'
           onClick={cancelCurrentTab}
         >
           Cancel
         </Button>
         <Button
           size='small'
-          primary
+          color='primary'
           disabled={checkDisabled()}
           onClick={handleNext}
         >

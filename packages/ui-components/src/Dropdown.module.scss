@@ -1,6 +1,34 @@
-@import './styles/index.scss';
+@import "./styles/index.scss";
 
-.root {
+.root.normal {
+  position: relative;
+  height: 64px;
+  background: #ffffff;
+
+  &.small {
+    height: 32px;
+
+    .activeRoot:after {
+      height: 22px;
+    }
+  }
+
+  .activeRoot {
+    & > .activeAction {
+      flex: 0;
+    }
+
+    &:after {
+      display: none;
+    }
+  }
+
+  .menu {
+    width: auto;
+  }
+}
+
+.root.border {
   position: relative;
   width: 220px;
   height: 64px;
@@ -15,10 +43,6 @@
     .activeRoot:after {
       height: 22px;
     }
-  }
-  
-  & > .menu {
-    display: none;
   }
 }
 
@@ -50,7 +74,7 @@
   }
 
   &:after {
-    content: '';
+    content: "";
     position: absolute;
     top: 50%;
     right: 43.5px;
@@ -65,7 +89,7 @@
   z-index: 99;
   display: none;
   position: absolute;
-  top: 64px;
+  top: 100%;
   left: 0;
   list-style: none;
   width: 220px;

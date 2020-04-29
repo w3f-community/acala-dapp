@@ -40,8 +40,9 @@ export const config: RouterConfigData[] = [
         path: 'swap'
       },
       {
-        redirectTo: 'wallet',
-        path: ''
+        redirectTo: '/loan',
+        element: <PageLoan />,
+        path: '/'
       }
     ],
     element: <MainLayout sideBarProps={{ config: sideBarConfig }} />,

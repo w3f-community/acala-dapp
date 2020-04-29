@@ -2,12 +2,12 @@ import React, { useContext, ChangeEvent, useState } from 'react';
 import { noop } from 'lodash';
 import { useFormik } from 'formik';
 
-import { CurrencyId, Rate } from '@acala-network/types/interfaces';
-import { convertToFixed18, Fixed18, stableCoinToDebit, calcCanGenerate, collateralToUSD } from '@acala-network/app-util';
+import { CurrencyId } from '@acala-network/types/interfaces';
+import { convertToFixed18, Fixed18, calcCanGenerate, collateralToUSD } from '@acala-network/app-util';
 
 import { BalanceInput, UserBalance, getStableCurrencyId, Token, FormatFixed18, Price, LoanInterestRate, FormatBalance, formatCurrency } from '@honzon-platform/react-components';
-import { useApi, useLoan, useFormValidator, getFormValidator, useAccounts } from '@honzon-platform/react-hooks';
-import { Button, List, ListConfig, nextTick } from '@honzon-platform/ui-components';
+import { useApi, useLoan, useFormValidator,  useAccounts } from '@honzon-platform/react-hooks';
+import { Button, List, ListConfig } from '@honzon-platform/ui-components';
 
 import { createProviderContext } from './CreateProvider';
 import classes from './Generate.module.scss';
@@ -91,10 +91,12 @@ export const Generate = () => {
   const stableCurrencyId = getStableCurrencyId(api);
   const [canGenerate, setCanGenerate] = useState<number>(0);
   const { currentLoanType, currentUserLoanHelper, setCollateral, setDebitStableCoin } = useLoan(selectedToken);
+
   const validator = useFormValidator({
     deposit: { type: 'balance', currency: selectedToken, min: 0 },
     generate: { type: 'number', max: canGenerate, min: 0 }
   });
+
   const form = useFormik({
     initialValues: {
       deposit: '' as any as number,
@@ -103,7 +105,6 @@ export const Generate = () => {
     validate: validator,
     onSubmit: noop
   });
-
 
   const handleDepositChange = (event: ChangeEvent<any>) => {
     const data = Number(event.target.value) || 0;
@@ -204,13 +205,11 @@ export const Generate = () => {
         <Button
           size='small'
           onClick={handlePrevious}
-          normal
         >
           Previous
         </Button>
         <Button
           size='small'
-          normal
           onClick={cancelCurrentTab}
         >
           Cancel
@@ -219,7 +218,6 @@ export const Generate = () => {
           size='small'
           disabled={checkDisabled()}
           onClick={handleNext}
-          primary
         >
           Next
         </Button>

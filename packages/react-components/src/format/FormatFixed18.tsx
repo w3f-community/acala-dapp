@@ -1,12 +1,17 @@
 import React, { FC, memo } from 'react';
+import clsx from 'clsx';
+
 import { Fixed18 } from '@acala-network/app-util';
 import { BareProps } from '@honzon-platform/ui-components/types';
 import { thousandth } from '../utils';
+
+import classes from './format.module.scss';
 
 interface Props extends BareProps {
   data: Fixed18;
   format?: 'percentage' | 'number' | 'thousandth';
   prefix?: string;
+  primary?: boolean;
 }
 
 export const FormatFixed18: FC<Props> = memo(({
@@ -14,6 +19,7 @@ export const FormatFixed18: FC<Props> = memo(({
   data,
   prefix,
   format = 'thousandth',
+  primary = false
 }) => {
   if (!data) {
     return null;
@@ -40,7 +46,17 @@ export const FormatFixed18: FC<Props> = memo(({
   };
 
   return (
-    <span className={className}>
+    <span
+      className={
+        clsx(
+          className,
+          {
+            [classes.primary]: primary
+          }
+        )
+
+      }
+    >
       {prefix ? prefix : null}
       {getRenderText()}
     </span>

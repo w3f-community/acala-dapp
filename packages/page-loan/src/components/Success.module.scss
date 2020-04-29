@@ -1,0 +1,15 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .title {
+    font-size: 20px;
+    line-height: 24px;
+    color: #173dc9;
+  }
+
+  .bg {
+    margin: 40px 0 30px 0;
+  }
+}

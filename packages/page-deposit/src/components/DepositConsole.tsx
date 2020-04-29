@@ -127,6 +127,7 @@ export const DepositConsole: FC = memo(() => {
           token={baseCurrencyId}
         />
         <TxButton
+          size='large'
           disabled={checkDisabled()}
           className={classes.txBtn}
           section='dex'

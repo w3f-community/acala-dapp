@@ -88,7 +88,7 @@ export const LoanTopBar: FC = () => {
     <div className={classes.root}>
       <LoanOverview />
       {
-        loans.map((item) => (
+        loans && loans.map((item) => (
           <LoanItem
             key={`loan-top-bar-${item.token}`}
             token={item.token}

@@ -20,8 +20,10 @@ export const ApiStatus : FC<BareProps> = memo(({ className }) => {
     if (connected) {
       return 'Connected';
     }
+
     return '';
   };
+
   return (
     <p className={
       clsx(

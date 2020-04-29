@@ -7,6 +7,7 @@ import { CreateProvider, createProviderContext } from './CreateProvider';
 import { useApi } from '@honzon-platform/react-hooks';
 import { getStableCurrencyId } from '@honzon-platform/react-components';
 import { Confirm } from './Confirm';
+import { Success } from './Success';
 
 
 const Inner: FC = () => {
@@ -48,14 +49,20 @@ const Inner: FC = () => {
       className={classes.root}
       gutter={false}
     >
-      <Step
-        config={stepConfig}
-        current={step}
-      />
-      <p className={classes.tips}>{renderTips()}</p>
-      {step === 'select' ? <SelectCollateral /> : null}
-      {step === 'generate' ? <Generate /> : null}
-      {step === 'confirm' ? <Confirm /> : null}
+    {
+      step !== 'success' ? (
+        <>
+          <Step
+            config={stepConfig}
+            current={step}
+          />
+          <p className={classes.tips}>{renderTips()}</p>
+          {step === 'select' ? <SelectCollateral /> : null}
+          {step === 'generate' ? <Generate /> : null}
+          {step === 'confirm' ? <Confirm /> : null}
+        </>
+      ) : <Success />
+    }
     </Card>
   );
 };

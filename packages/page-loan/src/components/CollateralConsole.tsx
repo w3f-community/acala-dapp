@@ -1,8 +1,9 @@
 import React, { FC } from 'react';
+import { isEmpty } from 'lodash';
 import { CurrencyId } from '@acala-network/types/interfaces';
-import { Card, Button } from '@honzon-platform/ui-components';
-import { Token, FormatBalance, getStableCurrencyId } from '@honzon-platform/react-components';
-import { useLoan, useApi, useBalance } from '@honzon-platform/react-hooks';
+import { Card } from '@honzon-platform/ui-components';
+import { Token, FormatBalance } from '@honzon-platform/react-components';
+import { useLoan, useBalance } from '@honzon-platform/react-hooks';
 
 import classes from './LoanConsole.module.scss';
 import { LonaActionButton } from './LoanActionButton';
@@ -15,10 +16,12 @@ interface Props {
 export const CollateralConsole: FC<Props> = ({
   token
 }) => {
-  const { api } = useApi();
-  const { currentUserLoanHelper } = useLoan(token);
-  const stableCurrency = getStableCurrencyId(api);
+  const { currentUserLoanHelper, currentLoanType } = useLoan(token);
   const balance = useBalance(token);
+
+  if (isEmpty(currentUserLoanHelper) || isEmpty(currentLoanType)) {
+    return null;
+  }
 
   return (
     <Card
@@ -28,7 +31,7 @@ export const CollateralConsole: FC<Props> = ({
         <>
           <div>Collateral <Token token={token} /></div>
           <FormatBalance
-            currency={stableCurrency}
+            currency={currentLoanType!.token}
             balance={currentUserLoanHelper.collaterals}
           />
         </>
@@ -39,7 +42,7 @@ export const CollateralConsole: FC<Props> = ({
             <p className={classes.itemTitle}>Required for Safety</p>
             <FormatBalance
               className={classes.itemBalance}
-              currency={stableCurrency}
+              currency={currentLoanType!.token}
               balance={currentUserLoanHelper.requiredCollateral}
             />
           </div>
@@ -56,7 +59,7 @@ export const CollateralConsole: FC<Props> = ({
             <p className={classes.itemTitle}>Able to Withdraw</p>
             <FormatBalance
               className={classes.itemBalance}
-              currency={stableCurrency}
+              currency={currentLoanType!.token}
               balance={
                 currentUserLoanHelper.collaterals ?
                 currentUserLoanHelper.collaterals

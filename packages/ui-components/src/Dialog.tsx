@@ -71,7 +71,6 @@ export const Dialog: FC<Props> = memo(({
                   <Button
                     size='small'
                     onClick={onCancel}
-                    normal
                   >
                     {cancelText}
                   </Button>
@@ -80,7 +79,7 @@ export const Dialog: FC<Props> = memo(({
                   <Button
                     size='small'
                     onClick={onConfirm}
-                    primary
+                    color='primary'
                   >
                     {confirmText}
                   </Button>

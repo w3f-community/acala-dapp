@@ -31,7 +31,7 @@ export const Step: FC<Props> = memo(({
               className={clsx(
                 classes.item,
                 {
-                  [classes.active]: item.index === current || index === 0
+                  [classes.active]: item.index === current
                 }
               )}
             >

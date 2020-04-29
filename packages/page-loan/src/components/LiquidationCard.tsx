@@ -20,7 +20,8 @@ export const LiquidationCard: FC<Props> = memo(({
       render: (data: Fixed18) => (
         <FormatFixed18
           data={data}
-          format='percentage'
+          prefix='$'
+          primary
         />
       ),
       title: 'Liquidation Price'
