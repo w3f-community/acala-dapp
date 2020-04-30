@@ -1,7 +1,7 @@
 import React, { FC, useContext } from 'react';
 
 import { Page, Grid } from '@honzon-platform/ui-components';
-import { PricesFeedCard } from '@honzon-platform/react-components';
+import { PricesFeedCard, WalletBalanceCard } from '@honzon-platform/react-components';
 
 import { LoanTopBar } from './components/LoanTopBar';
 import { WalletBalanceBar } from './components/WalletBalanceBar';
@@ -30,9 +30,6 @@ const Inner: FC = () => {
               }
               <Grid item container direction='row'>
                 <Grid container item flex={16} direction='column'>
-                  <Grid item>
-                    <WalletBalanceBar />
-                  </Grid>
                   {
                     currentTab === 'overview'
                     ? (
@@ -60,6 +57,9 @@ const Inner: FC = () => {
                   }
                 </Grid>
                 <Grid container item flex={8} direction='column'>
+                  <Grid item>
+                    <WalletBalanceCard />
+                  </Grid>
                   <Grid item>
                     <PricesFeedCard />
                   </Grid>

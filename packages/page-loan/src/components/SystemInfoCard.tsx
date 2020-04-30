@@ -1,13 +1,13 @@
 import React, { FC } from 'react';
 import { Card, ListConfig, List } from '@honzon-platform/ui-components';
-import { FormatFixed18, getStableCurrencyId } from '@honzon-platform/react-components';
+import { FormatFixed18 } from '@honzon-platform/react-components';
 import { Fixed18, convertToFixed18 } from '@acala-network/app-util';
-import { useApi, useCall } from '@honzon-platform/react-hooks';
+import { useApi, useCall, useConstants } from '@honzon-platform/react-hooks';
 import { Balance } from '@open-web3/orml-types/interfaces';
 
 export const SystemInfoCard: FC = () => {
   const { api } = useApi();
-  const stableCurrency = getStableCurrencyId(api);
+  const { stableCurrency } = useConstants();
   const issuance = useCall<Balance>(api.query.tokens.totalIssuance, [stableCurrency]);
 
   const listConfig: ListConfig[] = [

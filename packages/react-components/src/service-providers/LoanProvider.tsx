@@ -4,7 +4,7 @@ import { CurrencyId } from '@acala-network/types/interfaces';
 import { DerivedLoanType, DerivedLoanOverView, DerivedUserLoan, DerivedPrice } from '@acala-network/api-derive';
 import { LoanHelper } from '@acala-network/app-util';
 
-import { useCall, useApi, useAccounts, usePrice } from '@honzon-platform/react-hooks';
+import { useCall, useApi, useAccounts, usePrice, useConstants } from '@honzon-platform/react-hooks';
 import { tokenEq, getValueFromTimestampValue } from '../utils';
 
 interface ContextData {
@@ -32,6 +32,7 @@ export const LoanProvider: FC<PropsWithChildren<{}>> = memo(({ children }) => {
   const loanTypes = useCall<DerivedLoanType[]>((api.derive as any).loan.allLoanTypes, []) || [];
   const loanOverviews = useCall<DerivedLoanOverView[]>((api.derive as any).loan.allLoanOverviews, []) || [];
   const prices = usePrice() as DerivedPrice[] || [];
+  const { stableCurrency } = useConstants();
 
   const setCurrent = (current: CurrencyId): void => {
     if (!loans || !loanTypes || !loanOverviews || !prices) {
@@ -41,10 +42,7 @@ export const LoanProvider: FC<PropsWithChildren<{}>> = memo(({ children }) => {
     const currentUserLoan = loans.find((item): boolean => tokenEq(item.token, current));
     const currentLoanType = loanTypes.find((item): boolean => tokenEq(item.token, current));
     const collateralPrice = prices.find((item): boolean => tokenEq(item.token, current));
-    const stableCoinPrice = prices.find((item): boolean => tokenEq(
-      item.token,
-      api.consts.cdpEngine.getStableCurrencyId as any as CurrencyId
-    ));
+    const stableCoinPrice = prices.find((item): boolean => tokenEq(item.token, stableCurrency));
 
     if (currentUserLoan && currentLoanType && collateralPrice && stableCoinPrice) {
       currentUserLoanRef.current = currentUserLoan;

@@ -1,9 +1,9 @@
 import React, { FC, useContext, useState, useEffect } from 'react';
 import { Card, TableItem, Table, Button, Step } from '@honzon-platform/ui-components';
-import { useAllLoans, useLoan } from '@honzon-platform/react-hooks';
+import { useAllLoans, useLoan, useConstants } from '@honzon-platform/react-hooks';
 import { DerivedUserLoan } from '@acala-network/api-derive';
 import { CurrencyId } from '@acala-network/types/interfaces';
-import { Token, LoanInterestRate, FormatBalance, LoanCollateralRate } from '@honzon-platform/react-components';
+import { Token, LoanInterestRate, FormatBalance, LoanCollateralRate, formatCurrency } from '@honzon-platform/react-components';
 import { ReactComponent as GuideBG } from '../assets/guide-bg.svg';
 import { convertToFixed18 } from '@acala-network/app-util';
 
@@ -58,6 +58,7 @@ export const Overview: FC = () => {
 
   const { loans } = useAllLoans({ filterEmpty: true });
   const { setCurrentTab } = useContext(LoanContext);
+  const { stableCurrency } = useConstants();
 
   const tableConfig: TableItem<DerivedUserLoan>[] = [
     {
@@ -70,14 +71,14 @@ export const Overview: FC = () => {
       width: 1
     },
     {
-      align: 'left',
+      align: 'right',
       dataIndex: 'token',
       render: (token: CurrencyId) => <LoanInterestRate token={token} />,
-      title: 'Interest Rate',
-      width: 2
+      title: 'Rate',
+      width: 1
     },
     {
-      align: 'left',
+      align: 'right',
       title: 'Deposit',
       width: 1,
       render: (data: DerivedUserLoan) => (
@@ -88,23 +89,20 @@ export const Overview: FC = () => {
       )
     },
     {
-      align: 'left',
-      title: 'Debit',
-      width: 1,
+      align: 'right',
+      title: `Debit ${formatCurrency(stableCurrency)}`,
+      width: 2,
       render: (data: DerivedUserLoan) => {
-        const { currentUserLoanHelper } = useLoan(data.token);
+        const { getCurrentUserLoanHelper } = useLoan(data.token);
         return (
-          <FormatBalance
-            balance={currentUserLoanHelper.debitAmount}
-            currency={'AUSD'}
-          />
+          <FormatBalance balance={getCurrentUserLoanHelper().debitAmount} />
         );
       }
     },
     {
-      align: 'left',
+      align: 'right',
       title: 'Current Ratio',
-      width: 1,
+      width: 2,
       dataIndex: 'token',
       render: (token: CurrencyId) => <LoanCollateralRate token={token} />
     },
@@ -136,8 +134,6 @@ export const Overview: FC = () => {
     }
   }, [loans])
 
-  console.log(loans);
-
   // wait loading data
   if (empty === null) {
     return null;
@@ -152,11 +148,15 @@ export const Overview: FC = () => {
       header='Overview'
       gutter={false}
     >
-      <Table
-        showHeader
-        config={tableConfig}
-        data={loans}
-      />
+    {
+      loans && (
+        <Table
+          showHeader
+          config={tableConfig}
+          data={loans}
+        />
+      )
+    }
     </Card>
   );
 }

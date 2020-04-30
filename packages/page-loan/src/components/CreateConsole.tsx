@@ -4,14 +4,12 @@ import { SelectCollateral } from './SelectCollateral';
 import classes from './CreateConsole.module.scss';
 import { Generate } from './Generate';
 import { CreateProvider, createProviderContext } from './CreateProvider';
-import { useApi } from '@honzon-platform/react-hooks';
-import { getStableCurrencyId } from '@honzon-platform/react-components';
+import { useApi, useConstants } from '@honzon-platform/react-hooks';
 import { Confirm } from './Confirm';
 import { Success } from './Success';
 
 
 const Inner: FC = () => {
-  const { api } = useApi();
   const { step, selectedToken } = useContext(createProviderContext);
 
   const stepConfig = [
@@ -29,7 +27,7 @@ const Inner: FC = () => {
     }
   ];
   const renderTips = (): string => {
-    const stableCurrency = getStableCurrencyId(api).toString();
+    const { stableCurrency } = useConstants();
 
     if (step === 'select') {
       return 'Each collateral type has its own unique risk profiles.';

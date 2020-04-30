@@ -1,9 +1,9 @@
 import React, { FC } from 'react'
 import { noop } from 'lodash';
 import { Dialog, ButtonProps, Button } from '@honzon-platform/ui-components';
-import { useModal, useApi, useFormValidator, useLoan } from '@honzon-platform/react-hooks';
+import { useModal, useApi, useFormValidator, useLoan, useConstants } from '@honzon-platform/react-hooks';
 import { CurrencyId } from '@acala-network/types/interfaces';
-import { getStableCurrencyId, BalanceInput, TxButton } from '@honzon-platform/react-components';
+import { BalanceInput, TxButton } from '@honzon-platform/react-components';
 import { useFormik } from 'formik';
 import { stableCoinToDebit, Fixed18 } from '@acala-network/app-util';
 
@@ -27,7 +27,7 @@ export const LonaActionButton: FC<Props> = ({
 }) => {
   const { api } = useApi();
   const { status, open, close } = useModal(false);
-  const stableCurrency = getStableCurrencyId(api);
+  const { stableCurrency } = useConstants();
   const validator = useFormValidator({
     value: {
       type: 'number',
@@ -42,7 +42,8 @@ export const LonaActionButton: FC<Props> = ({
     validate: validator,
     onSubmit: noop
   });
-  const { currentUserLoanHelper } = useLoan(token);
+  const { getCurrentUserLoanHelper } = useLoan(token);
+  const currentUserLoanHelper = getCurrentUserLoanHelper();
 
   const operateStableCurrency = (): boolean => {
     return type === 'payback' || type === 'generate';

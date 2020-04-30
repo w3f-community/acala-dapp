@@ -1,19 +1,27 @@
 import React, { FC, useContext, useEffect } from 'react';
 import { isEmpty } from 'lodash';
-import { FormatBalance, getStableCurrencyId, FormatFixed18, TxButton, numToFixed18Inner } from '@honzon-platform/react-components';
+import { FormatBalance, FormatFixed18, TxButton, numToFixed18Inner } from '@honzon-platform/react-components';
 import { createProviderContext } from './CreateProvider';
-import { useLoan, useApi } from '@honzon-platform/react-hooks';
+import { useLoan, useApi, useConstants } from '@honzon-platform/react-hooks';
 import { Fixed18, stableCoinToDebit, convertToFixed18 } from '@acala-network/app-util';
 import { List, Button } from '@honzon-platform/ui-components';
 import classes from './Confirm.module.scss';
 import { LoanContext } from './LoanProvider';
 
 export const Confirm: FC = () => {
-  const { api } = useApi();
   const { generate, deposit, selectedToken, setStep } = useContext(createProviderContext);
   const { cancelCurrentTab } = useContext(LoanContext);
-  const { currentLoanType, currentUserLoanHelper, setCollateral, setDebitStableCoin } = useLoan(selectedToken);
-  const stableCurrency = getStableCurrencyId(api);
+  const { currentLoanType, getCurrentUserLoanHelper, setCollateral, setDebitStableCoin } = useLoan(selectedToken);
+  const currentUserLoanHelper = getCurrentUserLoanHelper();
+  const stableCurrency = useConstants();
+
+  useEffect(() => {
+    if (generate && deposit) {
+      setCollateral(deposit);
+      setDebitStableCoin(generate);
+    }
+  }, [generate, deposit]);
+
   const listConfig = [
     {
       key: 'depositing',
@@ -81,7 +89,7 @@ export const Confirm: FC = () => {
         return (
           <FormatFixed18
             data={data}
-            format='percentage'
+            prefix='$'
           />
         );
       },
@@ -100,6 +108,10 @@ export const Confirm: FC = () => {
       title: 'Interest Rate'
     }
   ];
+
+  if (isEmpty(currentUserLoanHelper)) {
+    return null;
+  }
 
   const data = {
     collateralizationRatio: currentUserLoanHelper.collateralRatio,
@@ -131,13 +143,6 @@ export const Confirm: FC = () => {
   const handleSuccess = () => {
     setStep('success');
   };
-
-  useEffect(() => {
-    if (generate && deposit) {
-      setCollateral(deposit);
-      setDebitStableCoin(generate);
-    }
-  }, [generate, deposit]);
 
   const handlePrevious = () => {
     setStep('generate');

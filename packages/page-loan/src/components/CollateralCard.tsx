@@ -9,7 +9,8 @@ import { Fixed18 } from '@acala-network/app-util';
 export const CollateralCard = () => {
   const { loanTypes } = useAllLoans({ filterEmpty: false });
   const [active, setActive] = useState<string>('');
-  const { currentUserLoanHelper } = useLoan(active);
+  const { getCurrentUserLoanHelper } = useLoan(active);
+  const currentUserLoanHelper = getCurrentUserLoanHelper();
 
   const listConfig: ListConfig[] = [
     {

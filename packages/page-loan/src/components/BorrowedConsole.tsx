@@ -1,8 +1,8 @@
 import React, { FC } from 'react';
 import { CurrencyId } from '@acala-network/types/interfaces';
-import { Card, Button } from '@honzon-platform/ui-components';
-import { Token, FormatBalance, getStableCurrencyId } from '@honzon-platform/react-components';
-import { useLoan, useApi } from '@honzon-platform/react-hooks';
+import { Card } from '@honzon-platform/ui-components';
+import { Token, FormatBalance } from '@honzon-platform/react-components';
+import { useLoan, useConstants } from '@honzon-platform/react-hooks';
 
 import classes from './LoanConsole.module.scss';
 import { LonaActionButton } from './LoanActionButton';
@@ -14,9 +14,9 @@ interface Props {
 export const BorrowedConsole: FC<Props> = ({
   token
 }) => {
-  const { api } = useApi();
-  const { currentUserLoanHelper } = useLoan(token);
-  const stableCurrency = getStableCurrencyId(api);
+  const { getCurrentUserLoanHelper } = useLoan(token);
+  const currentUserLoanHelper = getCurrentUserLoanHelper();
+  const { stableCurrency } = useConstants();
 
   const checkCanPayBackDisabled = (): boolean => {
     if (!currentUserLoanHelper.canPayBack) {

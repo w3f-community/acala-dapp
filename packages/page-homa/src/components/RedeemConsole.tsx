@@ -18,7 +18,7 @@ export const RedeemConsole: FC = () => {
   const validator = useFormValidator({
     amount: {
       type: 'balance',
-      currency: stakingPool.stakingCurrency
+      currency: stakingPool.liquidCurrency
     },
     target: {
       type: 'number',
@@ -124,6 +124,7 @@ export const RedeemConsole: FC = () => {
       </Grid>
       <Grid item>
         <BalanceInput
+          error={!!form.errors.amount}
           id='amount'
           name='amount'
           value={form.values.amount}

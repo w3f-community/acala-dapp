@@ -5,6 +5,7 @@ export * from './useCall';
 export * from './useIsAppReady';
 export * from './useStorage';
 export * from './useAppSetting';
+export * from './useConstants';
 
 // common
 export * from './useStateWithCallback';

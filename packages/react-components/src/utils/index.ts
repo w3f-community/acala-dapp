@@ -65,10 +65,6 @@ export const getAllCurrencyIds = (api: ApiPromise): CurrencyId[] => {
   });
 };
 
-export const getStableCurrencyId = (api: ApiPromise): CurrencyId => {
-  return api.consts.cdpEngine.getStableCurrencyId as CurrencyId;
-}
-
 export const getCurrencyIdFromName = (api: ApiPromise, name: string): CurrencyId => {
   const CurrencyId = api.registry.createType('CurrencyId' as any);
 

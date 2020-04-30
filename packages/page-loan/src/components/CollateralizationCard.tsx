@@ -12,7 +12,8 @@ interface Props {
 export const CollateralizationCard: FC<Props> = ({
   token
 }) => {
-  const { currentUserLoanHelper } = useLoan(token);
+  const { getCurrentUserLoanHelper } = useLoan(token);
+  const currentUserLoanHelper = getCurrentUserLoanHelper();
 
   const listConfig: ListConfig[] = [
     {

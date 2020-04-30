@@ -16,8 +16,9 @@ interface Props {
 export const CollateralConsole: FC<Props> = ({
   token
 }) => {
-  const { currentUserLoanHelper, currentLoanType } = useLoan(token);
+  const { getCurrentUserLoanHelper, currentLoanType } = useLoan(token);
   const balance = useBalance(token);
+  const currentUserLoanHelper = getCurrentUserLoanHelper();
 
   if (isEmpty(currentUserLoanHelper) || isEmpty(currentLoanType)) {
     return null;

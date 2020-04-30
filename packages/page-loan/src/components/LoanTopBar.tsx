@@ -13,13 +13,18 @@ interface LoanItemProps {
   token: CurrencyId | string;
 }
 
-const LoanItem: FC<LoanItemProps> = memo(({
-  token
-}) => {
-  const { setCurrentTab } = useContext(LoanContext);
+const LoanItem: FC<LoanItemProps> = memo(({ token }) => {
+  const { setCurrentTab, currentTab } = useContext(LoanContext);
   return (
     <div
-      className={classes.item}
+      className={
+        clsx(
+          classes.item,
+          {
+            [classes.active]: currentTab === token
+          }
+        )
+      }
       onClick={() => setCurrentTab(token)}
     >
       <Token
@@ -46,11 +51,17 @@ const LoanItem: FC<LoanItemProps> = memo(({
 LoanItem.displayName = 'LoanItem';
 
 const LoanOverview: FC = () => {
-  const { showOverview } = useContext(LoanContext);
+  const { showOverview, currentTab } = useContext(LoanContext);
 
   return (
     <div
-      className={clsx(classes.item, classes.overview)}
+      className={clsx(
+        classes.item,
+        classes.overview,
+        {
+          [classes.active]: currentTab === 'overview'
+        }
+      )}
       onClick={showOverview}
     >
       <div className={classes.icon}>

@@ -33,6 +33,7 @@ export const Button: FC<ButtonProps> = memo(({
     if (disabled || loading) {
       return;
     }
+
     onClick && onClick(event);
   }
 
@@ -52,7 +53,12 @@ export const Button: FC<ButtonProps> = memo(({
       }
       onClick={_onClick}
     >
-      { loading ? <Loading /> : null }
+      { loading ? (
+          <Loading
+            size={18}
+            className={classes.loading}
+          />
+        ) : null }
       {children}
     </button>
   );

@@ -5,8 +5,8 @@ import { useFormik } from 'formik';
 import { CurrencyId } from '@acala-network/types/interfaces';
 import { convertToFixed18, Fixed18, calcCanGenerate, collateralToUSD } from '@acala-network/app-util';
 
-import { BalanceInput, UserBalance, getStableCurrencyId, Token, FormatFixed18, Price, LoanInterestRate, FormatBalance, formatCurrency } from '@honzon-platform/react-components';
-import { useApi, useLoan, useFormValidator,  useAccounts } from '@honzon-platform/react-hooks';
+import { BalanceInput, UserBalance, Token, FormatFixed18, Price, LoanInterestRate, FormatBalance, formatCurrency } from '@honzon-platform/react-components';
+import { useApi, useLoan, useFormValidator,  useAccounts, useConstants } from '@honzon-platform/react-hooks';
 import { Button, List, ListConfig } from '@honzon-platform/ui-components';
 
 import { createProviderContext } from './CreateProvider';
@@ -85,12 +85,12 @@ const Overview = ({ data }: any) => {
 
 export const Generate = () => {
   const { api } = useApi();
-  const { active } = useAccounts();
   const { selectedToken, setDeposit, setGenerate, setStep } = useContext(createProviderContext);
   const { cancelCurrentTab } = useContext(LoanContext);
-  const stableCurrencyId = getStableCurrencyId(api);
+  const { stableCurrency } = useConstants();
   const [canGenerate, setCanGenerate] = useState<number>(0);
-  const { currentLoanType, currentUserLoanHelper, setCollateral, setDebitStableCoin } = useLoan(selectedToken);
+  const { currentLoanType, getCurrentUserLoanHelper, setCollateral, setDebitStableCoin } = useLoan(selectedToken);
+  const currentUserLoanHelper = getCurrentUserLoanHelper();
 
   const validator = useFormValidator({
     deposit: { type: 'balance', currency: selectedToken, min: 0 },
@@ -178,13 +178,13 @@ export const Generate = () => {
             <span>Max to Lock</span>
             <UserBalance token={selectedToken} />
           </div>
-          <p className={classes.title}>How much {stableCurrencyId.toString()} would you like to borrow?</p>
+          <p className={classes.title}>How much {stableCurrency.toString()} would you like to borrow?</p>
           <BalanceInput
             className={classes.input}
             error={!!form.errors.generate}
             id='generate'
             name='generate'
-            token={stableCurrencyId}
+            token={stableCurrency}
             value={form.values.generate}
             onChange={handleGenerageChange}
           />
@@ -192,7 +192,7 @@ export const Generate = () => {
             <span>Max to borrow</span>
             <FormatBalance
               balance={canGenerate}
-              currency={stableCurrencyId}
+              currency={stableCurrency}
             />
           </div>
         </div>

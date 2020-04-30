@@ -8,6 +8,7 @@ import { usePrice } from "./usePrice";
 import { tokenEq, getValueFromTimestampValue } from "@honzon-platform/react-components";
 import { CurrencyId } from "@acala-network/types/interfaces";
 import { LoanHelper, convertToFixed18, Fixed18, stableCoinToDebit } from "@acala-network/app-util";
+import { useConstants } from './useConstants';
 
 const filterEmptyLoan = (loans: DerivedUserLoan[] | null): DerivedUserLoan[] | null => {
   if (loans === null) {
@@ -46,14 +47,12 @@ export const useLoan = (token: CurrencyId | string) => {
   const loans = useCall<DerivedUserLoan[]>((api.derive as any).loan.allLoans, [active ? active.address : '']) || [];
   const loanTypes = useCall<DerivedLoanType[]>((api.derive as any).loan.allLoanTypes, []) || [];
   const prices = usePrice() as DerivedPrice[] || [];
+  const { stableCurrency } = useConstants();
 
   const [collateral, setCollateral] = useState<number>(0);
   const [debitStableCoin, setDebitStableCoin] = useState<number>(0);
 
-  const stableCoinPrice = prices.find((item): boolean => tokenEq(
-    item.token,
-    api.consts.cdpEngine.getStableCurrencyId as CurrencyId
-  ));
+  const stableCoinPrice = prices.find((item): boolean => tokenEq(item.token, stableCurrency));
 
   const currentUserLoan = loans.find((item): boolean => tokenEq(item.token, token));
 
@@ -61,7 +60,7 @@ export const useLoan = (token: CurrencyId | string) => {
 
   const collateralPrice = prices.find((item): boolean => tokenEq(item.token, token));
 
-  useEffect(() => {
+  const getCurrentUserLoanHelper = (): LoanHelper => {
     if (currentUserLoan && currentLoanType && collateralPrice && stableCoinPrice) {
       currentUserLoanRef.current = currentUserLoan;
       currentLoanTypeRef.current = currentLoanType;
@@ -74,22 +73,21 @@ export const useLoan = (token: CurrencyId | string) => {
         )
       );
 
-      setCurrentUserLoanHelper(
-        new LoanHelper({
-          collateralPrice: getValueFromTimestampValue(collateralPrice.price),
-          collaterals: _collateral,
-          debitExchangeRate: currentLoanType.debitExchangeRate,
-          debits: _debit,
-          expectedBlockTime: currentLoanType.expectedBlockTime.toNumber(),
-          globalStableFee: currentLoanType.globalStabilityFee,
-          liquidationRatio: currentLoanType.liquidationRatio,
-          requiredCollateralRatio: currentLoanType.requiredCollateralRatio,
-          stableCoinPrice: getValueFromTimestampValue(stableCoinPrice.price),
-          stableFee: currentLoanType.stabilityFee
-        })
-      )
+      return new LoanHelper({
+        collateralPrice: getValueFromTimestampValue(collateralPrice.price),
+        collaterals: _collateral,
+        debitExchangeRate: currentLoanType.debitExchangeRate,
+        debits: _debit,
+        expectedBlockTime: currentLoanType.expectedBlockTime.toNumber(),
+        globalStableFee: currentLoanType.globalStabilityFee,
+        liquidationRatio: currentLoanType.liquidationRatio,
+        requiredCollateralRatio: currentLoanType.requiredCollateralRatio,
+        stableCoinPrice: getValueFromTimestampValue(stableCoinPrice.price),
+        stableFee: currentLoanType.stabilityFee
+      });
     }
-  }, [currentUserLoan, currentLoanType, collateralPrice, stableCoinPrice, collateral, debitStableCoin]);
+    return {} as LoanHelper;
+  };
 
 
   return {
@@ -100,6 +98,6 @@ export const useLoan = (token: CurrencyId | string) => {
     stableCoinPrice,
     setCollateral,
     setDebitStableCoin,
-    currentUserLoanHelper
+    getCurrentUserLoanHelper
   };
 }

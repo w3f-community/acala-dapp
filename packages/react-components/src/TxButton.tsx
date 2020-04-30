@@ -1,6 +1,6 @@
 import React, { FC, PropsWithChildren, useState, useContext } from 'react';
 import { useAccounts, useApi, useNotification } from '@honzon-platform/react-hooks';
-import { NotificationContext, Button } from '@honzon-platform/ui-components';
+import { Button } from '@honzon-platform/ui-components';
 import { BareProps } from '@honzon-platform/ui-components/types';
 import { FormatAddress } from './format';
 
@@ -59,6 +59,7 @@ export const TxButton: FC<PropsWithChildren<Props>> = ({
       return;
     }
 
+
     const extrinsic = api.tx[section][method](...params);
     const notification = createNotification({
       icon: 'loading',
@@ -67,6 +68,9 @@ export const TxButton: FC<PropsWithChildren<Props>> = ({
       type: 'info',
       title: `${section}: ${method}`
     });
+
+    // lock btn click
+    setIsSending(true);
 
     extrinsic.signAndSend(active.address, (result) => {
       if (result.isInBlock) {

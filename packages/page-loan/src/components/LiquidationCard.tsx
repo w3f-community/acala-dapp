@@ -13,7 +13,8 @@ interface Props {
 export const LiquidationCard: FC<Props> = memo(({
   token
 }) => {
-  const { currentUserLoanHelper, currentLoanType } = useLoan(token);
+  const { getCurrentUserLoanHelper, currentLoanType } = useLoan(token);
+  const currentUserLoanHelper = getCurrentUserLoanHelper();
   const listConfig = [
     {
       key: 'price',
