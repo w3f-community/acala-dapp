@@ -4,12 +4,11 @@ import { useFormik } from 'formik';
 
 import { CurrencyId } from '@acala-network/types/interfaces';
 
-import { Card, Tag, Button, TagGroup, nextTick } from '@honzon-platform/ui-components';
+import { Card, Button, nextTick, IconButton } from '@honzon-platform/ui-components';
 import { BalanceInput, TxButton, SwapContext, numToFixed18Inner } from '@honzon-platform/react-components';
 import { useFormValidator } from '@honzon-platform/react-hooks';
 import { convertToFixed18 } from '@acala-network/app-util';
 
-import { ReactComponent as SwapIcon } from '../assets/swap.svg';
 import classes from './SwapConsole.module.scss';
 import { SwapInfo } from './SwapInfo';
 import { DexExchangeRate } from './DexExchangeRate';
@@ -65,13 +64,14 @@ interface SwapBtn {
 
 function SwapBtn ({ onClick }: SwapBtn): ReactElement {
   return (
-    <Button
+    <IconButton
       className={classes.swapBtn}
+      color='primary'
       onClick={onClick}
-      color='normal'
-    >
-      <SwapIcon />
-    </Button>
+      icon='swap'
+      size='large'
+      type='border'
+    />
   );
 }
 
@@ -198,7 +198,7 @@ export const SwapConsole: FC = memo(() => {
           onTokenChange={onTargetTokenChange}
           title='Receive'
           token={targetCurrency}
-          value={form.values.target as any as number}
+          value={form.values.target}
           error={form.errors.target}
         />
         <TxButton

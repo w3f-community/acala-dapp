@@ -3,7 +3,7 @@ import { Dialog } from '@honzon-platform/ui-components';
 
 const POLKADOT_EXTENSIONS_ADDRESS = 'https://chrome.google.com/webstore/detail/polkadot%7Bjs%7D-extension/mopnmbcafieddcagagdcbnhejhlodfdd';
 
-export const NoExtension: React.FC = memo(() => {
+export const NoExtensions: React.FC = memo(() => {
   const handleGetExtensionBtnClick = (): void => {
     window.open(POLKADOT_EXTENSIONS_ADDRESS);
   };
@@ -21,4 +21,4 @@ export const NoExtension: React.FC = memo(() => {
   );
 });
 
-NoExtension.displayName = 'NoExtension';
+NoExtensions.displayName = 'NoExtensions';

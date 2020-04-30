@@ -1,8 +1,9 @@
 import React, { FC, memo, ReactNode } from 'react';
+import clsx from 'clsx';
 
 import { BareProps } from './types';
 import classes from './Step.module.scss';
-import clsx from 'clsx';
+import { ReactComponent as CheckedIcon } from './assets/checked.svg';
 
 export interface StepConfig {
   index: number | string;
@@ -19,6 +20,12 @@ export const Step: FC<Props> = memo(({
   config,
   current
 }) => {
+
+  const isDone = (index: number): boolean => {
+    const currentArrayIndex = config.findIndex((item): boolean => item.index === current); 
+    return index < currentArrayIndex;
+  };
+
   return (
     <ul className={
       clsx(classes.root, className)
@@ -31,11 +38,18 @@ export const Step: FC<Props> = memo(({
               className={clsx(
                 classes.item,
                 {
-                  [classes.active]: item.index === current
+                  [classes.active]: item.index === current,
+                  [classes.done]: isDone(index)
                 }
               )}
             >
-              <span className={classes.point}>{index + 1 }</span>
+              <span className={classes.point}>
+                {
+                  isDone(index) ? (
+                      <CheckedIcon />
+                  ) : index + 1
+                }
+              </span>
               <span className={classes.text}>{item.text}</span>
             </li>
           );

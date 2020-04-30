@@ -47,6 +47,10 @@
   }
 }
 
+.row {
+  transition: all 200ms linear;
+}
+
 .row:last-child {
   & > .cell {
     border-bottom: none;
@@ -62,5 +66,5 @@
 }
 
 .row:hover {
-  background: #f2f5f7;
+  background: $table-active-color;
 }

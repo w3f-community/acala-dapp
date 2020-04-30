@@ -16,6 +16,7 @@ interface Props extends BareProps {
   icon?: boolean;
   name?: boolean;
   upper?: boolean;
+  gutter?: boolean;
 }
 
 const ICON_CONFIG = {
@@ -31,7 +32,8 @@ export const Token: FC<Props> = memo(({
   icon,
   token,
   name = true,
-  upper = true
+  upper = true,
+  gutter = false
 }) => {
   if (!token) {
     return null;
@@ -48,10 +50,27 @@ export const Token: FC<Props> = memo(({
   };
 
   return (
-    <div className={clsx(classes.root, className)}>
+    <div
+      className={
+        clsx(
+          classes.root,
+          className,
+          {
+            [classes.gutter]: gutter
+          }
+        )
+      }
+    >
       {
         icon ? (
-          <span className={classes.icon}>
+          <span className={
+            clsx(
+              classes.icon,
+              {
+                [classes.noName]: !name
+              }
+            )
+          }>
             {renderIcon()}
           </span>
         ) : null

@@ -93,6 +93,7 @@ export const StakingConsolee: FC = () => {
       </Grid>
       <Grid container item justifyContent='center'>
         <TxButton
+          size='middle'
           className={classes.txBtn}
           disabled={checkDisabled()}
           section='homa'

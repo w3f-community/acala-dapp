@@ -118,7 +118,7 @@ export const SelectCollateral: FC = () => {
       <div className={classes.action}>
         <Button
           size='small'
-          color='normal'
+          type='border'
           onClick={cancelCurrentTab}
         >
           Cancel

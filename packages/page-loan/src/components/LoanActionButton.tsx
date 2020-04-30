@@ -114,6 +114,26 @@ export const LonaActionButton: FC<Props> = ({
         className={classes.dialog}
         title={getDialogTitle()}
         visiable={status}
+        action={
+          <>
+            <Button
+              size='small'
+              onClick={close}
+            >
+              Cancel
+            </Button>
+            <TxButton
+              size='small'
+              disabled={checkDisabled()}
+              section='honzon'
+              method='adjustLoan'
+              params={getParams()}
+              onSuccess={close}
+            >
+              Confirm
+            </TxButton>
+          </>
+        }
       >
         <BalanceInput
           id='value'
@@ -123,24 +143,6 @@ export const LonaActionButton: FC<Props> = ({
           onChange={form.handleChange}
           token={operateStableCurrency() ? stableCurrency : token}
         />
-        <div className={classes.action}>
-          <Button
-            size='small'
-            onClick={close}
-          >
-            Cancel
-          </Button>
-          <TxButton
-            size='small'
-            disabled={checkDisabled()}
-            section='honzon'
-            method='adjustLoan'
-            params={getParams()}
-            onSuccess={close}
-          >
-            Confirm
-          </TxButton>
-        </div>
       </Dialog>
     </>
   );

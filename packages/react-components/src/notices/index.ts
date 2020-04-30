@@ -1,3 +1,3 @@
 export * from './ConnectError';
-export * from './NoAccount';
-export * from './NoExtension';
+export * from './NoAccounts';
+export * from './NoExtensions';

@@ -8,7 +8,7 @@
   margin-left: 24px;
   width: 216px;
   height: 64px;
-  border: 1px solid #ebeef5;
+  border: 1px solid #d8d8d8;
   border-radius: 12px;
   background: #ffffff;
   cursor: pointer;
@@ -26,8 +26,17 @@
   }
 
   &.add {
-    background: #173DC9;
+    background: #000a39;
     color: #ffffff;
+    transition: background 200ms;
+
+    &:hover {
+      background: #333B61;
+    }
+
+    &:active {
+      background: #000419;
+    }
 
     .content {
       justify-content: center;

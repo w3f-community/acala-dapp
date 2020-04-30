@@ -1,7 +1,7 @@
 import React, { FC, memo } from 'react';
 import { Dialog } from '@honzon-platform/ui-components';
 
-export const NoAccount: FC = memo(() => {
+export const NoAccounts: FC = memo(() => {
   const handleRetry = (): void => window.location.reload();
 
   return (
@@ -19,4 +19,4 @@ export const NoAccount: FC = memo(() => {
   );
 });
 
-NoAccount.displayName = 'NoAccount';
+NoAccounts.displayName = 'NoAccounts';

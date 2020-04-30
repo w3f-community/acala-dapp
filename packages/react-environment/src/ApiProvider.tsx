@@ -7,7 +7,6 @@ const CONNECT_TIMEOUT = 1000 * 60; // one minute
 interface ApiProps {
   endpoint: string;
   children: ReactNode;
-  Loading?: ReactNode;
   ConnectError?: ReactNode;
 }
 
@@ -42,7 +41,6 @@ export const ApiProvider: FC<ApiProps> = ({
   endpoint,
   children,
   ConnectError,
-  Loading
 }) => {
   const [connectStatus, setConnectStatus] = useState<ConnectStatus>(
     {} as ConnectStatus
@@ -50,10 +48,6 @@ export const ApiProvider: FC<ApiProps> = ({
   const [api, setApi] = useState<ApiPromise>({} as ApiPromise);
 
   const renderContent = (): ReactNode => {
-    if (connectStatus.loading && Loading) {
-      return Loading;
-    }
-
     if (connectStatus.connected) {
       return children;
     }
@@ -114,7 +108,7 @@ export const ApiProvider: FC<ApiProps> = ({
         ...connectStatus
       }}
     >
-      {Loading ? renderContent() : children}
+      {renderContent()}
       {renderError()}
     </ApiContext.Provider>
   );

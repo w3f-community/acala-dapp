@@ -8,34 +8,23 @@ import { Dialog } from '@honzon-platform/ui-components';
 
 import { ReactComponent as CheckedIcon } from './assets/checked.svg';
 import classes from './SelectAccount.module.scss';
+import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 
 interface Props {
-  onSelect?: () => void;
+  accounts: InjectedAccountWithMeta[];
+  visable: boolean;
+  onSelect?: (account: InjectedAccountWithMeta) => void;
 }
 
-export const SelectAccount: React.FC<Props> = memo(({ onSelect }) => {
-  const { accounts, setActiveAccount } = useAccounts();
-  const { api } = useApi();
+export const SelectAccount: React.FC<Props> = memo(({
+  accounts,
+  onSelect,
+  visable
+}) => {
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
-  const { close, open, status } = useModal(false);
-
-  // auto select the first account, if only one in the list
-  useEffect(() => {
-    if (!accounts || accounts.length === 0) return noop;
-
-    if (accounts.length === 1) {
-      setActiveAccount(accounts[0], api);
-
-      return noop;
-    }
-
-    open();
-  }, [accounts, api, open, setActiveAccount]);
 
   const confirmHandler = (): void => {
-    setActiveAccount(accounts[selectedIndex], api);
-    onSelect && onSelect();
-    close();
+    onSelect && onSelect(accounts[selectedIndex]);
   };
 
   const genSelectHandler = (index: number): AnyFunction => (): void => setSelectedIndex(index);
@@ -44,7 +33,7 @@ export const SelectAccount: React.FC<Props> = memo(({ onSelect }) => {
     <Dialog
       className={classes.root}
       title='Choose Account'
-      visiable={status}
+      visiable={visable}
       onConfirm={confirmHandler}
     >
       <ul className={classes.list}>

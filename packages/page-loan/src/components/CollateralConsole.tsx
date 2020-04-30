@@ -30,7 +30,13 @@ export const CollateralConsole: FC<Props> = ({
       headerClassName={classes.header}
       header={(
         <>
-          <div>Collateral <Token token={token} /></div>
+          <div>
+            <span>Collateral</span>
+            <Token
+              token={token}
+              gutter
+            />
+          </div>
           <FormatBalance
             currency={currentLoanType!.token}
             balance={currentUserLoanHelper.collaterals}

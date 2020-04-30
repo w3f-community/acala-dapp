@@ -1,6 +1,10 @@
 .root {
   display: flex;
   align-items: center;
+
+  &.gutter {
+    margin: 0 4px;
+  }
 }
 
 .icon {
@@ -8,8 +12,12 @@
   flex: 0 0 42px;
   height: 42px;
   border-radius: 50%;
-  background: #dddddd;
+  background: #ffffff;
   overflow: hidden;
+
+  &.noName {
+    margin-right: 0;
+  }
 
   :global(svg) {
     width: 100%;

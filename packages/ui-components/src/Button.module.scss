@@ -7,7 +7,7 @@
   border-radius: 2px;
   font-weight: 500;
   cursor: pointer;
-  transition:  background 200ms;
+  transition: all 200ms;
 
   // clear default apperance
   border: none;
@@ -19,18 +19,24 @@
   &.large {
     min-width: 178px;
     height: 58px;
-    font-size: 24px;
+    font-size: 20px;
+    line-height: 20px;
   }
 
   &.middle {
-    min-width: 86px;
-    height: 40px;
+    min-width: 120px;
+    height: 42px;
+    padding: 0 12px;
+    font-size: 16px;
+    line-height: 16px;
   }
 
   &.small {
     min-width: 80px;
     height: 32px;
-    font-size: 12px;
+    padding: 0 12px;
+    font-size: 14px;
+    line-height: 14px;
   }
 
   // type
@@ -40,6 +46,10 @@
 
     &:hover {
       background: $color-primary-hover;
+    }
+
+    &:active {
+      background: $color-primary-active;
     }
 
     &:hover.disabled,
@@ -55,17 +65,88 @@
     color: #333333;
   }
 
+  &.type-border.color-primary {
+    color: $color-primary;
+    border: 1px solid $color-primary;
+
+    &:hover {
+      color: $color-primary-hover;
+      border: 1px solid $color-primary-hover;
+    }
+
+    &:active {
+      color: $color-primary-active;
+      border: 1px solid $color-primary-active;
+    }
+  }
+
+  &.type-border.color-normal {
+    color: $color-black;
+    border: 1px solid $normal-button-border-color;
+
+    &:hover {
+      color: $color-primary-hover;
+      border: 1px solid $color-primary-hover;
+    }
+
+    &:active {
+      color: $color-primary-active;
+      border: 1px solid $color-primary-active;
+    }
+  }
+
   &.type-ghost.color-primary {
     background: transparent;
     color: $color-primary;
+
+    &:hover {
+      color: $color-primary-hover;
+    }
+
+    &:active {
+      color: $color-primary-active;
+    }
   }
 
   &.type-ghost.color-normal {
     background: transparent;
     color: $color-black;
+
+    &:hover {
+      color: $color-primary-hover;
+    }
+
+    &:active {
+      color: $color-primary-active;
+    }
   }
 
   .loading {
     margin-right: 4px;
+  }
+}
+
+.iconButton {
+  &.large {
+    max-width: 58px;
+    min-width: 58px;
+    height: 58px;
+    font-size: 20px;
+  }
+
+  &.middle {
+    max-width: 42px;
+    min-width: 42px;
+    height: 42px;
+    padding: 0 12px;
+    font-size: 16px;
+  }
+
+  &.small {
+    max-width: 32px;
+    min-width: 32px;
+    height: 32px;
+    padding: 0 12px;
+    font-size: 14px;
   }
 }

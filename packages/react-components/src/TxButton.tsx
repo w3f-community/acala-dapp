@@ -1,12 +1,10 @@
 import React, { FC, PropsWithChildren, useState, useContext } from 'react';
 import { useAccounts, useApi, useNotification } from '@honzon-platform/react-hooks';
-import { Button } from '@honzon-platform/ui-components';
+import { Button, ButtonProps } from '@honzon-platform/ui-components';
 import { BareProps } from '@honzon-platform/ui-components/types';
 import { FormatAddress } from './format';
 
-interface Props extends BareProps {
-  size?: 'small' | 'large';
-  disabled: boolean;
+interface Props extends ButtonProps {
   section: string;
   method: string;
   params: any[];

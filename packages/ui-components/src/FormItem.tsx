@@ -1,4 +1,4 @@
-import React, { ReactNode, FC, memo } from 'react';
+import React, { FC, memo } from 'react';
 import clsx from 'clsx';
 
 import { BareProps } from './types';
@@ -20,3 +20,5 @@ export const FormItem: FC<Props> = memo(({
     </div>
   );
 });
+
+FormItem.displayName = 'FormItem';

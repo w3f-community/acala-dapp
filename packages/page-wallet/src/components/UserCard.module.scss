@@ -18,8 +18,14 @@
   }
 
   .name {
+    display: flex;
+    align-items: center;
     font-size: 20px;
     line-height: 24px;
+
+    > button {
+      min-width: 0;
+    }
   }
 
   .address {

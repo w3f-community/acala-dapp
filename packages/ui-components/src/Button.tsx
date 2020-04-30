@@ -4,8 +4,9 @@ import clsx from 'clsx';
 import { BareProps } from './types';
 import { Loading } from './Loading';
 import classes from './Button.module.scss';
+import { IconType, getIcon } from './Icon';
 
-type ButtonType = 'normal' | 'ghost';
+type ButtonType = 'normal' | 'ghost' | 'border';
 type ButtonColor = 'normal' | 'primary' | 'danger';
 type ButtonSize = 'small' | 'middle' | 'large';
 
@@ -18,7 +19,7 @@ export interface ButtonProps extends BareProps {
   size?: ButtonSize;
 }
 
-export const Button: FC<ButtonProps> = memo(({
+export const Button: FC<ButtonProps> = ({
   children,
   className,
   color = 'normal',
@@ -62,6 +63,29 @@ export const Button: FC<ButtonProps> = memo(({
       {children}
     </button>
   );
-});
+};
 
-Button.displayName = 'Button';
+
+interface IconButtonProps extends ButtonProps {
+  icon: IconType;
+}
+
+export const IconButton: FC<IconButtonProps> = ({
+  icon,
+  className,
+  ...other
+}) => {
+  return (
+    <Button
+      className={
+        clsx(
+          className,
+          classes.iconButton
+        )
+      }
+      {...other}
+    >
+    { getIcon(icon) }
+    </Button>
+  );
+}

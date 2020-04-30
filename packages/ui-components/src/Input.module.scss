@@ -7,8 +7,6 @@
   background: #ffffff;
   border: 1px solid #ecf0f2;
   border-radius: 2px;
-  font-size: 22px;
-  line-height: 26px;
 
   .input {
     flex: 1;
@@ -17,6 +15,9 @@
     appearance: none;
     outline: none;
     box-shadow: none;
+
+    font-size: 22px;
+    line-height: 26px;
   }
 
   &.error {

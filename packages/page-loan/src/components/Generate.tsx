@@ -203,18 +203,21 @@ export const Generate = () => {
       </div>
       <div className={classes.action}>
         <Button
-          size='small'
-          onClick={handlePrevious}
-        >
-          Previous
-        </Button>
-        <Button
+          type='ghost'
           size='small'
           onClick={cancelCurrentTab}
         >
           Cancel
         </Button>
         <Button
+          type='border'
+          size='small'
+          onClick={handlePrevious}
+        >
+          Prev
+        </Button>
+        <Button
+          color='primary'
           size='small'
           disabled={checkDisabled()}
           onClick={handleNext}

@@ -37,6 +37,20 @@
         color: #333333;
       }
     }
+
+    &.done {
+      .point {
+        border-color: $color-primary;
+
+        & path {
+          fill: $color-primary;
+        }
+      }
+
+      .text {
+        color: #333333;
+      }
+    }
   }
 
   .point {

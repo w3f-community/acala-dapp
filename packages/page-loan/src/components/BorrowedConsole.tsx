@@ -44,7 +44,13 @@ export const BorrowedConsole: FC<Props> = ({
       headerClassName={classes.header}
       header={(
         <>
-          <div>{'Borrow '} <Token token={token} /></div>
+          <div>
+            <span>{'Borrow '}</span>
+            <Token
+              token={stableCurrency}
+              gutter
+            />
+          </div>
           <FormatBalance
             currency={stableCurrency}
             balance={currentUserLoanHelper.debitAmount}

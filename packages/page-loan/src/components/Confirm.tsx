@@ -2,7 +2,7 @@ import React, { FC, useContext, useEffect } from 'react';
 import { isEmpty } from 'lodash';
 import { FormatBalance, FormatFixed18, TxButton, numToFixed18Inner } from '@honzon-platform/react-components';
 import { createProviderContext } from './CreateProvider';
-import { useLoan, useApi, useConstants } from '@honzon-platform/react-hooks';
+import { useLoan, useConstants } from '@honzon-platform/react-hooks';
 import { Fixed18, stableCoinToDebit, convertToFixed18 } from '@acala-network/app-util';
 import { List, Button } from '@honzon-platform/ui-components';
 import classes from './Confirm.module.scss';
@@ -13,7 +13,7 @@ export const Confirm: FC = () => {
   const { cancelCurrentTab } = useContext(LoanContext);
   const { currentLoanType, getCurrentUserLoanHelper, setCollateral, setDebitStableCoin } = useLoan(selectedToken);
   const currentUserLoanHelper = getCurrentUserLoanHelper();
-  const stableCurrency = useConstants();
+  const { stableCurrency } = useConstants();
 
   useEffect(() => {
     if (generate && deposit) {
@@ -157,16 +157,18 @@ export const Confirm: FC = () => {
       />
       <div className={classes.action}>
         <Button
-          size='small'
-          onClick={handlePrevious}
-        >
-          Previous
-        </Button>
-        <Button
+          type='ghost'
           size='small'
           onClick={cancelCurrentTab}
         >
           Cancel
+        </Button>
+        <Button
+          type='border'
+          size='small'
+          onClick={handlePrevious}
+        >
+          Prev
         </Button>
         <TxButton
           disabled={checkDisabled()}

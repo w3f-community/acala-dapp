@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 
-import { ConnectError, SelectAccount } from '@honzon-platform/react-components';
+import { ConnectError, NoAccounts, NoExtensions } from '@honzon-platform/react-components';
 import { UIProvider, Notification } from '@honzon-platform/ui-components';
 import { ApiProvider, AccountProvider } from '@honzon-platform/react-environment';
 import { useAppSetting } from '@honzon-platform/react-hooks/useAppSetting';
@@ -16,11 +16,11 @@ const App: FC = () => {
           <ApiProvider
             endpoint={endpoint}
             ConnectError={<ConnectError />}
-            Loading={null}
           >
             <AccountProvider
               applicationName={'Acala Honzon Platfrom'}
-              SelectAccount={<SelectAccount />}
+              NoAccounts={<NoAccounts />}
+              NoExtensions={<NoExtensions />}
             >
               <RouterProvider config={routerConfig} />
             </AccountProvider>

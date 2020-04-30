@@ -35,7 +35,7 @@ export const BalanceInput: FC<Props> = memo(({
   error,
   id,
   max = 0,
-  showMaxBtn = true,
+  showMaxBtn = false,
   name,
   onChange,
   onTokenChange,
