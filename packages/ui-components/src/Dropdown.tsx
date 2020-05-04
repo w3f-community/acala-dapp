@@ -11,13 +11,15 @@ export interface DropdownConfig {
 }
 
 interface Props extends BareProps {
-  size: 'small' | 'normal';
+  size?: 'small' | 'normal';
   value?: any;
   onChange: (value: string | any) => void;
   placeholder?: string;
   config: DropdownConfig[];
   error?: boolean;
   border?: boolean;
+  menuClassName?: string;
+  selectedRender?: (value: any) => ReactNode;
 }
 
 export const Dropdown: FC<Props> = memo(({
@@ -27,7 +29,9 @@ export const Dropdown: FC<Props> = memo(({
   value,
   placeholder,
   onChange,
-  border = true
+  border = true,
+  menuClassName,
+  selectedRender
 }) => {
   const [open, setOpen] = useState<boolean>(false);
   const active = config.find((data: DropdownConfig) => data.value === value);
@@ -43,6 +47,16 @@ export const Dropdown: FC<Props> = memo(({
   const onItemSelect = (value: string): void => {
     onChange(value);
     closeMenu();
+  };
+
+  const renderSelected = () => {
+    if (!active) {
+      return placeholder;
+    }
+    if (selectedRender) {
+      return selectedRender(active.value);
+    }
+    return active.render();
   };
 
   return (
@@ -61,13 +75,13 @@ export const Dropdown: FC<Props> = memo(({
     >
       <div className={classes.activeRoot} onClick={toggleMenu}>
         <div className={classes.activeContent}>
-          {active ? active.render() : placeholder}
+          {renderSelected()}
         </div>
         <div className={classes.activeAction}>
           <ArrowDownIcon />
         </div>
       </div>
-      <ul className={classes.menu}>
+      <ul className={clsx(classes.menu, menuClassName)}>
         {config.map((item: DropdownConfig) => {
           return (
             <li

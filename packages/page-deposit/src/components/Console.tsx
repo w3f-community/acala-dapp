@@ -5,7 +5,7 @@ import { DepositConsole } from './DepositConsole';
 import { WithdrawConsole } from './WithdrawConsole';
 import { RewardConsole } from './RewardConsole';
 
-export const Console: FC = memo(() => {
+export const Console: FC = () => {
   const { action } = useContext(DepositContext);
 
   if (action === 'deposit') {
@@ -21,6 +21,4 @@ export const Console: FC = memo(() => {
   }
 
   return null;
-});
-
-Console.displayName = 'Console';
+};

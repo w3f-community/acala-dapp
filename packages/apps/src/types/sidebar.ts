@@ -6,6 +6,7 @@ export interface SideBarItem {
   path?: string;
   target?: string;
   href?: string;
+  isExternal?: boolean;
 }
 
 export interface SideBarConfig {

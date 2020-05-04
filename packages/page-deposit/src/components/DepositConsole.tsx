@@ -60,7 +60,6 @@ const InputArea: FC<InputAreaProps> = memo(({
 InputArea.displayName = 'InputArea';
 
 export const DepositConsole: FC = memo(() => {
-  const { active } = useAccounts();
   const { enabledCurrencyIds, baseCurrencyId } = useContext(DepositContext);
   const [otherCurrency, setOtherCurrency] = useState<CurrencyId>(enabledCurrencyIds[0]);
   const { rate } = useDexExchangeRate(otherCurrency);
@@ -148,7 +147,7 @@ export const DepositConsole: FC = memo(() => {
         <ul className={classes.addon}>
           <li className={classes.addonItem}>
             <span>Exchange Rate</span>
-            <DexExchangeRate token={otherCurrency} />
+            <DexExchangeRate supply={otherCurrency} />
           </li>
           <li className={classes.addonItem}>
             <span>Current Pool Size</span>

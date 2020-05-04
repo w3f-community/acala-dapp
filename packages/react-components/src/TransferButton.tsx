@@ -48,6 +48,11 @@ export const TransferButton: FC<Props> = memo(({
     return false;
   };
 
+  const onSuccess = () => {
+    form.resetForm();
+    close();
+  }
+
   useEffect(() => {
     form.resetForm();
   }, [status]);
@@ -79,6 +84,7 @@ export const TransferButton: FC<Props> = memo(({
               section='currencies'
               method='transfer'
               params={[form.values.account, token, numToFixed18Inner(form.values.amount)]}
+              onSuccess={onSuccess}
             >
               Transfer
             </TxButton>

@@ -42,12 +42,16 @@ export const sideBarConfig: SideBarConfig = {
     {
       icon: <EmailSVG />,
       name: 'Email',
-      path: 'mailto:hello@acala.network'
+      path: 'mailto:hello@acala.network',
+      isExternal: true,
+      target: '_blank'
     },
     {
       icon: <TwitterSVG />,
       name: 'Twitter',
-      path: 'https://twitter.com/AcalaNetwork'
+      path: 'https://twitter.com/AcalaNetwork',
+      isExternal: true,
+      target: '_blank'
     }
   ]
 };

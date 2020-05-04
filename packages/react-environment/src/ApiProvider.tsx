@@ -8,6 +8,7 @@ interface ApiProps {
   endpoint: string;
   children: ReactNode;
   ConnectError?: ReactNode;
+  Loading?: ReactNode;
 }
 
 interface ConnectStatus {
@@ -41,6 +42,7 @@ export const ApiProvider: FC<ApiProps> = ({
   endpoint,
   children,
   ConnectError,
+  Loading
 }) => {
   const [connectStatus, setConnectStatus] = useState<ConnectStatus>(
     {} as ConnectStatus
@@ -48,6 +50,10 @@ export const ApiProvider: FC<ApiProps> = ({
   const [api, setApi] = useState<ApiPromise>({} as ApiPromise);
 
   const renderContent = (): ReactNode => {
+    if (connectStatus.loading) {
+      return Loading ? Loading : null;
+    }
+
     if (connectStatus.connected) {
       return children;
     }

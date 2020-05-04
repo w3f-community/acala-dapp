@@ -1,12 +1,12 @@
 import React, { FC, useContext } from 'react';
 import { StakingPoolContext } from '@honzon-platform/react-components';
-import { useApi } from '@honzon-platform/react-hooks';
 import { Dropdown, DropdownConfig } from '@honzon-platform/ui-components';
 import { BareProps } from '@honzon-platform/ui-components/types';
+import classes from './TargetRedeemList.module.scss';
 
 interface Props extends BareProps {
   value: number;
-  onChange: (value: number) => {};
+  onChange: (value: number) => void;
 }
 
 export const TargetRedeemList: FC<Props> = ({
@@ -32,11 +32,13 @@ export const TargetRedeemList: FC<Props> = ({
 
   return (
     <Dropdown
+      menuClassName={classes.menu}
       config={config}
       className={className}
       value={value}
       size='small'
       onChange={onChange}
+      selectedRender={(era) => era}
     />
   );
 };

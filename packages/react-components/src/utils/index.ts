@@ -57,14 +57,6 @@ export const getValueFromTimestampValue = (origin: TimestampedValue): Codec => {
   return origin.value;
 };
 
-export const getAllCurrencyIds = (api: ApiPromise): CurrencyId[] => {
-  const tokenList = api.registry.createType('CurrencyId' as any).defKeys as string[];
-
-  return tokenList.map((name: string): CurrencyId => {
-    return api.registry.createType('CurrencyId' as any, name) as CurrencyId;
-  });
-};
-
 export const getCurrencyIdFromName = (api: ApiPromise, name: string): CurrencyId => {
   const CurrencyId = api.registry.createType('CurrencyId' as any);
 

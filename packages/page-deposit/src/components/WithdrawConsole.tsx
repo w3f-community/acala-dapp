@@ -55,6 +55,7 @@ const InputArea: FC<InputAreaProps> = memo(({
         name={name}
         token={token}
         value={value}
+        tokenPosition='left'
       />
     </div>
   );
@@ -103,14 +104,19 @@ export const WithdrawConsole: FC = memo(() => {
           onTokenChange={setOtherCurrency}
         />
         <RightArrowIcon className={classes.arrowIcon} />
-        <AccountDexTokens
-          className={classes.output}
-          baseCurrencyId={baseCurrencyId}
-          token={otherCurrency}
-          account={active!.address}
-          withdraw={form.values.share}
-        />
+        <div className={classes.output}>
+        {
+          form.values.share ? (
+            <AccountDexTokens
+              baseCurrencyId={baseCurrencyId}
+              token={otherCurrency}
+              account={active!.address}
+              withdraw={form.values.share}
+            />) : null
+        }
+        </div>
         <TxButton
+          size='large'
           className={classes.txBtn}
           disabled={checkDisabled()}
           section='dex'
@@ -124,7 +130,7 @@ export const WithdrawConsole: FC = memo(() => {
         <ul className={classes.addon}>
           <li className={classes.addonItem}>
             <span>Exchange Rate</span>
-            <DexExchangeRate token={otherCurrency} />
+            <DexExchangeRate supply={otherCurrency} />
           </li>
           <li className={classes.addonItem}>
             <span>Current Pool Size</span>

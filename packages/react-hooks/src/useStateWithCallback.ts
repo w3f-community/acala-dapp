@@ -20,5 +20,5 @@ export function useStateWithCallback<T> (init: T) {
     _setValue(value);
   };
 
-  return [value, setValue] as [T, any];
+  return [value, setValue] as [T, (data: T, callback?: (value?: T) => void) => void];
 }

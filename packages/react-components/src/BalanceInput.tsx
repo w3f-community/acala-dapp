@@ -22,6 +22,7 @@ interface Props extends BareProps {
   onTokenChange?: (token: CurrencyId) => void;
   placeholder?: string;
   token: CurrencyId | string;
+  tokenPosition?: 'left' | 'right';
   value?: number;
   showMaxBtn?: boolean;
   max?: number;
@@ -40,6 +41,7 @@ export const BalanceInput: FC<Props> = memo(({
   onChange,
   onTokenChange,
   placeholder,
+  tokenPosition = 'right',
   token,
   value
 }) => {
@@ -47,6 +49,29 @@ export const BalanceInput: FC<Props> = memo(({
 
   if (typeof token === 'string') {
     token = getCurrencyIdFromName(api, token);
+  }
+
+  const renderToken = () => {
+    if (enableTokenSelect) {
+      return (
+        <TokenSelector
+          className={
+            clsx(
+              classes.tokenSelector,
+              classes[tokenPosition]
+            )
+          }
+          onChange={onTokenChange}
+          value={token as CurrencyId}
+          currencies={currencies}
+        />
+      );
+    } else {
+      <Token
+        className={classes.token}
+        token={token}
+      />
+    }
   }
 
   return (
@@ -59,6 +84,9 @@ export const BalanceInput: FC<Props> = memo(({
         }
       )
     }>
+      {
+        tokenPosition === 'left' ? renderToken() : null
+      }
       <input 
         disabled={disabled}
         className={classes.input}
@@ -81,21 +109,7 @@ export const BalanceInput: FC<Props> = memo(({
           ): null
       }
       {
-        enableTokenSelect
-          ? (
-            <TokenSelector
-              className={classes.tokenSelector}
-              onChange={onTokenChange}
-              value={token}
-              currencies={currencies}
-            />
-          )
-          : (
-            <Token
-              className={classes.token}
-              token={token}
-            />
-          )
+        tokenPosition === 'right' ? renderToken() : null
       }
     </div>
   );

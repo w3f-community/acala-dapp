@@ -6,9 +6,12 @@ import { ReactComponent as SystemIcon } from '../assets/system.svg';
 import classes from './Card.module.scss';
 import { DepositContext } from './Provider';
 import { convertToFixed18 } from '@acala-network/app-util';
+import { useDexTotalSystemReward } from '@honzon-platform/react-hooks';
 
 export const SystemCard: FC = memo(() => {
   const { exchangeFee } = useContext(DepositContext);
+  const totalReward = useDexTotalSystemReward();
+
   return (
     <Card
       className={classes.root}
@@ -22,11 +25,11 @@ export const SystemCard: FC = memo(() => {
       </div>
       <ul className={classes.list}>
         <li className={classes.listItem}>
-          <p className={classes.listTitle}>Reward</p>
+          <p className={classes.listTitle}>Total Reward</p>
           <FormatBalance
             className={classes.listContent}
-            currency={'AUSD'}
-            balance={1}
+            currency={totalReward.token}
+            balance={totalReward.amount}
           />
         </li>
         <li className={classes.listItem}>

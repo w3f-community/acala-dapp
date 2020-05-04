@@ -26,6 +26,7 @@ export const RedeemConsole: FC = () => {
     }
   });
   const [redeemType, setRedeemType] = useState<RedeemType>('Immediately');
+  const [era, setEra] = useState<number>(0);
   const form = useFormik({
     initialValues: {
       amount: '' as any as number,
@@ -145,13 +146,12 @@ export const RedeemConsole: FC = () => {
             className={classes.item}
             label={(
               <div className={classes.targetInput}>
-                <span>Redeem in</span>
+                <span>Redeem in ERA</span>
                 <TargetRedeemList
                   className={classes.select}
-                  selected
-                  onChange={() => {}}
+                  value={era}
+                  onChange={setEra}
                 />
-                ERA
             </div>
             )}
             onClick={() => setRedeemType('Target')}

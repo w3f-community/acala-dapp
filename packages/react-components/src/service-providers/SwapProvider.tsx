@@ -1,30 +1,34 @@
-import React, { memo, createContext, FC, PropsWithChildren, useState } from 'react';
+import React, { memo, createContext, FC, PropsWithChildren, useState, useEffect } from 'react';
 
 import { CurrencyId } from '@acala-network/types/interfaces';
 import { Fixed18, calcTargetInOtherToBase, convertToFixed18, calcTargetInBaseToOther, calcTargetInOtherToOther, calcSupplyInOtherToBase, calcSupplyInBaseToOther, calcSupplyInOtherToOther } from '@acala-network/app-util';
-import { useApi, useCall, useStateWithCallback } from '@honzon-platform/react-hooks';
+import { useApi, useStateWithCallback } from '@honzon-platform/react-hooks';
 import { DerivedDexPool } from '@acala-network/api-derive';
 
 import { Vec } from '@polkadot/types';
+import { tokenEq } from '../utils';
+
+export interface PoolData {
+  supplyCurrency: CurrencyId;
+  targetCurrency: CurrencyId;
+  supplySize: number;
+  targetSize: number;
+}
 
 interface ContextData {
   baseCurrency: CurrencyId;
 
   supplyCurrencies: (CurrencyId | string)[];
-  supplyCurrency: CurrencyId;
   targetCurrencies: (CurrencyId | string)[];
-  targetCurrency: CurrencyId;
-  setSupplyCurrency: (currency: CurrencyId, callback?: (currency: CurrencyId) => void) => void;
-  setTargetCurrency: (currency: CurrencyId, callback?: (curency: CurrencyId) => void) => void;
 
   slippage: number;
   setSlippage: (slippage: number) => void;
 
-  calcSupply: (target: number, slippage?: number) => Promise<number>;
-  calcTarget: (supply: number, slippage?: number) => Promise<number>;
+  calcSupply: (supplyCurrency: CurrencyId, targetCurrency: CurrencyId, target: number, slippage?: number) => Promise<number>;
+  calcTarget: (supplyCurrency: CurrencyId, targetCurrency: CurrencyId, supply: number, slippage?: number) => Promise<number>;
 
-  supplyPool: DerivedDexPool | undefined;
-  targetPool: DerivedDexPool | undefined;
+  setCurrency: (target: CurrencyId, slippage: CurrencyId, callback?: (pool: PoolData) => void) => Promise<void>;
+  pool: PoolData;
 }
 
 export const SwapContext = createContext<ContextData>({} as ContextData);
@@ -36,11 +40,53 @@ export const SwapProvider: FC<PropsWithChildren<{}>> = memo(({ children }) => {
   const baseCurrency = api.consts.dex.getBaseCurrencyId as CurrencyId;
   const targetCurrencies = supplyCurrencies.slice();
   const feeRate = convertToFixed18(api.consts.dex.getExchangeFee);
-  const [supplyCurrency, setSupplyCurrency] = useStateWithCallback<CurrencyId>(defaultSupplyCurrency);
-  const [targetCurrency, setTargetCurrency] = useStateWithCallback<CurrencyId>(baseCurrency);
   const [slippage, setSlippage] = useStateWithCallback<number>(0.005);
-  const supplyPool = useCall<DerivedDexPool>((api.derive as any).dex.pool, [supplyCurrency]);
-  const targetPool = useCall<DerivedDexPool>((api.derive as any).dex.pool, [targetCurrency]);
+  const [pool, setPool] = useStateWithCallback<PoolData>({
+    supplyCurrency: defaultSupplyCurrency,
+    supplySize: 0,
+    targetCurrency: baseCurrency,
+    targetSize: 0
+  });
+
+  const setCurrency = async (supply: CurrencyId, target: CurrencyId, callback?: () => void): Promise<void> => {
+    // base to other
+    if (tokenEq(supply, baseCurrency) && !tokenEq(target, baseCurrency)) {
+      const pool = await (api.derive as any).dex.pool(target) as DerivedDexPool;
+      setPool({
+        supplyCurrency: supply,
+        targetCurrency: target,
+        supplySize: convertToFixed18(pool.base).toNumber(),
+        targetSize: convertToFixed18(pool.other).toNumber(),
+      }, callback);
+    }
+
+    // other to base
+    if (tokenEq(target, baseCurrency) && !tokenEq(supply, baseCurrency)) {
+      const pool = await (api.derive as any).dex.pool(supply) as DerivedDexPool;
+      setPool({
+        supplyCurrency: supply,
+        targetCurrency: target,
+        supplySize: convertToFixed18(pool.other).toNumber(),
+        targetSize: convertToFixed18(pool.base).toNumber(),
+      }, callback);
+    }
+
+    // other to other
+    if (!tokenEq(target, baseCurrency) && !tokenEq(supply, baseCurrency)) {
+      const supplyPool = await (api.derive as any).dex.pool(supply) as DerivedDexPool;
+      const targetPool = await (api.derive as any).dex.pool(target) as DerivedDexPool;
+      setPool({
+        supplyCurrency: supply,
+        targetCurrency: target,
+        supplySize: convertToFixed18(targetPool.other).toNumber(),
+        targetSize: convertToFixed18(supplyPool.other).toNumber(),
+      }, callback);
+    }
+  };
+
+  useEffect(() => {
+    setCurrency(pool.supplyCurrency, pool.targetCurrency);
+  }, []);
 
   const convertPool = (origin: DerivedDexPool): { base: Fixed18; other: Fixed18 } => {
     return {
@@ -49,7 +95,7 @@ export const SwapProvider: FC<PropsWithChildren<{}>> = memo(({ children }) => {
     };
   };
 
-  const calcSupply = async (target: number, slippag?: number): Promise<number> => {
+  const calcSupply = async (supplyCurrency: CurrencyId, targetCurrency: CurrencyId, target: number, slippag?: number): Promise<number> => {
     // reload supply pool and target pool
     const supplyPool = await (api.derive as any).dex.pool(supplyCurrency);
     const targetPool = await (api.derive as any).dex.pool(targetCurrency);
@@ -87,7 +133,8 @@ export const SwapProvider: FC<PropsWithChildren<{}>> = memo(({ children }) => {
     return 0;
   };
 
-  const calcTarget = async (supply: number, slippage?: number): Promise<number> => {
+  const calcTarget = async (supplyCurrency: CurrencyId, targetCurrency: CurrencyId, supply: number, slippage?: number): Promise<number> => {
+    console.log(targetCurrency.toString());
     // reload supply pool and target pool
     const supplyPool = await (api.derive as any).dex.pool(supplyCurrency);
     const targetPool = await (api.derive as any).dex.pool(targetCurrency);
@@ -136,13 +183,9 @@ export const SwapProvider: FC<PropsWithChildren<{}>> = memo(({ children }) => {
       supplyCurrencies,
       targetCurrencies,
       setSlippage,
-      setSupplyCurrency,
-      setTargetCurrency,
-      supplyCurrency,
-      targetCurrency,
       slippage,
-      supplyPool,
-      targetPool
+      setCurrency,
+      pool
     }}>
       {children}
     </SwapContext.Provider>

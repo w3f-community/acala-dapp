@@ -45,7 +45,7 @@ export const BorrowedConsole: FC<Props> = ({
       header={(
         <>
           <div>
-            <span>{'Borrow '}</span>
+            <span>Borrowed</span>
             <Token
               token={stableCurrency}
               gutter

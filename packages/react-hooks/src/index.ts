@@ -6,6 +6,7 @@ export * from './useIsAppReady';
 export * from './useStorage';
 export * from './useAppSetting';
 export * from './useConstants';
+export * from './useHistory';
 
 // common
 export * from './useStateWithCallback';
@@ -22,6 +23,8 @@ export * from './useDexExchangeRate';
 export * from './useDexShare';
 export * from './useDexReward';
 export * from './useDexPool';
+export * from './useDexTotalReward';
+export * from './useDexTotalDeposit';
 
 // homa
 export * from './useStakingPool';

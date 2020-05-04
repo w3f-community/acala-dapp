@@ -30,7 +30,7 @@ export const PoolOverview: FC = memo(() => {
       align: 'left',
       width: 3,
       render: (token: CurrencyId) => (
-          <DexExchangeRate token={token} />
+          <DexExchangeRate supply={token} />
         )
     },
     {

@@ -5,11 +5,11 @@ import { BareProps } from '@honzon-platform/ui-components/types';
 
 import classes from './Token.module.scss';
 import { formatCurrency } from './utils';
-import { ReactComponent as AUSDIcon } from './assets/coins-icon/aUSD.svg';
-import { ReactComponent as BtcIcon } from './assets/coins-icon/BTC.svg';
-import { ReactComponent as DotIcon } from './assets/coins-icon/DOT.svg';
-import { ReactComponent as LDotIcon } from './assets/coins-icon/LDOT.svg';
-import { ReactComponent as EthIcon } from './assets/coins-icon/ETH.svg';
+import AcaIcon from './assets/coins-icon/ACA.svg';
+import AUSDIcon from './assets/coins-icon/aUSD.svg';
+import BtcIcon from './assets/coins-icon/BTC.svg';
+import DotIcon from './assets/coins-icon/DOT.svg';
+import LDotIcon from './assets/coins-icon/LDOT.svg';
 
 interface Props extends BareProps {
   token: CurrencyId | string;
@@ -20,9 +20,9 @@ interface Props extends BareProps {
 }
 
 const ICON_CONFIG = {
+  aca: AcaIcon,
   ausd: AUSDIcon,
   dot: DotIcon,
-  eth: EthIcon,
   ldot: LDotIcon,
   xbtc: BtcIcon
 };
@@ -46,7 +46,7 @@ export const Token: FC<Props> = memo(({
       return null;
     }
 
-    return React.createElement(result);
+    return <img src={result} />;
   };
 
   return (
@@ -67,7 +67,7 @@ export const Token: FC<Props> = memo(({
             clsx(
               classes.icon,
               {
-                [classes.noName]: !name
+                [classes.noName]: !name,
               }
             )
           }>

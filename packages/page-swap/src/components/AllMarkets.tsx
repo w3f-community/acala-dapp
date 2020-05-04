@@ -22,7 +22,7 @@ export const AllMarkets: FC = () => {
     {
       title: 'Market Price',
       align: 'left',
-      render: (token: string | CurrencyId): ReactNode => <DexExchangeRate token={token} />
+      render: (token: string | CurrencyId): ReactNode => <DexExchangeRate supply={token} />
     },
     {
       title: 'Pool Size',

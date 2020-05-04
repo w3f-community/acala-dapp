@@ -4,8 +4,12 @@ import { FormatBalance } from '@honzon-platform/react-components';
 
 import { ReactComponent as UserIcon } from '../assets/user.svg';
 import classes from './Card.module.scss';
+import { useDexTotalReward, useDexTotalDeposit } from '@honzon-platform/react-hooks';
 
 export const UserCard: FC = memo(() => {
+  const totalRewawrd = useDexTotalReward();
+  const totalDeposit = useDexTotalDeposit();
+
   return (
     <Card
       className={classes.root}
@@ -22,16 +26,16 @@ export const UserCard: FC = memo(() => {
           <p className={classes.listTitle}>Total Reward</p>
           <FormatBalance
             className={classes.listContent}
-            currency={'AUSD'}
-            balance={1}
+            currency={totalRewawrd.token}
+            balance={totalRewawrd.amount}
           />
         </li>
         <li className={classes.listItem}>
-          <p className={classes.listTitle}>Total Deposit (USD)</p>
+          <p className={classes.listTitle}>Total Deposit</p>
           <FormatBalance
             className={classes.listContent}
-            currency={'AUSD'}
-            balance={1}
+            currency={totalDeposit.token}
+            balance={totalDeposit.amount}
           />
         </li>
       </ul>

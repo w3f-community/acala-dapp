@@ -3,7 +3,7 @@ import React, { FC } from 'react';
 import { Page, Grid } from '@honzon-platform/ui-components';
 
 import { UserCard } from './components/UserCard';
-import { WalletBalanceCard, AirDrop } from '@honzon-platform/react-components';
+import { WalletBalanceCard, AirDrop, BaseTxHistory } from '@honzon-platform/react-components';
 
 const PageWallet: FC = () => {
   return (

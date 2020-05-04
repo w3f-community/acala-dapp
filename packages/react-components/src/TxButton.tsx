@@ -1,7 +1,6 @@
 import React, { FC, PropsWithChildren, useState, useContext } from 'react';
-import { useAccounts, useApi, useNotification } from '@honzon-platform/react-hooks';
+import { useAccounts, useApi, useNotification, useHistory } from '@honzon-platform/react-hooks';
 import { Button, ButtonProps } from '@honzon-platform/ui-components';
-import { BareProps } from '@honzon-platform/ui-components/types';
 import { FormatAddress } from './format';
 
 interface Props extends ButtonProps {
@@ -28,6 +27,7 @@ export const TxButton: FC<PropsWithChildren<Props>> = ({
   const { api } = useApi();
   const { active } = useAccounts();
   const [isSending, setIsSending] = useState<boolean>(false);
+  const { addHistory } = useHistory();
   const { createNotification } = useNotification();
 
   const _onFailed = (): void => {
@@ -78,6 +78,7 @@ export const TxButton: FC<PropsWithChildren<Props>> = ({
           removedDelay: 4000
         });
         _onSuccess();
+        addHistory(extrinsic);
       }
     }).catch(() => {
         notification.update({

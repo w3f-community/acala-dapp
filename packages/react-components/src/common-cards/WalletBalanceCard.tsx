@@ -2,12 +2,11 @@ import React, { FC, memo, ReactElement } from 'react';
 
 import { CurrencyId } from '@acala-network/types/interfaces';
 import { Table, TableItem, Card, Button } from '@honzon-platform/ui-components';
-import { useAccounts, useApi } from '@honzon-platform/react-hooks';
+import { useAccounts, useApi, useConstants } from '@honzon-platform/react-hooks';
 
 import { Token } from '../Token';
 import { UserBalance } from '../UserBalance';
 import { Price } from '../Price';
-import { getAllCurrencyIds } from '../utils';
 import { TransferButton } from '../TransferButton';
 
 type TableData = CurrencyId[];
@@ -25,8 +24,8 @@ export const WalletBalanceCard: FC<Props> = memo(({
   showHeader = false,
   showCell = ['token', 'balance', 'amount']
 }) => {
-  const { api } = useApi();
   const { active } = useAccounts();
+  const { allCurrencyIds: allToken } = useConstants();
 
   if (!active) {
     return null;
@@ -44,7 +43,12 @@ export const WalletBalanceCard: FC<Props> = memo(({
       key: 'balance',
       align: 'center',
       /* eslint-disable-next-line react/display-name */
-      render: (token: CurrencyId) => <UserBalance token={token} />,
+      render: (token: CurrencyId) => (
+        <UserBalance
+          token={token}
+          withIcon={false}
+        />
+      ),
       title: 'Balance'
     },
     {
@@ -75,7 +79,6 @@ export const WalletBalanceCard: FC<Props> = memo(({
     }
   ];
   const tableConfig = _tableConfig.filter((item) => showCell.includes(item.key!));
-  const allToken = getAllCurrencyIds(api);
 
   return (
     <Card

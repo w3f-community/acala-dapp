@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 
 import { ConnectError, NoAccounts, NoExtensions } from '@honzon-platform/react-components';
-import { UIProvider, Notification } from '@honzon-platform/ui-components';
+import { UIProvider, Notification, FullLoading } from '@honzon-platform/ui-components';
 import { ApiProvider, AccountProvider } from '@honzon-platform/react-environment';
 import { useAppSetting } from '@honzon-platform/react-hooks/useAppSetting';
 
@@ -16,6 +16,7 @@ const App: FC = () => {
           <ApiProvider
             endpoint={endpoint}
             ConnectError={<ConnectError />}
+            Loading={<FullLoading />}
           >
             <AccountProvider
               applicationName={'Acala Honzon Platfrom'}
