@@ -7,7 +7,7 @@ import classes from './CollateralCard.module.scss';
 import { Fixed18 } from '@acala-network/app-util';
 
 export const CollateralCard = () => {
-  const { loanTypes } = useAllLoans({ filterEmpty: false });
+  const { loanTypes } = useAllLoans();
   const [active, setActive] = useState<string>('');
   const { getCurrentUserLoanHelper } = useLoan(active);
   const currentUserLoanHelper = getCurrentUserLoanHelper();

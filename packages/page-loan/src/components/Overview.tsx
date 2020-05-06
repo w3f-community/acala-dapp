@@ -1,6 +1,6 @@
 import React, { FC, useContext, useState, useEffect } from 'react';
 import { Card, TableItem, Table, Button, Step } from '@honzon-platform/ui-components';
-import { useAllLoans, useLoan, useConstants } from '@honzon-platform/react-hooks';
+import { useAllLoans, useLoan, useConstants, filterEmptyLoan } from '@honzon-platform/react-hooks';
 import { DerivedUserLoan } from '@acala-network/api-derive';
 import { CurrencyId } from '@acala-network/types/interfaces';
 import { Token, LoanInterestRate, FormatBalance, LoanCollateralRate, formatCurrency } from '@honzon-platform/react-components';
@@ -56,7 +56,7 @@ export const Guide: FC = () => {
 export const Overview: FC = () => {
   const [empty, setEmpty] = useState<boolean | null>(null);
 
-  const { loans } = useAllLoans({ filterEmpty: true });
+  const { loans } = useAllLoans();
   const { setCurrentTab } = useContext(LoanContext);
   const { stableCurrency } = useConstants();
 
@@ -130,7 +130,7 @@ export const Overview: FC = () => {
 
   useEffect(() => {
     if (loans !== null) {
-      setEmpty(!loans.length);
+      setEmpty(!filterEmptyLoan(loans).length);
     }
   }, [loans])
 
@@ -153,7 +153,7 @@ export const Overview: FC = () => {
         <Table
           showHeader
           config={tableConfig}
-          data={loans}
+          data={filterEmptyLoan(loans)}
         />
       )
     }

@@ -1,9 +1,9 @@
-import React, { FC } from 'react'
+import React, { FC, useEffect, useState, ChangeEvent } from 'react'
 import { noop } from 'lodash';
-import { Dialog, ButtonProps, Button } from '@honzon-platform/ui-components';
-import { useModal, useApi, useFormValidator, useLoan, useConstants } from '@honzon-platform/react-hooks';
+import { Dialog, ButtonProps, Button, List, ListConfig } from '@honzon-platform/ui-components';
+import { useModal, useFormValidator, useLoan, useConstants } from '@honzon-platform/react-hooks';
 import { CurrencyId } from '@acala-network/types/interfaces';
-import { BalanceInput, TxButton } from '@honzon-platform/react-components';
+import { BalanceInput, TxButton, FormatBalance, FormatFixed18 } from '@honzon-platform/react-components';
 import { useFormik } from 'formik';
 import { stableCoinToDebit, Fixed18 } from '@acala-network/app-util';
 
@@ -11,7 +11,7 @@ import classes from './LoanActionButton.module.scss';
 
 type ActionType = 'payback' | 'generate' | 'deposit' | 'withdraw';
 
-interface Props extends Omit<ButtonProps, 'onClick'> {
+interface Props extends Omit<ButtonProps, 'onClick' | 'type'> {
   type: ActionType;
   text: string;
   token: CurrencyId | string;
@@ -25,7 +25,6 @@ export const LonaActionButton: FC<Props> = ({
   max,
   ...other
 }) => {
-  const { api } = useApi();
   const { status, open, close } = useModal(false);
   const { stableCurrency } = useConstants();
   const validator = useFormValidator({
@@ -42,8 +41,8 @@ export const LonaActionButton: FC<Props> = ({
     validate: validator,
     onSubmit: noop
   });
-  const { getCurrentUserLoanHelper } = useLoan(token);
-  const currentUserLoanHelper = getCurrentUserLoanHelper();
+  const { currentUserLoanHelper, setCollateral, setDebitStableCoin } = useLoan(token);
+  const [listData, setListData] = useState<{[k in string]: Fixed18}>({});
 
   const operateStableCurrency = (): boolean => {
     return type === 'payback' || type === 'generate';
@@ -60,35 +59,38 @@ export const LonaActionButton: FC<Props> = ({
   };
 
   const getParams = () => {
-    const _params = [token, '0', '0'];
+    const params = [token, '0', '0'];
 
-    if (!form.values.value) {
-      return _params;
+    if (!form.values.value || !currentUserLoanHelper) {
+      return params;
     }
 
-    if (type === 'payback') {
-      _params[2] = '-' + stableCoinToDebit(
-        Fixed18.fromNatural(form.values.value),
-        currentUserLoanHelper.debitExchangeRate
-      ).innerToString();
-    }
+    switch (type) {
+      case 'payback': {
+        params[2] = '-' + stableCoinToDebit(
+          Fixed18.fromNatural(form.values.value),
+          currentUserLoanHelper.debitExchangeRate
+        ).innerToString();
+        break;
+      }
+      case 'generate': {
+        params[2] = stableCoinToDebit(
+          Fixed18.fromNatural(form.values.value),
+          currentUserLoanHelper.debitExchangeRate
+        ).innerToString();
+        break;
+      }
+      case 'deposit': {
+        params[1] = Fixed18.fromNatural(form.values.value).innerToString();
+        break;
+      }
+      case 'withdraw': {
+        params[1] = '-' + Fixed18.fromNatural(form.values.value).innerToString();
+        break;
 
-    if (type === 'generate') {
-      _params[2] = stableCoinToDebit(
-        Fixed18.fromNatural(form.values.value),
-        currentUserLoanHelper.debitExchangeRate
-      ).innerToString();
+      }
     }
-
-    if (type === 'deposit') {
-      _params[1] = Fixed18.fromNatural(form.values.value).innerToString();
-    }
-
-    if (type === 'withdraw') {
-      _params[1] = '-' + Fixed18.fromNatural(form.values.value).innerToString();
-    }
-
-    return _params;
+    return params;
   };
 
   const checkDisabled = (): boolean => {
@@ -99,6 +101,86 @@ export const LonaActionButton: FC<Props> = ({
       return true;
     }
     return false;
+  };
+
+  const config: ListConfig[] = [
+    {
+      key: 'borrowed',
+      title: 'Borrowed aUSD',
+      render: (value) => {
+        return <FormatBalance balance={value} />
+      }
+    },
+    {
+      key: 'collateralRate',
+      title: 'New Collateral Ratio',
+      render: (value) => {
+        return (
+          <FormatFixed18
+            data={value}
+            format='percentage'
+          />
+        );
+      }
+    },
+    {
+      key: 'liquidationPrice',
+      title: 'New Liquidation Price',
+      render: (value) => {
+        return (
+          <FormatFixed18
+            data={value}
+            prefix='$'
+          />
+        );
+      }
+    },
+  ];
+
+  useEffect(() => {
+    const value = form.values.value;
+
+    if (value) {
+      switch (type) {
+        case 'deposit': {
+          setCollateral(value);
+          break;
+        }
+        case 'withdraw': {
+          setCollateral(-value);
+          break;
+        }
+        case 'generate': {
+          setDebitStableCoin(value);
+          break;
+        }
+        case 'payback': {
+          setDebitStableCoin(-value);
+          break;
+        }
+      }
+    }
+  }, [form.values.value]);
+
+  useEffect(() => {
+    setListData({
+      borrowed: currentUserLoanHelper.debitAmount,
+      collateralRate: currentUserLoanHelper.collateralRatio,
+      liquidationPrice: currentUserLoanHelper.liquidationPrice
+    });
+  }, [currentUserLoanHelper]);
+
+  const handleMax = () => {
+    form.setFieldValue('value', max);
+  };
+
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    form.handleChange(event);
+  };
+
+  const handleSuccess = () => {
+    form.resetForm();
+    close();
   };
 
   return (
@@ -128,7 +210,7 @@ export const LonaActionButton: FC<Props> = ({
               section='honzon'
               method='adjustLoan'
               params={getParams()}
-              onSuccess={close}
+              onSuccess={handleSuccess}
             >
               Confirm
             </TxButton>
@@ -140,8 +222,16 @@ export const LonaActionButton: FC<Props> = ({
           name='value'
           error={!!form.errors.value}
           value={form.values.value}
-          onChange={form.handleChange}
+          onChange={handleChange}
           token={operateStableCurrency() ? stableCurrency : token}
+          showMaxBtn
+          onMax={handleMax}
+        />
+        <List
+          className={classes.list}
+          itemClassName={classes.listItem}
+          config={config}
+          data={listData}
         />
       </Dialog>
     </>

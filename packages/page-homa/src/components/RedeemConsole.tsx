@@ -61,7 +61,7 @@ export const RedeemConsole: FC = () => {
   }
 
   const info = {
-    receivedLiquidToken: Fixed18.fromNatural(form.values.amount),
+    redeemed: Fixed18.fromNatural(form.values.amount),
     climeFee: stakingPoolHelper.claimFee(
       Fixed18.fromNatural(form.values.amount), getTargetEra()
     ),
@@ -69,7 +69,7 @@ export const RedeemConsole: FC = () => {
 
   const listConfig = [
     {
-      key: 'Redeemed',
+      key: 'redeemed',
       title: 'Redeemed',
       render: (value: any) => (
         <FormatBalance

@@ -89,12 +89,16 @@ export const Generate = () => {
   const { cancelCurrentTab } = useContext(LoanContext);
   const { stableCurrency } = useConstants();
   const [canGenerate, setCanGenerate] = useState<number>(0);
-  const { currentLoanType, getCurrentUserLoanHelper, setCollateral, setDebitStableCoin } = useLoan(selectedToken);
+  const { currentLoanType, getCurrentUserLoanHelper, setCollateral, setDebitStableCoin, minmumDebitValue } = useLoan(selectedToken);
   const currentUserLoanHelper = getCurrentUserLoanHelper();
 
   const validator = useFormValidator({
     deposit: { type: 'balance', currency: selectedToken, min: 0 },
-    generate: { type: 'number', max: canGenerate, min: 0 }
+    generate: {
+      type: 'number',
+      max: canGenerate,
+      min: minmumDebitValue.toNumber(),
+    }
   });
 
   const form = useFormik({

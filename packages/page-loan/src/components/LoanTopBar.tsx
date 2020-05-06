@@ -6,7 +6,7 @@ import { CurrencyId } from '@acala-network/types/interfaces';
 import { ReactComponent as OverviewIcon } from '../assets/overview.svg';
 import { ReactComponent as AddIcon } from '../assets/add.svg';
 import classes from './LoanTopBar.module.scss';
-import { useLoan, useAllLoans } from '@honzon-platform/react-hooks';
+import { useLoan, useAllLoans, filterEmptyLoan } from '@honzon-platform/react-hooks';
 import { LoanContext } from './LoanProvider';
 
 interface LoanItemProps {
@@ -93,13 +93,13 @@ const LoanAdd: FC = () => {
 }
 
 export const LoanTopBar: FC = () => {
-  const { loans } = useAllLoans({ filterEmpty: true });
+  const { loans } = useAllLoans();
 
   return (
     <div className={classes.root}>
       <LoanOverview />
       {
-        loans && loans.map((item) => (
+        filterEmptyLoan(loans).map((item) => (
           <LoanItem
             key={`loan-top-bar-${item.token}`}
             token={item.token}

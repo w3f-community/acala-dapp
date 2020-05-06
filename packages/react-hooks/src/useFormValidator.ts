@@ -16,6 +16,8 @@ interface NumberConfig {
   type: 'number';
   max?: number;
   min?: number;
+  equalMax?: boolean;
+  equalMin?: boolean;
 }
 
 interface StringConfig {
@@ -66,20 +68,24 @@ export const getFormValidator = (configs: Config, api: ApiPromise, active: Injec
         }
 
         if (config.type === 'number') {
-          const _value = Fixed18.fromNatural(value);
-          const _max = Fixed18.fromNatural(config.max !== undefined ? config.max : Number.MAX_VALUE);
-          const _min = Fixed18.fromNatural(config.min !== undefined ? config.min : Number.MIN_VALUE);
-
           if (!numberPattern.test(value.toString())) {
             error[key] = 'Not a validate number';
           }
 
-          if (_value.isGreaterThan(_max)) {
+          if (config.max && value > config.max) {
             error[key] = `Value is bigger than ${config.max}`;
           }
 
-          if (_value.isLessThan(_min)) {
+          if (config.min && value < config.min) {
             error[key] = `Value is less than ${config.min}`;
+          }
+
+          if (config.equalMax === false && value === config.max) {
+            error[key] = `Value should not equal ${config.max}`;
+          }
+
+          if (config.equalMin === false && value === config.min) {
+            error[key] = `Value should not equal ${config.min}`;
           }
         }
 

@@ -16,6 +16,7 @@ export const useConstants = () => {
     return {
       allCurrencyIds: allCurrencyIds.current,
       stableCurrency: api.consts.cdpEngine.getStableCurrencyId as CurrencyId,
-      dexCurrencies
+      dexCurrencies,
+      ...api.consts,
     }
 };

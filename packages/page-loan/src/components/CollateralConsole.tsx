@@ -81,7 +81,6 @@ export const CollateralConsole: FC<Props> = ({
             text='Withdraw'
             token={token}
             max={
-
                 currentUserLoanHelper.collaterals ?
                 currentUserLoanHelper.collaterals
                   .sub(currentUserLoanHelper.requiredCollateral)

@@ -1,6 +1,8 @@
 import React, { FC, ReactNode, memo } from 'react';
-import classes from './List.module.scss';
 import clsx from 'clsx';
+
+import classes from './List.module.scss';
+import { BareProps } from './types';
 
 type ListData = {
   [k in string]: any
@@ -12,19 +14,20 @@ export interface ListConfig {
   render: (data: any, index: number) => ReactNode;
 }
 
-interface Props {
+interface Props extends BareProps {
   config: ListConfig[];
   data: ListData;
   itemClassName?: string;
 }
 
 export const List: FC<Props> = memo(({
+  className,
   config,
   data,
   itemClassName
 }) => {
   return (
-    <ul className={classes.root}>
+    <ul className={clsx(classes.root, className)}>
       {
         config.map((_config, index): ReactNode => {
           const { key } = _config;

@@ -2,10 +2,12 @@ import React, { FC } from 'react';
 import { CurrencyId } from '@acala-network/types/interfaces';
 import { Card } from '@honzon-platform/ui-components';
 import { Token, FormatBalance } from '@honzon-platform/react-components';
-import { useLoan, useConstants } from '@honzon-platform/react-hooks';
+import { useLoan, useConstants, useBalance } from '@honzon-platform/react-hooks';
 
 import classes from './LoanConsole.module.scss';
 import { LonaActionButton } from './LoanActionButton';
+import { isEmpty } from 'lodash';
+import { convertToFixed18 } from '@acala-network/app-util';
 
 interface Props {
   token: CurrencyId | string;
@@ -14,9 +16,9 @@ interface Props {
 export const BorrowedConsole: FC<Props> = ({
   token
 }) => {
-  const { getCurrentUserLoanHelper } = useLoan(token);
-  const currentUserLoanHelper = getCurrentUserLoanHelper();
+  const { currentUserLoanHelper, minmumDebitValue } = useLoan(token);
   const { stableCurrency } = useConstants();
+  const balance = useBalance(stableCurrency);
 
   const checkCanPayBackDisabled = (): boolean => {
     if (!currentUserLoanHelper.canPayBack) {
@@ -37,6 +39,10 @@ export const BorrowedConsole: FC<Props> = ({
     }
     return false;
   };
+
+  if (isEmpty(currentUserLoanHelper)) {
+    return null;
+  }
 
   return (
     <Card
@@ -74,7 +80,10 @@ export const BorrowedConsole: FC<Props> = ({
             text='Payback'
             token={token}
             max={
-              currentUserLoanHelper.canPayBack?.toNumber()
+              Math.min(
+                convertToFixed18(balance || 0).toNumber(),
+                currentUserLoanHelper.canPayBack.sub(minmumDebitValue).toNumber()
+              )
             }
           />
         </div>

@@ -25,7 +25,7 @@ interface Props extends BareProps {
   tokenPosition?: 'left' | 'right';
   value?: number;
   showMaxBtn?: boolean;
-  max?: number;
+  onMax?: () => void;
 }
 
 export const BalanceInput: FC<Props> = memo(({
@@ -35,7 +35,7 @@ export const BalanceInput: FC<Props> = memo(({
   enableTokenSelect = false,
   error,
   id,
-  max = 0,
+  onMax,
   showMaxBtn = false,
   name,
   onChange,
@@ -103,6 +103,7 @@ export const BalanceInput: FC<Props> = memo(({
             className={classes.maxBtn}
             type='ghost'
             color='primary'
+            onClick={onMax}
           >
             max
           </Button>

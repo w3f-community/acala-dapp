@@ -10,9 +10,9 @@ import { CurrencyId } from "@acala-network/types/interfaces";
 import { LoanHelper, convertToFixed18, Fixed18, stableCoinToDebit } from "@acala-network/app-util";
 import { useConstants } from './useConstants';
 
-const filterEmptyLoan = (loans: DerivedUserLoan[] | null): DerivedUserLoan[] | null => {
-  if (loans === null) {
-    return null;
+export const filterEmptyLoan = (loans: DerivedUserLoan[] | null): DerivedUserLoan[]=> {
+  if (!loans) {
+    return [];
   }
 
   return loans.filter((item) => {
@@ -20,11 +20,7 @@ const filterEmptyLoan = (loans: DerivedUserLoan[] | null): DerivedUserLoan[] | n
   });
 };
 
-interface UseAllLoansConfig {
-  filterEmpty?: boolean
-}
-
-export const useAllLoans = ({ filterEmpty }: UseAllLoansConfig) => {
+export const useAllLoans = () => {
   const { api } = useApi();
   const { active } = useAccounts();
   const loans = useCall<DerivedUserLoan[]>((api.derive as any).loan.allLoans, [active ? active.address : '']) || null;
@@ -32,22 +28,23 @@ export const useAllLoans = ({ filterEmpty }: UseAllLoansConfig) => {
   const loanOverviews = useCall<DerivedLoanOverView[]>((api.derive as any).loan.allLoanOverviews, []) || [];
 
   return {
-    loans: filterEmpty ? filterEmptyLoan(loans) : loans,
+    loans,
     loanTypes,
     loanOverviews
   }
 };
 
-export const useLoan = (token: CurrencyId | string) => {
+export const useLoan = (token: CurrencyId | string, callback?: () => void) => {
   const { api } = useApi();
   const { active } = useAccounts();
-  const [currentUserLoanHelper, setCurrentUserLoanHelper] = useState<LoanHelper>({} as LoanHelper);
   const currentUserLoanRef = useRef<DerivedUserLoan>({} as DerivedUserLoan);
   const currentLoanTypeRef = useRef<DerivedLoanType>({} as DerivedLoanType);
   const loans = useCall<DerivedUserLoan[]>((api.derive as any).loan.allLoans, [active ? active.address : '']) || [];
   const loanTypes = useCall<DerivedLoanType[]>((api.derive as any).loan.allLoanTypes, []) || [];
   const prices = usePrice() as DerivedPrice[] || [];
+  const [currentUserLoanHelper, setCurrentUserLoanHelper] = useState<LoanHelper>({} as LoanHelper);
   const { stableCurrency } = useConstants();
+  const minmumDebitValue = useRef<Fixed18>(convertToFixed18(api.consts.cdpEngine.minimumDebitValue));
 
   const [collateral, setCollateral] = useState<number>(0);
   const [debitStableCoin, setDebitStableCoin] = useState<number>(0);
@@ -89,15 +86,50 @@ export const useLoan = (token: CurrencyId | string) => {
     return {} as LoanHelper;
   };
 
+  useEffect(() => {
+    if (currentUserLoan && currentLoanType && collateralPrice && stableCoinPrice) {
+      currentUserLoanRef.current = currentUserLoan;
+      currentLoanTypeRef.current = currentLoanType;
+
+      const _collateral = convertToFixed18(currentUserLoan.collaterals).add(Fixed18.fromNatural(collateral));
+      const _debit = convertToFixed18(currentUserLoan.debits).add(
+        stableCoinToDebit(
+          Fixed18.fromNatural(debitStableCoin),
+          convertToFixed18(currentLoanType.debitExchangeRate)
+        )
+      );
+      setCurrentUserLoanHelper(new LoanHelper({
+        collateralPrice: getValueFromTimestampValue(collateralPrice.price),
+        collaterals: _collateral,
+        debitExchangeRate: currentLoanType.debitExchangeRate,
+        debits: _debit,
+        expectedBlockTime: currentLoanType.expectedBlockTime.toNumber(),
+        globalStableFee: currentLoanType.globalStabilityFee,
+        liquidationRatio: currentLoanType.liquidationRatio,
+        requiredCollateralRatio: currentLoanType.requiredCollateralRatio,
+        stableCoinPrice: getValueFromTimestampValue(stableCoinPrice.price),
+        stableFee: currentLoanType.stabilityFee
+      }));
+    }
+  }, [currentUserLoan, currentLoanType, collateralPrice, stableCoinPrice, collateral, debitStableCoin]);
+
+  useEffect(() => {
+    callback && callback();
+  }, [stableCoinPrice, loans, loanTypes, prices]); 
 
   return {
-    loans: filterEmptyLoan(loans),
+    loans,
     currentUserLoan,
     currentLoanType,
     collateralPrice,
     stableCoinPrice,
     setCollateral,
     setDebitStableCoin,
-    getCurrentUserLoanHelper
+    getCurrentUserLoanHelper,
+    currentUserLoanHelper,
+    setCurrentUserLoanHelper,
+    minmumDebitValue: minmumDebitValue.current,
+    collateral,
+    debitStableCoin,
   };
 }

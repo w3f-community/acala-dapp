@@ -3,7 +3,7 @@ import { noop } from 'lodash';
 import { useFormik } from 'formik';
 import clsx from 'clsx';
 
-import { Fixed18 } from '@acala-network/app-util';
+import { Fixed18, convertToFixed18 } from '@acala-network/app-util';
 import { Grid, List } from '@honzon-platform/ui-components';
 import { StakingPoolContext, TxButton, BalanceInput, formatCurrency, numToFixed18Inner, FormatBalance } from "@honzon-platform/react-components";
 import { useFormValidator } from '@honzon-platform/react-hooks';
@@ -11,7 +11,7 @@ import { useFormValidator } from '@honzon-platform/react-hooks';
 import classes from './StakingConsole.module.scss';
 
 export const StakingConsolee: FC = () => {
-  const { stakingPool, stakingPoolHelper } = useContext(StakingPoolContext);
+  const { stakingPool, stakingPoolHelper, rewardRate } = useContext(StakingPoolContext);
   const validator = useFormValidator({
     stakingBalance: {
       type: 'balance',
@@ -35,7 +35,7 @@ export const StakingConsolee: FC = () => {
 
   const estimated = {
     receivedLiquidToken: stakingPoolHelper.convertToLiquid(Fixed18.fromNatural(form.values.stakingBalance)),
-    depositStakingToken: form.values.stakingBalance
+    depositStakingToken: Fixed18.fromNatural(form.values.stakingBalance).mul(convertToFixed18(rewardRate || 0))
   };
 
   const listConfig = [
@@ -55,7 +55,7 @@ export const StakingConsolee: FC = () => {
       render: (value: any) => (
         <FormatBalance
           balance={value}
-          currency={stakingPool.stakingCurrency}
+          currency={stakingPool.liquidCurrency}
         />
       )
     }
@@ -79,7 +79,7 @@ export const StakingConsolee: FC = () => {
       className={classes.root}
     >
       <Grid item>
-        <p>Deposit DOT & Mint Liquidt DOT (L-DOT). Your DOTs will be staked to earn returns, meanwhile you can use, trade and invest L-DOT balance in your wallet.</p>
+        <p>Deposit DOT & Mint Liquid DOT (L-DOT). Your DOTs will be staked to earn returns, meanwhile you can use, trade and invest L-DOT balance in your wallet.</p>
       </Grid>
       <Grid item>
           <BalanceInput

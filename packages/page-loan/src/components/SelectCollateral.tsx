@@ -10,7 +10,7 @@ import { createProviderContext } from './CreateProvider';
 import { LoanContext } from './LoanProvider';
 
 export const SelectCollateral: FC = () => {
-  const { loanTypes } = useAllLoans({ filterEmpty: false });
+  const { loanTypes } = useAllLoans();
   const [selected, setSelected] = useState<CurrencyId>(null as any as CurrencyId);
   const { active } = useAccounts();
   const { setStep, setSelectedToken } = useContext(createProviderContext);

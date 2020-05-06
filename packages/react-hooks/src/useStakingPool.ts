@@ -5,7 +5,7 @@ import { StakingPoolHelper, Fixed18 } from '@acala-network/app-util';
 
 import { useApi } from './useApi';
 import { useCall } from './useCall';
-import { Amount } from '@acala-network/types/interfaces';
+import { Amount, Rate } from '@acala-network/types/interfaces';
 
 export interface FreeItem {
   era: number;
@@ -20,6 +20,8 @@ export const useStakingPool = () => {
   const stakingPool = useCall<DerivedStakingPool>((api.derive as any).homa.stakingPool, []);
   const eraLength = api.consts.polkadotBridge.eraLength;
   const expectedBlockTime = api.consts.babe.expectedBlockTime;
+  const rewardRate = useCall<Rate>(api.query.polkadotBridge.mockRewardRate, []) as Rate;
+
 
   const fetchFeeList = async (start: number, duration: number) => {
     const list = [];
@@ -61,13 +63,16 @@ export const useStakingPool = () => {
     }
   }, [stakingPool]);
 
-  if (stakingPool && stakingPoolHelper) {
-    const unbondingDuration = expectedBlockTime.toNumber() * Number(eraLength.toString()) * stakingPool.bondingDuration.toNumber();
-    return {
-      stakingPool,
-      stakingPoolHelper,
-      unbondingDuration,
-      freeList
-    };
+  if (!stakingPool || !stakingPoolHelper) {
+    return null;
   }
+
+  const unbondingDuration = expectedBlockTime.toNumber() * Number(eraLength.toString()) * stakingPool.bondingDuration.toNumber();
+  return {
+    stakingPool,
+    stakingPoolHelper,
+    unbondingDuration,
+    freeList,
+    rewardRate
+  };
 };

@@ -39,7 +39,7 @@ export const usePrice = (token?: CurrencyId | string) => {
   const [price, setPrice] = useState<DerivedPrice[]>([]);
 
   useEffect(() => {
-    if (!_price) {
+    if (!_price || _price.length === 0) {
       return;
     }
 
