@@ -39,10 +39,10 @@ export const ApiContext = React.createContext<ApiData>(
  * ```
  */
 export const ApiProvider: FC<ApiProps> = ({
-  endpoint,
-  children,
   ConnectError,
-  Loading
+  Loading,
+  children,
+  endpoint
 }) => {
   const [connectStatus, setConnectStatus] = useState<ConnectStatus>(
     {} as ConnectStatus
@@ -51,7 +51,7 @@ export const ApiProvider: FC<ApiProps> = ({
 
   const renderContent = (): ReactNode => {
     if (connectStatus.loading) {
-      return Loading ? Loading : null;
+      return Loading || null;
     }
 
     if (connectStatus.connected) {

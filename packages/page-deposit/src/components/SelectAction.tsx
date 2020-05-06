@@ -37,12 +37,13 @@ export const SelectAction: FC = memo(() => {
       )
     }
   ];
+
   return (
     <Dropdown
-      onChange={setActiveAction}
-      value={action}
       config={config}
+      onChange={setActiveAction}
       placeholder=''
+      value={action}
     />
   );
 });

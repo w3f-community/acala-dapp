@@ -42,6 +42,7 @@ const PricesList: FC = () => {
   if (!data) {
     return null;
   }
+
   return (
     <Table
       config={tableConfig}
@@ -54,7 +55,8 @@ PricesList.displayName = 'PricesFeedCardList';
 
 export const PricesFeedCard: FC = memo(() => {
   return (
-    <Card header='Price Feed' gutter={false}>
+    <Card gutter={false}
+      header='Price Feed'>
       <PricesList />
     </Card>
   );

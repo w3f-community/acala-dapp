@@ -5,8 +5,8 @@ import { useFormik } from 'formik';
 import { CurrencyId } from '@acala-network/types/interfaces';
 import { convertToFixed18, Fixed18, calcCanGenerate, collateralToUSD } from '@acala-network/app-util';
 
-import { BalanceInput, UserBalance, Token, FormatFixed18, Price, LoanInterestRate, FormatBalance, formatCurrency } from '@honzon-platform/react-components';
-import { useApi, useLoan, useFormValidator,  useAccounts, useConstants } from '@honzon-platform/react-hooks';
+import { BalanceInput, UserBalance, Token, FormatFixed18, Price, LoanInterestRate, FormatBalance, formatCurrency, thousandth } from '@honzon-platform/react-components';
+import { useApi, useLoan, useFormValidator, useAccounts, useConstants, useBalance } from '@honzon-platform/react-hooks';
 import { Button, List, ListConfig } from '@honzon-platform/ui-components';
 
 import { createProviderContext } from './CreateProvider';
@@ -19,7 +19,7 @@ const Overview = ({ data }: any) => {
       key: 'collateral',
       title: 'Collateralization',
       render: (value: CurrencyId) => {
-        return <Token token={value} />
+        return <Token token={value} />;
       }
     },
     {
@@ -31,7 +31,7 @@ const Overview = ({ data }: any) => {
             data={data}
             format='percentage'
           />
-        )
+        );
       }
     },
     {
@@ -43,7 +43,7 @@ const Overview = ({ data }: any) => {
       key: 'collateral',
       title: 'Interest Rate',
       render: (token: CurrencyId) => {
-        return <LoanInterestRate token={token} />
+        return <LoanInterestRate token={token} />;
       }
     },
     {
@@ -84,20 +84,19 @@ const Overview = ({ data }: any) => {
 };
 
 export const Generate = () => {
-  const { api } = useApi();
   const { selectedToken, setDeposit, setGenerate, setStep } = useContext(createProviderContext);
   const { cancelCurrentTab } = useContext(LoanContext);
   const { stableCurrency } = useConstants();
-  const [canGenerate, setCanGenerate] = useState<number>(0);
-  const { currentLoanType, getCurrentUserLoanHelper, setCollateral, setDebitStableCoin, minmumDebitValue } = useLoan(selectedToken);
-  const currentUserLoanHelper = getCurrentUserLoanHelper();
+  const { currentLoanType, currentUserLoanHelper, minmumDebitValue, setCollateral, setDebitStableCoin } = useLoan(selectedToken);
+  const selectedCurrencyBalance = useBalance(selectedToken);
 
   const validator = useFormValidator({
     deposit: { type: 'balance', currency: selectedToken, min: 0 },
     generate: {
       type: 'number',
-      max: canGenerate,
-      min: minmumDebitValue.toNumber(),
+      max: currentUserLoanHelper?.canGenerate?.toNumber() || 0,
+      min: minmumDebitValue?.toNumber() || 0,
+      equalMin: false
     }
   });
 
@@ -112,23 +111,14 @@ export const Generate = () => {
 
   const handleDepositChange = (event: ChangeEvent<any>) => {
     const data = Number(event.target.value) || 0;
+
     setCollateral(data);
-    setCanGenerate(
-      calcCanGenerate(
-        collateralToUSD(
-          Fixed18.fromNatural(data),
-          currentUserLoanHelper.collateralPrice
-        ),
-        Fixed18.ZERO,
-        currentUserLoanHelper.requiredCollateralRatio,
-        currentUserLoanHelper.stableCoinPrice
-      ).toNumber()
-    );
     form.handleChange(event);
   };
 
   const handleGenerageChange = (event: ChangeEvent<any>) => {
     const data = Number(event.target.value) || 0;
+
     setDebitStableCoin(data);
     form.handleChange(event);
   };
@@ -156,10 +146,26 @@ export const Generate = () => {
     if (!form.values.deposit || !form.values.generate) {
       return true;
     }
+
     if (form.errors.deposit || form.errors.generate) {
       return true;
     }
+
     return false;
+  };
+
+  const handleDepositMax = (): void => {
+    const data = convertToFixed18(selectedCurrencyBalance || 0).toNumber();
+
+    setCollateral(data);
+    form.setFieldValue('deposit', data);
+  };
+
+  const handleGenerateMax = (): void => {
+    const data = currentUserLoanHelper.canGenerate.toNumber();
+
+    setDebitStableCoin(data);
+    form.setFieldValue('generate', data);
   };
 
   return (
@@ -167,16 +173,18 @@ export const Generate = () => {
       <div className={classes.content}>
         <div className={classes.console}>
           <p className={classes.title}>
-            How much DOT would you deposit as collateral?
+            How much {formatCurrency(selectedToken)} would you deposit as collateral?
           </p>
           <BalanceInput
             className={classes.input}
             error={!!form.errors.deposit}
             id='deposit'
             name='deposit'
+            onChange={handleDepositChange}
+            onMax={handleDepositMax}
+            showMaxBtn
             token={selectedToken}
             value={form.values.deposit}
-            onChange={handleDepositChange}
           />
           <div className={classes.addon}>
             <span>Max to Lock</span>
@@ -188,14 +196,23 @@ export const Generate = () => {
             error={!!form.errors.generate}
             id='generate'
             name='generate'
+            onChange={handleGenerageChange}
+            onMax={handleGenerateMax}
+            showMaxBtn
             token={stableCurrency}
             value={form.values.generate}
-            onChange={handleGenerageChange}
           />
           <div className={classes.addon}>
             <span>Max to borrow</span>
             <FormatBalance
-              balance={canGenerate}
+              balance={currentUserLoanHelper.canGenerate}
+              currency={stableCurrency}
+            />
+          </div>
+          <div className={classes.addon}>
+            <span>Min to borrow</span>
+            <FormatBalance
+              balance={minmumDebitValue}
               currency={stableCurrency}
             />
           </div>
@@ -207,24 +224,24 @@ export const Generate = () => {
       </div>
       <div className={classes.action}>
         <Button
-          type='ghost'
-          size='small'
           onClick={cancelCurrentTab}
+          size='small'
+          type='ghost'
         >
           Cancel
         </Button>
         <Button
-          type='border'
-          size='small'
           onClick={handlePrevious}
+          size='small'
+          type='border'
         >
           Prev
         </Button>
         <Button
           color='primary'
-          size='small'
           disabled={checkDisabled()}
           onClick={handleNext}
+          size='small'
         >
           Next
         </Button>

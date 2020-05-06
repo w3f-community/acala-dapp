@@ -14,9 +14,9 @@ export const UserCard: FC = memo(() => {
     <Card
       className={classes.root}
       contentClassName={classes.content}
-      headerClassName={classes.header}
-      header='For User'
       gutter={false}
+      header='For User'
+      headerClassName={classes.header}
     >
       <div className={classes.avatar}>
         <UserIcon />
@@ -25,17 +25,17 @@ export const UserCard: FC = memo(() => {
         <li className={classes.listItem}>
           <p className={classes.listTitle}>Total Reward</p>
           <FormatBalance
+            balance={totalRewawrd.amount}
             className={classes.listContent}
             currency={totalRewawrd.token}
-            balance={totalRewawrd.amount}
           />
         </li>
         <li className={classes.listItem}>
           <p className={classes.listTitle}>Total Deposit</p>
           <FormatBalance
+            balance={totalDeposit.amount}
             className={classes.listContent}
             currency={totalDeposit.token}
-            balance={totalDeposit.amount}
           />
         </li>
       </ul>

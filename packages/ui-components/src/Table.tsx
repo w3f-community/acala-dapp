@@ -30,7 +30,7 @@ export function Table<T extends { [k: string]: any }> ({
   config,
   data,
   rawProps,
-  showHeader = false,
+  showHeader = false
 }: Props<T>): ReactElement {
   const randomId = useRef<string>(randomID());
 
@@ -56,7 +56,7 @@ export function Table<T extends { [k: string]: any }> ({
           config.map((_item, index) => (
             <col
               key={`table-header-colgroup-${randomId.current}-${index}`}
-              style={{ width: _item.width ? `${_item.width / totalWidthConfiged}%` : defaultCellWidth}}
+              style={{ width: _item.width ? `${_item.width / totalWidthConfiged}%` : defaultCellWidth }}
             />
           ))
         }
@@ -66,11 +66,11 @@ export function Table<T extends { [k: string]: any }> ({
           <thead>
             <tr>
               {config.map((item, index) => (
-                <th 
+                <th
                   className={
                     clsx(
                       classes.headerCell,
-                      classes[item.align || 'center'],
+                      classes[item.align || 'center']
                     )
                   }
                   key={`table-header-${randomId.current}-${index}`}
@@ -109,7 +109,7 @@ export function Table<T extends { [k: string]: any }> ({
                       classes.cell,
                       classes[configData.align || 'center'],
                       {
-                        first: index === 0,
+                        first: index === 0
                       }
                     )
                   }

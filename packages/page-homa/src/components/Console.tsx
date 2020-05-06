@@ -1,13 +1,13 @@
 import React, { FC, memo, ReactElement } from 'react';
 import { Card, Tabs } from '@honzon-platform/ui-components';
-import { StakingConsolee } from './StakingConsole';
+import { StakingConsole } from './StakingConsole';
 import { RedeemConsole } from './RedeemConsole';
 
 export const Console: FC = memo(() => {
   const config = [
     {
       title: 'Mint & Stake',
-      render: (): ReactElement => <StakingConsolee />
+      render: (): ReactElement => <StakingConsole />
     },
     {
       title: 'Redeem',
@@ -17,7 +17,8 @@ export const Console: FC = memo(() => {
 
   return (
     <Card>
-      <Tabs config={config} style='bar' />
+      <Tabs config={config}
+        style='bar' />
     </Card>
   );
 });

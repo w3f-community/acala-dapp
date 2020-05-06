@@ -9,7 +9,7 @@ import classes from './Confirm.module.scss';
 import { LoanContext } from './LoanProvider';
 
 export const Confirm: FC = () => {
-  const { generate, deposit, selectedToken, setStep } = useContext(createProviderContext);
+  const { deposit, generate, selectedToken, setStep } = useContext(createProviderContext);
   const { cancelCurrentTab } = useContext(LoanContext);
   const { currentLoanType, getCurrentUserLoanHelper, setCollateral, setDebitStableCoin } = useLoan(selectedToken);
   const currentUserLoanHelper = getCurrentUserLoanHelper();
@@ -20,20 +20,20 @@ export const Confirm: FC = () => {
       setCollateral(deposit);
       setDebitStableCoin(generate);
     }
-  }, [generate, deposit]);
+  }, [generate, deposit, setCollateral, setDebitStableCoin]);
 
   const listConfig = [
     {
       key: 'depositing',
       render: (value: number) => {
         return (
-          <FormatBalance 
+          <FormatBalance
             balance={deposit}
             currency={selectedToken}
           />
         );
       },
-      title: 'Depositing',
+      title: 'Depositing'
     },
     {
       key: 'borrowing',
@@ -51,7 +51,7 @@ export const Confirm: FC = () => {
       key: 'collateralizationRatio',
       render: (data: Fixed18) => {
         return (
-          <FormatFixed18 
+          <FormatFixed18
             data={data}
             format='percentage'
           />
@@ -118,7 +118,7 @@ export const Confirm: FC = () => {
     liquidationRatio: currentUserLoanHelper.liquidationRatio,
     liquidationFee: currentLoanType ? convertToFixed18(currentLoanType.liquidationPenalty) : 0,
     liuqidationPrice: currentUserLoanHelper.liquidationPrice,
-    interestRate: currentUserLoanHelper.stableFeeAPR,
+    interestRate: currentUserLoanHelper.stableFeeAPR
   };
 
   const checkDisabled = (): boolean => {
@@ -131,12 +131,14 @@ export const Confirm: FC = () => {
       numToFixed18Inner(deposit),
       '0'
     ];
+
     if (!isEmpty(currentLoanType) && !isEmpty(currentUserLoanHelper)) {
       _params[2] = stableCoinToDebit(
         Fixed18.fromNatural(generate),
-        currentUserLoanHelper.debitExchangeRate,
+        currentUserLoanHelper.debitExchangeRate
       ).innerToString();
     }
+
     return _params;
   };
 
@@ -146,7 +148,7 @@ export const Confirm: FC = () => {
 
   const handlePrevious = () => {
     setStep('generate');
-  }
+  };
 
   return (
     <div className={classes.root}>
@@ -157,26 +159,26 @@ export const Confirm: FC = () => {
       />
       <div className={classes.action}>
         <Button
-          type='ghost'
-          size='small'
           onClick={cancelCurrentTab}
+          size='small'
+          type='ghost'
         >
           Cancel
         </Button>
         <Button
-          type='border'
-          size='small'
           onClick={handlePrevious}
+          size='small'
+          type='border'
         >
           Prev
         </Button>
         <TxButton
           disabled={checkDisabled()}
-          size='small'
-          section='honzon'
           method='adjustLoan'
-          params={getParams()}
           onSuccess={handleSuccess}
+          params={getParams()}
+          section='honzon'
+          size='small'
         >
           Confirm
         </TxButton>

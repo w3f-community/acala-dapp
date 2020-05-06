@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 import parse from 'url-parse';
 
 const DEFAULT_ENDPOINT = 'wss://testnet-node-1.acala.laminar.one/ws';
@@ -14,7 +14,7 @@ export const useAppSetting = ({ defaultEndpoint } = { defaultEndpoint: DEFAULT_E
     } else {
       setEndpoint(DEFAULT_ENDPOINT);
     }
-  }, []);
+  }, [url.query.endpoint]);
 
   return { endpoint };
-}
+};

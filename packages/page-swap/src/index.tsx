@@ -4,6 +4,7 @@ import { Page, Grid } from '@honzon-platform/ui-components';
 import { SwapConsole } from './components/SwapConsole';
 import { SwapProvider, WalletBalanceCard } from '@honzon-platform/react-components';
 import { AllMarkets } from './components/AllMarkets';
+import { Transaction } from './components/Transaction';
 
 const PageSwap: FC = () => {
   return (
@@ -18,8 +19,14 @@ const PageSwap: FC = () => {
             <Grid item>
               <AllMarkets />
             </Grid>
-            <Grid item>
-              <WalletBalanceCard />
+            <Grid container
+            item>
+              <Grid item flex={16}>
+                <Transaction />
+              </Grid>
+              <Grid item flex={8}>
+                <WalletBalanceCard />
+              </Grid>
             </Grid>
           </Grid>
         </Page.Content>

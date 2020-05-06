@@ -5,14 +5,14 @@ import { SideBarItem } from '@honzon-platform/apps/types/sidebar';
 
 import classes from './Sidebar.module.scss';
 
-export const ProductItem: React.FC<SideBarItem> = memo(({ icon, name, path, isExternal, target }) => {
+export const ProductItem: React.FC<SideBarItem> = memo(({ icon, isExternal, name, path, target }) => {
   const search = window.location.search;
 
   if (isExternal) {
     return (
       <a
-        href={path}
         className={classes.item}
+        href={path}
         target={target}
       >
         {cloneElement(icon)}
@@ -20,8 +20,10 @@ export const ProductItem: React.FC<SideBarItem> = memo(({ icon, name, path, isEx
       </a>
     );
   }
+
   return (
-    <NavLink to={`${path as string}${search}`} className={classes.item}>
+    <NavLink className={classes.item}
+      to={`${path as string}${search}`}>
       {cloneElement(icon)}
       {name}
     </NavLink>

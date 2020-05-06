@@ -9,7 +9,7 @@ interface Props extends BareProps {
 
 export const Section: FC<Props> = memo(({
   children,
-  title,
+  title
 }) => {
   return (
     <section className={classes.root}>

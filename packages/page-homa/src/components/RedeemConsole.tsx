@@ -5,7 +5,7 @@ import clsx from 'clsx';
 
 import { Fixed18 } from '@acala-network/app-util';
 import { Grid, List, Radio, Input } from '@honzon-platform/ui-components';
-import { StakingPoolContext, TxButton, BalanceInput, numToFixed18Inner, formtDuration, FormatBalance } from "@honzon-platform/react-components";
+import { StakingPoolContext, TxButton, BalanceInput, numToFixed18Inner, formtDuration, FormatBalance } from '@honzon-platform/react-components';
 import { useFormValidator } from '@honzon-platform/react-hooks';
 
 import classes from './RedeemConsole.module.scss';
@@ -30,7 +30,7 @@ export const RedeemConsole: FC = () => {
   const form = useFormik({
     initialValues: {
       amount: '' as any as number,
-      target: '' as any as number,
+      target: '' as any as number
     },
     validate: validator,
     onSubmit: noop
@@ -38,7 +38,7 @@ export const RedeemConsole: FC = () => {
 
   const resetForm = useCallback(() => {
     form.resetForm();
-  }, []);
+  }, [form]);
 
   if (!stakingPoolHelper || !stakingPool) {
     return null;
@@ -58,13 +58,13 @@ export const RedeemConsole: FC = () => {
     }
 
     return stakingPoolHelper.currentEra;
-  }
+  };
 
   const info = {
     redeemed: Fixed18.fromNatural(form.values.amount),
     climeFee: stakingPoolHelper.claimFee(
       Fixed18.fromNatural(form.values.amount), getTargetEra()
-    ),
+    )
   };
 
   const listConfig = [
@@ -94,9 +94,11 @@ export const RedeemConsole: FC = () => {
     if (!form.values.amount) {
       return true;
     }
+
     if (form.errors.amount) {
       return true;
     }
+
     return false;
   };
 
@@ -105,7 +107,7 @@ export const RedeemConsole: FC = () => {
       numToFixed18Inner(form.values.amount),
       redeemType as any
     ];
-    
+
     if (redeemType === 'Target') {
       _params[1] = {
         Target: form.values.target
@@ -117,8 +119,8 @@ export const RedeemConsole: FC = () => {
 
   return (
     <Grid
-      direction='column'
       className={classes.root}
+      direction='column'
     >
       <Grid item>
         <p>Withdraw deposit and interest</p>
@@ -128,9 +130,9 @@ export const RedeemConsole: FC = () => {
           error={!!form.errors.amount}
           id='amount'
           name='amount'
-          value={form.values.amount}
           onChange={form.handleChange}
           token={stakingPool.liquidCurrency}
+          value={form.values.amount}
         />
       </Grid>
       <Grid item>
@@ -149,18 +151,18 @@ export const RedeemConsole: FC = () => {
                 <span>Redeem in ERA</span>
                 <TargetRedeemList
                   className={classes.select}
-                  value={era}
                   onChange={setEra}
+                  value={era}
                 />
-            </div>
+              </div>
             )}
             onClick={() => setRedeemType('Target')}
           />
           <Radio
             checked={redeemType === 'WaitForUnbonding'}
-            onClick={() => setRedeemType('WaitForUnbonding')}
             className={classes.item}
             label='Redeem & Wait for Unbounding Period'
+            onClick={() => setRedeemType('WaitForUnbonding')}
           />
         </div>
       </Grid>
@@ -169,32 +171,34 @@ export const RedeemConsole: FC = () => {
         Current Era = {stakingPoolHelper.currentEra} Unbounding Period = {formtDuration(unbondingDuration)} Days, Era {stakingPoolHelper.bondingDuration}
         </p>
       </Grid>
-      <Grid container item justifyContent='center'>
+      <Grid container
+        item
+        justifyContent='center'>
         <Grid item>
           <TxButton
             className={classes.txBtn}
             disabled={checkDisabled()}
-            section='homa'
             method='redeem'
-            params={getParams()}
             onSuccess={resetForm}
+            params={getParams()}
+            section='homa'
           >
             Redeem
-        </TxButton>
+          </TxButton>
         </Grid>
       </Grid>
       <Grid
-        item
         className={clsx(
           classes.info,
           {
             [classes.show]: !!form.values.amount
           }
         )}
-        >
-        <List data={info} config={listConfig} />
+        item
+      >
+        <List config={listConfig}
+          data={info} />
       </Grid>
     </Grid>
   );
 };
-

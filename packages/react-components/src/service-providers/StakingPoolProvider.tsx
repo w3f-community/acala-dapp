@@ -17,7 +17,6 @@ interface ContextData {
 export const StakingPoolContext = createContext<ContextData>({} as ContextData);
 
 export const StakingPoolProvider: FC = memo(({ children }) => {
-
   const result = useStakingPool();
 
   if (!result) {

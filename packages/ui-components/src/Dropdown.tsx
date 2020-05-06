@@ -23,15 +23,15 @@ interface Props extends BareProps {
 }
 
 export const Dropdown: FC<Props> = memo(({
+  border = true,
   className,
   config,
-  size = 'normal',
-  value,
-  placeholder,
-  onChange,
-  border = true,
   menuClassName,
-  selectedRender
+  onChange,
+  placeholder,
+  selectedRender,
+  size = 'normal',
+  value
 }) => {
   const [open, setOpen] = useState<boolean>(false);
   const active = config.find((data: DropdownConfig) => data.value === value);
@@ -49,13 +49,15 @@ export const Dropdown: FC<Props> = memo(({
     closeMenu();
   };
 
-  const renderSelected = () => {
+  const renderSelected = (): ReactNode => {
     if (!active) {
       return placeholder;
     }
+
     if (selectedRender) {
       return selectedRender(active.value);
     }
+
     return active.render();
   };
 
@@ -73,7 +75,10 @@ export const Dropdown: FC<Props> = memo(({
         )
       }
     >
-      <div className={classes.activeRoot} onClick={toggleMenu}>
+      <div
+        className={classes.activeRoot}
+        onClick={toggleMenu}
+      >
         <div className={classes.activeContent}>
           {renderSelected()}
         </div>
@@ -82,12 +87,12 @@ export const Dropdown: FC<Props> = memo(({
         </div>
       </div>
       <ul className={clsx(classes.menu, menuClassName)}>
-        {config.map((item: DropdownConfig) => {
+        {config.map((item: DropdownConfig): ReactNode => {
           return (
             <li
+              className={classes.menuItem}
               key={`dropdown-${item.value}`}
               onClick={() => onItemSelect(item.value)}
-              className={classes.menuItem}
             >
               {item.render()}
             </li>
@@ -97,3 +102,5 @@ export const Dropdown: FC<Props> = memo(({
     </div>
   );
 });
+
+Dropdown.displayName = 'Dropdown';

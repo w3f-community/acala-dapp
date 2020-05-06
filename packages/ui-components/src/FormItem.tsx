@@ -9,9 +9,9 @@ interface Props extends BareProps {
 }
 
 export const FormItem: FC<Props> = memo(({
-  className,
   children,
-  label,
+  className,
+  label
 }) => {
   return (
     <div className={clsx(classes.root, className)}>

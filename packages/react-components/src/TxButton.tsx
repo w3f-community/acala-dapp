@@ -10,12 +10,14 @@ interface Props extends ButtonProps {
   onSuccess?: () => void;
   onFailed?: () => void;
   onFinally?: () => void;
+  addon?: any;
 }
 
 export const TxButton: FC<PropsWithChildren<Props>> = ({
-  disabled,
-  className,
+  addon,
   children,
+  className,
+  disabled,
   method,
   onFailed,
   onFinally,
@@ -27,7 +29,7 @@ export const TxButton: FC<PropsWithChildren<Props>> = ({
   const { api } = useApi();
   const { active } = useAccounts();
   const [isSending, setIsSending] = useState<boolean>(false);
-  const { addHistory } = useHistory();
+  const { push } = useHistory();
   const { createNotification } = useNotification();
 
   const _onFailed = (): void => {
@@ -57,7 +59,6 @@ export const TxButton: FC<PropsWithChildren<Props>> = ({
       return;
     }
 
-
     const extrinsic = api.tx[section][method](...params);
     const notification = createNotification({
       icon: 'loading',
@@ -78,14 +79,14 @@ export const TxButton: FC<PropsWithChildren<Props>> = ({
           removedDelay: 4000
         });
         _onSuccess();
-        addHistory(extrinsic);
+        push(extrinsic, addon);
       }
     }).catch(() => {
-        notification.update({
-          icon: 'error',
-          type: 'error',
-          removedDelay: 4000
-        });
+      notification.update({
+        icon: 'error',
+        type: 'error',
+        removedDelay: 4000
+      });
       _onFailed();
     }).finally(() => {
       _onFinally();
@@ -95,11 +96,11 @@ export const TxButton: FC<PropsWithChildren<Props>> = ({
   return (
     <Button
       className={className}
+      color='primary'
       disabled={disabled || isSending}
       loading={isSending}
       onClick={onClick}
       size={size}
-      color='primary'
     >
       {children}
     </Button>

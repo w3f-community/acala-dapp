@@ -15,7 +15,7 @@ interface Props extends BareProps {
 
 export const Price: FC<Props> = memo(({
   className,
-  token,
+  token
 }) => {
   const price = usePrice(token) as DerivedPrice;
 
@@ -26,8 +26,8 @@ export const Price: FC<Props> = memo(({
   return (
     <FormatFixed18
       className={className}
-      prefix='$'
       data={convertToFixed18(getValueFromTimestampValue(price.price))}
+      prefix='$'
     />
   );
 });

@@ -1,5 +1,5 @@
 import { Codec } from '@polkadot/types/types';
-import * as dayjs from 'dayjs'
+import * as dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 
 import { CurrencyId } from '@acala-network/types/interfaces';
@@ -23,10 +23,14 @@ export const formatCurrency = (currency: CurrencyId | string, upper = true): str
   return upper ? inner.toUpperCase() : inner.toLowerCase();
 };
 
-export const formatBalance = (balance: Fixed18 | Codec | number): Fixed18 => {
+export const formatHash = (hash: string): string => {
+  return hash.replace(/(\w{6})\w*?(\w{12}$)/, '$1......$2');
+};
+
+export const formatBalance = (balance: Fixed18 | Codec | number | string): Fixed18 => {
   let inner = Fixed18.ZERO;
 
-  if (typeof balance === 'number') {
+  if (typeof balance === 'number' || typeof balance === 'string') {
     inner = Fixed18.fromNatural(balance);
   } else if (balance instanceof Fixed18) {
     inner = balance;
@@ -45,6 +49,7 @@ export const tokenEq = (base: CurrencyId | string, target: CurrencyId | string):
   if (!target || !base) {
     return false;
   }
+
   return base.toString().toUpperCase() === target.toString().toUpperCase();
 };
 
@@ -64,6 +69,7 @@ export const getCurrencyIdFromName = (api: ApiPromise, name: string): CurrencyId
 };
 
 export const formtDuration = (duration: number): number => {
-  const DAY =  1000 * 60 * 60 * 24;
+  const DAY = 1000 * 60 * 60 * 24;
+
   return Fixed18.fromRational(duration, DAY).toNumber();
-}
+};

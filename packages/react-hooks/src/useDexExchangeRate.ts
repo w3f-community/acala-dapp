@@ -14,7 +14,7 @@ export const useDexExchangeRate = (token: CurrencyId) => {
 
   useEffect(() => {
     if (pool) {
-      setRate( Fixed18.fromRational(
+      setRate(Fixed18.fromRational(
         pool.base.toString(),
         pool.other.toString()
       ));
@@ -22,4 +22,4 @@ export const useDexExchangeRate = (token: CurrencyId) => {
   }, [pool]);
 
   return { rate };
-}
+};

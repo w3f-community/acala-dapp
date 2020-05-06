@@ -18,9 +18,11 @@ export const DepositContext = createContext<DepositContextData>({} as DepositCon
 export const DepositProvider: FC<BareProps> = memo(({ children }) => {
   const { api } = useApi();
   const [action, _setAction] = useState<ACTION_TYPE>('deposit');
+
   const setActiveAction = (type: ACTION_TYPE): void => {
     _setAction(type);
   };
+
   const enabledCurrencyIds = api.consts.dex.enabledCurrencyIds as Vec<CurrencyId>;
   const baseCurrencyId = api.consts.dex.getBaseCurrencyId as CurrencyId;
   const exchangeFee = api.consts.dex.getExchangeFee as Rate;
@@ -31,7 +33,7 @@ export const DepositProvider: FC<BareProps> = memo(({ children }) => {
       baseCurrencyId,
       enabledCurrencyIds,
       exchangeFee,
-      setActiveAction,
+      setActiveAction
     }}>
       {children}
     </DepositContext.Provider>

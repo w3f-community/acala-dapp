@@ -1,9 +1,9 @@
-import { useApi } from "./useApi";
-import { useAccounts } from "./useAccounts";
-import { CurrencyId, Amount } from "@acala-network/types/interfaces";
-import { convertToFixed18, Fixed18 } from "@acala-network/app-util";
-import { ApiPromise } from "@polkadot/api";
-import { InjectedAccountWithMeta } from "@polkadot/extension-inject/types";
+import { useApi } from './useApi';
+import { useAccounts } from './useAccounts';
+import { CurrencyId, Amount } from '@acala-network/types/interfaces';
+import { convertToFixed18, Fixed18 } from '@acala-network/app-util';
+import { ApiPromise } from '@polkadot/api';
+import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 
 interface BalanceConfig {
   type: 'balance';
@@ -43,7 +43,7 @@ export const getFormValidator = (configs: Config, api: ApiPromise, active: Injec
         const value = values[key];
 
         if (config.type === 'balance' && config.currency) {
-          (api.derive as any).currencies.balance(active!.address, config.currency).then((result: Amount) => {
+          (api.derive as any).currencies.balance(active.address, config.currency).then((result: Amount) => {
             const _balance = convertToFixed18(result);
             const _value = Fixed18.fromNatural(value);
             const _max = Fixed18.fromNatural(config.max !== undefined ? config.max : Number.MAX_VALUE);
@@ -93,25 +93,27 @@ export const getFormValidator = (configs: Config, api: ApiPromise, active: Injec
           const length = (value as string).length;
 
           if (config.pattern !== undefined && !config.pattern.test(value)) {
-            error[key] = `Value is not a validate string`;
+            error[key] = 'Value is not a validate string';
           }
 
           if (config.max !== undefined && length > config.max) {
-            error[key] = `Value is more than ${config.max}`
+            error[key] = `Value is more than ${config.max}`;
           }
+
           if (config.min !== undefined && length < config.min) {
-            error[key] = `Value is less than ${config.max}`
+            error[key] = `Value is less than ${config.max}`;
           }
         }
       });
 
       resolve(error);
     });
-  }
+  };
 };
 
 export const useFormValidator = (configs: Config) => {
   const { api } = useApi();
   const { active } = useAccounts();
+
   return getFormValidator(configs, api, active!);
-}
+};

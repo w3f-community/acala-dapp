@@ -1,16 +1,15 @@
-import { isEmpty } from 'lodash';
-import { useApi } from "./useApi";
-import { useAccounts } from "./useAccounts";
-import { useRef, useEffect, useState } from "react";
-import { DerivedUserLoan, DerivedLoanType, DerivedLoanOverView, DerivedPrice } from "@acala-network/api-derive";
-import { useCall } from "./useCall";
-import { usePrice } from "./usePrice";
-import { tokenEq, getValueFromTimestampValue } from "@honzon-platform/react-components";
-import { CurrencyId } from "@acala-network/types/interfaces";
-import { LoanHelper, convertToFixed18, Fixed18, stableCoinToDebit } from "@acala-network/app-util";
+import { useApi } from './useApi';
+import { useAccounts } from './useAccounts';
+import { useRef, useEffect, useState, useCallback } from 'react';
+import { DerivedUserLoan, DerivedLoanType, DerivedLoanOverView, DerivedPrice } from '@acala-network/api-derive';
+import { useCall } from './useCall';
+import { usePrice } from './usePrice';
+import { tokenEq, getValueFromTimestampValue } from '@honzon-platform/react-components';
+import { CurrencyId } from '@acala-network/types/interfaces';
+import { LoanHelper, convertToFixed18, Fixed18, stableCoinToDebit } from '@acala-network/app-util';
 import { useConstants } from './useConstants';
 
-export const filterEmptyLoan = (loans: DerivedUserLoan[] | null): DerivedUserLoan[]=> {
+export const filterEmptyLoan = (loans: DerivedUserLoan[] | null): DerivedUserLoan[] => {
   if (!loans) {
     return [];
   }
@@ -31,7 +30,7 @@ export const useAllLoans = () => {
     loans,
     loanTypes,
     loanOverviews
-  }
+  };
 };
 
 export const useLoan = (token: CurrencyId | string, callback?: () => void) => {
@@ -83,39 +82,19 @@ export const useLoan = (token: CurrencyId | string, callback?: () => void) => {
         stableFee: currentLoanType.stabilityFee
       });
     }
+
     return {} as LoanHelper;
   };
 
   useEffect(() => {
     if (currentUserLoan && currentLoanType && collateralPrice && stableCoinPrice) {
-      currentUserLoanRef.current = currentUserLoan;
-      currentLoanTypeRef.current = currentLoanType;
-
-      const _collateral = convertToFixed18(currentUserLoan.collaterals).add(Fixed18.fromNatural(collateral));
-      const _debit = convertToFixed18(currentUserLoan.debits).add(
-        stableCoinToDebit(
-          Fixed18.fromNatural(debitStableCoin),
-          convertToFixed18(currentLoanType.debitExchangeRate)
-        )
-      );
-      setCurrentUserLoanHelper(new LoanHelper({
-        collateralPrice: getValueFromTimestampValue(collateralPrice.price),
-        collaterals: _collateral,
-        debitExchangeRate: currentLoanType.debitExchangeRate,
-        debits: _debit,
-        expectedBlockTime: currentLoanType.expectedBlockTime.toNumber(),
-        globalStableFee: currentLoanType.globalStabilityFee,
-        liquidationRatio: currentLoanType.liquidationRatio,
-        requiredCollateralRatio: currentLoanType.requiredCollateralRatio,
-        stableCoinPrice: getValueFromTimestampValue(stableCoinPrice.price),
-        stableFee: currentLoanType.stabilityFee
-      }));
+      setCurrentUserLoanHelper(getCurrentUserLoanHelper());
     }
   }, [currentUserLoan, currentLoanType, collateralPrice, stableCoinPrice, collateral, debitStableCoin]);
 
   useEffect(() => {
     callback && callback();
-  }, [stableCoinPrice, loans, loanTypes, prices]); 
+  }, [stableCoinPrice, loans, loanTypes, prices, callback]);
 
   return {
     loans,
@@ -130,6 +109,6 @@ export const useLoan = (token: CurrencyId | string, callback?: () => void) => {
     setCurrentUserLoanHelper,
     minmumDebitValue: minmumDebitValue.current,
     collateral,
-    debitStableCoin,
+    debitStableCoin
   };
-}
+};

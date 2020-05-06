@@ -6,17 +6,18 @@ import { BareProps } from '@honzon-platform/ui-components/types';
 import classes from './ApiStatus.module.scss';
 import clsx from 'clsx';
 
-
-export const ApiStatus : FC<BareProps> = memo(({ className }) => {
-  const { loading, error, connected } = useApi();
+export const ApiStatus: FC<BareProps> = memo(({ className }) => {
+  const { connected, error, loading } = useApi();
 
   const getStatusText = (): string => {
     if (loading) {
       return 'Connecting';
     }
+
     if (error) {
       return 'Error';
     }
+
     if (connected) {
       return 'Connected';
     }
@@ -32,7 +33,7 @@ export const ApiStatus : FC<BareProps> = memo(({ className }) => {
         {
           [classes.connected]: connected,
           [classes.error]: error,
-          [classes.loading]: loading,
+          [classes.loading]: loading
         }
       )
     }>

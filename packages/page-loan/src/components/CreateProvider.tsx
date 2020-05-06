@@ -17,7 +17,7 @@ export interface ProviderData {
 
 export const createProviderContext = createContext<ProviderData>({} as ProviderData);
 
-interface Props extends BareProps {};
+type Props = BareProps;
 
 export const CreateProvider: FC<Props> = ({
   children
@@ -45,10 +45,10 @@ export const CreateProvider: FC<Props> = ({
         deposit,
         setDeposit,
         generate,
-        setGenerate,
+        setGenerate
       }}
     >
       {children}
     </createProviderContext.Provider>
   );
-}
+};

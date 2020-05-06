@@ -6,16 +6,16 @@ import { Balance } from '@acala-network/types/interfaces';
 
 interface Props {
   currency: string;
-  account?: AccountId | string
+  account?: AccountId | string;
 }
 
 export const AirDropAmount: FC<Props> = memo(({
-  currency,
-  account
+  account,
+  currency
 }) => {
   const { api } = useApi();
   const { active } = useAccounts();
-  const _account = account ? account : active ? active.address : '';
+  const _account = account || (active ? active.address : '');
   const result = useCall(api.query.airDrop.airDrops, [_account, currency]);
 
   if (!result) {

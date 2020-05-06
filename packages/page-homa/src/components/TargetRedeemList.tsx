@@ -11,15 +11,16 @@ interface Props extends BareProps {
 
 export const TargetRedeemList: FC<Props> = ({
   className,
-  value,
-  onChange
-}) => { 
-  const { stakingPool, freeList } = useContext(StakingPoolContext);
+  onChange,
+  value
+}) => {
+  const { freeList, stakingPool } = useContext(StakingPoolContext);
+
   if (!stakingPool.bondingDuration) {
     return null;
   }
 
-  const config: DropdownConfig[] = freeList.map(({ era, free}) => {
+  const config: DropdownConfig[] = freeList.map(({ era, free }) => {
     return {
       value: era,
       render: () => (
@@ -32,13 +33,13 @@ export const TargetRedeemList: FC<Props> = ({
 
   return (
     <Dropdown
-      menuClassName={classes.menu}
-      config={config}
       className={className}
-      value={value}
-      size='small'
+      config={config}
+      menuClassName={classes.menu}
       onChange={onChange}
       selectedRender={(era) => era}
+      size='small'
+      value={value}
     />
   );
 };

@@ -1,4 +1,4 @@
-import React, { FC, memo, useContext, ReactElement, ChangeEvent, ReactNode } from 'react';
+import React, { FC, memo, useContext, ReactElement, ChangeEvent, ReactNode, useState } from 'react';
 import { noop } from 'lodash';
 import { useFormik } from 'formik';
 
@@ -39,10 +39,10 @@ const InputArea: FC<InputAreaProps> = memo(({
     <div className={classes.inputAreaRoot}>
       <p className={classes.title}>{title}</p>
       <BalanceInput
+        className={classes.input}
+        currencies={currencies}
         enableTokenSelect
         error={!!error}
-        currencies={currencies}
-        className={classes.input}
         name={inputName}
         onChange={onChange}
         onTokenChange={onTokenChange}
@@ -65,8 +65,8 @@ function SwapBtn ({ onClick }: SwapBtn): ReactElement {
     <IconButton
       className={classes.swapBtn}
       color='primary'
-      onClick={onClick}
       icon='swap'
+      onClick={onClick}
       size='large'
       type='border'
     />
@@ -75,21 +75,21 @@ function SwapBtn ({ onClick }: SwapBtn): ReactElement {
 
 export const SwapConsole: FC = memo(() => {
   const {
-    slippage,
-    supplyCurrencies,
-    targetCurrencies,
     calcSupply,
     calcTarget,
-    setCurrency,
     pool,
+    setCurrency,
+    supplyCurrencies,
+    targetCurrencies
   } = useContext(SwapContext);
+  const [slippage, setSlippage] = useState<number>(0.005);
 
   const validator = useFormValidator({
     supply: {
       type: 'balance',
       currency: pool.supplyCurrency,
       min: 0,
-      max: pool.supplySize,
+      max: pool.supplySize
     },
     target: {
       type: 'number',
@@ -134,11 +134,11 @@ export const SwapConsole: FC = memo(() => {
 
   const onSlippageChange = (slippage: number): void => {
     const supply = form.values.supply;
-
+    setSlippage(slippage);
     calcTarget(pool.supplyCurrency, pool.targetCurrency, supply, slippage).then((target) => {
       nextTick(() => form.setFieldValue('target', target));
     });
-  }
+  };
 
   const onSupplyTokenChange = async (token: CurrencyId): Promise<void> => {
     await setCurrency(token, pool.targetCurrency);
@@ -150,33 +150,34 @@ export const SwapConsole: FC = memo(() => {
   const onTargetTokenChange = async (token: CurrencyId): Promise<void> => {
     await setCurrency(pool.supplyCurrency, token, (pool): void => {
       const supply = form.values.supply;
+
       calcTarget(pool.supplyCurrency, pool.targetCurrency, supply, slippage).then((target) => {
-        console.log(target);
-        form.setFieldValue('target', target)
+        form.setFieldValue('target', target);
       });
     });
-
   };
 
   const checkDisabled = (): boolean => {
     if (form.errors.supply || form.errors.target) {
       return true;
     }
+
     if (!(form.values.target && form.values.supply)) {
       return true;
     }
-    return false;
-  }
 
+    return false;
+  };
 
   return (
-    <Card className={classes.root} gutter={false}>
+    <Card className={classes.root}
+      gutter={false}>
       <div className={classes.main}>
         <InputArea
+          currencies={supplyCurrencies}
           error={form.errors.supply}
           inputName='supply'
           onChange={onSupplyChange}
-          currencies={supplyCurrencies}
           onTokenChange={onSupplyTokenChange}
           title='Pay With'
           token={pool.supplyCurrency}
@@ -193,19 +194,20 @@ export const SwapConsole: FC = memo(() => {
               />
             </div>
           }
+          currencies={targetCurrencies}
+          error={form.errors.target}
           inputName='target'
           onChange={onTargetChange}
-          currencies={targetCurrencies}
           onTokenChange={onTargetTokenChange}
           title='Receive'
           token={pool.targetCurrency}
           value={form.values.target}
-          error={form.errors.target}
         />
         <TxButton
-          size='large'
           className={classes.txBtn}
+          disabled={checkDisabled()}
           method='swapCurrency'
+          onSuccess={form.resetForm}
           params={
             [
               pool.supplyCurrency,
@@ -215,17 +217,20 @@ export const SwapConsole: FC = memo(() => {
             ]
           }
           section='dex'
-          disabled={checkDisabled()}
-          onSuccess={form.resetForm}
+          size='large'
         >
           Swap
         </TxButton>
       </div>
       <SwapInfo
+        slippage={slippage}
         supply={form.values.supply}
         target={form.values.target}
       />
-      <SlippageInputArea onChange={onSlippageChange} />
+      <SlippageInputArea 
+        slippage={slippage}
+        onChange={onSlippageChange} 
+      />
     </Card>
   );
 });

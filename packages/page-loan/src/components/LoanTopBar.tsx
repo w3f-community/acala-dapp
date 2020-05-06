@@ -14,7 +14,8 @@ interface LoanItemProps {
 }
 
 const LoanItem: FC<LoanItemProps> = memo(({ token }) => {
-  const { setCurrentTab, currentTab } = useContext(LoanContext);
+  const { currentTab, setCurrentTab } = useContext(LoanContext);
+
   return (
     <div
       className={
@@ -29,15 +30,15 @@ const LoanItem: FC<LoanItemProps> = memo(({ token }) => {
     >
       <Token
         className={classes.icon}
-        token={token}
         icon
         name={false}
+        token={token}
       />
       <div className={classes.content}>
         <Token
           className={classes.token}
-          token={token}
           icon={false}
+          token={token}
         />
         <LoanCollateralRate
           className={classes.collateralRate}
@@ -51,7 +52,7 @@ const LoanItem: FC<LoanItemProps> = memo(({ token }) => {
 LoanItem.displayName = 'LoanItem';
 
 const LoanOverview: FC = () => {
-  const { showOverview, currentTab } = useContext(LoanContext);
+  const { currentTab, showOverview } = useContext(LoanContext);
 
   return (
     <div
@@ -90,7 +91,7 @@ const LoanAdd: FC = () => {
       </div>
     </div>
   );
-}
+};
 
 export const LoanTopBar: FC = () => {
   const { loans } = useAllLoans();

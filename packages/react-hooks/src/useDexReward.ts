@@ -1,17 +1,17 @@
-import { CurrencyId } from "@acala-network/types/interfaces";
-import AccountId from "@polkadot/types/generic/AccountId";
+import { CurrencyId } from '@acala-network/types/interfaces';
+import AccountId from '@polkadot/types/generic/AccountId';
 
-import { useCall } from "./useCall";
-import { useDexShare } from "./useDexShare";
-import { useApi } from "./useApi";
-import { useAccounts } from "./useAccounts";
-import { convertToFixed18 } from "@acala-network/app-util";
-import { Balance } from "@polkadot/types/interfaces";
+import { useCall } from './useCall';
+import { useDexShare } from './useDexShare';
+import { useApi } from './useApi';
+import { useAccounts } from './useAccounts';
+import { convertToFixed18 } from '@acala-network/app-util';
+import { Balance } from '@polkadot/types/interfaces';
 
 export const useDexReward = (token: CurrencyId | string, account?: AccountId | string) => {
   const { api } = useApi();
   const { active } = useAccounts();
-  const _account = account ? account : active ? active.address : '';
+  const _account = account || (active ? active.address : '');
   const totalInterest = useCall<Balance>(api.query.dex.totalInterest, [token]);
   const { share, totalShares } = useDexShare(token, _account);
   const withdrawnInterest = useCall<Balance>(api.query.dex.withdrawnInterest, [token, _account]);
@@ -21,8 +21,7 @@ export const useDexReward = (token: CurrencyId | string, account?: AccountId | s
   if (!totalInterest || !share || !totalShares) {
     return { amount: 0,
       token: baseCurrency,
-      rewardRatio: liquidityIncentiveRate
-    };
+      rewardRatio: liquidityIncentiveRate };
   }
 
   const _totalInterest = convertToFixed18(totalInterest);
@@ -35,4 +34,4 @@ export const useDexReward = (token: CurrencyId | string, account?: AccountId | s
     token: baseCurrency,
     rewardRatio: liquidityIncentiveRate
   };
-}
+};

@@ -1,7 +1,6 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from 'react';
 
 export function useStateWithCallback<T> (init: T) {
-
   const [value, _setValue] = useState<T>(init);
   const _history = useRef<T>(init);
   const _callback = useRef<(value?: T) => void>();
@@ -17,6 +16,7 @@ export function useStateWithCallback<T> (init: T) {
     if (callback) {
       _callback.current = callback;
     }
+
     _setValue(value);
   };
 

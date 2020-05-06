@@ -5,15 +5,14 @@ import { SwapContext } from '@honzon-platform/react-components';
 
 interface Props {
   onChange?: (slippage: number) => void;
+  slippage?: number
 }
 
-export const SlippageInputArea: FC<Props> = memo(({ onChange }) => {
-  const { slippage, setSlippage } = useContext(SwapContext);
+export const SlippageInputArea: FC<Props> = memo(({ onChange, slippage = 0.005 }) => {
   const suggestValues = [0.001, 0.005, 0.01];
   const suggestedIndex = 1;
 
   const handleClick = (num: number): void => {
-    setSlippage(num);
     onChange && onChange(num);
   };
 
@@ -29,8 +28,8 @@ export const SlippageInputArea: FC<Props> = memo(({ onChange }) => {
           suggestValues.map((suggest): ReactElement => {
             return (
               <Tag
-                key={`suggest-${suggest}`}
                 color={slippage === suggest ? 'primary' : 'white'}
+                key={`suggest-${suggest}`}
                 onClick={() => handleClick(suggest) }
               >
                 {renderSuggest(suggest)}

@@ -17,8 +17,8 @@ interface Props extends BareProps {
 export const FormatFixed18: FC<Props> = memo(({
   className,
   data,
-  prefix,
   format = 'thousandth',
+  prefix,
   primary = false
 }) => {
   if (!data) {
@@ -57,7 +57,7 @@ export const FormatFixed18: FC<Props> = memo(({
 
       }
     >
-      {prefix ? prefix : null}
+      {prefix || null}
       {getRenderText()}
     </span>
   );

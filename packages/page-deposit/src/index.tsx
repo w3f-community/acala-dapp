@@ -8,6 +8,7 @@ import { SelectAction } from './components/SelectAction';
 import { DepositProvider } from './components/Provider';
 import { Console } from './components/Console';
 import { PoolOverview } from './components/PoolOverview';
+import { Transaction } from './components/Transaction';
 
 const PageDeposit: FC = () => {
   return (
@@ -16,8 +17,11 @@ const PageDeposit: FC = () => {
       <SwapProvider>
         <Page.Content>
           <DepositProvider>
-            <Grid container direction='column'>
-              <Grid item container direction='row'>
+            <Grid container
+              direction='column'>
+              <Grid container
+                direction='row'
+                item>
                 <Grid item>
                   <UserCard />
                 </Grid>
@@ -33,6 +37,9 @@ const PageDeposit: FC = () => {
               </Grid>
               <Grid item>
                 <PoolOverview />
+              </Grid>
+              <Grid item>
+                <Transaction />
               </Grid>
             </Grid>
           </DepositProvider>

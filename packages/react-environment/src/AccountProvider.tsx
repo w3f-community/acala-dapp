@@ -28,10 +28,10 @@ interface Props extends BareProps {
 }
 
 export const AccountProvider: FC<Props> = memo(({
-  applicationName = 'Honzon Platform',
-  children,
   NoAccounts,
-  NoExtensions
+  NoExtensions,
+  applicationName = 'Honzon Platform',
+  children
 }) => {
   const { api } = useApi();
   const [accounts, setAccounts] = useState<InjectedAccountWithMeta[]>([]);
@@ -39,7 +39,7 @@ export const AccountProvider: FC<Props> = memo(({
   const [error, setError] = useState<AccountProviderError>('');
   const [ready, setReady] = useState<boolean>(false);
   const { getStorage, setStorage } = useStorage({ useAccountPrefix: false });
-  const { open, close, status } = useModal(false);
+  const { close, open, status } = useModal(false);
 
   const loadAccounts = useCallback(async (): Promise<boolean> => {
     const injected = await web3Enable(applicationName);
@@ -63,9 +63,10 @@ export const AccountProvider: FC<Props> = memo(({
     return true;
   }, [applicationName]);
 
-  const setActiveAccount = async (account: InjectedAccountWithMeta): Promise<void> => {
+  const setActiveAccount = useCallback(async (account: InjectedAccountWithMeta): Promise<void> => {
     try {
       const injector = await web3FromAddress(account.address);
+
       api.setSigner(injector.signer);
       setActive(account);
       setReady(true);
@@ -73,11 +74,11 @@ export const AccountProvider: FC<Props> = memo(({
     } catch (e) {
       setReady(false);
     }
-  };
+  });
 
-  const openSelectAccount = (): void => {
+  const openSelectAccount = useCallback((): void => {
     open();
-  };
+  });
 
   const closeSelectAccount = (): void => {
     close();
@@ -89,7 +90,7 @@ export const AccountProvider: FC<Props> = memo(({
 
   useEffect(() => {
     if (!accounts.length || active) {
-      return
+      return;
     }
 
     // check saved active account
@@ -98,12 +99,12 @@ export const AccountProvider: FC<Props> = memo(({
 
     if (savedActiveAccount) {
       setActiveAccount(savedActiveAccount);
-    } else if (accounts.length === 1){
+    } else if (accounts.length === 1) {
       setActiveAccount(accounts[0]);
     } else {
       openSelectAccount();
     }
-  }, [accounts]);
+  }, [accounts, active, getStorage, openSelectAccount, setActiveAccount]);
 
   const handleAccountSelect = (account: InjectedAccountWithMeta) => {
     setActiveAccount(account);
@@ -135,8 +136,8 @@ export const AccountProvider: FC<Props> = memo(({
     >
       <SelectAccount
         accounts={accounts}
-        visable={status}
         onSelect={handleAccountSelect}
+        visable={status}
       />
       {children}
       {renderError()}

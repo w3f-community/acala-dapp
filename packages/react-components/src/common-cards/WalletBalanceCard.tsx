@@ -1,8 +1,8 @@
-import React, { FC, memo, ReactElement } from 'react';
+import React, { FC, memo } from 'react';
 
 import { CurrencyId } from '@acala-network/types/interfaces';
-import { Table, TableItem, Card, Button } from '@honzon-platform/ui-components';
-import { useAccounts, useApi, useConstants } from '@honzon-platform/react-hooks';
+import { Table, TableItem, Card } from '@honzon-platform/ui-components';
+import { useAccounts, useConstants } from '@honzon-platform/react-hooks';
 
 import { Token } from '../Token';
 import { UserBalance } from '../UserBalance';
@@ -41,7 +41,7 @@ export const WalletBalanceCard: FC<Props> = memo(({
     },
     {
       key: 'balance',
-      align: 'center',
+      align: 'right',
       /* eslint-disable-next-line react/display-name */
       render: (token: CurrencyId) => (
         <UserBalance
@@ -82,13 +82,13 @@ export const WalletBalanceCard: FC<Props> = memo(({
 
   return (
     <Card
-      header={title || 'Wallet Balance'}
       gutter={false}
+      header={title || 'Wallet Balance'}
     >
       <Table
-        showHeader={showHeader}
         config={tableConfig}
         data={allToken}
+        showHeader={showHeader}
       />
     </Card>
   );

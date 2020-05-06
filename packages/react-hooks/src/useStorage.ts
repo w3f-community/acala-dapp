@@ -22,7 +22,7 @@ const getPrefixKey = (key: string, options: Options & { address: string }): stri
 };
 
 export const useStorage = (
-  options: Options =  { customPrefix: '', useAccountPrefix: true, useCustomPrefix: false }
+  options: Options = { customPrefix: '', useAccountPrefix: true, useCustomPrefix: false }
 ): { getStorage: Get; setStorage: Set } => {
   const isReady = useIsAppReady();
   const { active: activeAccount } = useAccounts();
@@ -35,9 +35,9 @@ export const useStorage = (
         return window.localStorage.getItem(_key);
       }
     } else {
-        const _key = getPrefixKey(key, { ...options, address: '' });
+      const _key = getPrefixKey(key, { ...options, address: '' });
 
-        return window.localStorage.getItem(_key);
+      return window.localStorage.getItem(_key);
     }
 
     return null;
@@ -51,10 +51,9 @@ export const useStorage = (
         window.localStorage.setItem(_key, value);
       }
     } else {
-        const _key = getPrefixKey(key, { ...options, address: '' });
+      const _key = getPrefixKey(key, { ...options, address: '' });
 
-        window.localStorage.setItem(_key, value);
-
+      window.localStorage.setItem(_key, value);
     }
   };
 

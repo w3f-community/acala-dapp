@@ -29,11 +29,11 @@ const ICON_CONFIG = {
 
 export const Token: FC<Props> = memo(({
   className,
+  gutter = false,
   icon,
-  token,
   name = true,
-  upper = true,
-  gutter = false
+  token,
+  upper = true
 }) => {
   if (!token) {
     return null;
@@ -67,7 +67,7 @@ export const Token: FC<Props> = memo(({
             clsx(
               classes.icon,
               {
-                [classes.noName]: !name,
+                [classes.noName]: !name
               }
             )
           }>

@@ -16,9 +16,9 @@ export const Card: React.FC<Props> = memo(({
   children,
   className,
   contentClassName,
+  gutter = true,
   header,
-  headerClassName,
-  gutter = true
+  headerClassName
 }) => {
   return (
     <section className={clsx(classes.root, className)}>

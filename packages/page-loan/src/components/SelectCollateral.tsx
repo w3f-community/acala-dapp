@@ -13,7 +13,7 @@ export const SelectCollateral: FC = () => {
   const { loanTypes } = useAllLoans();
   const [selected, setSelected] = useState<CurrencyId>(null as any as CurrencyId);
   const { active } = useAccounts();
-  const { setStep, setSelectedToken } = useContext(createProviderContext);
+  const { setSelectedToken, setStep } = useContext(createProviderContext);
   const { cancelCurrentTab } = useContext(LoanContext);
 
   const onSelect = (token: CurrencyId) => {
@@ -42,9 +42,9 @@ export const SelectCollateral: FC = () => {
       render: (token: CurrencyId) => {
         return (
           <Radio
-            checked={tokenEq(token, selected as CurrencyId)}
-            onClick={() => onSelect(token)}
+            checked={tokenEq(token, selected)}
             label={<Token token={token}/>}
+            onClick={() => onSelect(token)}
           />
         );
       }
@@ -94,11 +94,11 @@ export const SelectCollateral: FC = () => {
       dataIndex: 'token',
       render: (token: CurrencyId) => (
         <UserBalance
-          token={token}
           account={active ? active.address : ''}
+          token={token}
         />
-        )
-    },
+      )
+    }
   ];
 
   const handleRowClick = (_event: any, data: DerivedLoanType) => {
@@ -108,30 +108,30 @@ export const SelectCollateral: FC = () => {
   return (
     <div className={classes.root}>
       <Table
-        showHeader
         config={tableConfig}
         data={loanTypes}
         rawProps={{
           onClick: handleRowClick
         }}
+        showHeader
       />
       <div className={classes.action}>
         <Button
+          onClick={cancelCurrentTab}
           size='small'
           type='border'
-          onClick={cancelCurrentTab}
         >
           Cancel
         </Button>
         <Button
-          size='small'
           color='primary'
           disabled={checkDisabled()}
           onClick={handleNext}
+          size='small'
         >
           Next
         </Button>
       </div>
     </div>
   );
-}
+};

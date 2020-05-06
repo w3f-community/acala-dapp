@@ -1,9 +1,7 @@
 import React, { FC, memo, useContext, useState } from 'react';
-import { noop } from 'lodash';
 import { Card } from '@honzon-platform/ui-components';
 import { CurrencyId } from '@acala-network/types/interfaces';
-import { BalanceInput, TxButton, DexReward, TokenSelector } from '@honzon-platform/react-components';
-import { useFormik, FastField } from 'formik';
+import { TxButton, DexReward, TokenSelector } from '@honzon-platform/react-components';
 import { DepositContext } from './Provider';
 import classes from './RewardConsole.module.scss';
 import { useFormValidator, useDexReward, useConstants } from '@honzon-platform/react-hooks';
@@ -16,10 +14,11 @@ interface InputAreaProps {
 }
 
 const InputArea: FC<InputAreaProps> = memo(({
-  token,
   onTokenChange,
+  token
 }) => {
   const { dexCurrencies } = useConstants();
+
   return (
     <div className={classes.inputAreaRoot}>
       <div className={classes.inputAreaTitle}>
@@ -28,18 +27,19 @@ const InputArea: FC<InputAreaProps> = memo(({
       <div className={classes.inputAreaContent}>
         <TokenSelector
           className={classes.dropdown}
-          value={token}
           currencies={dexCurrencies}
           onChange={onTokenChange}
+          value={token}
         />
         <RightArrowIcon className={classes.arrowIcon} />
-          <div className={classes.output}>
-            <DexReward token={token} />
-          </div>
+        <div className={classes.output}>
+          <DexReward token={token} />
+        </div>
       </div>
     </div>
   );
 });
+
 InputArea.displayName = 'InputArea';
 
 export const RewardConsole: FC = memo(() => {
@@ -55,17 +55,21 @@ export const RewardConsole: FC = memo(() => {
     <Card>
       <div className={classes.main}>
         <InputArea
-          token={otherCurrency}
           currencies={enabledCurrencyIds}
           onTokenChange={setOtherCurrency}
+          token={otherCurrency}
         />
         <TxButton
-          size='large'
+          addon={{
+            currency: otherCurrency.toString(),
+            amount
+          }}
           className={classes.txBtn}
           disabled={checkDisabled()}
           method='withdrawIncentiveInterest'
-          section='dex'
           params={[otherCurrency]}
+          section='dex'
+          size='large'
         >
           Withdraw
         </TxButton>

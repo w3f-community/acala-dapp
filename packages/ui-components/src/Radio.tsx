@@ -10,8 +10,8 @@ interface Props extends Omit<InputHTMLAttributes<HTMLInputElement>, 'type'> {
 }
 
 export const Radio: FC<Props> = memo(({
-  className,
   checked = false,
+  className,
   label,
   onClick,
   ...other
@@ -38,4 +38,6 @@ export const Radio: FC<Props> = memo(({
       {label ? <div className={classes.label}>{label}</div> : null}
     </label>
   );
-})
+});
+
+Radio.displayName = 'Radio';

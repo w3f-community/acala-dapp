@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 import { DerivedStakingPool } from '@acala-network/api-derive';
 import { StakingPoolHelper, Fixed18 } from '@acala-network/app-util';
@@ -12,7 +12,15 @@ export interface FreeItem {
   free: number;
 }
 
-export const useStakingPool = () => {
+interface useStakingPoolReturnType {
+  stakingPool: DerivedStakingPool | undefined;
+  stakingPoolHelper: StakingPoolHelper;
+  unbondingDuration: number;
+  freeList: FreeItem[];
+  rewardRate: Rate;
+}
+
+export const useStakingPool = (): useStakingPoolReturnType => {
   const { api } = useApi();
   const [stakingPoolHelper, setStakingPoolHelper] = useState<StakingPoolHelper>(null as any as StakingPoolHelper);
   const [freeList, setFreeList] = useState<FreeItem[]>([]);
@@ -21,29 +29,33 @@ export const useStakingPool = () => {
   const eraLength = api.consts.polkadotBridge.eraLength;
   const expectedBlockTime = api.consts.babe.expectedBlockTime;
   const rewardRate = useCall<Rate>(api.query.polkadotBridge.mockRewardRate, []) as Rate;
+  const [unbondingDuration, setUnbondingDuration] = useState<number>(0);
 
-
-  const fetchFeeList = async (start: number, duration: number) => {
+  const fetchFeeList = useCallback(async (start: number, duration: number) => {
     const list = [];
+
     for (let i = start; i < start + duration; i++) {
       const result = await api.query.stakingPool.unbonding<Amount[]>(i);
       const free = Fixed18.fromParts(result[0].toString()).sub(Fixed18.fromParts(result[1].toString()));
+
       list.push({
         era: i,
         free: free.toNumber()
       });
     }
+
     return list.filter((item) => item.free);
-  };
+  }, [api.query.stakingPool]);
 
   useEffect(() => {
     if (stakingPool) {
       (async () => {
         const list = await fetchFeeList(stakingPool.currentEra.toNumber(), stakingPool.bondingDuration.toNumber());
+
         setFreeList(list);
       })();
     }
-  }, [stakingPool]);
+  }, [fetchFeeList, stakingPool]);
 
   useEffect(() => {
     if (stakingPool) {
@@ -60,14 +72,10 @@ export const useStakingPool = () => {
           unbondingToFree: stakingPool.unbondingToFree
         })
       );
+      setUnbondingDuration(expectedBlockTime.toNumber() * Number(eraLength.toString()) * stakingPool.bondingDuration.toNumber());
     }
-  }, [stakingPool]);
+  }, [eraLength, expectedBlockTime, stakingPool]);
 
-  if (!stakingPool || !stakingPoolHelper) {
-    return null;
-  }
-
-  const unbondingDuration = expectedBlockTime.toNumber() * Number(eraLength.toString()) * stakingPool.bondingDuration.toNumber();
   return {
     stakingPool,
     stakingPoolHelper,

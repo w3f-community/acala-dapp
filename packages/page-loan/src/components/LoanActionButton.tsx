@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState, ChangeEvent } from 'react'
+import React, { FC, useEffect, useState, ChangeEvent } from 'react';
 import { noop } from 'lodash';
 import { Dialog, ButtonProps, Button, List, ListConfig } from '@honzon-platform/ui-components';
 import { useModal, useFormValidator, useLoan, useConstants } from '@honzon-platform/react-hooks';
@@ -19,13 +19,13 @@ interface Props extends Omit<ButtonProps, 'onClick' | 'type'> {
 }
 
 export const LonaActionButton: FC<Props> = ({
-  type,
-  token,
-  text,
   max,
+  text,
+  token,
+  type,
   ...other
 }) => {
-  const { status, open, close } = useModal(false);
+  const { close, open, status } = useModal(false);
   const { stableCurrency } = useConstants();
   const validator = useFormValidator({
     value: {
@@ -46,11 +46,11 @@ export const LonaActionButton: FC<Props> = ({
 
   const operateStableCurrency = (): boolean => {
     return type === 'payback' || type === 'generate';
-  }
+  };
 
   const getDialogTitle = () => {
     const _token = operateStableCurrency() ? stableCurrency : token;
-    
+
     return `${text} ${_token}`;
   };
 
@@ -73,6 +73,7 @@ export const LonaActionButton: FC<Props> = ({
         ).innerToString();
         break;
       }
+
       case 'generate': {
         params[2] = stableCoinToDebit(
           Fixed18.fromNatural(form.values.value),
@@ -80,16 +81,18 @@ export const LonaActionButton: FC<Props> = ({
         ).innerToString();
         break;
       }
+
       case 'deposit': {
         params[1] = Fixed18.fromNatural(form.values.value).innerToString();
         break;
       }
+
       case 'withdraw': {
         params[1] = '-' + Fixed18.fromNatural(form.values.value).innerToString();
         break;
-
       }
     }
+
     return params;
   };
 
@@ -97,9 +100,11 @@ export const LonaActionButton: FC<Props> = ({
     if (!form.values.value) {
       return true;
     }
+
     if (form.errors.value) {
       return true;
     }
+
     return false;
   };
 
@@ -108,7 +113,7 @@ export const LonaActionButton: FC<Props> = ({
       key: 'borrowed',
       title: 'Borrowed aUSD',
       render: (value) => {
-        return <FormatBalance balance={value} />
+        return <FormatBalance balance={value} />;
       }
     },
     {
@@ -134,7 +139,7 @@ export const LonaActionButton: FC<Props> = ({
           />
         );
       }
-    },
+    }
   ];
 
   useEffect(() => {
@@ -146,21 +151,24 @@ export const LonaActionButton: FC<Props> = ({
           setCollateral(value);
           break;
         }
+
         case 'withdraw': {
           setCollateral(-value);
           break;
         }
+
         case 'generate': {
           setDebitStableCoin(value);
           break;
         }
+
         case 'payback': {
           setDebitStableCoin(-value);
           break;
         }
       }
     }
-  }, [form.values.value]);
+  }, [form.values.value, setCollateral, setDebitStableCoin, type]);
 
   useEffect(() => {
     setListData({
@@ -193,45 +201,45 @@ export const LonaActionButton: FC<Props> = ({
         {text}
       </Button>
       <Dialog
-        className={classes.dialog}
-        title={getDialogTitle()}
-        visiable={status}
         action={
           <>
             <Button
-              size='small'
               onClick={close}
+              size='small'
             >
               Cancel
             </Button>
             <TxButton
-              size='small'
               disabled={checkDisabled()}
-              section='honzon'
               method='adjustLoan'
-              params={getParams()}
               onSuccess={handleSuccess}
+              params={getParams()}
+              section='honzon'
+              size='small'
             >
               Confirm
             </TxButton>
           </>
         }
+        className={classes.dialog}
+        title={getDialogTitle()}
+        visiable={status}
       >
         <BalanceInput
+          error={!!form.errors.value}
           id='value'
           name='value'
-          error={!!form.errors.value}
-          value={form.values.value}
           onChange={handleChange}
-          token={operateStableCurrency() ? stableCurrency : token}
-          showMaxBtn
           onMax={handleMax}
+          showMaxBtn
+          token={operateStableCurrency() ? stableCurrency : token}
+          value={form.values.value}
         />
         <List
           className={classes.list}
-          itemClassName={classes.listItem}
           config={config}
           data={listData}
+          itemClassName={classes.listItem}
         />
       </Dialog>
     </>

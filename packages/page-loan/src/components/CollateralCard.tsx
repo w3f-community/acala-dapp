@@ -47,7 +47,7 @@ export const CollateralCard = () => {
 
   useEffect(() => {
     if (!active && !isEmpty(loanTypes) && loanTypes[0].token) {
-      setActive(loanTypes[0].token.toString())
+      setActive(loanTypes[0].token.toString());
     }
   }, [loanTypes, active]);
 
@@ -63,32 +63,32 @@ export const CollateralCard = () => {
 
   const handleDropdownChange = (value: string) => {
     setActive(value);
-  }
+  };
 
   const dropdownConfig = loanTypes.map((item) => {
     return {
       value: item.token.toString(),
       render: () => formatCurrency(item.token)
-    }
+    };
   });
 
   return (
     <Card
       className={classes.root}
-      headerClassName={classes.header}
+      gutter={false}
       header={
         <>
           <p>Collateral</p>
           <Dropdown
             border={false}
-            value={active}
-            size='small'
             config={dropdownConfig}
             onChange={handleDropdownChange}
+            size='small'
+            value={active}
           />
         </>
       }
-      gutter={false}
+      headerClassName={classes.header}
     >
       <List
         config={listConfig}

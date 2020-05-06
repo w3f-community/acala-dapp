@@ -10,22 +10,23 @@ import { config as routerConfig } from './router-config';
 
 const App: FC = () => {
   const { endpoint } = useAppSetting();
+
   return (
     <UIProvider>
       <Notification>
-          <ApiProvider
-            endpoint={endpoint}
-            ConnectError={<ConnectError />}
-            Loading={<FullLoading />}
+        <ApiProvider
+          ConnectError={<ConnectError />}
+          endpoint={endpoint}
+          Loading={<FullLoading />}
+        >
+          <AccountProvider
+            applicationName={'Acala Honzon Platfrom'}
+            NoAccounts={<NoAccounts />}
+            NoExtensions={<NoExtensions />}
           >
-            <AccountProvider
-              applicationName={'Acala Honzon Platfrom'}
-              NoAccounts={<NoAccounts />}
-              NoExtensions={<NoExtensions />}
-            >
-              <RouterProvider config={routerConfig} />
-            </AccountProvider>
-          </ApiProvider>
+            <RouterProvider config={routerConfig} />
+          </AccountProvider>
+        </ApiProvider>
       </Notification>
     </UIProvider>
   );

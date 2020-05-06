@@ -20,16 +20,6 @@ export const SystemInfo: FC = () => {
       render: (data): ReactNode => <FormatFixed18 data={data} />
     },
     {
-      key: 'currentRatio',
-      title: 'Current Bonding Ratio',
-      render: (data): ReactNode => (
-        <FormatFixed18
-          data={data}
-          format='percentage'
-        />
-      )
-    },
-    {
       key: 'maxRatio',
       title: 'Max Bonding Ratio',
       render: (data): ReactNode => (
@@ -48,23 +38,20 @@ export const SystemInfo: FC = () => {
           format='percentage'
         />
       )
-    },
+    }
   ];
 
-  if (!stakingPool) {
-    return null;
-  }
-
   const listData = {
-    liquidExchangeRate: stakingPoolHelper.liquidExchangeRate,
-    currentRatio: stakingPoolHelper.communalBondedRatio,
-    maxRatio: convertToFixed18(stakingPool.maxBondRatio),
-    minRatio: convertToFixed18(stakingPool.minBondRatio)
+    liquidExchangeRate: stakingPoolHelper?.liquidExchangeRate,
+    maxRatio: convertToFixed18(stakingPool?.maxBondRatio || 0),
+    minRatio: convertToFixed18(stakingPool?.minBondRatio || 0)
   };
 
   return (
-    <Card header='System Info' gutter={false}>
-      <List config={listConfig} data={listData} />
+    <Card gutter={false}
+      header='System Info'>
+      <List config={listConfig}
+        data={listData} />
     </Card>
   );
 };

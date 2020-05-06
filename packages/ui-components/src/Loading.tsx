@@ -4,23 +4,27 @@ import { BareProps } from './types';
 import clsx from 'clsx';
 
 interface Props extends BareProps {
-  size?: number
+  size?: number;
 }
 
 export const Loading: FC<Props> = ({
   className,
   size = 40
 }) => {
-  const style = { width: size, height: size };
+  const style = {
+    height: size,
+    width: size
+  };
+
   return (
     <div
-    className={
-      clsx(
-        classes.root,
-        className
-      )
-    }
-    style={style}
+      className={
+        clsx(
+          classes.root,
+          className
+        )
+      }
+      style={style}
     >
       <div className={classes.loader} />
     </div>
@@ -33,4 +37,4 @@ export const FullLoading: FC = () => {
       <Loading/>
     </div>
   );
-}
+};

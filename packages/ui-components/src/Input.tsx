@@ -13,9 +13,9 @@ interface Props extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size' | 'pr
 export const Input: FC<Props> = ({
   className,
   error,
+  prefix,
   size = 'normal',
   suffix,
-  prefix,
   ...other
 }) => {
   return (
@@ -24,18 +24,19 @@ export const Input: FC<Props> = ({
         clsx(
           classes.root,
           className,
+          classes[size],
           {
             [classes.error]: error
           }
         )
       }
     >
-      {prefix ? <span>{prefix}</span>: null}
+      {prefix ? <span>{prefix}</span> : null}
       <input
         className={classes.input}
         {...other}
       />
-      {suffix? <span>{suffix}</span>: null}
+      {suffix ? <span>{suffix}</span> : null}
     </div>
   );
-}
+};

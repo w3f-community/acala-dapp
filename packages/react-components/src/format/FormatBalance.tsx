@@ -1,7 +1,6 @@
 import React, { FC, memo, useRef } from 'react';
 import clsx from 'clsx';
 
-
 import { Balance as BalanceType } from '@polkadot/types/interfaces';
 import { Fixed18 } from '@acala-network/app-util';
 
@@ -12,7 +11,7 @@ import { randomID } from '@honzon-platform/ui-components';
 import { formatBalance, formatCurrency, thousandth } from '../utils';
 import classes from './format.module.scss';
 
-interface BalancePair {
+export interface BalancePair {
   balance?: BalanceType | Fixed18 | number;
   currency?: CurrencyId | string;
 }
@@ -52,7 +51,7 @@ export const FormatBalance: FC<Props> = memo(({
         clsx(
           className,
           {
-            [classes.primary]: primary 
+            [classes.primary]: primary
           }
         )
       }

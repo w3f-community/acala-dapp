@@ -20,7 +20,7 @@ export const LoanCollateralRate: FC<Props> = memo(({
 }) => {
   const { api } = useApi();
   const { active } = useAccounts();
-  const _account = account ? account : active ? active.address : '';
+  const _account = account || (active ? active.address : '');
   const loans = useCall<DerivedUserLoan[]>((api.derive as any).loan.allLoans, [_account]) || [];
   const loanTypes = useCall<DerivedLoanType[]>((api.derive as any).loan.allLoanTypes, []) || [];
   const { stableCurrency } = useConstants();
@@ -45,6 +45,7 @@ export const LoanCollateralRate: FC<Props> = memo(({
       convertToFixed18(getValueFromTimestampValue(stableCoinPrice.price))
     )
   );
+
   return (
     <FormatFixed18
       className={className}

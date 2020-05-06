@@ -16,9 +16,9 @@ export const SystemCard: FC = memo(() => {
     <Card
       className={classes.root}
       contentClassName={classes.content}
-      headerClassName={classes.header}
-      header='For System'
       gutter={false}
+      header='For System'
+      headerClassName={classes.header}
     >
       <div className={classes.avatar}>
         <SystemIcon />
@@ -27,9 +27,9 @@ export const SystemCard: FC = memo(() => {
         <li className={classes.listItem}>
           <p className={classes.listTitle}>Total Reward</p>
           <FormatBalance
+            balance={totalReward.amount}
             className={classes.listContent}
             currency={totalReward.token}
-            balance={totalReward.amount}
           />
         </li>
         <li className={classes.listItem}>

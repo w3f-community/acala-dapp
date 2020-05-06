@@ -1,4 +1,4 @@
-import React, { FC, memo, useContext } from 'react'
+import React, { FC, memo, useContext } from 'react';
 
 import { DepositContext } from './Provider';
 import { DepositConsole } from './DepositConsole';

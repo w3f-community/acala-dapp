@@ -10,19 +10,14 @@ import { DepositContext } from './Provider';
 import { AccountDexTokens } from './AccountDexTokens';
 
 export const PoolOverview: FC = memo(() => {
-  const { enabledCurrencyIds, baseCurrencyId } = useContext(DepositContext);
-  const { active } = useAccounts();
+  const { enabledCurrencyIds } = useContext(DepositContext);
   const tableConfig: TableItem<CurrencyId>[] = [
     {
       title: 'Token Pair',
       align: 'left',
       width: 3,
       render: (token: CurrencyId) => (
-        <AccountDexTokens
-          account={active!.address}
-          baseCurrencyId={baseCurrencyId}
-          token={token}
-        />
+        <AccountDexTokens token={token} />
       )
     },
     {
@@ -30,8 +25,8 @@ export const PoolOverview: FC = memo(() => {
       align: 'left',
       width: 3,
       render: (token: CurrencyId) => (
-          <DexExchangeRate supply={token} />
-        )
+        <DexExchangeRate supply={token} />
+      )
     },
     {
       title: 'Current Pool Size',
@@ -53,17 +48,19 @@ export const PoolOverview: FC = memo(() => {
       title: 'Reward Ratio',
       align: 'right',
       width: 1,
-      render: (token: CurrencyId) => <DexRewardRatio token={token} />,
+      render: (token: CurrencyId) => <DexRewardRatio token={token} />
     },
     {
       title: 'Reward',
       align: 'right',
       width: 1,
-      render: (token: CurrencyId) => <DexReward token={token} />,
+      render: (token: CurrencyId) => <DexReward token={token} />
     }
   ];
+
   return (
-    <Card header='Deposit' gutter={false}>
+    <Card gutter={false}
+      header='Deposit'>
       <Table
         config={tableConfig}
         data={enabledCurrencyIds}

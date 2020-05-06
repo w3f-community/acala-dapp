@@ -8,9 +8,8 @@ import { useApi, useConstants } from '@honzon-platform/react-hooks';
 import { Confirm } from './Confirm';
 import { Success } from './Success';
 
-
 const Inner: FC = () => {
-  const { step, selectedToken } = useContext(createProviderContext);
+  const { selectedToken, step } = useContext(createProviderContext);
 
   const stepConfig = [
     {
@@ -26,12 +25,14 @@ const Inner: FC = () => {
       text: 'Confirm'
     }
   ];
+
   const renderTips = (): string => {
     const { stableCurrency } = useConstants();
 
     if (step === 'select') {
       return 'Each collateral type has its own unique risk profiles.';
     }
+
     if (step === 'generate') {
       return `Deposit ${selectedToken.toString()} as collateral to genearte ${stableCurrency}`;
     }
@@ -39,6 +40,7 @@ const Inner: FC = () => {
     if (step === 'confirm') {
       return `Confirm creating a collateralized loan for ${stableCurrency}`;
     }
+
     return '';
   };
 
@@ -47,20 +49,20 @@ const Inner: FC = () => {
       className={classes.root}
       gutter={false}
     >
-    {
-      step !== 'success' ? (
-        <>
-          <Step
-            config={stepConfig}
-            current={step}
-          />
-          <p className={classes.tips}>{renderTips()}</p>
-          {step === 'select' ? <SelectCollateral /> : null}
-          {step === 'generate' ? <Generate /> : null}
-          {step === 'confirm' ? <Confirm /> : null}
-        </>
-      ) : <Success />
-    }
+      {
+        step !== 'success' ? (
+          <>
+            <Step
+              config={stepConfig}
+              current={step}
+            />
+            <p className={classes.tips}>{renderTips()}</p>
+            {step === 'select' ? <SelectCollateral /> : null}
+            {step === 'generate' ? <Generate /> : null}
+            {step === 'confirm' ? <Confirm /> : null}
+          </>
+        ) : <Success />
+      }
     </Card>
   );
 };
@@ -71,4 +73,4 @@ export const CreateConsole = () => {
       <Inner />
     </CreateProvider>
   );
-}
+};

@@ -10,15 +10,16 @@ const PageWallet: FC = () => {
     <Page>
       <Page.Title title='Wallet' />
       <Page.Content>
-        <Grid container direction='column'>
+        <Grid container
+          direction='column'>
           <Grid item>
             <UserCard />
           </Grid>
           <Grid item>
             <WalletBalanceCard
-              title='Balance'
-              showHeader
               showCell={['token', 'amount', 'price', 'balance', 'action']}
+              showHeader
+              title='Balance'
             />
           </Grid>
           <Grid item>

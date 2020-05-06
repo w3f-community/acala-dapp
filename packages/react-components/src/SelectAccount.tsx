@@ -32,29 +32,29 @@ export const SelectAccount: React.FC<Props> = memo(({
   return (
     <Dialog
       className={classes.root}
+      onConfirm={confirmHandler}
       title='Choose Account'
       visiable={visable}
-      onConfirm={confirmHandler}
     >
       <ul className={classes.list}>
         {
           accounts.map((item, index) => {
             return (
               <li
-                key={`account-${item.address}`}
                 className={classes.item}
+                key={`account-${item.address}`}
                 onClick={genSelectHandler(index)}
               >
                 <Identicon
                   className={classes.icon}
-                  value={item.address}
                   size={16}
+                  value={item.address}
                 />
                 <p className={classes.account}>{item.meta.name}</p>
                 <div className={classes.checked}>
-                {
-                  selectedIndex === index ? <CheckedIcon /> : null
-                }
+                  {
+                    selectedIndex === index ? <CheckedIcon /> : null
+                  }
                 </div>
               </li>
             );

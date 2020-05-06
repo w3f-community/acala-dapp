@@ -6,7 +6,7 @@ import { Section, Card, Table, TableItem } from '@honzon-platform/ui-components'
 import { SwapContext, Token, DexExchangeRate, DexPoolSize } from '@honzon-platform/react-components';
 
 export const AllMarkets: FC = () => {
-  const { supplyCurrencies, baseCurrency } = useContext(SwapContext);
+  const { baseCurrency, supplyCurrencies } = useContext(SwapContext);
   const _supplyCurrencies = supplyCurrencies.filter((item: string | CurrencyId) => item.toString() !== baseCurrency.toString());
   const tableConfig: TableItem<string | CurrencyId>[] = [
     {
@@ -14,8 +14,8 @@ export const AllMarkets: FC = () => {
       align: 'left',
       render: (token: string | CurrencyId): ReactNode => (
         <Token
-          token={token}
           icon
+          token={token}
         />
       )
     },
@@ -42,4 +42,4 @@ export const AllMarkets: FC = () => {
       </Card>
     </Section>
   );
-}
+};

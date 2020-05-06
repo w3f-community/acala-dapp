@@ -69,7 +69,7 @@ export const LoanProvider: FC<PropsWithChildren<{}>> = memo(({ children }) => {
       return !item.collaterals.isEmpty && !item.debits.isEmpty;
     });
   };
- 
+
   return (
     <LoanContext.Provider
       value={{

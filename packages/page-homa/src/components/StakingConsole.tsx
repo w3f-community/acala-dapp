@@ -1,33 +1,33 @@
 import React, { FC, useContext, useCallback } from 'react';
 import { noop } from 'lodash';
 import { useFormik } from 'formik';
-import clsx from 'clsx';
 
 import { Fixed18, convertToFixed18 } from '@acala-network/app-util';
 import { Grid, List } from '@honzon-platform/ui-components';
-import { StakingPoolContext, TxButton, BalanceInput, formatCurrency, numToFixed18Inner, FormatBalance } from "@honzon-platform/react-components";
+import { StakingPoolContext, TxButton, BalanceInput, numToFixed18Inner, FormatBalance } from '@honzon-platform/react-components';
 import { useFormValidator } from '@honzon-platform/react-hooks';
 
 import classes from './StakingConsole.module.scss';
 
-export const StakingConsolee: FC = () => {
-  const { stakingPool, stakingPoolHelper, rewardRate } = useContext(StakingPoolContext);
+export const StakingConsole: FC = () => {
+  const { rewardRate, stakingPool, stakingPoolHelper } = useContext(StakingPoolContext);
+
   const validator = useFormValidator({
     stakingBalance: {
       type: 'balance',
-      currency: stakingPool.stakingCurrency
+      currency: stakingPool && stakingPool.stakingCurrency
     }
   });
   const form = useFormik({
     initialValues: {
-      stakingBalance: '' as any as number,
+      stakingBalance: '' as any as number
     },
     validate: validator,
     onSubmit: noop
   });
   const resetForm = useCallback(() => {
     form.resetForm();
-  }, []);
+  }, [form]);
 
   if (!stakingPoolHelper || !stakingPool) {
     return null;
@@ -42,21 +42,21 @@ export const StakingConsolee: FC = () => {
     {
       key: 'receivedLiquidToken',
       title: 'Mint',
-      render: (value: any) => (
-        <FormatBalance
+      render: (value: Fixed18) => (
+        value.isFinity() ? (<FormatBalance
           balance={value}
           currency={stakingPool.liquidCurrency}
-        />
+        />): '~'
       )
     },
     {
       key: 'depositStakingToken',
       title: 'Estimated Profit / Era',
-      render: (value: any) => (
-        <FormatBalance
+      render: (value: Fixed18) => (
+        value.isFinity() ? (<FormatBalance
           balance={value}
           currency={stakingPool.liquidCurrency}
-        />
+        />): '~'
       )
     }
   ];
@@ -75,49 +75,41 @@ export const StakingConsolee: FC = () => {
 
   return (
     <Grid
-      direction='column'
       className={classes.root}
+      direction='column'
     >
       <Grid item>
         <p>Deposit DOT & Mint Liquid DOT (L-DOT). Your DOTs will be staked to earn returns, meanwhile you can use, trade and invest L-DOT balance in your wallet.</p>
       </Grid>
       <Grid item>
-          <BalanceInput
-            id='stakingBalance'
-            name='stakingBalance'
-            value={form.values.stakingBalance}
-            onChange={form.handleChange}
-            token={stakingPool.stakingCurrency}
-            error={!!form.errors.stakingBalance}
-          />
+        <BalanceInput
+          error={!!form.errors.stakingBalance}
+          id='stakingBalance'
+          name='stakingBalance'
+          onChange={form.handleChange}
+          token={stakingPool.stakingCurrency}
+          value={form.values.stakingBalance}
+        />
       </Grid>
-      <Grid container item justifyContent='center'>
+      <Grid container
+        item
+        justifyContent='center'>
         <TxButton
-          size='middle'
           className={classes.txBtn}
           disabled={checkDisabled()}
-          section='homa'
           method='mint'
-          params={[numToFixed18Inner(form.values.stakingBalance)]}
           onSuccess={resetForm}
+          params={[numToFixed18Inner(form.values.stakingBalance)]}
+          section='homa'
+          size='middle'
         >
           Deposit
         </TxButton>
       </Grid>
-      <Grid
-        item
-        className={
-          clsx(classes.estimated, {
-            [classes.show]: !!form.values.stakingBalance
-          })
-        }
-      >
         <List
-          data={estimated}
           config={listConfig}
+          data={estimated}
         />
-      </Grid>
     </Grid>
   );
 };
-

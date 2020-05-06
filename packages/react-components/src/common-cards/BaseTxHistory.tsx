@@ -1,49 +1,49 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC } from 'react';
 import { Card, Table, TableItem } from '@honzon-platform/ui-components';
-import { useHistory, useAccounts } from '@honzon-platform/react-hooks';
+import { useHistory, useAccounts, ExtrinsicHistoryData } from '@honzon-platform/react-hooks';
 
 interface Props {
   section: string;
-  method: string;
+  method: string | string[];
+  config?: TableItem<any>[];
 }
 
+const defaultTableConfig: TableItem<ExtrinsicHistoryData>[] = [
+  {
+    key: 'tx',
+    title: 'Tx Hash',
+    render: (data) => {
+      return data.hash;
+    }
+  }
+];
+
 export const BaseTxHistory: FC<Props> = ({
-  section,
-  method
+  config = defaultTableConfig,
+  method,
+  section
 }) => {
   const { active } = useAccounts();
-  const { getHistory } = useHistory();
-  const [result, setResult] = useState<any[]>([]);
+  const { result } = useHistory({
+    method,
+    section,
+    signer: active ? active.address : ''
+  });
 
-  useEffect(() => {
-    if (active) {
-      getHistory({
-        section,
-        method,
-        signer: active.address
-      }, (result) => {
-        console.log(result);
-        setResult(result);
-      })
-    }
-  }, [active]);
+  if (!result.length) {
+    return null;
+  }
 
-  const tableConfig: TableItem[] = [
-    {
-      key: 'tx',
-      title: 'Tx Hash',
-      render: (data) => {
-        return data.hash
-      }
-    }
-  ]
   return (
-    <Card header='Transation'>
+    <Card
+      gutter={false}
+      header='Transaction'
+    >
       <Table
-        config={tableConfig}
+        config={config}
         data={result}
         showHeader
       />
     </Card>
   );
-}
+};

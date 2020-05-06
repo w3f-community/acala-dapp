@@ -36,7 +36,7 @@ export const LoanProvider: FC<BareProps> = ({
 
   const cancelCurrentTab = () => {
     setCurrentTab(prevTabRef.current);
-  }
+  };
 
   return (
     <LoanContext.Provider
@@ -51,4 +51,4 @@ export const LoanProvider: FC<BareProps> = ({
       {children}
     </LoanContext.Provider>
   );
-}
+};

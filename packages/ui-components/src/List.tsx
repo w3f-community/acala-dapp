@@ -34,7 +34,7 @@ export const List: FC<Props> = memo(({
 
           return (
             <li
-              className={clsx(classes.listItem,  itemClassName)}
+              className={clsx(classes.listItem, itemClassName)}
               key={`list-${key}-${index}`}
             >
               <div>{_config.title}</div>

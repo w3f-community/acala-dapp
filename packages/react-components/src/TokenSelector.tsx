@@ -41,9 +41,10 @@ export const TokenSelector: FC<Props> = memo(({
 
         return item;
       });
+
       setCurrencies(result);
     }
-  }, [api, currencies]);
+  }, [allCurrencyIds, api, currencies]);
 
   if (!_currencies.length) {
     return null;
@@ -54,8 +55,8 @@ export const TokenSelector: FC<Props> = memo(({
     render: () => {
       return (
         <Token
-          token={currency}
           icon
+          token={currency}
         />
       );
     }
@@ -68,9 +69,9 @@ export const TokenSelector: FC<Props> = memo(({
           className
         )
       }
-      value={value}
       config={config}
       onChange={onChange}
+      value={value}
     />
   );
 });

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 
 import { ReactComponent as ComingSoonImg } from './assets/coming-soon.svg';
 import classes from './ComingSoon.module.scss';
@@ -10,4 +10,4 @@ export const ComingSoon: FC = () => {
       <ComingSoonImg />
     </div>
   );
-}
+};

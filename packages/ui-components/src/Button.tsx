@@ -1,4 +1,4 @@
-import React, { FC, memo } from 'react';
+import React, { FC } from 'react';
 import clsx from 'clsx';
 
 import { BareProps } from './types';
@@ -29,14 +29,14 @@ export const Button: FC<ButtonProps> = ({
   size = 'middle',
   type = 'normal'
 }) => {
-  const _onClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const _onClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
     // handle disabled/loading status
     if (disabled || loading) {
       return;
     }
 
     onClick && onClick(event);
-  }
+  };
 
   return (
     <button
@@ -54,25 +54,26 @@ export const Button: FC<ButtonProps> = ({
       }
       onClick={_onClick}
     >
-      { loading ? (
+      {
+        loading ? (
           <Loading
-            size={18}
             className={classes.loading}
+            size={18}
           />
-        ) : null }
+        ) : null
+      }
       {children}
     </button>
   );
 };
-
 
 interface IconButtonProps extends ButtonProps {
   icon: IconType;
 }
 
 export const IconButton: FC<IconButtonProps> = ({
-  icon,
   className,
+  icon,
   ...other
 }) => {
   return (
@@ -85,7 +86,7 @@ export const IconButton: FC<IconButtonProps> = ({
       }
       {...other}
     >
-    { getIcon(icon) }
+      { getIcon(icon) }
     </Button>
   );
-}
+};

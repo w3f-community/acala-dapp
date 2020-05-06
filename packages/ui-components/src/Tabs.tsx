@@ -10,7 +10,7 @@ interface TabConfig {
 
 interface Props {
   config: TabConfig[];
-  style: 'normal' | 'button' | 'bar'
+  style: 'normal' | 'button' | 'bar';
 }
 
 export const Tabs: FC<Props> = memo(({

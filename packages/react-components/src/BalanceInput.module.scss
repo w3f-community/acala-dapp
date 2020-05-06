@@ -5,6 +5,19 @@
   padding-left: 16px;
   border: 1px solid #ecf0f2;
   border-radius: 2px;
+  transition: border-color 200ms;
+
+  &:hover, &.focused {
+    border-color: #173dc9;
+
+    .tokenSelector {
+      border-color: #173dc9;
+    }
+
+    .token {
+      border-color: #173dc9;
+    }
+  }
 
   &.error {
     border-color: #ff5500;
@@ -31,6 +44,7 @@
     width: 50%;
     border-left: 1px solid #ecf0f2;
     border-radius: 0;
+    transition: border-color 200ms;
 
     &.left {
       border-left: 0;

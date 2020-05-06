@@ -10,20 +10,27 @@ export const LoanConsole: FC = () => {
   const { currentTab } = useContext(LoanContext);
 
   return (
-    <Grid container direction='column'>
-      <Grid item container>
-        <Grid item flex={12}>
+    <Grid container
+      direction='column'>
+      <Grid container
+        item>
+        <Grid flex={12}
+          item>
           <LiquidationCard token={currentTab} />
         </Grid>
-        <Grid item flex={12}>
+        <Grid flex={12}
+          item>
           <CollateralizationCard token={currentTab} />
         </Grid>
       </Grid>
-      <Grid item container>
-        <Grid item flex={12}>
+      <Grid container
+        item>
+        <Grid flex={12}
+          item>
           <BorrowedConsole token={currentTab} />
         </Grid>
-        <Grid item flex={12}>
+        <Grid flex={12}
+          item>
           <CollateralConsole token={currentTab} />
         </Grid>
       </Grid>

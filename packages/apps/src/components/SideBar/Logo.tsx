@@ -9,4 +9,4 @@ export const Logo: FC = () => {
       <MandalaIogo/>
     </div>
   );
-}
+};

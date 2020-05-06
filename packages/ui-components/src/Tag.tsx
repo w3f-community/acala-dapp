@@ -3,10 +3,10 @@ import { BareProps } from './types';
 import classes from './Tag.module.scss';
 import clsx from 'clsx';
 
-type TagColor = 'normal' | 'white' | 'primary';
+type ColorType = 'normal' | 'white' | 'primary';
 
 interface Props extends BareProps {
-  color?: TagColor,
+  color?: ColorType;
   onClick?: () => void;
 }
 
@@ -35,7 +35,10 @@ export const Tag: FC<Props> = memo(({
 
 Tag.displayName = 'Tag';
 
-export const TagGroup: FC<BareProps> = memo(({ className, children }) => {
+export const TagGroup: FC<BareProps> = memo(({
+  children,
+  className
+}) => {
   return (
     <div className={clsx(classes.tagGroup, className)}>
       {children}

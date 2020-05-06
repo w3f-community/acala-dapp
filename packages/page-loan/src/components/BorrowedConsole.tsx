@@ -24,9 +24,11 @@ export const BorrowedConsole: FC<Props> = ({
     if (!currentUserLoanHelper.canPayBack) {
       return true;
     }
+
     if (currentUserLoanHelper.canPayBack.isZero()) {
       return true;
     }
+
     return false;
   };
 
@@ -34,9 +36,11 @@ export const BorrowedConsole: FC<Props> = ({
     if (!currentUserLoanHelper.canGenerate) {
       return true;
     }
+
     if (currentUserLoanHelper.canGenerate.isZero()) {
       return true;
     }
+
     return false;
   };
 
@@ -47,64 +51,64 @@ export const BorrowedConsole: FC<Props> = ({
   return (
     <Card
       className={classes.console}
-      headerClassName={classes.header}
       header={(
         <>
           <div>
             <span>Borrowed</span>
             <Token
-              token={stableCurrency}
               gutter
+              token={stableCurrency}
             />
           </div>
           <FormatBalance
-            currency={stableCurrency}
             balance={currentUserLoanHelper.debitAmount}
+            currency={stableCurrency}
           />
         </>
       )}
+      headerClassName={classes.header}
     >
-        <div className={classes.item}>
-          <div className={classes.itemContent}>
-            <p className={classes.itemTitle}>Can Pay Back</p>
-            <FormatBalance
-              className={classes.itemBalance}
-              currency={stableCurrency}
-              balance={currentUserLoanHelper.canPayBack}
-            />
-          </div>
-          <LonaActionButton
-            className={classes.itemAction}
-            disabled={checkCanPayBackDisabled()}
-            type='payback'
-            text='Payback'
-            token={token}
-            max={
-              Math.min(
-                convertToFixed18(balance || 0).toNumber(),
-                currentUserLoanHelper.canPayBack.sub(minmumDebitValue).toNumber()
-              )
-            }
+      <div className={classes.item}>
+        <div className={classes.itemContent}>
+          <p className={classes.itemTitle}>Can Pay Back</p>
+          <FormatBalance
+            balance={currentUserLoanHelper.canPayBack}
+            className={classes.itemBalance}
+            currency={stableCurrency}
           />
         </div>
-        <div className={classes.item}>
-          <div className={classes.itemContent}>
-            <p className={classes.itemTitle}>Can Generate</p>
-            <FormatBalance
-              className={classes.itemBalance}
-              currency={stableCurrency}
-              balance={currentUserLoanHelper.canGenerate}
-            />
-          </div>
-          <LonaActionButton
-            className={classes.itemAction}
-            disabled={checkCanGenerateDisabled()}
-            type='generate'
-            text='Generate'
-            token={token}
-            max={currentUserLoanHelper.canGenerate?.toNumber()}
+        <LonaActionButton
+          className={classes.itemAction}
+          disabled={checkCanPayBackDisabled()}
+          max={
+            Math.min(
+              convertToFixed18(balance || 0).toNumber(),
+              currentUserLoanHelper.canPayBack.sub(minmumDebitValue).toNumber()
+            )
+          }
+          text='Payback'
+          token={token}
+          type='payback'
+        />
+      </div>
+      <div className={classes.item}>
+        <div className={classes.itemContent}>
+          <p className={classes.itemTitle}>Can Generate</p>
+          <FormatBalance
+            balance={currentUserLoanHelper.canGenerate}
+            className={classes.itemBalance}
+            currency={stableCurrency}
           />
         </div>
+        <LonaActionButton
+          className={classes.itemAction}
+          disabled={checkCanGenerateDisabled()}
+          max={currentUserLoanHelper.canGenerate?.toNumber()}
+          text='Generate'
+          token={token}
+          type='generate'
+        />
+      </div>
     </Card>
   );
-}
+};

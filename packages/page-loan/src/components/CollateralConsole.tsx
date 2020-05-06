@@ -16,7 +16,7 @@ interface Props {
 export const CollateralConsole: FC<Props> = ({
   token
 }) => {
-  const { getCurrentUserLoanHelper, currentLoanType } = useLoan(token);
+  const { currentLoanType, getCurrentUserLoanHelper } = useLoan(token);
   const balance = useBalance(token);
   const currentUserLoanHelper = getCurrentUserLoanHelper();
 
@@ -27,68 +27,68 @@ export const CollateralConsole: FC<Props> = ({
   return (
     <Card
       className={classes.console}
-      headerClassName={classes.header}
       header={(
         <>
           <div>
             <span>Collateral</span>
             <Token
-              token={token}
               gutter
+              token={token}
             />
           </div>
           <FormatBalance
-            currency={currentLoanType!.token}
             balance={currentUserLoanHelper.collaterals}
+            currency={currentLoanType!.token}
           />
         </>
       )}
+      headerClassName={classes.header}
     >
-        <div className={classes.item}>
-          <div className={classes.itemContent}>
-            <p className={classes.itemTitle}>Required for Safety</p>
-            <FormatBalance
-              className={classes.itemBalance}
-              currency={currentLoanType!.token}
-              balance={currentUserLoanHelper.requiredCollateral}
-            />
-          </div>
-          <LonaActionButton
-            className={classes.itemAction}
-            type='deposit'
-            text='Deposit'
-            token={token}
-            max={convertToFixed18(balance || 0).toNumber()}
+      <div className={classes.item}>
+        <div className={classes.itemContent}>
+          <p className={classes.itemTitle}>Required for Safety</p>
+          <FormatBalance
+            balance={currentUserLoanHelper.requiredCollateral}
+            className={classes.itemBalance}
+            currency={currentLoanType!.token}
           />
         </div>
-        <div className={classes.item}>
-          <div className={classes.itemContent}>
-            <p className={classes.itemTitle}>Able to Withdraw</p>
-            <FormatBalance
-              className={classes.itemBalance}
-              currency={currentLoanType!.token}
-              balance={
-                currentUserLoanHelper.collaterals ?
-                currentUserLoanHelper.collaterals
+        <LonaActionButton
+          className={classes.itemAction}
+          max={convertToFixed18(balance || 0).toNumber()}
+          text='Deposit'
+          token={token}
+          type='deposit'
+        />
+      </div>
+      <div className={classes.item}>
+        <div className={classes.itemContent}>
+          <p className={classes.itemTitle}>Able to Withdraw</p>
+          <FormatBalance
+            balance={
+              currentUserLoanHelper.collaterals
+                ? currentUserLoanHelper.collaterals
                   .sub(currentUserLoanHelper.requiredCollateral)
-                : 0
-              }
-            />
-          </div>
-          <LonaActionButton
-            className={classes.itemAction}
-            type='withdraw'
-            text='Withdraw'
-            token={token}
-            max={
-                currentUserLoanHelper.collaterals ?
-                currentUserLoanHelper.collaterals
-                  .sub(currentUserLoanHelper.requiredCollateral)
-                  .toNumber()
                 : 0
             }
+            className={classes.itemBalance}
+            currency={currentLoanType!.token}
           />
         </div>
+        <LonaActionButton
+          className={classes.itemAction}
+          max={
+            currentUserLoanHelper.collaterals
+              ? currentUserLoanHelper.collaterals
+                .sub(currentUserLoanHelper.requiredCollateral)
+                .toNumber()
+              : 0
+          }
+          text='Withdraw'
+          token={token}
+          type='withdraw'
+        />
+      </div>
     </Card>
   );
-}
+};

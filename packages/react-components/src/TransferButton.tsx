@@ -17,7 +17,7 @@ export const TransferButton: FC<Props> = memo(({
   children,
   token
 }) => {
-  const { status, toggle, close } = useModal(false);
+  const { close, status, toggle } = useModal(false);
   const validator = useFormValidator({
     account: {
       type: 'string',
@@ -28,11 +28,11 @@ export const TransferButton: FC<Props> = memo(({
       currency: token,
       min: 0
     }
-  })
+  });
   const form = useFormik({
     initialValues: {
       account: '',
-      amount: '',
+      amount: ''
     },
     validate: validator,
     onSubmit: noop
@@ -42,16 +42,18 @@ export const TransferButton: FC<Props> = memo(({
     if (!(form.values.account && form.values.amount)) {
       return true;
     }
+
     if (form.errors.account || form.errors.amount) {
       return true;
     }
+
     return false;
   };
 
   const onSuccess = () => {
     form.resetForm();
     close();
-  }
+  };
 
   useEffect(() => {
     form.resetForm();
@@ -60,36 +62,36 @@ export const TransferButton: FC<Props> = memo(({
   return (
     <>
       <Button
-        size='small'
-        onClick={toggle}
         color='primary'
+        onClick={toggle}
+        size='small'
       >
-        {children ? children : 'Transfer'}
+        {children || 'Transfer'}
       </Button>
       <Dialog
-        title={`Transfer ${formatCurrency(token)}`}
-        visiable={status}
         action={(
-         <> 
+          <>
             <Button
-              size='small'
               color='normal'
               onClick={close}
+              size='small'
             >
               Cancel
             </Button>
             <TxButton
               disabled={checkDisabled()}
-              size='small'
-              section='currencies'
               method='transfer'
-              params={[form.values.account, token, numToFixed18Inner(form.values.amount)]}
               onSuccess={onSuccess}
+              params={[form.values.account, token, numToFixed18Inner(form.values.amount)]}
+              section='currencies'
+              size='small'
             >
               Transfer
             </TxButton>
-         </> 
+          </>
         )}
+        title={`Transfer ${formatCurrency(token)}`}
+        visiable={status}
       >
         <div>
           <FormItem label='Account'>

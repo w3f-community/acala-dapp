@@ -22,13 +22,14 @@ export const SystemInfoCard: FC = () => {
 
   const data = {
     stableCoinSupply: convertToFixed18(issuance && !issuance.isEmpty ? issuance : 0)
-  }
+  };
+
   return (
     <Card
-      header='System Info'
       gutter={false}
+      header='System Info'
     >
-      <List 
+      <List
         config={listConfig}
         data={data}
       />

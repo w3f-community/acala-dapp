@@ -10,8 +10,8 @@ interface Props extends BareProps {
   flex?: number;
   direction?: 'column' | 'row';
   gutter?: number;
-  justifyContent?: 'center' | 'flex-start' | 'flex-end' | 'space-between' | 'space-around',
-  alignItems?: 'center' | 'flex-start' | 'flex-end',
+  justifyContent?: 'center' | 'flex-start' | 'flex-end' | 'space-between' | 'space-around';
+  alignItems?: 'center' | 'flex-start' | 'flex-end';
   pDirection?: 'column' | 'row';
   pGutter?: number;
 }
@@ -20,11 +20,11 @@ export const Grid: FC<Props> = memo(({
   alignItems,
   children,
   className,
-  direction = 'row',
-  gutter = 24,
-  flex,
-  item,
   container,
+  direction = 'row',
+  flex,
+  gutter = 24,
+  item,
   justifyContent,
   pDirection,
   pGutter
@@ -61,7 +61,7 @@ export const Grid: FC<Props> = memo(({
     }
 
     return _style;
-  }
+  };
 
   return (
     <div
@@ -70,30 +70,30 @@ export const Grid: FC<Props> = memo(({
           className,
           {
             [classes.root]: container,
-            [classes[direction]]: container,
+            [classes[direction]]: container
           }
         )
       }
       style={getStyle()}
     >
-    {
-      React.Children.map(children, (node) => {
-        if (!node) {
-          return null;
-        }
+      {
+        React.Children.map(children, (node) => {
+          if (!node) {
+            return null;
+          }
 
-        if (item && !container) {
-          return node;
-        }
+          if (item && !container) {
+            return node;
+          }
 
-        const _props = {
-          pDirection: direction,
-          pGutter: gutter
-        } as any;
+          const _props = {
+            pDirection: direction,
+            pGutter: gutter
+          } as any;
 
-        return React.cloneElement(node as ReactElement, _props);
-      })
-    }
+          return React.cloneElement(node as ReactElement, _props);
+        })
+      }
     </div>
   );
 });

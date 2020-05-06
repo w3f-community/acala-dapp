@@ -46,7 +46,7 @@ export const CollateralizationCard: FC<Props> = ({
         />
       ),
       title: 'Interest Rate'
-    },
+    }
   ];
 
   const data = {
@@ -57,13 +57,13 @@ export const CollateralizationCard: FC<Props> = ({
 
   return (
     <Card
-      header='Collateralization'
       gutter={false}
+      header='Collateralization'
     >
-      <List 
+      <List
         config={listConfig}
         data={data}
       />
     </Card>
   );
-}
+};

@@ -6,15 +6,20 @@ import { StakingPoolContext, formatCurrency } from '@honzon-platform/react-compo
 
 export const SelectToken: FC = memo(() => {
   const { stakingPool } = useContext(StakingPoolContext);
-  const DEFAULT_VALUE= 'default';
+  const DEFAULT_VALUE = 'default';
   const config = [
     {
       value: DEFAULT_VALUE,
       render: (): string => {
+        if (!stakingPool) {
+          return '';
+        }
+
         return `${formatCurrency(stakingPool.stakingCurrency)}/${formatCurrency(stakingPool.liquidCurrency)}`;
       }
     }
-  ]
+  ];
+
   return (
     <Dropdown
       config={config}

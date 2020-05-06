@@ -1,4 +1,4 @@
-import React, { FC, memo } from 'react';
+import React, { FC, memo, FocusEventHandler, useState } from 'react';
 import clsx from 'clsx';
 
 import { CurrencyId } from '@acala-network/types/interfaces';
@@ -29,23 +29,24 @@ interface Props extends BareProps {
 }
 
 export const BalanceInput: FC<Props> = memo(({
-  currencies,
   className,
+  currencies,
   disabled = false,
   enableTokenSelect = false,
   error,
   id,
-  onMax,
-  showMaxBtn = false,
   name,
   onChange,
+  onMax,
   onTokenChange,
   placeholder,
-  tokenPosition = 'right',
+  showMaxBtn = false,
   token,
+  tokenPosition = 'right',
   value
 }) => {
   const { api } = useApi();
+  const [focused, setFocused] = useState<boolean>(false);
 
   if (typeof token === 'string') {
     token = getCurrencyIdFromName(api, token);
@@ -61,18 +62,28 @@ export const BalanceInput: FC<Props> = memo(({
               classes[tokenPosition]
             )
           }
+          currencies={currencies}
           onChange={onTokenChange}
           value={token as CurrencyId}
-          currencies={currencies}
         />
       );
-    } else {
+    }
+
+    return (
       <Token
         className={classes.token}
         token={token}
       />
-    }
-  }
+    );
+  };
+
+  const onFocus: FocusEventHandler<HTMLInputElement> = (e) => {
+    setFocused(true);
+  };
+
+  const onBlur: FocusEventHandler<HTMLInputElement> = (e) => {
+    setFocused(false);
+  };
 
   return (
     <div className={
@@ -80,19 +91,22 @@ export const BalanceInput: FC<Props> = memo(({
         className,
         classes.root,
         {
-          [classes.error]: error
+          [classes.error]: error,
+          [classes.focused]: focused
         }
       )
     }>
       {
         tokenPosition === 'left' ? renderToken() : null
       }
-      <input 
-        disabled={disabled}
+      <input
         className={classes.input}
+        disabled={disabled}
         id={id}
         name={name}
+        onBlur={onBlur}
         onChange={onChange}
+        onFocus={onFocus}
         placeholder={placeholder}
         type='number'
         value={value}
@@ -101,13 +115,13 @@ export const BalanceInput: FC<Props> = memo(({
         showMaxBtn ? (
           <Button
             className={classes.maxBtn}
-            type='ghost'
             color='primary'
             onClick={onMax}
+            type='ghost'
           >
             max
           </Button>
-          ): null
+        ) : null
       }
       {
         tokenPosition === 'right' ? renderToken() : null

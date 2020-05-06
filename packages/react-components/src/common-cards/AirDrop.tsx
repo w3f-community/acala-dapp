@@ -25,13 +25,13 @@ export const AirDrop: FC = () => {
 
   return (
     <Card
-      header='AirDrop'
       gutter={false}
+      header='AirDrop'
     >
       <Table<string[]>
-        showHeader
         config={tableConfig}
         data={keys}
+        showHeader
       />
     </Card>
   );

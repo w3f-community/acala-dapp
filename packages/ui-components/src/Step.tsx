@@ -20,9 +20,9 @@ export const Step: FC<Props> = memo(({
   config,
   current
 }) => {
-
   const isDone = (index: number): boolean => {
-    const currentArrayIndex = config.findIndex((item): boolean => item.index === current); 
+    const currentArrayIndex = config.findIndex((item): boolean => item.index === current);
+
     return index < currentArrayIndex;
   };
 
@@ -34,7 +34,6 @@ export const Step: FC<Props> = memo(({
         config.map((item, index) => {
           return (
             <li
-              key={`step-${item.index}-${item.text}`}
               className={clsx(
                 classes.item,
                 {
@@ -42,11 +41,12 @@ export const Step: FC<Props> = memo(({
                   [classes.done]: isDone(index)
                 }
               )}
+              key={`step-${item.index}-${item.text}`}
             >
               <span className={classes.point}>
                 {
                   isDone(index) ? (
-                      <CheckedIcon />
+                    <CheckedIcon />
                   ) : index + 1
                 }
               </span>

@@ -22,7 +22,6 @@ export const DexExchangeRate: FC<Props> = memo(({ supply, target }) => {
   const [supplyToken, setSupplyToken] = useState<CurrencyId | string>();
   const [targetToken, setTargetToken] = useState<CurrencyId | string>(baseCurrency);
 
-
   useEffect(() => {
     if (!supplyPool || !supply) {
       return;
@@ -31,7 +30,7 @@ export const DexExchangeRate: FC<Props> = memo(({ supply, target }) => {
     if (tokenEq(supply, baseCurrency) && !tokenEq(_target, baseCurrency) && targetPool) {
       setRatio(Fixed18.fromRational(
         targetPool.base.toString(),
-        targetPool.other.toString(),
+        targetPool.other.toString()
       ));
       setSupplyToken(target);
     }
@@ -39,7 +38,7 @@ export const DexExchangeRate: FC<Props> = memo(({ supply, target }) => {
     if (tokenEq(_target, baseCurrency) && !tokenEq(supply, baseCurrency) && supplyPool) {
       setRatio(Fixed18.fromRational(
         supplyPool.base.toString(),
-        supplyPool.other.toString(),
+        supplyPool.other.toString()
       ));
       setSupplyToken(supply);
     }
@@ -48,18 +47,17 @@ export const DexExchangeRate: FC<Props> = memo(({ supply, target }) => {
       setRatio(Fixed18.fromRational(
         Fixed18.fromRational(
           supplyPool.base.toString(),
-          supplyPool.other.toString(),
+          supplyPool.other.toString()
         ).toNumber(),
         Fixed18.fromRational(
           targetPool.base.toString(),
-          targetPool.other.toString(),
-        ).toNumber(),
+          targetPool.other.toString()
+        ).toNumber()
       ));
       setSupplyToken(supply);
       setTargetToken(target || baseCurrency);
     }
-  }, [supplyPool, targetPool, supply, target]);
-
+  }, [supplyPool, targetPool, supply, target, baseCurrency, _target]);
 
   return (
     <FormatBalance

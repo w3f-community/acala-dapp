@@ -1,4 +1,4 @@
-import React, { FC, PropsWithChildren, useEffect, useRef } from 'react';
+import React, { FC, PropsWithChildren, useEffect, useRef, ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import clsx from 'clsx';
 
@@ -6,7 +6,7 @@ import classes from './NotificationDisplay.module.scss';
 import { NotificationConfig } from './types';
 import { Loading } from '../Loading';
 import { ReactComponent as SuccessIcon } from '../assets/success.svg';
-import { ReactComponent as ErrorIcon } from '../assets/error.svg';;
+import { ReactComponent as ErrorIcon } from '../assets/error.svg';
 import { ReactComponent as InformationIcon } from '../assets/information.svg';
 
 const NotificationPortal: FC<PropsWithChildren<{}>> = ({ children }) => {
@@ -27,21 +27,21 @@ const NotificationPortal: FC<PropsWithChildren<{}>> = ({ children }) => {
 };
 
 const NotificationCard: FC<NotificationConfig> = (config) => {
-  const renderIcon = () => {
+  const renderIcon = (): ReactNode => {
     if (config.icon === 'loading') {
-      return <Loading />
+      return <Loading />;
     }
 
     if (config.icon === 'success') {
-      return <SuccessIcon />
+      return <SuccessIcon />;
     }
 
     if (config.icon === 'information') {
-      return <InformationIcon />
+      return <InformationIcon />;
     }
 
     if (config.icon === 'error') {
-      return <ErrorIcon />
+      return <ErrorIcon />;
     }
 
     return config.icon;

@@ -47,5 +47,5 @@ export const config: RouterConfigData[] = [
     ],
     element: <MainLayout sideBarProps={{ config: sideBarConfig }} />,
     path: '/'
-  },
+  }
 ];

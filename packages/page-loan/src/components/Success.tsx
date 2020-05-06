@@ -19,9 +19,9 @@ export const Success: FC = () => {
       <p className={classes.title}>Your loan is created, and aUSD is generated!</p>
       <SuccessBg className={classes.bg} />
       <Button
-        size='small'
         color='primary'
         onClick={handleDone}
+        size='small'
       >
       Done
       </Button>

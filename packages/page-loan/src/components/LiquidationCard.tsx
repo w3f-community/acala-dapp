@@ -13,8 +13,7 @@ interface Props {
 export const LiquidationCard: FC<Props> = memo(({
   token
 }) => {
-  const { getCurrentUserLoanHelper, currentLoanType } = useLoan(token);
-  const currentUserLoanHelper = getCurrentUserLoanHelper();
+  const { currentLoanType, currentUserLoanHelper } = useLoan(token);
   const listConfig = [
     {
       key: 'price',
@@ -50,15 +49,15 @@ export const LiquidationCard: FC<Props> = memo(({
   ];
 
   const data = {
-    price: currentUserLoanHelper.liquidationPrice,
-    ratio: currentUserLoanHelper.liquidationRatio,
+    price: currentUserLoanHelper?.liquidationPrice,
+    ratio: currentUserLoanHelper?.liquidationRatio,
     penalty: convertToFixed18(currentLoanType ? currentLoanType.liquidationPenalty : 0)
   };
 
   return (
     <Card
-      header='Liquidation'
       gutter={false}
+      header='Liquidation'
     >
       <List
         config={listConfig}

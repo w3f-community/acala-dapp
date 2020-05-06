@@ -21,10 +21,10 @@ export const TagInput: FC<Props> = memo(({
   return (
     <div>
       <input
-      id={id}
-      name={name}
-      onChange={onChange}
-      value={value}
+        id={id}
+        name={name}
+        onChange={onChange}
+        value={value}
       />
       {label ? <span>{label}</span> : null}
     </div>

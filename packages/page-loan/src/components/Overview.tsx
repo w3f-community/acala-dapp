@@ -43,9 +43,9 @@ export const Guide: FC = () => {
       />
       <GuideBG className={classes.guideBg} />
       <Button
+        color='primary'
         onClick={handleStart}
         size='small'
-        color='primary'
       >
         Get Started
       </Button>
@@ -94,6 +94,7 @@ export const Overview: FC = () => {
       width: 2,
       render: (data: DerivedUserLoan) => {
         const { getCurrentUserLoanHelper } = useLoan(data.token);
+
         return (
           <FormatBalance balance={getCurrentUserLoanHelper().debitAmount} />
         );
@@ -117,22 +118,22 @@ export const Overview: FC = () => {
 
         return (
           <Button
-            size='small'
             color='primary'
             onClick={handleClick}
+            size='small'
           >
             Manage Loan
           </Button>
         );
       }
-    },
+    }
   ];
 
   useEffect(() => {
     if (loans !== null) {
       setEmpty(!filterEmptyLoan(loans).length);
     }
-  }, [loans])
+  }, [loans]);
 
   // wait loading data
   if (empty === null) {
@@ -140,23 +141,23 @@ export const Overview: FC = () => {
   }
 
   if (empty) {
-    return <Guide />
+    return <Guide />;
   }
 
   return (
     <Card
-      header='Overview'
       gutter={false}
+      header='Overview'
     >
-    {
-      loans && (
-        <Table
-          showHeader
-          config={tableConfig}
-          data={filterEmptyLoan(loans)}
-        />
-      )
-    }
+      {
+        loans && (
+          <Table
+            config={tableConfig}
+            data={filterEmptyLoan(loans)}
+            showHeader
+          />
+        )
+      }
     </Card>
   );
-}
+};

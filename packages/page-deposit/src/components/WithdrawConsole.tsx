@@ -13,6 +13,8 @@ import { DepositContext } from './Provider';
 import { ReactComponent as RightArrowIcon } from '../assets/right-arrow.svg';
 import classes from './Withdraw.module.scss';
 import { AccountDexTokens } from './AccountDexTokens';
+import { useDexWithdrawShare } from './useDexWithdrawShare';
+import { nextTick } from 'q';
 
 interface InputAreaProps {
   error: string | undefined;
@@ -20,22 +22,22 @@ interface InputAreaProps {
   name: string;
   currencies?: Vec<CurrencyId>;
   value: number;
-  onChange: (eventOrPath: string | React.ChangeEvent<any>) => void
+  onChange: (eventOrPath: string | React.ChangeEvent<any>) => void;
   token: CurrencyId;
   share: Share | undefined;
   onTokenChange?: (token: CurrencyId) => void;
 }
 
 const InputArea: FC<InputAreaProps> = memo(({
+  currencies,
   error,
   id,
   name,
-  currencies,
   onChange,
   onTokenChange,
   share,
   token,
-  value,
+  value
 }) => {
   return (
     <div className={classes.inputAreaRoot}>
@@ -46,25 +48,25 @@ const InputArea: FC<InputAreaProps> = memo(({
         </p>
       </div>
       <BalanceInput
-        error={!!error}
-        id={id}
         currencies={currencies}
         enableTokenSelect
+        error={!!error}
+        id={id}
+        name={name}
         onChange={onChange}
         onTokenChange={onTokenChange}
-        name={name}
         token={token}
-        value={value}
         tokenPosition='left'
+        value={value}
       />
     </div>
   );
 });
+
 InputArea.displayName = 'InputArea';
 
 export const WithdrawConsole: FC = memo(() => {
-  const { active } = useAccounts();
-  const { enabledCurrencyIds, baseCurrencyId } = useContext(DepositContext);
+  const { enabledCurrencyIds } = useContext(DepositContext);
   const [otherCurrency, setOtherCurrency] = useState<CurrencyId>(enabledCurrencyIds[0]);
   const { share } = useDexShare(otherCurrency);
   const validator = useFormValidator({
@@ -73,19 +75,21 @@ export const WithdrawConsole: FC = memo(() => {
       min: 0,
       max: share ? convertToFixed18(share).toNumber() : 0
     }
-  })
+  });
   const form = useFormik({
     initialValues: {
       share: '' as any as number
     },
     validate: validator,
-    onSubmit: noop,
+    onSubmit: noop
   });
-
+  const withdrawTokens = useDexWithdrawShare(otherCurrency, form.values.share);
+  const _withdrawToken = withdrawTokens.map(item => ({ balance: item.balance?.toNumber(), currency: item.currency?.toString()}));
   const checkDisabled = () => {
     if (form.values.share && !form.errors.share) {
       return false;
     }
+
     return true;
   };
 
@@ -93,35 +97,34 @@ export const WithdrawConsole: FC = memo(() => {
     <Card>
       <div className={classes.main}>
         <InputArea
+          currencies={enabledCurrencyIds}
           error={form.errors.share}
           id='share'
           name='share'
-          value={form.values.share}
           onChange={form.handleChange}
-          token={otherCurrency}
-          currencies={enabledCurrencyIds}
-          share={share}
           onTokenChange={setOtherCurrency}
+          share={share}
+          token={otherCurrency}
+          value={form.values.share}
         />
         <RightArrowIcon className={classes.arrowIcon} />
         <div className={classes.output}>
-        {
-          form.values.share ? (
-            <AccountDexTokens
-              baseCurrencyId={baseCurrencyId}
-              token={otherCurrency}
-              account={active!.address}
-              withdraw={form.values.share}
-            />) : null
-        }
+          {
+            form.values.share ? (
+              <AccountDexTokens
+                token={otherCurrency}
+                withdraw={form.values.share}
+              />) : null
+          }
         </div>
         <TxButton
-          size='large'
+          addon={_withdrawToken}
           className={classes.txBtn}
           disabled={checkDisabled()}
-          section='dex'
           method='withdrawLiquidity'
           params={[otherCurrency, numToFixed18Inner(form.values.share)]}
+          section='dex'
+          size='large'
         >
           Withdraw
         </TxButton>

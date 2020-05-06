@@ -6,18 +6,19 @@ import { FormatBalance, SwapContext, FormatFixed18 } from '@honzon-platform/reac
 import { Fixed18 } from '@acala-network/app-util';
 
 interface Props {
+  slippage: number;
   target: number;
   supply: number;
 }
 
 export const SwapInfo: FC<Props> = memo(({
+  slippage,
   supply,
   target
 }) => {
   const {
-    slippage,
     supplyCurrency,
-    targetCurrency,
+    targetCurrency
   } = useContext(SwapContext);
 
   return (
@@ -25,15 +26,17 @@ export const SwapInfo: FC<Props> = memo(({
       <p>
         You are selling
         <Tag>
-          <FormatBalance balance={supply} currency={supplyCurrency} />
+          <FormatBalance balance={supply}
+            currency={supplyCurrency} />
         </Tag>
         for at least
         <Tag>
-          <FormatBalance balance={target} currency={targetCurrency} />
+          <FormatBalance balance={target}
+            currency={targetCurrency} />
         </Tag>
       </p>
       <p>
-        Expected price slippage 
+        Expected price slippage
         <Tag>
           <FormatFixed18
             data={Fixed18.fromNatural(slippage)}

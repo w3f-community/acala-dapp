@@ -19,18 +19,19 @@ export const DexUserShare: FC<Props> = memo(({
   token,
   withRatio = true
 }) => {
-  const {share, totalShares} = useDexShare(token, account);
+  const { share, totalShares } = useDexShare(token, account);
   const _share = convertToFixed18(share || 0);
   const _totalShares = convertToFixed18(totalShares || 0);
 
   if (withRatio) {
     return (
       <FormatFixed18
-      data={_share.div(_totalShares)}
-      format='percentage'
+        data={_share.div(_totalShares)}
+        format='percentage'
       />
     );
   }
+
   return (
     <FormatFixed18 data={_share} />
   );

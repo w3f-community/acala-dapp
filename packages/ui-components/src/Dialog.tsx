@@ -19,16 +19,16 @@ interface Props extends BareProps {
 }
 
 export const Dialog: FC<Props> = memo(({
+  action,
   cancelText = 'Cancel',
-  confirmText = 'Confrim',
-  className,
   children,
+  className,
+  confirmText = 'Confrim',
   onCancel,
   onConfirm,
+  showCancel = false,
   title,
-  visiable = true,
-  action,
-  showCancel = false
+  visiable = true
 }) => {
   /* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */
   const $body = document.querySelector('body')!;
@@ -39,6 +39,7 @@ export const Dialog: FC<Props> = memo(({
   useEffect((): () => void => {
     $body.append($div);
     $div.classList.add(`modal-${_uid.current}`);
+
     return (): void => { $body.removeChild($div); };
   }, [$body, $div]);
 
@@ -65,21 +66,21 @@ export const Dialog: FC<Props> = memo(({
         <div className={classes.content}>{children}</div>
         <div className={classes.action}>
           {
-            action ? action : (
+            action || (
               <>
                 {showCancel ? (
                   <Button
-                    size='small'
                     onClick={onCancel}
+                    size='small'
                   >
                     {cancelText}
                   </Button>
                 ) : null}
                 {onConfirm ? (
                   <Button
-                    size='small'
-                    onClick={onConfirm}
                     color='primary'
+                    onClick={onConfirm}
+                    size='small'
                   >
                     {confirmText}
                   </Button>

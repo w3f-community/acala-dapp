@@ -20,47 +20,48 @@ interface InputAreaProps {
   name: string;
   currencies?: (CurrencyId | string)[];
   value: number;
-  onChange: (event: React.ChangeEvent<any>) => void
+  onChange: (event: React.ChangeEvent<any>) => void;
   token: CurrencyId;
   onTokenChange?: (token: CurrencyId) => void;
 }
 
 const InputArea: FC<InputAreaProps> = memo(({
+  currencies,
   disabled,
   error,
   id,
   name,
-  currencies,
-  value,
   onChange,
   onTokenChange,
   token,
+  value
 }) => {
   return (
     <div className={classes.inputAreaRoot}>
       <div className={classes.inputAreaTitle}>
         <p>Deposit</p>
-        {token? <p className={classes.inputAreaBalance}>Balance: <UserBalance token={token} /> </p> : null}
+        {token ? <p className={classes.inputAreaBalance}>Balance: <UserBalance token={token} /> </p> : null}
       </div>
       <BalanceInput
+        currencies={currencies}
         disabled={disabled}
+        enableTokenSelect
+        error={!!error}
         id={id}
         name={name}
-        currencies={currencies}
-        enableTokenSelect
         onChange={onChange}
+        onTokenChange={onTokenChange}
         token={token}
         value={value}
-        onTokenChange={onTokenChange}
-        error={!!error}
       />
     </div>
   );
 });
+
 InputArea.displayName = 'InputArea';
 
 export const DepositConsole: FC = memo(() => {
-  const { enabledCurrencyIds, baseCurrencyId } = useContext(DepositContext);
+  const { baseCurrencyId, enabledCurrencyIds } = useContext(DepositContext);
   const [otherCurrency, setOtherCurrency] = useState<CurrencyId>(enabledCurrencyIds[0]);
   const { rate } = useDexExchangeRate(otherCurrency);
   const validator = useFormValidator({
@@ -78,27 +79,33 @@ export const DepositConsole: FC = memo(() => {
   const form = useFormik({
     initialValues: {
       other: '',
-      base: '',
+      base: ''
     },
     validate: validator,
-    onSubmit: noop,
+    onSubmit: noop
   });
+
   const handleOtherInput = (event: React.ChangeEvent<any>): void => {
     const value = Number(event.target.value);
+
     form.handleChange(event);
-    nextTick(() => { form.setFieldValue('base', Fixed18.fromNatural(value).mul(rate).toNumber()) });
+    nextTick(() => { form.setFieldValue('base', Fixed18.fromNatural(value).mul(rate).toNumber()); });
   };
+
   const handleSuccess = () => {
     // reset form
     form.resetForm();
   };
+
   const checkDisabled = () => {
     if (!(form.values.base && form.values.other)) {
       return true;
     }
+
     if (form.errors.base || form.errors.other) {
       return true;
     }
+
     return false;
   };
 
@@ -106,30 +113,28 @@ export const DepositConsole: FC = memo(() => {
     <Card>
       <div className={classes.main}>
         <InputArea
+          currencies={enabledCurrencyIds}
           error={form.errors.other}
           id={'other'}
           name={'other'}
-          value={form.values.other as any as number}
           onChange={handleOtherInput}
-          token={otherCurrency}
-          currencies={enabledCurrencyIds}
           onTokenChange={setOtherCurrency}
+          token={otherCurrency}
+          value={form.values.other as any as number}
         />
         <AddIcon className={classes.addIcon} />
         <InputArea
+          currencies={[baseCurrencyId]}
           error={form.errors.base}
           id={'base'}
           name={'base'}
-          value={form.values.base as any as number}
           onChange={form.handleChange}
-          currencies={[baseCurrencyId]}
           token={baseCurrencyId}
+          value={form.values.base as any as number}
         />
         <TxButton
-          size='large'
-          disabled={checkDisabled()}
           className={classes.txBtn}
-          section='dex'
+          disabled={checkDisabled()}
           method='addLiquidity'
           onSuccess={handleSuccess}
           params={
@@ -139,6 +144,8 @@ export const DepositConsole: FC = memo(() => {
               numToFixed18Inner(form.values.base)
             ]
           }
+          section='dex'
+          size='large'
         >
           Deposit
         </TxButton>

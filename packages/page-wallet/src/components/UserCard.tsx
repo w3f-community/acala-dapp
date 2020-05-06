@@ -23,7 +23,7 @@ export const UserCard: FC = memo(() => {
         type: 'success',
         title: 'Copy Success',
         removedDelay: 2000,
-        placement: 'top right',
+        placement: 'top right'
       });
     };
 
@@ -31,29 +31,29 @@ export const UserCard: FC = memo(() => {
       <>
         <Identicon
           className={classes.icon}
-          value={active.address}
           size={64}
           theme='substrate'
+          value={active.address}
         />
         <div className={classes.info}>
           <div className={classes.name}>
             {active.meta.name || 'User'}
             <Button
               color='primary'
-              type='ghost'
               onClick={openSelectAccount}
+              type='ghost'
             >
             change
             </Button>
           </div>
           <FormatAddress
-            className={classes.address}
             address={active.address}
+            className={classes.address}
           />
         </div>
         <CopyToClipboard
-          text={active.address}
           onCopy={handleCopy}
+          text={active.address}
         >
           <div className={classes.copy}>
             <CopyIcon />
@@ -61,7 +61,7 @@ export const UserCard: FC = memo(() => {
         </CopyToClipboard>
       </>
     );
-  }
+  };
 
   return (
     <Card
