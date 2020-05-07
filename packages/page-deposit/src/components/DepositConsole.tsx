@@ -1,17 +1,17 @@
-import React, { FC, memo, useState, useContext, ReactNode } from 'react';
+import React, { FC, memo, useState, useContext } from 'react';
 import { noop } from 'lodash';
 import { useFormik } from 'formik';
 
 import { CurrencyId } from '@acala-network/types/interfaces';
+import { Fixed18 } from '@acala-network/app-util';
 
 import { Card, nextTick } from '@honzon-platform/ui-components';
-import { useAccounts, useDexExchangeRate, useFormValidator } from '@honzon-platform/react-hooks';
+import { useDexExchangeRate, useFormValidator } from '@honzon-platform/react-hooks';
 import { BalanceInput, TxButton, numToFixed18Inner, DexExchangeRate, DexPoolSize, DexUserShare, UserBalance } from '@honzon-platform/react-components';
 
 import classes from './DepositConsole.module.scss';
 import { ReactComponent as AddIcon } from '../assets/add.svg';
 import { DepositContext } from './Provider';
-import { Fixed18 } from '@acala-network/app-util';
 
 interface InputAreaProps {
   disabled?: boolean;

@@ -6,13 +6,14 @@
 }
 
 .headerCell {
-  padding: 12px 0;
+  padding: 14px 0 15px 0;
   border-bottom: 1px solid #ecf0f2;
   font-size: $font-m;
+  font-weight: 500;
 }
 
 .cell {
-  padding: 12px 0;
+  height: 64px;
   border-bottom: 1px solid #ecf0f2;
   font-size: $font-m;
   color: $color-gray;
@@ -49,7 +50,7 @@
 }
 
 .row {
-  transition: all 200ms linear;
+  transition: all 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
 }
 
 .row:last-child {
@@ -68,4 +69,18 @@
 
 .row:hover {
   background: $table-active-color;
+}
+
+.empty {
+  height: 200px;
+  font-size: 16px;
+  text-align: center;
+}
+
+.small {
+  .cell {
+    height: auto;
+    padding-top: 16px;
+    padding-bottom: 16px;
+  }
 }

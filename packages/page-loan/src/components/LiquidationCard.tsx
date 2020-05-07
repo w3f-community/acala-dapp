@@ -56,7 +56,7 @@ export const LiquidationCard: FC<Props> = memo(({
 
   return (
     <Card
-      gutter={false}
+      padding={false}
       header='Liquidation'
     >
       <List

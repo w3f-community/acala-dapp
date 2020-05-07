@@ -9,7 +9,7 @@ interface Props extends BareProps {
   item?: boolean;
   flex?: number;
   direction?: 'column' | 'row';
-  gutter?: number;
+  padding?: number;
   justifyContent?: 'center' | 'flex-start' | 'flex-end' | 'space-between' | 'space-around';
   alignItems?: 'center' | 'flex-start' | 'flex-end';
   pDirection?: 'column' | 'row';
@@ -23,7 +23,7 @@ export const Grid: FC<Props> = memo(({
   container,
   direction = 'row',
   flex,
-  gutter = 24,
+  padding = 24,
   item,
   justifyContent,
   pDirection,
@@ -33,19 +33,19 @@ export const Grid: FC<Props> = memo(({
     const _style = {} as CSSProperties;
 
     if (pDirection === 'row' && item) {
-      _style.marginLeft = gutter || pGutter;
+      _style.marginLeft = padding || pGutter;
     }
 
     if (pDirection === 'column' && item) {
-      _style.marginTop = gutter || pGutter;
+      _style.marginTop = padding || pGutter;
     }
 
     if (direction === 'row' && container) {
-      _style.marginLeft = -gutter || -(pGutter || 0);
+      _style.marginLeft = -padding || -(pGutter || 0);
     }
 
     if (direction === 'column' && container) {
-      _style.marginTop = -gutter || -(pGutter || 0);
+      _style.marginTop = -padding || -(pGutter || 0);
     }
 
     if (flex) {
@@ -88,7 +88,7 @@ export const Grid: FC<Props> = memo(({
 
           const _props = {
             pDirection: direction,
-            pGutter: gutter
+            pGutter: padding
           } as any;
 
           return React.cloneElement(node as ReactElement, _props);

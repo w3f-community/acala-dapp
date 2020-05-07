@@ -5,6 +5,7 @@ import { ReactComponent as DepositIcon } from '../assets/deposit.svg';
 import { ReactComponent as WithdrawIcon } from '../assets/withdraw.svg';
 import { ReactComponent as RewardIcon } from '../assets/reward.svg';
 import { DepositContext } from './Provider';
+import classes from './SelectAction.module.scss';
 
 export const SelectAction: FC = memo(() => {
   const { action, setActiveAction } = useContext(DepositContext);
@@ -23,7 +24,7 @@ export const SelectAction: FC = memo(() => {
       render: () => (
         <>
           <WithdrawIcon />
-          <span>Withdraw Liquidity</span>
+          <span>Withdraw Liquidity & Reward</span>
         </>
       )
     },
@@ -40,6 +41,7 @@ export const SelectAction: FC = memo(() => {
 
   return (
     <Dropdown
+      className={classes.dropdown}
       config={config}
       onChange={setActiveAction}
       placeholder=''

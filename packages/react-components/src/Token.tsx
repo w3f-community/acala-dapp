@@ -16,7 +16,7 @@ interface Props extends BareProps {
   icon?: boolean;
   name?: boolean;
   upper?: boolean;
-  gutter?: boolean;
+  padding?: boolean;
 }
 
 const ICON_CONFIG = {
@@ -29,7 +29,7 @@ const ICON_CONFIG = {
 
 export const Token: FC<Props> = memo(({
   className,
-  gutter = false,
+  padding = false,
   icon,
   name = true,
   token,
@@ -56,7 +56,7 @@ export const Token: FC<Props> = memo(({
           classes.root,
           className,
           {
-            [classes.gutter]: gutter
+            [classes.padding]: padding
           }
         )
       }

@@ -33,6 +33,7 @@ export const DexExchangeRate: FC<Props> = memo(({ supply, target }) => {
         targetPool.other.toString()
       ));
       setSupplyToken(target);
+      setTargetToken(baseCurrency);
     }
 
     if (tokenEq(_target, baseCurrency) && !tokenEq(supply, baseCurrency) && supplyPool) {
@@ -41,6 +42,7 @@ export const DexExchangeRate: FC<Props> = memo(({ supply, target }) => {
         supplyPool.other.toString()
       ));
       setSupplyToken(supply);
+      setTargetToken(baseCurrency);
     }
 
     if (!tokenEq(_target, baseCurrency) && !tokenEq(supply, baseCurrency) && supplyPool && targetPool) {

@@ -14,7 +14,7 @@ export const UserCard: FC = memo(() => {
     <Card
       className={classes.root}
       contentClassName={classes.content}
-      gutter={false}
+      padding={false}
       header='For User'
       headerClassName={classes.header}
     >

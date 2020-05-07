@@ -82,13 +82,14 @@ export const WalletBalanceCard: FC<Props> = memo(({
 
   return (
     <Card
-      gutter={false}
+      padding={false}
       header={title || 'Wallet Balance'}
     >
       <Table
         config={tableConfig}
         data={allToken}
         showHeader={showHeader}
+        size='small'
       />
     </Card>
   );

@@ -48,7 +48,7 @@ export const SystemInfo: FC = () => {
   };
 
   return (
-    <Card gutter={false}
+    <Card padding={false}
       header='System Info'>
       <List config={listConfig}
         data={listData} />

@@ -75,7 +75,7 @@ export const CollateralCard = () => {
   return (
     <Card
       className={classes.root}
-      gutter={false}
+      padding={false}
       header={
         <>
           <p>Collateral</p>

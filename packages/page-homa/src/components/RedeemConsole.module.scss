@@ -1,4 +1,16 @@
 .root {
+  .notice {
+    font-size: 16px;
+    line-height: 19px;
+    color: #999999;
+  }
+
+  .eraInfo {
+    font-size: 12px;
+    line-height: 18px;
+    color: #666666;
+  }
+
   .txBtn {
     width: 250px;
     height: 40px;
@@ -21,18 +33,16 @@
     }
   }
 
-  .info {
-    height: 0;
-    opacity: 0;
-    transition: all 200ms ease-in-out;
-
-    &.show {
-      height: auto;
-      opacity: 1;
-    }
-  }
-
   .menu {
     width: 200px;
+  }
+
+  .listItem {
+    padding-left: 0;
+    padding-right: 0;
+
+    & :global(.aca-list--label) {
+      color: #999999;
+    }
   }
 }

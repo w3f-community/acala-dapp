@@ -79,7 +79,9 @@ export const StakingConsole: FC = () => {
       direction='column'
     >
       <Grid item>
-        <p>Deposit DOT & Mint Liquid DOT (L-DOT). Your DOTs will be staked to earn returns, meanwhile you can use, trade and invest L-DOT balance in your wallet.</p>
+        <p className={classes.notice}>
+          Deposit DOT & Mint Liquid DOT (L-DOT). Your DOTs will be staked to earn returns, meanwhile you can use, trade and invest L-DOT balance in your wallet.
+        </p>
       </Grid>
       <Grid item>
         <BalanceInput
@@ -107,6 +109,7 @@ export const StakingConsole: FC = () => {
         </TxButton>
       </Grid>
         <List
+          itemClassName={classes.listItem}
           config={listConfig}
           data={estimated}
         />

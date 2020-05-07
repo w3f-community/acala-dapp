@@ -9,14 +9,14 @@ interface Props extends BareProps {
   contentClassName?: string;
   header?: ReactNode;
   divider?: boolean;
-  gutter?: boolean;
+  padding?: boolean;
 }
 
 export const Card: React.FC<Props> = memo(({
   children,
   className,
   contentClassName,
-  gutter = true,
+  padding = true,
   header,
   headerClassName
 }) => {
@@ -28,8 +28,8 @@ export const Card: React.FC<Props> = memo(({
           contentClassName,
           classes.content,
           {
-            [classes.gutter]: gutter,
-            [classes.noTitleContent]: !header && gutter
+            [classes.padding]: padding,
+            [classes.noTitleContent]: !header && padding
           }
         )
       }>

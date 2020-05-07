@@ -32,7 +32,7 @@ export const CollateralConsole: FC<Props> = ({
           <div>
             <span>Collateral</span>
             <Token
-              gutter
+              padding
               token={token}
             />
           </div>

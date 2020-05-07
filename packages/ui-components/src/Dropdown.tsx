@@ -1,4 +1,4 @@
-import React, { memo, FC, ReactNode, useState } from 'react';
+import React, { memo, FC, ReactNode, useState, useRef, createRef, useEffect } from 'react';
 import clsx from 'clsx';
 
 import { ReactComponent as ArrowDownIcon } from './assets/arrow-down.svg';
@@ -19,6 +19,9 @@ interface Props extends BareProps {
   error?: boolean;
   border?: boolean;
   menuClassName?: string;
+  itemClassName?: string;
+  arrowClassName?: string;
+  activeContentClassName?: string;
   selectedRender?: (value: any) => ReactNode;
 }
 
@@ -27,6 +30,9 @@ export const Dropdown: FC<Props> = memo(({
   className,
   config,
   menuClassName,
+  itemClassName,
+  arrowClassName,
+  activeContentClassName,
   onChange,
   placeholder,
   selectedRender,
@@ -34,7 +40,19 @@ export const Dropdown: FC<Props> = memo(({
   value
 }) => {
   const [open, setOpen] = useState<boolean>(false);
+  const $rootRef = createRef<HTMLDivElement>();
   const active = config.find((data: DropdownConfig) => data.value === value);
+
+  useEffect(() => {
+    if (!$rootRef.current) {
+      return;
+    }
+    const $root = $rootRef.current;
+
+    $root.querySelectorAll('li').forEach(($item): void => {
+      $item.style.height = getComputedStyle($root).height;
+    });
+  }, [$rootRef]);
 
   const closeMenu = (): void => {
     setOpen(false);
@@ -63,6 +81,7 @@ export const Dropdown: FC<Props> = memo(({
 
   return (
     <div
+      ref={$rootRef}
       className={
         clsx(classes.root,
           className,
@@ -79,10 +98,10 @@ export const Dropdown: FC<Props> = memo(({
         className={classes.activeRoot}
         onClick={toggleMenu}
       >
-        <div className={classes.activeContent}>
+        <div className={clsx(classes.activeContent, activeContentClassName)}>
           {renderSelected()}
         </div>
-        <div className={classes.activeAction}>
+        <div className={clsx(classes.arrow, arrowClassName)}>
           <ArrowDownIcon />
         </div>
       </div>
@@ -90,7 +109,7 @@ export const Dropdown: FC<Props> = memo(({
         {config.map((item: DropdownConfig): ReactNode => {
           return (
             <li
-              className={classes.menuItem}
+              className={clsx(classes.menuItem, itemClassName)}
               key={`dropdown-${item.value}`}
               onClick={() => onItemSelect(item.value)}
             >

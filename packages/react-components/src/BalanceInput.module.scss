@@ -3,9 +3,9 @@
   align-items: stretch;
   height: 58px;
   padding-left: 16px;
-  border: 1px solid #ecf0f2;
+  border: 1px solid #cccccc;
   border-radius: 2px;
-  transition: border-color 200ms;
+  transition: border-color 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
 
   &:hover, &.focused {
     border-color: #173dc9;
@@ -21,6 +21,10 @@
 
   &.error {
     border-color: #ff5500;
+
+    .tokenSelector {
+      border-color: #ff5500;
+    }
   }
 
   .input {
@@ -42,13 +46,12 @@
     height: auto;
     max-width: 180px;
     width: 50%;
-    border-left: 1px solid #ecf0f2;
+    border-left: 1px solid #cccccc;
     border-radius: 0;
-    transition: border-color 200ms;
 
     &.left {
       border-left: 0;
-      border-right: 1px solid #ecf0f2;
+      border-right: 1px solid #cccccc;
       margin-right: 16px;
     }
   }
@@ -57,7 +60,7 @@
     flex-grow: 0;
     flex-shrink: 0;
     border: none;
-    border-left: 1px solid #ecf0f2;
+    border-left: 1px solid #cccccc;
     border-radius: 0;
     padding: 0 16px;
   }

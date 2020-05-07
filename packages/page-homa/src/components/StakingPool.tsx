@@ -63,7 +63,7 @@ export const StakingPool: FC = () => {
   return (
     <Card
       header='Staking Pools'
-      gutter={false}
+      padding={false}
     >
       <Table
         config={tableConfig}

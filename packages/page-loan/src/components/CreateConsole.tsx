@@ -47,7 +47,7 @@ const Inner: FC = () => {
   return (
     <Card
       className={classes.root}
-      gutter={false}
+      padding={false}
     >
       {
         step !== 'success' ? (

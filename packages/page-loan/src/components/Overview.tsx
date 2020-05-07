@@ -146,7 +146,7 @@ export const Overview: FC = () => {
 
   return (
     <Card
-      gutter={false}
+      padding={false}
       header='Overview'
     >
       {

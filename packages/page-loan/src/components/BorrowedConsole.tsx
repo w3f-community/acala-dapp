@@ -56,7 +56,7 @@ export const BorrowedConsole: FC<Props> = ({
           <div>
             <span>Borrowed</span>
             <Token
-              gutter
+              padding
               token={stableCurrency}
             />
           </div>

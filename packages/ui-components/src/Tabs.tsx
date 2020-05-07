@@ -1,23 +1,32 @@
-import React, { FC, ReactNode, useState, memo } from 'react';
+import React, { FC, ReactNode, useState, memo, useEffect } from 'react';
 import clsx from 'clsx';
 import { randomID } from './utils';
 import classes from './Tabs.module.scss';
 
-interface TabConfig {
+export interface TabConfig {
   title: string;
-  render: () => ReactNode;
+  render?: () => ReactNode;
+  value?: string;
 }
 
 interface Props {
   config: TabConfig[];
   style: 'normal' | 'button' | 'bar';
+  onChange?: (active: TabConfig) => void;
 }
 
 export const Tabs: FC<Props> = memo(({
   config,
-  style = 'normal'
+  style = 'normal',
+  onChange
 }) => {
   const [active, setActive] = useState<number>(0);
+
+  useEffect(() => {
+    if (config[active]) {
+      onChange && onChange(config[active]);
+    }
+  }, [active, config])
 
   const onClick = (index: number): void => {
     setActive(index);
@@ -40,9 +49,13 @@ export const Tabs: FC<Props> = memo(({
           })
         }
       </div>
-      <div className={classes.tabContent}>
-        {config[active].render()}
-      </div>
+      {
+        config[active]?.render ? (
+          <div className={classes.tabContent}>
+            {config[active]?.render()}
+          </div>
+        ) : null
+      }
     </div>
   );
 });

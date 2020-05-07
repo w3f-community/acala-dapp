@@ -28,6 +28,8 @@
       "@honzon-platform/page-swap/*": ["page-swap/src/*"],
       "@honzon-platform/page-deposit": ["page-deposit/src"],
       "@honzon-platform/page-deposit/*": ["page-deposit/src/*"],
+      "@honzon-platform/page-governance": ["page-governance/src"],
+      "@honzon-platform/page-governance/*": ["page-governance/src/*"],
       "@honzon-platform/react-hooks/*": ["react-hooks/src/*"],
       "@honzon-platform/react-hooks": ["react-hooks/src"],
       "@honzon-platform/react-environment/*": ["react-environment/src/*"],

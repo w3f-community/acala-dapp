@@ -57,7 +57,7 @@ export const CollateralizationCard: FC<Props> = ({
 
   return (
     <Card
-      gutter={false}
+      padding={false}
       header='Collateralization'
     >
       <List

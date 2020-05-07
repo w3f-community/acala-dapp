@@ -7,7 +7,7 @@
   border-radius: 2px;
   font-weight: 500;
   cursor: pointer;
-  transition: all 200ms;
+  transition: all 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
 
   // clear default apperance
   border: none;

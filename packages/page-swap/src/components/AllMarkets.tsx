@@ -33,7 +33,7 @@ export const AllMarkets: FC = () => {
 
   return (
     <Section title='All Markets'>
-      <Card gutter={false}>
+      <Card padding={false}>
         <Table
           config={tableConfig}
           data={_supplyCurrencies}

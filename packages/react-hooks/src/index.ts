@@ -31,3 +31,7 @@ export * from './useStakingPool';
 
 // loan
 export * from './useLoan';
+
+// council
+export * from './useCouncilList';
+export * from './useCouncilMembers';

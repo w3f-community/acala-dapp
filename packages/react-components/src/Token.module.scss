@@ -2,13 +2,13 @@
   display: flex;
   align-items: center;
 
-  &.gutter {
+  &.padding {
     margin: 0 4px;
   }
 }
 
 .icon {
-  margin-right: 8px;
+  margin-right: 12px;
   flex: 0 0 42px;
   height: 42px;
   border-radius: 50%;

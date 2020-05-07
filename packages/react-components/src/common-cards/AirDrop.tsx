@@ -25,7 +25,7 @@ export const AirDrop: FC = () => {
 
   return (
     <Card
-      gutter={false}
+      padding={false}
       header='AirDrop'
     >
       <Table<string[]>

@@ -30,19 +30,16 @@ export const BaseTxHistory: FC<Props> = ({
     signer: active ? active.address : ''
   });
 
-  if (!result.length) {
-    return null;
-  }
-
   return (
     <Card
-      gutter={false}
+      padding={false}
       header='Transaction'
     >
       <Table
         config={config}
         data={result}
         showHeader
+        empty='No Tx History'
       />
     </Card>
   );

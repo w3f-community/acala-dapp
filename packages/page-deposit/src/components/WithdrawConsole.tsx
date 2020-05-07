@@ -6,7 +6,7 @@ import { Vec } from '@polkadot/types';
 import { Card } from '@honzon-platform/ui-components';
 import { CurrencyId, Share } from '@acala-network/types/interfaces';
 import { BalanceInput, TxButton, numToFixed18Inner, DexExchangeRate, DexPoolSize, DexUserShare } from '@honzon-platform/react-components';
-import { useAccounts, useFormValidator, useDexShare } from '@honzon-platform/react-hooks';
+import { useFormValidator, useDexShare } from '@honzon-platform/react-hooks';
 import { convertToFixed18 } from '@acala-network/app-util';
 
 import { DepositContext } from './Provider';
@@ -14,7 +14,7 @@ import { ReactComponent as RightArrowIcon } from '../assets/right-arrow.svg';
 import classes from './Withdraw.module.scss';
 import { AccountDexTokens } from './AccountDexTokens';
 import { useDexWithdrawShare } from './useDexWithdrawShare';
-import { nextTick } from 'q';
+
 
 interface InputAreaProps {
   error: string | undefined;
@@ -42,9 +42,9 @@ const InputArea: FC<InputAreaProps> = memo(({
   return (
     <div className={classes.inputAreaRoot}>
       <div className={classes.inputAreaTitle}>
-        <p>Share</p>
+        <p>Pool Tokens</p>
         <p>
-          {share ? convertToFixed18(share).toString() : ''}
+          Balance: {share ? convertToFixed18(share).toString() : ''}
         </p>
       </div>
       <BalanceInput
@@ -56,7 +56,6 @@ const InputArea: FC<InputAreaProps> = memo(({
         onChange={onChange}
         onTokenChange={onTokenChange}
         token={token}
-        tokenPosition='left'
         value={value}
       />
     </div>
@@ -109,13 +108,18 @@ export const WithdrawConsole: FC = memo(() => {
         />
         <RightArrowIcon className={classes.arrowIcon} />
         <div className={classes.output}>
-          {
-            form.values.share ? (
-              <AccountDexTokens
-                token={otherCurrency}
-                withdraw={form.values.share}
-              />) : null
-          }
+          <div className={classes.outputTitle}>
+            <p>Output: Liquidity + Reward</p>
+          </div>
+          <div className={classes.outputContent}>
+            {
+              form.values.share ? (
+                <AccountDexTokens
+                  token={otherCurrency}
+                  withdraw={form.values.share}
+                />) : null
+            }
+          </div>
         </div>
         <TxButton
           addon={_withdrawToken}

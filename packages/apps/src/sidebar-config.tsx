@@ -31,12 +31,12 @@ export const sideBarConfig: SideBarConfig = {
       icon: <LiquidSVG />,
       name: 'Liquid DOT',
       path: 'homa'
+    },
+    {
+      icon: <GovernanceSVG />,
+      name: 'Governance',
+      path: 'governance'
     }
-    // {
-    //   icon: <GovernanceSVG />,
-    //   name: 'Governance',
-    //   path: 'governance'
-    // }
   ],
   socialMedia: [
     {

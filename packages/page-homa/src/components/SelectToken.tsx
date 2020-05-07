@@ -4,6 +4,8 @@ import { noop } from 'lodash';
 import { Dropdown } from '@honzon-platform/ui-components';
 import { StakingPoolContext, formatCurrency } from '@honzon-platform/react-components';
 
+import classes from './SelectToken.module.scss';
+
 export const SelectToken: FC = memo(() => {
   const { stakingPool } = useContext(StakingPoolContext);
   const DEFAULT_VALUE = 'default';
@@ -22,6 +24,8 @@ export const SelectToken: FC = memo(() => {
 
   return (
     <Dropdown
+      className={classes.root}
+      activeContentClassName={classes.activeContent}
       config={config}
       onChange={noop}
       placeholder={''}

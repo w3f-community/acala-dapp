@@ -36,15 +36,15 @@ export const SwapProvider: FC<PropsWithChildren<{}>> = memo(({ children }) => {
   const defaultSupplyCurrency = supplyCurrencies[0];
   const baseCurrency = api.consts.dex.getBaseCurrencyId as CurrencyId;
   const targetCurrencies = supplyCurrencies.slice();
-  const feeRate = convertToFixed18(api.consts.dex.getExchangeFee);
-  const [pool, setPool] = useStateWithCallback<PoolData>({
+  const feeRate = api.consts.dex.getExchangeFee;
+  const [pool, setPool] = useState<PoolData>({
     supplyCurrency: defaultSupplyCurrency,
     supplySize: 0,
     targetCurrency: baseCurrency,
     targetSize: 0
   });
 
-  const setCurrency = useCallback(async (supply: CurrencyId, target: CurrencyId, callback?: (pool: PoolData) => void): Promise<void> => {
+  const setCurrency = useCallback(async (supply: CurrencyId, target: CurrencyId): Promise<void> => {
     // base to other
     if (tokenEq(supply, baseCurrency) && !tokenEq(target, baseCurrency)) {
       const pool = await (api.derive as any).dex.pool(target) as DerivedDexPool;
@@ -54,7 +54,7 @@ export const SwapProvider: FC<PropsWithChildren<{}>> = memo(({ children }) => {
         targetCurrency: target,
         supplySize: convertToFixed18(pool.base).toNumber(),
         targetSize: convertToFixed18(pool.other).toNumber()
-      }, callback);
+      });
     }
 
     // other to base
@@ -66,7 +66,7 @@ export const SwapProvider: FC<PropsWithChildren<{}>> = memo(({ children }) => {
         targetCurrency: target,
         supplySize: convertToFixed18(pool.other).toNumber(),
         targetSize: convertToFixed18(pool.base).toNumber()
-      }, callback);
+      });
     }
 
     // other to other
@@ -79,7 +79,7 @@ export const SwapProvider: FC<PropsWithChildren<{}>> = memo(({ children }) => {
         targetCurrency: target,
         supplySize: convertToFixed18(targetPool.other).toNumber(),
         targetSize: convertToFixed18(supplyPool.other).toNumber()
-      }, callback);
+      });
     }
   }, [api.derive, baseCurrency, setPool]);
 

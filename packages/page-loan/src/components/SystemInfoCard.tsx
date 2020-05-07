@@ -26,7 +26,7 @@ export const SystemInfoCard: FC = () => {
 
   return (
     <Card
-      gutter={false}
+      padding={false}
       header='System Info'
     >
       <List

@@ -5,6 +5,7 @@ import PageLoan from '@honzon-platform/page-loan';
 import PageHoma from '@honzon-platform/page-homa';
 import PageSwap from '@honzon-platform/page-swap';
 import PageWallet from '@honzon-platform/page-wallet';
+import PageGovernance from '@honzon-platform/page-governance';
 
 import { MainLayout } from './layouts/Main';
 import { sideBarConfig } from './sidebar-config';
@@ -38,6 +39,10 @@ export const config: RouterConfigData[] = [
       {
         element: <PageSwap />,
         path: 'swap'
+      },
+      {
+        element: <PageGovernance />,
+        path: 'governance'
       },
       {
         redirectTo: '/loan',

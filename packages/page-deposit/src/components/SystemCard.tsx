@@ -16,7 +16,7 @@ export const SystemCard: FC = memo(() => {
     <Card
       className={classes.root}
       contentClassName={classes.content}
-      gutter={false}
+      padding={false}
       header='For System'
       headerClassName={classes.header}
     >

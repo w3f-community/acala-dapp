@@ -1,4 +1,4 @@
-import React, { InputHTMLAttributes, FC, ReactNode } from 'react';
+import React, { InputHTMLAttributes, FC, ReactNode, useState, FocusEventHandler } from 'react';
 import clsx from 'clsx';
 
 import classes from './Input.module.scss';
@@ -18,6 +18,16 @@ export const Input: FC<Props> = ({
   suffix,
   ...other
 }) => {
+  const [focused, setFocused] = useState<boolean>(false);
+
+  const onFocus: FocusEventHandler<HTMLInputElement> = (e) => {
+    setFocused(true);
+  };
+
+  const onBlur: FocusEventHandler<HTMLInputElement> = (e) => {
+    setFocused(false);
+  };
+
   return (
     <div
       className={
@@ -26,6 +36,7 @@ export const Input: FC<Props> = ({
           className,
           classes[size],
           {
+            [classes.focused]: focused,
             [classes.error]: error
           }
         )
@@ -33,6 +44,8 @@ export const Input: FC<Props> = ({
     >
       {prefix ? <span>{prefix}</span> : null}
       <input
+        onFocus={onFocus}
+        onBlur={onBlur}
         className={classes.input}
         {...other}
       />

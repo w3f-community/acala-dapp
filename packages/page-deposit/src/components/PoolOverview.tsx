@@ -59,7 +59,7 @@ export const PoolOverview: FC = memo(() => {
   ];
 
   return (
-    <Card gutter={false}
+    <Card padding={false}
       header='Deposit'>
       <Table
         config={tableConfig}

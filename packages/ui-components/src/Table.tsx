@@ -24,13 +24,19 @@ type Props<T> = {
   data: (T | any)[];
   rawProps?: RawProps<T>;
   showHeader?: boolean;
+  cellClassName?: string;
+  empty?: ReactNode;
+  size?: 'small' | 'normal'
 };
 
 export function Table<T extends { [k: string]: any }> ({
   config,
   data,
+  empty,
   rawProps,
-  showHeader = false
+  showHeader = false,
+  cellClassName,
+  size = 'normal'
 }: Props<T>): ReactElement {
   const randomId = useRef<string>(randomID());
 
@@ -50,7 +56,7 @@ export function Table<T extends { [k: string]: any }> ({
   const defaultCellWidth = `${100 / config.length}%`;
 
   return (
-    <table className={classes.root}>
+    <table className={clsx(classes.root, classes[size])}>
       <colgroup>
         {
           config.map((_item, index) => (
@@ -108,6 +114,7 @@ export function Table<T extends { [k: string]: any }> ({
                     clsx(
                       classes.cell,
                       classes[configData.align || 'center'],
+                      cellClassName,
                       {
                         first: index === 0
                       }
@@ -117,7 +124,7 @@ export function Table<T extends { [k: string]: any }> ({
                 >
                   <div>
                     {
-                      renderItem(configData, item, configIndex)
+                      renderItem(configData, item, index)
                     }
                   </div>
                 </td>
@@ -125,6 +132,13 @@ export function Table<T extends { [k: string]: any }> ({
             </tr>
           );
         })}
+      {
+        !data.length && empty ? (
+          <tr className={classes.empty}>
+            <td colSpan={config.length}>{empty}</td>
+          </tr>
+        ) : null
+      }
       </tbody>
     </table>
   );

@@ -1,10 +1,9 @@
-import React, { FC, useContext, useCallback, useState } from 'react';
+import React, { FC, useContext, useState } from 'react';
 import { noop } from 'lodash';
 import { useFormik } from 'formik';
-import clsx from 'clsx';
 
 import { Fixed18 } from '@acala-network/app-util';
-import { Grid, List, Radio, Input } from '@honzon-platform/ui-components';
+import { Grid, List, Radio } from '@honzon-platform/ui-components';
 import { StakingPoolContext, TxButton, BalanceInput, numToFixed18Inner, formtDuration, FormatBalance } from '@honzon-platform/react-components';
 import { useFormValidator } from '@honzon-platform/react-hooks';
 
@@ -14,18 +13,35 @@ import { TargetRedeemList } from './TargetRedeemList';
 type RedeemType = 'Immediately' | 'Target' | 'WaitForUnbonding';
 
 export const RedeemConsole: FC = () => {
-  const { stakingPool, stakingPoolHelper, unbondingDuration } = useContext(StakingPoolContext);
+  const { freeList, stakingPool, stakingPoolHelper, unbondingDuration } = useContext(StakingPoolContext);
+  const [redeemType, setRedeemType] = useState<RedeemType>('Immediately');
+
+  const getFreeLiquidityCurrencyAmount = (): number => {
+      return stakingPoolHelper?.communalFree.div(stakingPoolHelper.liquidExchangeRate).toNumber();
+  }
+
+  const getMaxLiquidCurrencyAmount = () => {
+    if (redeemType === 'Immediately') {
+      return getFreeLiquidityCurrencyAmount();
+    }
+    if (redeemType === 'WaitForUnbonding') {
+      return Number.POSITIVE_INFINITY;
+    }
+    return 0;
+  };
+
   const validator = useFormValidator({
     amount: {
       type: 'balance',
-      currency: stakingPool.liquidCurrency
+      currency: stakingPool?.liquidCurrency,
+      min: 0,
+      max: getMaxLiquidCurrencyAmount()
     },
     target: {
       type: 'number',
-      min: stakingPoolHelper.currentEra
+      min: stakingPoolHelper?.currentEra
     }
   });
-  const [redeemType, setRedeemType] = useState<RedeemType>('Immediately');
   const [era, setEra] = useState<number>(0);
   const form = useFormik({
     initialValues: {
@@ -35,10 +51,6 @@ export const RedeemConsole: FC = () => {
     validate: validator,
     onSubmit: noop
   });
-
-  const resetForm = useCallback(() => {
-    form.resetForm();
-  }, [form]);
 
   if (!stakingPoolHelper || !stakingPool) {
     return null;
@@ -71,21 +83,25 @@ export const RedeemConsole: FC = () => {
     {
       key: 'redeemed',
       title: 'Redeemed',
-      render: (value: any) => (
-        <FormatBalance
-          balance={value}
-          currency={stakingPool.liquidCurrency}
-        />
+      render: (value: Fixed18) => (
+        value.isFinity() ? (
+          <FormatBalance
+            balance={value}
+            currency={stakingPool.liquidCurrency}
+          />
+        ) : '~'
       )
     },
     {
       key: 'climeFee',
       title: 'Claim Fee',
       render: (value: Fixed18) => (
-        <FormatBalance
-          balance={value}
-          currency={stakingPool.liquidCurrency}
-        />
+        value.isFinity() ? (
+          <FormatBalance
+            balance={value}
+            currency={stakingPool.liquidCurrency}
+          />
+        ) : '~'
       )
     }
   ];
@@ -123,37 +139,32 @@ export const RedeemConsole: FC = () => {
       direction='column'
     >
       <Grid item>
-        <p>Withdraw deposit and interest</p>
-      </Grid>
-      <Grid item>
-        <BalanceInput
-          error={!!form.errors.amount}
-          id='amount'
-          name='amount'
-          onChange={form.handleChange}
-          token={stakingPool.liquidCurrency}
-          value={form.values.amount}
-        />
+        <p className={classes.notice}>Withdraw deposit and interest</p>
       </Grid>
       <Grid item>
         <div className={classes.select}>
           <Radio
             checked={redeemType === 'Immediately'}
             className={classes.item}
-            label='Redeem Now'
+            label={`Redeem Now, Total Free is ${getFreeLiquidityCurrencyAmount()} ${stakingPool.liquidCurrency}`}
             onClick={() => setRedeemType('Immediately')}
           />
           <Radio
+            disabled={!freeList.length}
             checked={redeemType === 'Target'}
             className={classes.item}
             label={(
               <div className={classes.targetInput}>
                 <span>Redeem in ERA</span>
-                <TargetRedeemList
-                  className={classes.select}
-                  onChange={setEra}
-                  value={era}
-                />
+                {
+                  freeList.length ? (
+                    <TargetRedeemList
+                      className={classes.select}
+                      onChange={setEra}
+                      value={era}
+                    />
+                  ) : null
+                }
               </div>
             )}
             onClick={() => setRedeemType('Target')}
@@ -167,8 +178,18 @@ export const RedeemConsole: FC = () => {
         </div>
       </Grid>
       <Grid item>
-        <p>
-        Current Era = {stakingPoolHelper.currentEra} Unbounding Period = {formtDuration(unbondingDuration)} Days, Era {stakingPoolHelper.bondingDuration}
+        <BalanceInput
+          error={!!form.errors.amount}
+          id='amount'
+          name='amount'
+          onChange={form.handleChange}
+          token={stakingPool.liquidCurrency}
+          value={form.values.amount}
+        />
+      </Grid>
+      <Grid item>
+        <p className={classes.eraInfo}>
+          Current Era = {stakingPoolHelper.currentEra} Unbounding Period = {formtDuration(unbondingDuration)} Days, Era {stakingPoolHelper.bondingDuration}
         </p>
       </Grid>
       <Grid container
@@ -179,7 +200,7 @@ export const RedeemConsole: FC = () => {
             className={classes.txBtn}
             disabled={checkDisabled()}
             method='redeem'
-            onSuccess={resetForm}
+            onSuccess={form.resetForm}
             params={getParams()}
             section='homa'
           >
@@ -188,15 +209,11 @@ export const RedeemConsole: FC = () => {
         </Grid>
       </Grid>
       <Grid
-        className={clsx(
-          classes.info,
-          {
-            [classes.show]: !!form.values.amount
-          }
-        )}
+        className={classes.info}
         item
       >
         <List config={listConfig}
+          itemClassName={classes.listItem}
           data={info} />
       </Grid>
     </Grid>

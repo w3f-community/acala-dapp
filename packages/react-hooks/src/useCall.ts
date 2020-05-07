@@ -47,7 +47,7 @@ function transformIdentity (value: any): any {
 // extract the serialized and mapped params, all ready for use in our call
 function extractParams (fn: any, params: any[], paramMap: (params: any[]) => any): [string, CallParams | null] {
   return [
-    JSON.stringify({ f: fn?.name, p: params }),
+    JSON.stringify({ f: fn?.name || fn, p: params }),
     params.length === 0 || !params.some((param): boolean => isNull(param) || isUndefined(null))
       ? paramMap(params)
       : null

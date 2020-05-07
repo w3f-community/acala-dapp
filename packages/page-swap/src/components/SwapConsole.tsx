@@ -7,7 +7,6 @@ import { CurrencyId } from '@acala-network/types/interfaces';
 import { Card, nextTick, IconButton } from '@honzon-platform/ui-components';
 import { BalanceInput, TxButton, SwapContext, numToFixed18Inner, DexExchangeRate } from '@honzon-platform/react-components';
 import { useFormValidator } from '@honzon-platform/react-hooks';
-
 import classes from './SwapConsole.module.scss';
 import { SwapInfo } from './SwapInfo';
 import { SlippageInputArea } from './SlippageInputArea';
@@ -141,20 +140,17 @@ export const SwapConsole: FC = memo(() => {
   };
 
   const onSupplyTokenChange = async (token: CurrencyId): Promise<void> => {
-    await setCurrency(token, pool.targetCurrency);
+    setCurrency(token, pool.targetCurrency);
 
     // reset form when supply token change
     form.resetForm();
   };
 
   const onTargetTokenChange = async (token: CurrencyId): Promise<void> => {
-    await setCurrency(pool.supplyCurrency, token, (pool): void => {
-      const supply = form.values.supply;
+    setCurrency(pool.supplyCurrency, token);
 
-      calcTarget(pool.supplyCurrency, pool.targetCurrency, supply, slippage).then((target) => {
-        form.setFieldValue('target', target);
-      });
-    });
+    // reset form when token change
+    form.resetForm();
   };
 
   const checkDisabled = (): boolean => {
@@ -171,7 +167,7 @@ export const SwapConsole: FC = memo(() => {
 
   return (
     <Card className={classes.root}
-      gutter={false}>
+      padding={false}>
       <div className={classes.main}>
         <InputArea
           currencies={supplyCurrencies}

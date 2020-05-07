@@ -37,10 +37,12 @@ export const StakingTokeBalances: FC = () => {
   ];
 
   return (
-    <Card gutter={false}
+    <Card padding={false}
       header='Balance'>
       <Table config={tableConfig}
-        data={tableData} />
+        data={tableData}
+        size='small'
+      />
     </Card>
   );
 };

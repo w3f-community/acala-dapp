@@ -37,8 +37,8 @@ export const List: FC<Props> = memo(({
               className={clsx(classes.listItem, itemClassName)}
               key={`list-${key}-${index}`}
             >
-              <div>{_config.title}</div>
-              <div>{_config.render(data[key], index)}</div>
+              <div className='aca-list--label'>{_config.title}</div>
+              <div className='aca-list--value'>{_config.render(data[key], index)}</div>
             </li>
           );
         })
