@@ -1,13 +1,12 @@
 import React, { FC, useRef } from 'react';
 
-import { BaseTxHistory, FormatBalance, FormatTime, FormatHash, Token, formatBalance, formatCurrency } from '@honzon-platform/react-components';
+import { BaseTxHistory, FormatBalance, FormatTime, FormatHash } from '@honzon-platform/react-components';
 import { TableItem } from '@honzon-platform/ui-components';
 import { ExtrinsicHistoryData, useConstants } from '@honzon-platform/react-hooks';
-import { Fixed18, calcSupplyInBaseToOther } from '@acala-network/app-util';
-import { CurrencyId } from '@acala-network/types/interfaces';
+import { Fixed18 } from '@acala-network/app-util';
 
 export const Transaction: FC = () => {
-  const { dex: { getBaseCurrencyId } } = useConstants() as any as { dex: { getBaseCurrencyId: CurrencyId }};
+  const { dexBaseCurrency } = useConstants();
 
   const config = useRef<TableItem<ExtrinsicHistoryData>[]>([
     {
@@ -29,7 +28,7 @@ export const Transaction: FC = () => {
                 },
                 {
                   balance: Fixed18.fromParts(data.params[2]),
-                  currency: getBaseCurrencyId
+                  currency: dexBaseCurrency
                 }
               ]}
               pairSymbol='+'

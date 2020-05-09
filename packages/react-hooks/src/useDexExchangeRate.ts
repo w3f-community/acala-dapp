@@ -21,5 +21,5 @@ export const useDexExchangeRate = (token: CurrencyId) => {
     }
   }, [pool]);
 
-  return { rate };
+  return rate;
 };

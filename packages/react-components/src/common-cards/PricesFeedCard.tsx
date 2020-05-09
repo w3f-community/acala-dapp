@@ -32,6 +32,7 @@ const PricesList: FC = () => {
           <FormatFixed18
             data={convertToFixed18(getValueFromTimestampValue(data))}
             prefix='$'
+            withPadEndDecimal
           />
         );
       },

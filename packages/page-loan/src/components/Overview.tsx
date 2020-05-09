@@ -93,10 +93,10 @@ export const Overview: FC = () => {
       title: `Debit ${formatCurrency(stableCurrency)}`,
       width: 2,
       render: (data: DerivedUserLoan) => {
-        const { getCurrentUserLoanHelper } = useLoan(data.token);
+        const { currentUserLoanHelper } = useLoan(data.token);
 
         return (
-          <FormatBalance balance={getCurrentUserLoanHelper().debitAmount} />
+          <FormatBalance balance={currentUserLoanHelper?.debitAmount} />
         );
       }
     },

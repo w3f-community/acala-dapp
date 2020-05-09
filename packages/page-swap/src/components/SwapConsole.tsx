@@ -7,6 +7,7 @@ import { CurrencyId } from '@acala-network/types/interfaces';
 import { Card, nextTick, IconButton } from '@honzon-platform/ui-components';
 import { BalanceInput, TxButton, SwapContext, numToFixed18Inner, DexExchangeRate } from '@honzon-platform/react-components';
 import { useFormValidator } from '@honzon-platform/react-hooks';
+
 import classes from './SwapConsole.module.scss';
 import { SwapInfo } from './SwapInfo';
 import { SlippageInputArea } from './SlippageInputArea';
@@ -79,7 +80,7 @@ export const SwapConsole: FC = memo(() => {
     pool,
     setCurrency,
     supplyCurrencies,
-    targetCurrencies
+    targetCurrencies,
   } = useContext(SwapContext);
   const [slippage, setSlippage] = useState<number>(0.005);
 
@@ -220,6 +221,8 @@ export const SwapConsole: FC = memo(() => {
       </div>
       <SwapInfo
         slippage={slippage}
+        supplyCurrency={pool?.supplyCurrency}
+        targetCurrency={pool?.targetCurrency}
         supply={form.values.supply}
         target={form.values.target}
       />

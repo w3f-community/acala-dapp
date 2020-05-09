@@ -1,4 +1,4 @@
-import React, { FC, memo, useState, useContext } from 'react';
+import React, { FC, memo, useState, useContext, useEffect } from 'react';
 import { noop } from 'lodash';
 import { useFormik } from 'formik';
 
@@ -63,7 +63,7 @@ InputArea.displayName = 'InputArea';
 export const DepositConsole: FC = memo(() => {
   const { baseCurrencyId, enabledCurrencyIds } = useContext(DepositContext);
   const [otherCurrency, setOtherCurrency] = useState<CurrencyId>(enabledCurrencyIds[0]);
-  const { rate } = useDexExchangeRate(otherCurrency);
+  const rate = useDexExchangeRate(otherCurrency);
   const validator = useFormValidator({
     other: {
       type: 'balance',
@@ -108,6 +108,10 @@ export const DepositConsole: FC = memo(() => {
 
     return false;
   };
+
+  useEffect(() => {
+    form.resetForm();
+  }, [otherCurrency])
 
   return (
     <Card>

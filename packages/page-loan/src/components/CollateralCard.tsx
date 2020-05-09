@@ -9,8 +9,7 @@ import { Fixed18 } from '@acala-network/app-util';
 export const CollateralCard = () => {
   const { loanTypes } = useAllLoans();
   const [active, setActive] = useState<string>('');
-  const { getCurrentUserLoanHelper } = useLoan(active);
-  const currentUserLoanHelper = getCurrentUserLoanHelper();
+  const { currentUserLoanHelper } = useLoan(active);
 
   const listConfig: ListConfig[] = [
     {
@@ -56,9 +55,9 @@ export const CollateralCard = () => {
   }
 
   const data = {
-    liquidationRatio: currentUserLoanHelper.liquidationRatio,
-    requiredCollateralRatio: currentUserLoanHelper.requiredCollateralRatio,
-    interestRate: currentUserLoanHelper.stableFeeAPR
+    liquidationRatio: currentUserLoanHelper?.liquidationRatio,
+    requiredCollateralRatio: currentUserLoanHelper?.requiredCollateralRatio,
+    interestRate: currentUserLoanHelper?.stableFeeAPR
   };
 
   const handleDropdownChange = (value: string) => {

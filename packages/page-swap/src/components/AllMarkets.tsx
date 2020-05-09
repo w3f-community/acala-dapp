@@ -6,8 +6,8 @@ import { Section, Card, Table, TableItem } from '@honzon-platform/ui-components'
 import { SwapContext, Token, DexExchangeRate, DexPoolSize } from '@honzon-platform/react-components';
 
 export const AllMarkets: FC = () => {
-  const { baseCurrency, supplyCurrencies } = useContext(SwapContext);
-  const _supplyCurrencies = supplyCurrencies.filter((item: string | CurrencyId) => item.toString() !== baseCurrency.toString());
+  const { dexBaseCurrency, supplyCurrencies } = useContext(SwapContext);
+  const _supplyCurrencies = supplyCurrencies.filter((item: string | CurrencyId) => item.toString() !== dexBaseCurrency.toString());
   const tableConfig: TableItem<string | CurrencyId>[] = [
     {
       title: 'Token Pair',

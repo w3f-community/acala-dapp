@@ -19,6 +19,8 @@ export const CouncilMembers: FC<Props> = ({ council }) => {
           <FormatAddress
             address={account.toString()}
             withFullAddress
+            withCopy
+            withIcon
           />
         );
       }

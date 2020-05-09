@@ -72,11 +72,11 @@ export const getFormValidator = (configs: Config, api: ApiPromise, active: Injec
             error[key] = 'Not a validate number';
           }
 
-          if (config.max && value > config.max) {
+          if (config.max !== undefined && value > config.max) {
             error[key] = `Value is bigger than ${config.max}`;
           }
 
-          if (config.min && value < config.min) {
+          if (config.min !== undefined &&  value < config.min) {
             error[key] = `Value is less than ${config.min}`;
           }
 

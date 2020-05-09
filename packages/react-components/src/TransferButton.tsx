@@ -76,7 +76,7 @@ export const TransferButton: FC<Props> = memo(({
               onClick={close}
               size='small'
             >
-              Cancel
+              Close 
             </Button>
             <TxButton
               disabled={checkDisabled()}

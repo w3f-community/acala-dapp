@@ -14,13 +14,13 @@ export const Transaction: FC = () => {
       title: 'Hash'
     },
     {
-      align: 'right',
+      align: 'left',
       dataIndex: 'signer',
       render: (value) => <FormatHash hash={value} />,
       title: 'From'
     },
     {
-      align: 'right',
+      align: 'left',
       dataIndex: 'params',
       render: (value) => <FormatHash hash={value[0]} />,
       title: 'To'

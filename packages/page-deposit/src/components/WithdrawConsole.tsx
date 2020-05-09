@@ -1,4 +1,4 @@
-import React, { FC, memo, useState, useContext } from 'react';
+import React, { FC, memo, useState, useContext, useEffect } from 'react';
 import { noop } from 'lodash';
 import { useFormik } from 'formik';
 
@@ -14,7 +14,6 @@ import { ReactComponent as RightArrowIcon } from '../assets/right-arrow.svg';
 import classes from './Withdraw.module.scss';
 import { AccountDexTokens } from './AccountDexTokens';
 import { useDexWithdrawShare } from './useDexWithdrawShare';
-
 
 interface InputAreaProps {
   error: string | undefined;
@@ -42,7 +41,7 @@ const InputArea: FC<InputAreaProps> = memo(({
   return (
     <div className={classes.inputAreaRoot}>
       <div className={classes.inputAreaTitle}>
-        <p>Pool Tokens</p>
+        <p>Pool Shares</p>
         <p>
           Balance: {share ? convertToFixed18(share).toString() : ''}
         </p>
@@ -91,6 +90,10 @@ export const WithdrawConsole: FC = memo(() => {
 
     return true;
   };
+
+  useEffect(() => {
+    form.resetForm();
+  }, [otherCurrency])
 
   return (
     <Card>

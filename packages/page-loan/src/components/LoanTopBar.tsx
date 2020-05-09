@@ -43,6 +43,7 @@ const LoanItem: FC<LoanItemProps> = memo(({ token }) => {
         <LoanCollateralRate
           className={classes.collateralRate}
           token={token}
+          withTooltip={false}
         />
       </div>
     </div>

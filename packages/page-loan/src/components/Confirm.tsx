@@ -1,9 +1,9 @@
-import React, { FC, useContext, useEffect } from 'react';
-import { isEmpty } from 'lodash';
+import React, { FC, useContext, useEffect, useState } from 'react';
+
 import { FormatBalance, FormatFixed18, TxButton, numToFixed18Inner } from '@honzon-platform/react-components';
 import { createProviderContext } from './CreateProvider';
 import { useLoan, useConstants } from '@honzon-platform/react-hooks';
-import { Fixed18, stableCoinToDebit, convertToFixed18 } from '@acala-network/app-util';
+import { Fixed18, stableCoinToDebit, convertToFixed18, LoanHelper } from '@acala-network/app-util';
 import { List, Button } from '@honzon-platform/ui-components';
 import classes from './Confirm.module.scss';
 import { LoanContext } from './LoanProvider';
@@ -11,16 +11,13 @@ import { LoanContext } from './LoanProvider';
 export const Confirm: FC = () => {
   const { deposit, generate, selectedToken, setStep } = useContext(createProviderContext);
   const { cancelCurrentTab } = useContext(LoanContext);
-  const { currentLoanType, getCurrentUserLoanHelper, setCollateral, setDebitStableCoin } = useLoan(selectedToken);
-  const currentUserLoanHelper = getCurrentUserLoanHelper();
+  const { currentLoanType, currentUserLoan, getUserLoanHelper } = useLoan(selectedToken);
+  const [loanHelper, setLoanHelper] = useState<LoanHelper | null>();
   const { stableCurrency } = useConstants();
 
   useEffect(() => {
-    if (generate && deposit) {
-      setCollateral(deposit);
-      setDebitStableCoin(generate);
-    }
-  }, [generate, deposit, setCollateral, setDebitStableCoin]);
+    setLoanHelper(getUserLoanHelper(currentUserLoan, currentLoanType, deposit, generate));
+  }, [generate, deposit, currentUserLoan, currentLoanType]);
 
   const listConfig = [
     {
@@ -72,7 +69,7 @@ export const Confirm: FC = () => {
       title: 'Liquidation Ratio'
     },
     {
-      key: 'liquidationFee',
+      key: 'liquidationPenalty',
       render: (data: Fixed18) => {
         return (
           <FormatFixed18
@@ -109,16 +106,12 @@ export const Confirm: FC = () => {
     }
   ];
 
-  if (isEmpty(currentUserLoanHelper)) {
-    return null;
-  }
-
   const data = {
-    collateralizationRatio: currentUserLoanHelper.collateralRatio,
-    liquidationRatio: currentUserLoanHelper.liquidationRatio,
-    liquidationFee: currentLoanType ? convertToFixed18(currentLoanType.liquidationPenalty) : 0,
-    liuqidationPrice: currentUserLoanHelper.liquidationPrice,
-    interestRate: currentUserLoanHelper.stableFeeAPR
+    collateralizationRatio: loanHelper?.collateralRatio,
+    liquidationRatio: loanHelper?.liquidationRatio,
+    liquidationPenalty: convertToFixed18(currentLoanType?.liquidationPenalty || 0),
+    liuqidationPrice: loanHelper?.liquidationPrice,
+    interestRate: loanHelper?.stableFeeAPR
   };
 
   const checkDisabled = (): boolean => {
@@ -132,10 +125,10 @@ export const Confirm: FC = () => {
       '0'
     ];
 
-    if (!isEmpty(currentLoanType) && !isEmpty(currentUserLoanHelper)) {
+    if (currentLoanType && loanHelper) {
       _params[2] = stableCoinToDebit(
         Fixed18.fromNatural(generate),
-        currentUserLoanHelper.debitExchangeRate
+        loanHelper.debitExchangeRate
       ).innerToString();
     }
 

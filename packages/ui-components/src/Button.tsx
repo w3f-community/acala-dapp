@@ -58,7 +58,7 @@ export const Button: FC<ButtonProps> = ({
         loading ? (
           <Loading
             className={classes.loading}
-            size={18}
+            size='small'
           />
         ) : null
       }

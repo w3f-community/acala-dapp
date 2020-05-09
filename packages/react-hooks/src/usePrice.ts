@@ -11,6 +11,8 @@ import { tokenEq,
 import { useApi } from './useApi';
 import { useCall } from './useCall';
 import { useStakingPool } from './useStakingPool';
+import { useDexExchangeRate } from './useDexExchangeRate';
+import { useConstants } from './useConstants';
 
 const insertPrice = (
   arr: DerivedPrice[],
@@ -31,9 +33,11 @@ const insertPrice = (
 
 export const usePrice = (token?: CurrencyId | string) => {
   const { api } = useApi();
+  const { nativeCurrency } = useConstants();
   const _price =
     useCall<DerivedPrice[]>((api.derive as any).price.allPrices, []) || [];
   const { stakingPool, stakingPoolHelper } = useStakingPool();
+  const nativeCurrencyRate = useDexExchangeRate(nativeCurrency);
   const [price, setPrice] = useState<DerivedPrice[]>([]);
 
   useEffect(() => {
@@ -42,9 +46,18 @@ export const usePrice = (token?: CurrencyId | string) => {
     }
 
     const price: DerivedPrice[] = [];
+    const _TimestampedValue = api.registry.get('TimestampedValue')!;
 
     _price.forEach((item): void => {
       price.push(item);
+    });
+
+    // native currency (ACA) price
+    insertPrice(price, {
+      token: nativeCurrency.toString(),
+      price: new _TimestampedValue(api.registry, {
+        value: nativeCurrencyRate.innerToString()
+      }) as TimestampedValue
     });
 
     // L-DOT price
@@ -70,7 +83,7 @@ export const usePrice = (token?: CurrencyId | string) => {
     }
 
     setPrice(price);
-  }, [_price, api.registry, stakingPool, stakingPoolHelper]);
+  }, [_price, api.registry, stakingPool, stakingPoolHelper, nativeCurrencyRate]);
 
   if (token && price) {
     return price.find((item: DerivedPrice) => item.token === token.toString());

@@ -9,8 +9,21 @@ import { TimestampedValue } from '@open-web3/orml-types/interfaces';
 
 dayjs.extend(duration);
 
+export const padEndDecimal = (origin: number | string, dp: number): string => {
+  const _origin = origin.toString();
+  let [i, d] = _origin.split('.');
+
+  if (!d) {
+    d = '';
+  }
+
+  d = d.padEnd(dp, '0');
+
+  return `${i}.${d}`;
+}; 
+
 export const thousandth = (num: number): string => {
-  return num.toLocaleString();
+  return num.toLocaleString('en-IN', { maximumSignificantDigits: 18, minimumFractionDigits: 5 });
 };
 
 export const formatCurrency = (currency: CurrencyId | string, upper = true): string => {
@@ -29,6 +42,10 @@ export const formatHash = (hash: string): string => {
 
 export const formatBalance = (balance: Fixed18 | Codec | number | string): Fixed18 => {
   let inner = Fixed18.ZERO;
+
+  if (!balance) {
+    return Fixed18.ZERO;
+  }
 
   if (typeof balance === 'number' || typeof balance === 'string') {
     inner = Fixed18.fromNatural(balance);

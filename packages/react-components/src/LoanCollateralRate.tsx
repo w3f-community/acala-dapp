@@ -11,12 +11,14 @@ import { calcCollateralRatio, debitToUSD, convertToFixed18, collateralToUSD } fr
 interface Props extends BareProps {
   account?: AccountId | string;
   token: CurrencyId | string;
+  withTooltip?: boolean;
 }
 
 export const LoanCollateralRate: FC<Props> = memo(({
   account,
   className,
-  token
+  token,
+  withTooltip = true
 }) => {
   const { api } = useApi();
   const { active } = useAccounts();
@@ -51,6 +53,7 @@ export const LoanCollateralRate: FC<Props> = memo(({
       className={className}
       data={amount}
       format='percentage'
+      withTooltip={withTooltip}
     />
   );
 });

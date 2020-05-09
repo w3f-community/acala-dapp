@@ -1,22 +1,39 @@
-import { useApi } from './useApi';
+
+import { useMemo } from 'react';
+
 import { CurrencyId } from '@acala-network/types/interfaces';
 import { Vec } from '@polkadot/types';
-import { useRef } from 'react';
+
+import { useApi } from './useApi';
 
 export const useConstants = () => {
   const { api } = useApi();
 
-  // all currency ids
-  const tokenList = api.registry.createType('CurrencyId' as any).defKeys as string[];
-  const allCurrencyIds = useRef(tokenList.map((name: string): CurrencyId => {
-    return api.registry.createType('CurrencyId' as any, name) as CurrencyId;
-  }));
-  const dexCurrencies = (api.consts.dex.enabledCurrencyIds as Vec<CurrencyId>);
+  // all currencies id
+  const allCurrencyIds = useMemo(() => {
+    const tokenList = api.registry.createType('CurrencyId' as any).defKeys as string[];
+    return tokenList.map((name: string): CurrencyId => {
+      return api.registry.createType('CurrencyId' as any, name) as CurrencyId;
+    });
+  }, [api]);
+
+  // all currencies in dex
+  const dexCurrencies = useMemo(() => api.consts.dex.enabledCurrencyIds as Vec<CurrencyId>, [api]);
+
+  // dex base currency
+  const dexBaseCurrency = useMemo(() => api.consts.dex.getBaseCurrencyId as CurrencyId, [api]);
+
+  // stable currency id
+  const stableCurrency = useMemo(() => api.consts.cdpEngine.getStableCurrencyId as CurrencyId, [api]);
+
+  // native currency id
+  const nativeCurrency = useMemo(() => api.consts.currencies.nativeCurrencyId as CurrencyId, [api]);
 
   return {
-    allCurrencyIds: allCurrencyIds.current,
-    stableCurrency: api.consts.cdpEngine.getStableCurrencyId as CurrencyId,
+    allCurrencyIds,
+    stableCurrency,
+    nativeCurrency,
     dexCurrencies,
-    ...api.consts
-  };
+    dexBaseCurrency
+  }
 };

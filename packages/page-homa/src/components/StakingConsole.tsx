@@ -5,12 +5,13 @@ import { useFormik } from 'formik';
 import { Fixed18, convertToFixed18 } from '@acala-network/app-util';
 import { Grid, List } from '@honzon-platform/ui-components';
 import { StakingPoolContext, TxButton, BalanceInput, numToFixed18Inner, FormatBalance } from '@honzon-platform/react-components';
-import { useFormValidator } from '@honzon-platform/react-hooks';
+import { useFormValidator, useBalance } from '@honzon-platform/react-hooks';
 
 import classes from './StakingConsole.module.scss';
 
 export const StakingConsole: FC = () => {
   const { rewardRate, stakingPool, stakingPoolHelper } = useContext(StakingPoolContext);
+  const balance = useBalance(stakingPool?.stakingCurrency);
 
   const validator = useFormValidator({
     stakingBalance: {
@@ -55,7 +56,7 @@ export const StakingConsole: FC = () => {
       render: (value: Fixed18) => (
         value.isFinity() ? (<FormatBalance
           balance={value}
-          currency={stakingPool.liquidCurrency}
+          currency={stakingPool.stakingCurrency}
         />): '~'
       )
     }
@@ -71,6 +72,10 @@ export const StakingConsole: FC = () => {
     }
 
     return false;
+  };
+
+  const handleMax = () => {
+    form.setFieldValue('stakingBalance', convertToFixed18(balance || 0).toNumber());
   };
 
   return (
@@ -90,6 +95,8 @@ export const StakingConsole: FC = () => {
           name='stakingBalance'
           onChange={form.handleChange}
           token={stakingPool.stakingCurrency}
+          showMaxBtn
+          onMax={handleMax}
           value={form.values.stakingBalance}
         />
       </Grid>

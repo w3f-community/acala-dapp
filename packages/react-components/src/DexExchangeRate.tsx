@@ -4,7 +4,7 @@ import { CurrencyId } from '@acala-network/types/interfaces';
 import { Fixed18 } from '@acala-network/app-util';
 
 import { FormatBalance } from '@honzon-platform/react-components';
-import { useApi, useDexPool } from '@honzon-platform/react-hooks';
+import { useApi, useDexPool, useConstants } from '@honzon-platform/react-hooks';
 import { tokenEq } from './utils';
 
 interface Props {
@@ -13,39 +13,38 @@ interface Props {
 }
 
 export const DexExchangeRate: FC<Props> = memo(({ supply, target }) => {
-  const { api } = useApi();
-  const baseCurrency = api.consts.dex.getBaseCurrencyId as CurrencyId;
-  const _target = target || baseCurrency;
+  const { dexBaseCurrency } = useConstants();
+  const _target = target || dexBaseCurrency;
   const supplyPool = useDexPool(supply || null as any as CurrencyId);
   const targetPool = useDexPool(_target || null as any as CurrencyId);
   const [ratio, setRatio] = useState<Fixed18>(Fixed18.ZERO);
   const [supplyToken, setSupplyToken] = useState<CurrencyId | string>();
-  const [targetToken, setTargetToken] = useState<CurrencyId | string>(baseCurrency);
+  const [targetToken, setTargetToken] = useState<CurrencyId | string>(dexBaseCurrency);
 
   useEffect(() => {
     if (!supplyPool || !supply) {
       return;
     }
 
-    if (tokenEq(supply, baseCurrency) && !tokenEq(_target, baseCurrency) && targetPool) {
+    if (tokenEq(supply, dexBaseCurrency) && !tokenEq(_target, dexBaseCurrency) && targetPool) {
       setRatio(Fixed18.fromRational(
         targetPool.base.toString(),
         targetPool.other.toString()
       ));
       setSupplyToken(target);
-      setTargetToken(baseCurrency);
+      setTargetToken(dexBaseCurrency);
     }
 
-    if (tokenEq(_target, baseCurrency) && !tokenEq(supply, baseCurrency) && supplyPool) {
+    if (tokenEq(_target, dexBaseCurrency) && !tokenEq(supply, dexBaseCurrency) && supplyPool) {
       setRatio(Fixed18.fromRational(
         supplyPool.base.toString(),
         supplyPool.other.toString()
       ));
       setSupplyToken(supply);
-      setTargetToken(baseCurrency);
+      setTargetToken(dexBaseCurrency);
     }
 
-    if (!tokenEq(_target, baseCurrency) && !tokenEq(supply, baseCurrency) && supplyPool && targetPool) {
+    if (!tokenEq(_target, dexBaseCurrency) && !tokenEq(supply, dexBaseCurrency) && supplyPool && targetPool) {
       setRatio(Fixed18.fromRational(
         Fixed18.fromRational(
           supplyPool.base.toString(),
@@ -57,9 +56,9 @@ export const DexExchangeRate: FC<Props> = memo(({ supply, target }) => {
         ).toNumber()
       ));
       setSupplyToken(supply);
-      setTargetToken(target || baseCurrency);
+      setTargetToken(target || dexBaseCurrency);
     }
-  }, [supplyPool, targetPool, supply, target, baseCurrency, _target]);
+  }, [supplyPool, targetPool, supply, target, dexBaseCurrency, _target]);
 
   return (
     <FormatBalance

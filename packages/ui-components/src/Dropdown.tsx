@@ -1,6 +1,7 @@
 import React, { memo, FC, ReactNode, useState, useRef, createRef, useEffect } from 'react';
 import clsx from 'clsx';
 
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import { ReactComponent as ArrowDownIcon } from './assets/arrow-down.svg';
 import { BareProps } from './types';
 import classes from './Dropdown.module.scss';
@@ -80,45 +81,47 @@ export const Dropdown: FC<Props> = memo(({
   };
 
   return (
-    <div
-      ref={$rootRef}
-      className={
-        clsx(classes.root,
-          className,
-          {
-            [classes.open]: open,
-            [classes.small]: size === 'small',
-            [classes.border]: border,
-            [classes.normal]: !border
-          }
-        )
-      }
-    >
+    <ClickAwayListener onClickAway={closeMenu}>
       <div
-        className={classes.activeRoot}
-        onClick={toggleMenu}
+        ref={$rootRef}
+        className={
+          clsx(classes.root,
+            className,
+            {
+              [classes.open]: open,
+              [classes.small]: size === 'small',
+              [classes.border]: border,
+              [classes.normal]: !border
+            }
+          )
+        }
       >
-        <div className={clsx(classes.activeContent, activeContentClassName)}>
-          {renderSelected()}
+        <div
+          className={classes.activeRoot}
+          onClick={toggleMenu}
+        >
+          <div className={clsx(classes.activeContent, activeContentClassName)}>
+            {renderSelected()}
+          </div>
+          <div className={clsx(classes.arrow, arrowClassName)}>
+            <ArrowDownIcon />
+          </div>
         </div>
-        <div className={clsx(classes.arrow, arrowClassName)}>
-          <ArrowDownIcon />
-        </div>
+          <ul className={clsx(classes.menu, menuClassName)}>
+            {config.map((item: DropdownConfig): ReactNode => {
+              return (
+                <li
+                  className={clsx(classes.menuItem, itemClassName)}
+                  key={`dropdown-${item.value}`}
+                  onClick={() => onItemSelect(item.value)}
+                >
+                  {item.render()}
+                </li>
+              );
+            })}
+          </ul>
       </div>
-      <ul className={clsx(classes.menu, menuClassName)}>
-        {config.map((item: DropdownConfig): ReactNode => {
-          return (
-            <li
-              className={clsx(classes.menuItem, itemClassName)}
-              key={`dropdown-${item.value}`}
-              onClick={() => onItemSelect(item.value)}
-            >
-              {item.render()}
-            </li>
-          );
-        })}
-      </ul>
-    </div>
+    </ClickAwayListener>
   );
 });
 

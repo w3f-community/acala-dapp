@@ -19,3 +19,4 @@ export * from './Tag';
 export * from './UIProvider';
 export * from './FormItem';
 export * from './utils';
+export * from './Copy';

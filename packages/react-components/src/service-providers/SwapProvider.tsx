@@ -2,7 +2,7 @@ import React, { memo, createContext, FC, PropsWithChildren, useState, useEffect,
 
 import { CurrencyId } from '@acala-network/types/interfaces';
 import { Fixed18, calcTargetInOtherToBase, convertToFixed18, calcTargetInBaseToOther, calcTargetInOtherToOther, calcSupplyInOtherToBase, calcSupplyInBaseToOther, calcSupplyInOtherToOther } from '@acala-network/app-util';
-import { useApi, useStateWithCallback } from '@honzon-platform/react-hooks';
+import { useApi, useStateWithCallback, useConstants } from '@honzon-platform/react-hooks';
 import { DerivedDexPool } from '@acala-network/api-derive';
 
 import { Vec } from '@polkadot/types';
@@ -16,7 +16,7 @@ export interface PoolData {
 }
 
 interface ContextData {
-  baseCurrency: CurrencyId;
+  dexBaseCurrency: CurrencyId;
 
   supplyCurrencies: (CurrencyId | string)[];
   targetCurrencies: (CurrencyId | string)[];
@@ -34,19 +34,19 @@ export const SwapProvider: FC<PropsWithChildren<{}>> = memo(({ children }) => {
   const { api } = useApi();
   const supplyCurrencies = (api.consts.dex.enabledCurrencyIds as Vec<CurrencyId>).toArray();
   const defaultSupplyCurrency = supplyCurrencies[0];
-  const baseCurrency = api.consts.dex.getBaseCurrencyId as CurrencyId;
+  const { dexBaseCurrency } = useConstants();
   const targetCurrencies = supplyCurrencies.slice();
   const feeRate = api.consts.dex.getExchangeFee;
   const [pool, setPool] = useState<PoolData>({
     supplyCurrency: defaultSupplyCurrency,
     supplySize: 0,
-    targetCurrency: baseCurrency,
+    targetCurrency: dexBaseCurrency,
     targetSize: 0
   });
 
   const setCurrency = useCallback(async (supply: CurrencyId, target: CurrencyId): Promise<void> => {
     // base to other
-    if (tokenEq(supply, baseCurrency) && !tokenEq(target, baseCurrency)) {
+    if (tokenEq(supply, dexBaseCurrency) && !tokenEq(target, dexBaseCurrency)) {
       const pool = await (api.derive as any).dex.pool(target) as DerivedDexPool;
 
       setPool({
@@ -58,7 +58,7 @@ export const SwapProvider: FC<PropsWithChildren<{}>> = memo(({ children }) => {
     }
 
     // other to base
-    if (tokenEq(target, baseCurrency) && !tokenEq(supply, baseCurrency)) {
+    if (tokenEq(target, dexBaseCurrency) && !tokenEq(supply, dexBaseCurrency)) {
       const pool = await (api.derive as any).dex.pool(supply) as DerivedDexPool;
 
       setPool({
@@ -70,7 +70,7 @@ export const SwapProvider: FC<PropsWithChildren<{}>> = memo(({ children }) => {
     }
 
     // other to other
-    if (!tokenEq(target, baseCurrency) && !tokenEq(supply, baseCurrency)) {
+    if (!tokenEq(target, dexBaseCurrency) && !tokenEq(supply, dexBaseCurrency)) {
       const supplyPool = await (api.derive as any).dex.pool(supply) as DerivedDexPool;
       const targetPool = await (api.derive as any).dex.pool(target) as DerivedDexPool;
 
@@ -81,7 +81,7 @@ export const SwapProvider: FC<PropsWithChildren<{}>> = memo(({ children }) => {
         targetSize: convertToFixed18(supplyPool.other).toNumber()
       });
     }
-  }, [api.derive, baseCurrency, setPool]);
+  }, [api.derive, dexBaseCurrency, setPool]);
 
   useEffect(() => {
     setCurrency(pool.supplyCurrency, pool.targetCurrency);
@@ -103,7 +103,7 @@ export const SwapProvider: FC<PropsWithChildren<{}>> = memo(({ children }) => {
       return '' as any as number;
     }
 
-    if (!supplyCurrency.eq(baseCurrency) && targetCurrency.eq(baseCurrency)) {
+    if (!supplyCurrency.eq(dexBaseCurrency) && targetCurrency.eq(dexBaseCurrency)) {
       // other to base
       return calcSupplyInOtherToBase(
         Fixed18.fromNatural(target),
@@ -111,14 +111,14 @@ export const SwapProvider: FC<PropsWithChildren<{}>> = memo(({ children }) => {
         convertToFixed18(feeRate),
         Fixed18.fromNatural(slippage || 0)
       ).toNumber();
-    } else if (supplyCurrency.eq(baseCurrency) && !targetCurrency.eq(baseCurrency)) {
+    } else if (supplyCurrency.eq(dexBaseCurrency) && !targetCurrency.eq(dexBaseCurrency)) {
       return calcSupplyInBaseToOther(
         Fixed18.fromNatural(target),
         convertPool(targetPool),
         convertToFixed18(feeRate),
         Fixed18.fromNatural(slippage || 0)
       ).toNumber();
-    } else if (!supplyCurrency.eq(baseCurrency) && !targetCurrency.eq(baseCurrency)) {
+    } else if (!supplyCurrency.eq(dexBaseCurrency) && !targetCurrency.eq(dexBaseCurrency)) {
       // other to other
       return calcSupplyInOtherToOther(
         Fixed18.fromNatural(target),
@@ -141,7 +141,7 @@ export const SwapProvider: FC<PropsWithChildren<{}>> = memo(({ children }) => {
       return '' as any as number;
     }
 
-    if (!supplyCurrency.eq(baseCurrency) && targetCurrency.eq(baseCurrency)) {
+    if (!supplyCurrency.eq(dexBaseCurrency) && targetCurrency.eq(dexBaseCurrency)) {
       // other to base
       return calcTargetInOtherToBase(
         Fixed18.fromNatural(supply),
@@ -149,14 +149,14 @@ export const SwapProvider: FC<PropsWithChildren<{}>> = memo(({ children }) => {
         convertToFixed18(feeRate),
         Fixed18.fromNatural(slippage || 0)
       ).toNumber();
-    } else if (supplyCurrency.eq(baseCurrency) && !targetCurrency.eq(baseCurrency)) {
+    } else if (supplyCurrency.eq(dexBaseCurrency) && !targetCurrency.eq(dexBaseCurrency)) {
       return calcTargetInBaseToOther(
         Fixed18.fromNatural(supply),
         convertPool(targetPool),
         convertToFixed18(feeRate),
         Fixed18.fromNatural(slippage || 0)
       ).toNumber();
-    } else if (!supplyCurrency.eq(baseCurrency) && !targetCurrency.eq(baseCurrency)) {
+    } else if (!supplyCurrency.eq(dexBaseCurrency) && !targetCurrency.eq(dexBaseCurrency)) {
       // other to other
       return calcTargetInOtherToOther(
         Fixed18.fromNatural(supply),
@@ -170,12 +170,12 @@ export const SwapProvider: FC<PropsWithChildren<{}>> = memo(({ children }) => {
     return 0;
   };
 
-  targetCurrencies.push(baseCurrency);
-  supplyCurrencies.push(baseCurrency);
+  targetCurrencies.push(dexBaseCurrency);
+  supplyCurrencies.push(dexBaseCurrency);
 
   return (
     <SwapContext.Provider value={{
-      baseCurrency,
+      dexBaseCurrency,
       calcSupply,
       calcTarget,
       supplyCurrencies,

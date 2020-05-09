@@ -1,26 +1,41 @@
 import React, { FC } from 'react';
 import Tooltip from '@material-ui/core/Tooltip';
 
+import { Copy } from '@honzon-platform/ui-components';
+
 import { formatHash } from '../utils';
 
 interface Props {
   hash: string;
+  withCopy?: boolean;
+  withTooltip?: boolean;
 }
 
 export const FormatHash: FC<Props> = ({
-  hash
+  hash,
+  withCopy = true,
+  withTooltip = true
 }) => {
+  const renderInner = () => {
+    if (withTooltip) {
+      return (
+        <Tooltip
+          arrow
+          title={hash}
+          placement='left'
+        >
+          <span>{formatHash(hash)}</span>
+        </Tooltip>
+      );
+    }
+
+    return <span>formatHash(hash)</span>
+  };
   return (
-    <Tooltip
-      arrow
-      placement='top'
-      title={hash}
-    >
-      <span>
-        {
-          formatHash(hash)
-        }
-      </span>
-    </Tooltip>
+    <Copy
+      text={hash}
+      render={renderInner}
+      withCopy={withCopy}
+    />
   );
 };

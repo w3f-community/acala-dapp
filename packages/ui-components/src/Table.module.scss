@@ -6,7 +6,7 @@
 }
 
 .headerCell {
-  padding: 14px 0 15px 0;
+  padding: 14px 8px 15px 8px;
   border-bottom: 1px solid #ecf0f2;
   font-size: $font-m;
   font-weight: 500;
@@ -14,6 +14,8 @@
 
 .cell {
   height: 64px;
+  padding-left: 8px;
+  padding-right: 8px;
   border-bottom: 1px solid #ecf0f2;
   font-size: $font-m;
   color: $color-gray;

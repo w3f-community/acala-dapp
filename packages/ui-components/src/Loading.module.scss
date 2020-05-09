@@ -1,6 +1,29 @@
 @import './styles/index.scss';
 
 $loader-width: 4px;
+$loader-width-small: 2px;
+
+.root.normal {
+  width: 40px;
+  height: 40px;
+
+}
+
+.root.small {
+  width: 14px;
+  height: 14px;
+  .loader {
+    border-width: $loader-width-small;
+
+    &::before {
+      top: -$loader-width-small;
+      left: -$loader-width-small;
+      bottom: -$loader-width-small;
+      right: -$loader-width-small; 
+      border-width: $loader-width-small;
+    }
+  }
+}
 
 .root {
   .loader {
@@ -32,7 +55,6 @@ $loader-width: 4px;
     }
   }
 }
-
 .fullscreen {
   position: absolute;
   display: flex;

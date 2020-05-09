@@ -43,6 +43,7 @@ export const UserBalance: FC<Props> = memo(({
         className={className}
         data={_amount}
         prefix='$'
+        withPadEndDecimal
       />
     );
   }
