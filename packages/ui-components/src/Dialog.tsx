@@ -1,11 +1,13 @@
-import React, { FC, memo, ReactNode, useEffect, useRef } from 'react';
-import { createPortal } from 'react-dom';
+import React, { FC, memo, ReactNode, createRef } from 'react';
+import Modal from '@material-ui/core/Modal';
+import Fade from '@material-ui/core/Fade';
+import Backdrop from '@material-ui/core/Backdrop';
+
 
 import { BareProps } from './types';
 import classes from './Dialog.module.scss';
 import { Button } from './Button';
 import clsx from 'clsx';
-import { randomID } from './utils';
 
 interface Props extends BareProps {
   visiable: boolean;
@@ -23,75 +25,67 @@ export const Dialog: FC<Props> = memo(({
   cancelText = 'Cancel',
   children,
   className,
-  confirmText = 'Confrim',
+  confirmText = 'Confirm',
   onCancel,
   onConfirm,
   showCancel = false,
   title,
   visiable = true
 }) => {
-  /* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */
-  const $body = document.querySelector('body')!;
-  const $divRef = useRef(document.createElement('div'));
-  const _uid = useRef(randomID());
-  const $div = $divRef.current;
+  const $div = createRef<HTMLDivElement>();
 
-  useEffect((): () => void => {
-    $body.append($div);
-    $div.classList.add(`modal-${_uid.current}`);
-
-    return (): void => { $body.removeChild($div); };
-  }, [$body, $div]);
-
-  if (!visiable) {
-    return null;
-  }
-
-  return createPortal((
-    <div
-      className={
-        clsx({ [classes.mask]: visiable })
-      }
-    >
-      <div className={
-        clsx(
-          classes.root,
-          className,
-          {
-            [classes.visiable]: visiable
-          }
-        )
-      }>
-        {title ? <div className={classes.title}>{title}</div> : null}
-        <div className={classes.content}>{children}</div>
-        <div className={classes.action}>
-          {
-            action || (
-              <>
-                {showCancel ? (
-                  <Button
-                    onClick={onCancel}
-                    size='small'
-                  >
-                    {cancelText}
-                  </Button>
-                ) : null}
-                {onConfirm ? (
-                  <Button
-                    color='primary'
-                    onClick={onConfirm}
-                    size='small'
-                  >
-                    {confirmText}
-                  </Button>
-                ) : null}
-              </>
-            )
-          }
+  return (
+    <Modal
+        disableEnforceFocus
+        disableAutoFocus
+        open={visiable}
+        className={classes.mask}
+        closeAfterTransition
+        BackdropComponent={Backdrop}
+        BackdropProps={{ timeout: 500, }}
+        container={$div.current}
+      >
+      <Fade in={visiable}>
+        <div className={
+          clsx(
+            classes.root,
+            className,
+            {
+              [classes.visiable]: visiable
+            }
+          )
+        }>
+          {title ? <div className={classes.title}>{title}</div> : null}
+          <div className={classes.content}>{children}</div>
+          <div className={classes.action}>
+            {
+              action || (
+                <>
+                  {showCancel ? (
+                    <Button
+                      onClick={onCancel}
+                      size='small'
+                    >
+                      {cancelText}
+                    </Button>
+                  ) : null}
+                  {onConfirm ? (
+                    <Button
+                      color='primary'
+                      onClick={onConfirm}
+                      size='small'
+                    >
+                      {confirmText}
+                    </Button>
+                  ) : null}
+                </>
+              )
+            }
+          </div>
         </div>
-      </div>
-    </div>
-  ), $div);
+      </Fade>
+    </Modal>
+  );
 });
 
 Dialog.displayName = 'Dialog';
