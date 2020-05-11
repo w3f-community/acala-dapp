@@ -22,8 +22,7 @@ export const UserCard: FC = memo(() => {
         icon: 'success',
         type: 'success',
         title: 'Copy Success',
-        removedDelay: 2000,
-        placement: 'top right'
+        removedDelay: 2000
       });
     };
 

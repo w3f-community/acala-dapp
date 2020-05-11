@@ -1,4 +1,4 @@
-import React, { useState, useEffect, createContext, PropsWithChildren, FC, ReactElement, useCallback, memo, ReactNode } from 'react';
+import React, { useState, useEffect, createContext, FC, useCallback, memo, ReactNode, useMemo } from 'react';
 
 import { web3Accounts, web3Enable, web3FromAddress } from '@polkadot/extension-dapp';
 import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
@@ -63,7 +63,7 @@ export const AccountProvider: FC<Props> = memo(({
     return true;
   }, [applicationName]);
 
-  const setActiveAccount = useCallback(async (account: InjectedAccountWithMeta): Promise<void> => {
+  const setActiveAccount = async (account: InjectedAccountWithMeta): Promise<void> => {
     try {
       const injector = await web3FromAddress(account.address);
 
@@ -74,15 +74,15 @@ export const AccountProvider: FC<Props> = memo(({
     } catch (e) {
       setReady(false);
     }
-  });
+  };
 
   const openSelectAccount = useCallback((): void => {
     open();
-  });
+  }, [open]);
 
-  const closeSelectAccount = (): void => {
+  const closeSelectAccount = useCallback((): void => {
     close();
-  };
+  }, [close]);
 
   useEffect(() => {
     loadAccounts();
@@ -106,22 +106,22 @@ export const AccountProvider: FC<Props> = memo(({
     }
   }, [accounts, active, getStorage, openSelectAccount, setActiveAccount]);
 
-  const handleAccountSelect = (account: InjectedAccountWithMeta) => {
-    setActiveAccount(account);
+  const handleAccountSelect = async (account: InjectedAccountWithMeta) => {
+    await setActiveAccount(account);
     closeSelectAccount();
   };
 
-  const renderError = (): ReactNode => {
+  const renderError = useCallback((): ReactNode => {
     if (error && error === 'NO_ACCOUNTS' && NoAccounts) {
       return NoAccounts;
     }
 
-    if (error && error === 'NO_EXTENSIONS' && NoAccounts) {
+    if (error && error === 'NO_EXTENSIONS' && NoExtensions) {
       return NoExtensions;
     }
 
     return null;
-  };
+  }, [error, NoAccounts, NoExtensions]);
 
   return (
     <AccountContext.Provider

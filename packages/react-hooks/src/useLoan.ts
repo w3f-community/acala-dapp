@@ -57,6 +57,10 @@ export const useLoan = (token: CurrencyId | string) => {
   }, [prices]);
 
   const collateralPrice = useMemo<DerivedPrice | undefined>(() => {
+    if (!token) {
+      return;
+    }
+
     return prices.find((item): boolean => tokenEq(item.token, token));
   }, [prices, token]);
 

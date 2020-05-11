@@ -14,6 +14,7 @@ export * from './TokenSelector';
 export * from './Price';
 export * from './TxButton';
 export * from './TransferButton';
+export * from './EventsWather';
 
 // airdrop
 export * from './AirDropAmount';

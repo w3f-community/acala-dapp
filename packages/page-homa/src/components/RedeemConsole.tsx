@@ -78,7 +78,7 @@ export const RedeemConsole: FC = () => {
     }
 
     if (redeemType === 'Target') {
-      return form.values.target;
+      return era;
     }
 
     if (redeemType === 'WaitForUnbonding') {
@@ -90,9 +90,7 @@ export const RedeemConsole: FC = () => {
 
   const info = {
     redeemed: Fixed18.fromNatural(form.values.amount),
-    climeFee: stakingPoolHelper.claimFee(
-      Fixed18.fromNatural(form.values.amount), getTargetEra()
-    )
+    climeFee: stakingPoolHelper.claimFee(Fixed18.fromNatural(form.values.amount), getTargetEra())
   };
 
   const listConfig = [

@@ -2,6 +2,10 @@ import React, { FC, PropsWithChildren, useState, useContext } from 'react';
 import { useAccounts, useApi, useNotification, useHistory } from '@honzon-platform/react-hooks';
 import { Button, ButtonProps } from '@honzon-platform/ui-components';
 import { FormatAddress } from './format';
+import { SubmittableResult, ApiPromise } from '@polkadot/api';
+import { CreateNotification } from '@honzon-platform/ui-components/Notification/context';
+import { ITuple } from '@polkadot/types/types';
+import { DispatchError } from '@polkadot/types/interfaces';
 
 interface Props extends ButtonProps {
   section: string;
@@ -14,6 +18,45 @@ interface Props extends ButtonProps {
 }
 
 const TX_TIMEOUT = 60 * 1000;
+
+function extractEvents (api: ApiPromise, result: SubmittableResult, createNotification: CreateNotification) {
+  if (!result ||!result.events) {
+    return;
+  }
+
+  result
+    .events
+    .filter((event): boolean => !!event.event)
+    .map(({ event: { data, method, section } }): void => {
+      if (section === 'system' && method === 'ExtrinsicFailed') {
+        const [dispatchError] = data as unknown as ITuple<[DispatchError]>;
+          let message = dispatchError.type;
+
+          if (dispatchError.isModule) {
+            try {
+              const mod = dispatchError.asModule;
+              const error = api.registry.findMetaError(new Uint8Array([mod.index.toNumber(), mod.error.toNumber()]));
+
+              message = `${error.section}.${error.name}`;
+            } catch (error) { }
+          }
+
+          createNotification({
+            type: 'error',
+            icon: 'error',
+            title: `${section}.${method}`,
+            content: message,
+            removedDelay: 4000
+          });
+      } else {
+          createNotification({
+            type: 'info',
+            title: `${section}.${method}`,
+            removedDelay: 4000
+          });
+      }
+    });
+}
 
 export const TxButton: FC<PropsWithChildren<Props>> = ({
   addon,
@@ -73,7 +116,6 @@ export const TxButton: FC<PropsWithChildren<Props>> = ({
     const notification = createNotification({
       icon: 'loading',
       content: <FormatAddress address={hash} />,
-      placement: 'top right',
       type: 'info',
       title: `${section}: ${method}`
     });
@@ -84,21 +126,26 @@ export const TxButton: FC<PropsWithChildren<Props>> = ({
     // timeout
     await Promise.race([
       new Promise((resolve) => setTimeout(() => resolve('timeout'), TX_TIMEOUT)),
-      new Promise((resolve, reject) => {
-        signedTx.send((result) => {
-          console.log(result.toHuman());
+      new Promise(async (resolve, reject) => {
+        const unsub = await signedTx.send((result) => {
           if (
             result.status.isInBlock
             || result.status.isFinalized
           ) {
             resolve(result);
           } else if(
-            result.status.isInvalid
-            || result.status.isUsurped
+            result.status.isUsurped
             || result.status.isDropped
             || result.status.isFinalityTimeout
           ){
+            unsub && unsub();
             reject(result);
+          }
+
+          if (result.status.isFinalized) {
+            unsub && unsub();
+          } else {
+            extractEvents(api, result as unknown as SubmittableResult, createNotification);
           }
         }).catch(reject);
       })
@@ -119,7 +166,7 @@ export const TxButton: FC<PropsWithChildren<Props>> = ({
         _onSuccess();
         push(hash, signedTx, addon);
       }
-    }).catch(() => {
+    }).catch((error) => {
       notification.update({
         icon: 'error',
         type: 'error',

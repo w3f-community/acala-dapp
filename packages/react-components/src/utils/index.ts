@@ -66,7 +66,6 @@ export const tokenEq = (base: CurrencyId | string, target: CurrencyId | string):
   if (!target || !base) {
     return false;
   }
-
   return base.toString().toUpperCase() === target.toString().toUpperCase();
 };
 

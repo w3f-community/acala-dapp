@@ -169,7 +169,7 @@ export const Generate = () => {
   useEffect(() => {
     const _result = getUserLoanHelper(currentUserLoan, currentLoanType, collateral, debit)
     setUserLoanHelper(_result);
-  }, [collateral, debit, currentLoanType, currentUserLoan]);
+  }, [collateral, debit, currentLoanType, currentUserLoan, getUserLoanHelper]);
 
   useEffect(() => {
     const data = Number(form.values.deposit) || 0;

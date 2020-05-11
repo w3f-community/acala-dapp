@@ -1,6 +1,7 @@
 import React, { ReactNode, FC, useState, useEffect, useContext } from 'react';
 import { ApiPromise, WsProvider } from '@polkadot/api';
 import { options } from '@acala-network/api';
+import { EventsWather } from '@honzon-platform/react-components/';
 
 const CONNECT_TIMEOUT = 1000 * 60; // one minute
 
@@ -116,6 +117,7 @@ export const ApiProvider: FC<ApiProps> = ({
     >
       {renderContent()}
       {renderError()}
+      <EventsWather />
     </ApiContext.Provider>
   );
 };

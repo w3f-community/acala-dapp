@@ -28,7 +28,6 @@ export const Copy: FC<Props> = ({
       icon: 'success',
       title: `Copy ${display ? display : text} success`,
       removedDelay: 2000,
-      placement: 'top right'
     });
   };
 
