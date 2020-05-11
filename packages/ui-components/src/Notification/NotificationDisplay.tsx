@@ -1,7 +1,7 @@
 import React, { FC, PropsWithChildren, useEffect, useRef, ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import clsx from 'clsx';
-
+import Slide from '@material-ui/core/Slide';
 import classes from './NotificationDisplay.module.scss';
 import { NotificationConfig } from './types';
 import { Loading } from '../Loading';
@@ -48,23 +48,25 @@ const NotificationCard: FC<NotificationConfig> = (config) => {
   };
 
   return (
-    <div
-      className={
-        clsx(
-          classes.root,
-          classes[config.type || 'info'],
-          {
-            [classes.noContent]: !config.content
-          }
-        )
-      }
-    >
-      <div className={classes.icon}>{renderIcon()}</div>
-      <div className={classes.content}>
-        <div className={classes.title}>{config.title}</div>
-        <div className={classes.info}>{config.content}</div>
+    <Slide direction="left" in>
+      <div
+        className={
+          clsx(
+            classes.root,
+            classes[config.type || 'info'],
+            {
+              [classes.noContent]: !config.content
+            }
+          )
+        }
+      >
+        <div className={classes.icon}>{renderIcon()}</div>
+        <div className={classes.content}>
+          <div className={classes.title}>{config.title}</div>
+          <div className={classes.info}>{config.content}</div>
+        </div>
       </div>
-    </div>
+    </Slide>
   );
 };
 

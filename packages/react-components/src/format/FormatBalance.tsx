@@ -41,10 +41,11 @@ export const FormatBalance: FC<Props> = memo(({
 
     let _transform = compose(
       useThousandth ? thousandth : _noop,
-      curry(padEndDecimal)(placeholder, 5)
+      curry(padEndDecimal)(placeholder, 6)
     );
 
-    const balance = _transform(formatBalance(data?.balance).toNumber(dp, 3)) || '0';
+    const _balance = formatBalance(data?.balance);
+    const balance = _balance.isNaN ()? _balance.toString() : _transform(_balance.toNumber(dp, 3));
 
     return (
       <span key={`${_id}-${index}`}>
@@ -70,7 +71,7 @@ export const FormatBalance: FC<Props> = memo(({
           )
         }
       >
-        {pair ? pair.map((data, index) => renderBalance(data, index, true, 5)) : renderBalance({ balance, currency }, -1, true, 5)}
+        {pair ? pair.map((data, index) => renderBalance(data, index, true, 6)) : renderBalance({ balance, currency }, -1, true, 6)}
       </span>
     </Tooltip>
   );

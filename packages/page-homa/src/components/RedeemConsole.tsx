@@ -1,28 +1,45 @@
-import React, { FC, useContext, useState } from 'react';
+import React, { FC, useContext, useState, useMemo } from 'react';
 import { noop } from 'lodash';
 import { useFormik } from 'formik';
 
 import { Fixed18 } from '@acala-network/app-util';
 import { Grid, List, Radio } from '@honzon-platform/ui-components';
-import { StakingPoolContext, TxButton, BalanceInput, numToFixed18Inner, formtDuration, FormatBalance } from '@honzon-platform/react-components';
+import { TxButton, BalanceInput, numToFixed18Inner, formatDuration, FormatBalance } from '@honzon-platform/react-components';
 import { useFormValidator } from '@honzon-platform/react-hooks';
 
 import classes from './RedeemConsole.module.scss';
 import { TargetRedeemList } from './TargetRedeemList';
+import { StakingPoolContext } from './StakingPoolProvider';
 
 type RedeemType = 'Immediately' | 'Target' | 'WaitForUnbonding';
 
 export const RedeemConsole: FC = () => {
   const { freeList, stakingPool, stakingPoolHelper, unbondingDuration } = useContext(StakingPoolContext);
   const [redeemType, setRedeemType] = useState<RedeemType>('Immediately');
+  const [era, setEra] = useState<number>(0);
+  const freeLiquidityCurrencyAmount = useMemo((): number => {
+    if (!stakingPoolHelper) {
+      return 0;
+    }
 
-  const getFreeLiquidityCurrencyAmount = (): number => {
-      return stakingPoolHelper?.communalFree.div(stakingPoolHelper.liquidExchangeRate).toNumber();
-  }
+    return stakingPoolHelper.communalFree.div(stakingPoolHelper.liquidExchangeRate).toNumber();
+  }, [stakingPoolHelper]);
+  const freeLiquidityCurrencyAmountInTarget = useMemo((): number => {
+    const _result = freeList.find((item): boolean => item.era === era);
+
+    if (!_result) {
+      return 0;
+    }
+
+    return _result.free.div(stakingPoolHelper.liquidExchangeRate).toNumber();
+  }, [freeList, era]);
 
   const getMaxLiquidCurrencyAmount = () => {
     if (redeemType === 'Immediately') {
-      return getFreeLiquidityCurrencyAmount();
+      return freeLiquidityCurrencyAmount;
+    }
+    if (redeemType === 'Target') {
+      return freeLiquidityCurrencyAmountInTarget;
     }
     if (redeemType === 'WaitForUnbonding') {
       return Number.POSITIVE_INFINITY;
@@ -42,7 +59,6 @@ export const RedeemConsole: FC = () => {
       min: stakingPoolHelper?.currentEra
     }
   });
-  const [era, setEra] = useState<number>(0);
   const form = useFormik({
     initialValues: {
       amount: '' as any as number,
@@ -126,7 +142,7 @@ export const RedeemConsole: FC = () => {
 
     if (redeemType === 'Target') {
       _params[1] = {
-        Target: form.values.target
+        Target: era
       };
     }
 
@@ -146,7 +162,7 @@ export const RedeemConsole: FC = () => {
           <Radio
             checked={redeemType === 'Immediately'}
             className={classes.item}
-            label={`Redeem Now, Total Free is ${getFreeLiquidityCurrencyAmount()} ${stakingPool.liquidCurrency}`}
+            label={`Redeem Now, Total Free is ${freeLiquidityCurrencyAmount} ${stakingPool.liquidCurrency}`}
             onClick={() => setRedeemType('Immediately')}
           />
           <Radio
@@ -165,6 +181,9 @@ export const RedeemConsole: FC = () => {
                     />
                   ) : null
                 }
+                {
+                  freeLiquidityCurrencyAmountInTarget ? `Free is ${freeLiquidityCurrencyAmountInTarget}` : null
+                }           
               </div>
             )}
             onClick={() => setRedeemType('Target')}
@@ -189,7 +208,7 @@ export const RedeemConsole: FC = () => {
       </Grid>
       <Grid item>
         <p className={classes.eraInfo}>
-          Current Era = {stakingPoolHelper.currentEra} Unbounding Period = {formtDuration(unbondingDuration)} Days, Era {stakingPoolHelper.bondingDuration}
+          Current Era = {stakingPoolHelper.currentEra} Unbounding Period = {formatDuration(unbondingDuration)} Days, Era {stakingPoolHelper.bondingDuration}
         </p>
       </Grid>
       <Grid container

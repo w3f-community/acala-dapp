@@ -58,7 +58,7 @@ export const useLoan = (token: CurrencyId | string) => {
 
   const collateralPrice = useMemo<DerivedPrice | undefined>(() => {
     return prices.find((item): boolean => tokenEq(item.token, token));
-  }, [prices]);
+  }, [prices, token]);
 
   const getUserLoanHelper = useCallback((
     loan: DerivedUserLoan | undefined,
@@ -77,7 +77,7 @@ export const useLoan = (token: CurrencyId | string) => {
 
     const _debit = debitAmount
       ? convertToFixed18(loan.debits)
-        .add(stableCoinToDebit( Fixed18.fromNatural(debitAmount), convertToFixed18(loanType.debitExchangeRate)))
+        .add(stableCoinToDebit(Fixed18.fromNatural(debitAmount), convertToFixed18(loanType.debitExchangeRate)))
       : convertToFixed18(loan.debits);
 
     return new LoanHelper({

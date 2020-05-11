@@ -11,7 +11,7 @@ interface Props extends BareProps {
   direction?: 'column' | 'row';
   padding?: number;
   justifyContent?: 'center' | 'flex-start' | 'flex-end' | 'space-between' | 'space-around';
-  alignItems?: 'center' | 'flex-start' | 'flex-end';
+  alignItems?: 'center' | 'flex-start' | 'flex-end' | 'stretch';
   pDirection?: 'column' | 'row';
   pGutter?: number;
 }

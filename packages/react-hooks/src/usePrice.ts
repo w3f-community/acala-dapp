@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useMemo } from 'react';
 
 import { DerivedPrice } from '@acala-network/api-derive';
 import { CurrencyId } from '@acala-network/types/interfaces';
@@ -31,6 +31,8 @@ const insertPrice = (
   return arr;
 };
 
+
+
 export const usePrice = (token?: CurrencyId | string) => {
   const { api } = useApi();
   const { nativeCurrency } = useConstants();
@@ -38,11 +40,9 @@ export const usePrice = (token?: CurrencyId | string) => {
     useCall<DerivedPrice[]>((api.derive as any).price.allPrices, []) || [];
   const { stakingPool, stakingPoolHelper } = useStakingPool();
   const nativeCurrencyRate = useDexExchangeRate(nativeCurrency);
-  const [price, setPrice] = useState<DerivedPrice[]>([]);
-
-  useEffect(() => {
+  const price = useMemo(() => {
     if (!_price || _price.length === 0) {
-      return;
+      return [];
     }
 
     const price: DerivedPrice[] = [];
@@ -82,8 +82,8 @@ export const usePrice = (token?: CurrencyId | string) => {
       }
     }
 
-    setPrice(price);
-  }, [_price, api.registry, stakingPool, stakingPoolHelper, nativeCurrencyRate]);
+    return price;
+  }, [_price, stakingPool, stakingPoolHelper, nativeCurrencyRate]);
 
   if (token && price) {
     return price.find((item: DerivedPrice) => item.token === token.toString());

@@ -1,4 +1,4 @@
-import React, { FC, useContext, useEffect, useState } from 'react';
+import React, { FC, useContext, useEffect, useState, useMemo } from 'react';
 
 import { FormatBalance, FormatFixed18, TxButton, numToFixed18Inner } from '@honzon-platform/react-components';
 import { createProviderContext } from './CreateProvider';
@@ -8,16 +8,22 @@ import { List, Button } from '@honzon-platform/ui-components';
 import classes from './Confirm.module.scss';
 import { LoanContext } from './LoanProvider';
 
+let count = 0;
 export const Confirm: FC = () => {
-  const { deposit, generate, selectedToken, setStep } = useContext(createProviderContext);
+  const {
+    deposit,
+    generate,
+    selectedToken,
+    setStep,
+    currentLoanType,
+    currentUserLoan,
+    getUserLoanHelper 
+  } = useContext(createProviderContext);
   const { cancelCurrentTab } = useContext(LoanContext);
-  const { currentLoanType, currentUserLoan, getUserLoanHelper } = useLoan(selectedToken);
-  const [loanHelper, setLoanHelper] = useState<LoanHelper | null>();
   const { stableCurrency } = useConstants();
-
-  useEffect(() => {
-    setLoanHelper(getUserLoanHelper(currentUserLoan, currentLoanType, deposit, generate));
-  }, [generate, deposit, currentUserLoan, currentLoanType]);
+  const loanHelper = useMemo(() => {
+    return getUserLoanHelper(currentUserLoan, currentLoanType, deposit, generate);
+  }, [generate, deposit, currentUserLoan, currentLoanType])
 
   const listConfig = [
     {

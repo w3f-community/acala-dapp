@@ -34,6 +34,7 @@ export const FormatHash: FC<Props> = ({
   return (
     <Copy
       text={hash}
+      display={formatHash(hash)}
       render={renderInner}
       withCopy={withCopy}
     />

@@ -21,11 +21,11 @@ export const BorrowedConsole: FC<Props> = ({
   const balance = useBalance(stableCurrency);
 
   const checkCanPayBackDisabled = (): boolean => {
-    if (!currentUserLoanHelper.canPayBack) {
+    if (!currentUserLoanHelper?.canPayBack) {
       return true;
     }
 
-    if (currentUserLoanHelper.canPayBack.isZero()) {
+    if (currentUserLoanHelper?.canPayBack.isZero()) {
       return true;
     }
 
@@ -33,11 +33,11 @@ export const BorrowedConsole: FC<Props> = ({
   };
 
   const checkCanGenerateDisabled = (): boolean => {
-    if (!currentUserLoanHelper.canGenerate) {
+    if (!currentUserLoanHelper?.canGenerate) {
       return true;
     }
 
-    if (currentUserLoanHelper.canGenerate.isZero()) {
+    if (currentUserLoanHelper?.canGenerate.isZero()) {
       return true;
     }
 
@@ -61,7 +61,7 @@ export const BorrowedConsole: FC<Props> = ({
             />
           </div>
           <FormatBalance
-            balance={currentUserLoanHelper.debitAmount}
+            balance={currentUserLoanHelper?.debitAmount}
             currency={stableCurrency}
           />
         </>
@@ -72,7 +72,7 @@ export const BorrowedConsole: FC<Props> = ({
         <div className={classes.itemContent}>
           <p className={classes.itemTitle}>Can Pay Back</p>
           <FormatBalance
-            balance={currentUserLoanHelper.canPayBack}
+            balance={currentUserLoanHelper?.canPayBack}
             className={classes.itemBalance}
             currency={stableCurrency}
           />
@@ -83,7 +83,7 @@ export const BorrowedConsole: FC<Props> = ({
           max={
             Math.min(
               convertToFixed18(balance || 0).toNumber(),
-              currentUserLoanHelper.canPayBack.sub(minmumDebitValue).toNumber()
+              currentUserLoanHelper?.canPayBack.toNumber()
             )
           }
           text='Payback'
@@ -95,7 +95,7 @@ export const BorrowedConsole: FC<Props> = ({
         <div className={classes.itemContent}>
           <p className={classes.itemTitle}>Can Generate</p>
           <FormatBalance
-            balance={currentUserLoanHelper.canGenerate}
+            balance={currentUserLoanHelper?.canGenerate}
             className={classes.itemBalance}
             currency={stableCurrency}
           />
@@ -103,7 +103,7 @@ export const BorrowedConsole: FC<Props> = ({
         <LonaActionButton
           className={classes.itemAction}
           disabled={checkCanGenerateDisabled()}
-          max={currentUserLoanHelper.canGenerate?.toNumber()}
+          max={currentUserLoanHelper?.canGenerate?.toNumber()}
           text='Generate'
           token={token}
           type='generate'

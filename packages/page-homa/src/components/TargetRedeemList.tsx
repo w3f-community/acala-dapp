@@ -1,9 +1,9 @@
 import React, { FC, useContext } from 'react';
-import { StakingPoolContext, formtDuration } from '@honzon-platform/react-components';
+import { formatDuration, formatCurrency } from '@honzon-platform/react-components';
 import { Dropdown, DropdownConfig } from '@honzon-platform/ui-components';
 import { BareProps } from '@honzon-platform/ui-components/types';
 import classes from './TargetRedeemList.module.scss';
-import { Fixed18 } from '@acala-network/app-util';
+import { StakingPoolContext } from './StakingPoolProvider';
 
 interface Props extends BareProps {
   value: number;
@@ -15,20 +15,21 @@ export const TargetRedeemList: FC<Props> = ({
   onChange,
   value
 }) => {
-  const { freeList, stakingPool, stakingPoolHelper } = useContext(StakingPoolContext);
-
-  if (!stakingPool.bondingDuration) {
-    return null;
-  }
+  const { freeList, stakingPool, stakingPoolHelper, eraDuration } = useContext(StakingPoolContext);
 
   const config: DropdownConfig[] = freeList.map(({ era, free }) => {
+    const duration = formatDuration((era - stakingPoolHelper.currentEra) * eraDuration);
+
     return {
       value: era,
-      render: () => (
-        <div>
-          At Era: {era} ≈ {formtDuration(era)}, Free to Redeem: {Fixed18.fromNatural(free).div(stakingPoolHelper.liquidExchangeRate)}
-        </div>
-      )
+      render: () => {
+        return (
+          <div className={classes.item}>
+            <span>
+            {`at era ${era}(≈ ${duration} days later) has ${free.div(stakingPoolHelper?.liquidExchangeRate)} ${formatCurrency(stakingPool?.liquidCurrency)} to redeem`}</span>
+          </div>
+        );
+      }
     };
   });
 

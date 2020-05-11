@@ -20,8 +20,7 @@ export interface ExtrinsicHistoryData {
   signer: string;
   time: Date;
   [k: string]: any;
-  addon?: any;
-}
+  addon?: any; }
 
 class ExtrinsicHistoryCenter extends Dexie {
   private history: Dexie.Table<ExtrinsicHistoryData, string>;
@@ -29,8 +28,8 @@ class ExtrinsicHistoryCenter extends Dexie {
   private count: number;
 
   constructor () {
-    super('extrinsic');
-    this.version(1).stores({
+    super('extrinsic_2');
+    this.version(2).stores({
       history: 'hash, method, section, params, signer'
     });
     this.history = this.table('history');
@@ -38,9 +37,9 @@ class ExtrinsicHistoryCenter extends Dexie {
     this.count = 0;
   }
 
-  push (tx: SubmittableExtrinsic<'promise'>, addon?: any) {
+  push (hash: string, tx: SubmittableExtrinsic<'promise'>, addon?: any) {
     this.history.add({
-      hash: tx.hash.hash.toString(),
+      hash: hash,
       method: tx.method.methodName,
       params: tx.method.args.toString().split(','),
       section: tx.method.sectionName,
@@ -56,7 +55,7 @@ class ExtrinsicHistoryCenter extends Dexie {
       return [];
     }
 
-    return this.history.filter((item) => {
+    return await this.history.filter((item) => {
       let flag = true;
 
       Object.keys(params).forEach((key) => {
@@ -68,7 +67,7 @@ class ExtrinsicHistoryCenter extends Dexie {
       });
 
       return flag;
-    }).toArray();
+    }).reverse().sortBy('time');
   }
 
   watch (callback: () => void): Subscription {
@@ -81,7 +80,7 @@ class ExtrinsicHistoryCenter extends Dexie {
 const extrinsicHistoryCenter = new ExtrinsicHistoryCenter();
 
 interface HooksReturnType {
-  push: (tx: SubmittableExtrinsic<'promise'>, addon?: any) => void;
+  push: (hash: string, tx: SubmittableExtrinsic<'promise'>, addon?: any) => void;
   result: ExtrinsicHistoryData[];
 }
 
@@ -89,13 +88,13 @@ export const useHistory = (query?: QueryParams): HooksReturnType => {
   const [result, _setResult] = useState<ExtrinsicHistoryData[]>([]);
   const _savedQuery = useRef<QueryParams | undefined>();
 
-  const push = (tx: SubmittableExtrinsic<'promise'>, addon?: any): void => {
-    extrinsicHistoryCenter.push(tx, addon);
+  const push = (hash: string, tx: SubmittableExtrinsic<'promise'>, addon?: any): void => {
+    extrinsicHistoryCenter.push(hash, tx, addon);
   };
 
   useEffect(() => {
     if (query && !isEqual(_savedQuery.current, query)) {
-      const sub = extrinsicHistoryCenter.watch(async () => {
+      extrinsicHistoryCenter.watch(async () => {
         const result = await extrinsicHistoryCenter.query(query);
         _setResult(result);
       });

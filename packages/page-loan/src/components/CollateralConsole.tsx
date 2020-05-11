@@ -4,7 +4,7 @@ import { CurrencyId } from '@acala-network/types/interfaces';
 import { Card } from '@honzon-platform/ui-components';
 import { Token, FormatBalance } from '@honzon-platform/react-components';
 import { useLoan, useBalance } from '@honzon-platform/react-hooks';
-import { convertToFixed18 } from '@acala-network/app-util';
+import { convertToFixed18, Fixed18 } from '@acala-network/app-util';
 
 import classes from './LoanConsole.module.scss';
 import { LonaActionButton } from './LoanActionButton';
@@ -64,7 +64,7 @@ export const CollateralConsole: FC<Props> = ({
         <div className={classes.itemContent}>
           <p className={classes.itemTitle}>Able to Withdraw</p>
           <FormatBalance
-            balance={currentUserLoanHelper?.collaterals?.sub(currentUserLoanHelper?.requiredCollateral)}
+            balance={currentUserLoanHelper?.collaterals?.sub(currentUserLoanHelper?.requiredCollateral).max(Fixed18.ZERO)}
             className={classes.itemBalance}
             currency={currentLoanType!.token}
           />

@@ -7,6 +7,7 @@ export * from './useStorage';
 export * from './useAppSetting';
 export * from './useConstants';
 export * from './useExtrinsicHistory';
+export * from './useInterval';
 
 // common
 export * from './useStateWithCallback';
@@ -28,6 +29,7 @@ export * from './useDexTotalDeposit';
 
 // homa
 export * from './useStakingPool';
+export * from './useCurrentRedeem';
 
 // loan
 export * from './useLoan';

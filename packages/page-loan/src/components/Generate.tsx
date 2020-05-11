@@ -6,7 +6,7 @@ import { CurrencyId } from '@acala-network/types/interfaces';
 import { convertToFixed18, Fixed18, LoanHelper } from '@acala-network/app-util';
 
 import { BalanceInput, UserBalance, Token, FormatFixed18, Price, LoanInterestRate, FormatBalance, formatCurrency, thousandth } from '@honzon-platform/react-components';
-import { useLoan, useFormValidator, useConstants, useBalance } from '@honzon-platform/react-hooks';
+import { useFormValidator, useConstants, useBalance } from '@honzon-platform/react-hooks';
 import { Button, List, ListConfig } from '@honzon-platform/ui-components';
 
 import { createProviderContext } from './CreateProvider';
@@ -84,10 +84,18 @@ const Overview = ({ data }: any) => {
 };
 
 export const Generate = () => {
-  const { selectedToken, setDeposit, setGenerate, setStep } = useContext(createProviderContext);
+  const {
+    selectedToken,
+    setDeposit,
+    setGenerate,
+    setStep,
+    currentLoanType,
+    currentUserLoan,
+    minmumDebitValue,
+    getUserLoanHelper
+  } = useContext(createProviderContext);
   const { cancelCurrentTab } = useContext(LoanContext);
   const { stableCurrency } = useConstants();
-  const { currentLoanType, currentUserLoan, minmumDebitValue, getUserLoanHelper } = useLoan(selectedToken);
   const selectedCurrencyBalance = useBalance(selectedToken);
   const [maxGenerate, setMaxGenerate] = useState<Fixed18>(Fixed18.ZERO);
   const [collateral, setCollateral] = useState<number>(0);
@@ -159,7 +167,8 @@ export const Generate = () => {
   };
 
   useEffect(() => {
-    setUserLoanHelper(getUserLoanHelper(currentUserLoan, currentLoanType, collateral, debit));
+    const _result = getUserLoanHelper(currentUserLoan, currentLoanType, collateral, debit)
+    setUserLoanHelper(_result);
   }, [collateral, debit, currentLoanType, currentUserLoan]);
 
   useEffect(() => {

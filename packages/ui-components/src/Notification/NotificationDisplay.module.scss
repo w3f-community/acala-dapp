@@ -1,5 +1,13 @@
 @import '../styles/index.scss';
 
+:global(.notification--root) {
+  z-index: 999;
+  position: fixed;
+  width: 400px;
+  top: 0;
+  right: 24px;
+}
+
 .root {
   display: flex;
   padding: 16px 20px;

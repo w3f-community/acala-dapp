@@ -1,10 +1,11 @@
-import React, { FC, useContext, useEffect, useState, ReactNode } from 'react';
-import { noop } from 'lodash';
+import React, { FC, useContext, ReactNode } from 'react';
 
 import { Card, ListConfig, List } from '@honzon-platform/ui-components';
-import { StakingPoolContext, formatCurrency } from '@honzon-platform/react-components';
+import { formatCurrency } from '@honzon-platform/react-components';
 import { convertToFixed18 } from '@acala-network/app-util';
 import { FormatFixed18 } from '@honzon-platform/react-components/format/FormatFixed18';
+
+import { StakingPoolContext } from './StakingPoolProvider';
 
 export const SystemInfo: FC = () => {
   const { stakingPool, stakingPoolHelper } = useContext(StakingPoolContext);

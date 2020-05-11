@@ -1,10 +1,11 @@
 import React, { createContext, useState, FC } from 'react';
 import { BareProps } from '@honzon-platform/ui-components/types';
 import { CurrencyId } from '@acala-network/types/interfaces';
+import { useLoan } from '@honzon-platform/react-hooks';
 
 type CREATE_STEP = 'select' | 'generate' | 'confirm' | 'success';
 
-export interface ProviderData {
+export interface ProviderData extends ReturnType<typeof useLoan> {
   step: CREATE_STEP;
   setStep: (step: CREATE_STEP) => void;
   selectedToken: CurrencyId;
@@ -26,6 +27,7 @@ export const CreateProvider: FC<Props> = ({
   const [selectedToken, _setSelectedToken] = useState<CurrencyId>(null as any as CurrencyId);
   const [deposit, setDeposit] = useState<number>(0);
   const [generate, setGenerate] = useState<number>(0);
+  const _loan = useLoan(selectedToken);
 
   const setStep = (step: CREATE_STEP) => {
     _setStep(step);
@@ -45,7 +47,8 @@ export const CreateProvider: FC<Props> = ({
         deposit,
         setDeposit,
         generate,
-        setGenerate
+        setGenerate,
+        ..._loan
       }}
     >
       {children}

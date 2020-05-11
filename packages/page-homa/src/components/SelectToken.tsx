@@ -2,9 +2,10 @@ import React, { FC, memo, useContext } from 'react';
 import { noop } from 'lodash';
 
 import { Dropdown } from '@honzon-platform/ui-components';
-import { StakingPoolContext, formatCurrency } from '@honzon-platform/react-components';
+import { formatCurrency } from '@honzon-platform/react-components';
 
 import classes from './SelectToken.module.scss';
+import { StakingPoolContext } from './StakingPoolProvider';
 
 export const SelectToken: FC = memo(() => {
   const { stakingPool } = useContext(StakingPoolContext);

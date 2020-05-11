@@ -35,6 +35,7 @@ export const WalletBalanceCard: FC<Props> = memo(({
     {
       key: 'token',
       align: 'left',
+      width: 1,
       /* eslint-disable-next-line react/display-name */
       render: (token: CurrencyId) => <Token token={token} />,
       title: 'Token'
@@ -42,6 +43,7 @@ export const WalletBalanceCard: FC<Props> = memo(({
     {
       key: 'balance',
       align: 'right',
+      width: 2,
       /* eslint-disable-next-line react/display-name */
       render: (token: CurrencyId) => (
         <UserBalance
@@ -54,6 +56,7 @@ export const WalletBalanceCard: FC<Props> = memo(({
     {
       key: 'price',
       align: 'right',
+      width: 2,
       /* eslint-disable-next-line react/display-name */
       render: (token) => <Price token={token} />,
       title: 'Price'
@@ -61,6 +64,7 @@ export const WalletBalanceCard: FC<Props> = memo(({
     {
       key: 'amount',
       align: 'right',
+      width: 2,
       /* eslint-disable-next-line react/display-name */
       render: (token: CurrencyId) => (
         <UserBalance
@@ -74,6 +78,7 @@ export const WalletBalanceCard: FC<Props> = memo(({
       key: 'action',
       align: 'right',
       title: 'Action',
+      width: 2,
       /* eslint-disable-next-line react/display-name */
       render: (token: CurrencyId) => <TransferButton token={token} />
     }

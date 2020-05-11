@@ -85,8 +85,8 @@ export const getCurrencyIdFromName = (api: ApiPromise, name: string): CurrencyId
   return new CurrencyId(name);
 };
 
-export const formtDuration = (duration: number): number => {
+export const formatDuration = (duration: number): number => {
   const DAY = 1000 * 60 * 60 * 24;
 
-  return Fixed18.fromRational(duration, DAY).toNumber();
+  return Fixed18.fromRational(duration, DAY).toNumber(6, 2);
 };

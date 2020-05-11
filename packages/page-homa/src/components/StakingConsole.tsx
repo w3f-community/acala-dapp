@@ -4,10 +4,11 @@ import { useFormik } from 'formik';
 
 import { Fixed18, convertToFixed18 } from '@acala-network/app-util';
 import { Grid, List } from '@honzon-platform/ui-components';
-import { StakingPoolContext, TxButton, BalanceInput, numToFixed18Inner, FormatBalance } from '@honzon-platform/react-components';
+import { TxButton, BalanceInput, numToFixed18Inner, FormatBalance } from '@honzon-platform/react-components';
 import { useFormValidator, useBalance } from '@honzon-platform/react-hooks';
 
 import classes from './StakingConsole.module.scss';
+import { StakingPoolContext } from './StakingPoolProvider';
 
 export const StakingConsole: FC = () => {
   const { rewardRate, stakingPool, stakingPoolHelper } = useContext(StakingPoolContext);
@@ -19,6 +20,7 @@ export const StakingConsole: FC = () => {
       currency: stakingPool && stakingPool.stakingCurrency
     }
   });
+
   const form = useFormik({
     initialValues: {
       stakingBalance: '' as any as number
@@ -26,6 +28,7 @@ export const StakingConsole: FC = () => {
     validate: validator,
     onSubmit: noop
   });
+
   const resetForm = useCallback(() => {
     form.resetForm();
   }, [form]);

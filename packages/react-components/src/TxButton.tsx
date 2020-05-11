@@ -13,6 +13,8 @@ interface Props extends ButtonProps {
   addon?: any;
 }
 
+const TX_TIMEOUT = 60 * 1000;
+
 export const TxButton: FC<PropsWithChildren<Props>> = ({
   addon,
   children,
@@ -46,7 +48,7 @@ export const TxButton: FC<PropsWithChildren<Props>> = ({
     onFinally && onFinally();
   };
 
-  const onClick = (): void => {
+  const onClick = async (): Promise<void> => {
     if (!api.tx[section] || !api.tx[section][method]) {
       console.error(`can not find api.tx.${section}.${method}`);
 
@@ -58,11 +60,19 @@ export const TxButton: FC<PropsWithChildren<Props>> = ({
 
       return;
     }
+    const account = await api.query.system.account(active.address);
+    const signedTx = await api.tx[section][method](...params).signAsync(
+      active.address,
+      {
+        nonce: account.nonce.toNumber()
+      }
+    );
 
-    const extrinsic = api.tx[section][method](...params);
+    const hash = signedTx.hash.toString();
+
     const notification = createNotification({
       icon: 'loading',
-      content: <FormatAddress address={extrinsic.hash.hash.toString()} />,
+      content: <FormatAddress address={hash} />,
       placement: 'top right',
       type: 'info',
       title: `${section}: ${method}`
@@ -71,15 +81,43 @@ export const TxButton: FC<PropsWithChildren<Props>> = ({
     // lock btn click
     setIsSending(true);
 
-    extrinsic.signAndSend(active.address, (result) => {
-      if (result.isInBlock) {
+    // timeout
+    await Promise.race([
+      new Promise((resolve) => setTimeout(() => resolve('timeout'), TX_TIMEOUT)),
+      new Promise((resolve, reject) => {
+        signedTx.send((result) => {
+          console.log(result.toHuman());
+          if (
+            result.status.isInBlock
+            || result.status.isFinalized
+          ) {
+            resolve(result);
+          } else if(
+            result.status.isInvalid
+            || result.status.isUsurped
+            || result.status.isDropped
+            || result.status.isFinalityTimeout
+          ){
+            reject(result);
+          }
+        }).catch(reject);
+      })
+    ]).then((result) => {
+      if (result === 'timeout') {
+        notification.update({
+          icon: 'info',
+          type: 'info',
+          title: 'Extrinsic timed out, Please check manually',
+          removedDelay: 4000
+        });
+      } else {
         notification.update({
           icon: 'success',
           type: 'success',
           removedDelay: 4000
         });
         _onSuccess();
-        push(extrinsic, addon);
+        push(hash, signedTx, addon);
       }
     }).catch(() => {
       notification.update({

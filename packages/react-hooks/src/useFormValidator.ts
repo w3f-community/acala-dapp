@@ -32,7 +32,7 @@ type Config = {
 }
 
 export const getFormValidator = (configs: Config, api: ApiPromise, active: InjectedAccountWithMeta) => {
-  const numberPattern = /^\-?([1-9]\d*|0)(\.\d{1,5})?$/;
+  const numberPattern = /^\-?([1-9]\d*|0)(\.\d{1,6})?$/;
 
   return (values: any) => {
     const error = {} as any;

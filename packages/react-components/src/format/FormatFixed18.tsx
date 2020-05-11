@@ -31,23 +31,25 @@ export const FormatFixed18: FC<Props> = memo(({
   }
 
   const getRenderText = (): string => {
-    if (data.isNaN()) {
-      return data.toString();
+    let _text = '';
+
+    if (!data.isFinity()) {
+      return 'NaN';
     }
 
     if (format === 'number') {
-      return withPadEndDecimal ? padEndDecimal(data.toString(), 5) : data.toString();
+      _text = withPadEndDecimal ? padEndDecimal(data.toString(6, 3), 6) : data.toString();
     }
 
     if (format === 'thousandth') {
-      return withPadEndDecimal ? padEndDecimal(thousandth(data.toNumber()), 5) : thousandth(data.toNumber());
+      _text = withPadEndDecimal ? padEndDecimal(thousandth(data.toNumber(6, 3)), 6) : thousandth(data.toNumber(6, 3));
     }
 
     if (format === 'percentage') {
-      return data.mul(Fixed18.fromNatural(100)).toString(2, 3) + '%';
+      _text = data.mul(Fixed18.fromNatural(100)).toString(2, 3) + '%';
     }
 
-    return '';
+    return `${prefix ? prefix : ''}${_text}`;
   };
 
   const inner = (): ReactElement => (
@@ -62,7 +64,6 @@ export const FormatFixed18: FC<Props> = memo(({
 
         }
       >
-        {prefix || null}
         {getRenderText()}
       </span>
   );

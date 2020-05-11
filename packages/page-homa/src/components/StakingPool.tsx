@@ -1,8 +1,10 @@
 import React, { FC, useContext } from 'react';
 import { Table, Card, TableItem } from '@honzon-platform/ui-components';
-import { StakingPoolContext, Token, FormatBalance, FormatFixed18 } from '@honzon-platform/react-components';
+import { Token, FormatBalance, FormatFixed18 } from '@honzon-platform/react-components';
 import { CurrencyId } from '@acala-network/types/interfaces';
-import { convertToFixed18, Fixed18 } from '@acala-network/app-util';
+import { Fixed18 } from '@acala-network/app-util';
+
+import { StakingPoolContext } from './StakingPoolProvider';
 
 export const StakingPool: FC = () => {
   const { rewardRate, stakingPool, stakingPoolHelper } = useContext(StakingPoolContext);

@@ -43,13 +43,14 @@ export const LonaActionButton: FC<Props> = ({
     validate: validator,
     onSubmit: noop
   });
-  const { getUserLoanHelper, currentLoanType, currentUserLoan } = useLoan(token);
+  const { getUserLoanHelper, currentUserLoanHelper, currentLoanType, currentUserLoan, minmumDebitValue } = useLoan(token);
   const [collateral, setCollateral] = useState<number>(0);
   const [debit, setDebit] = useState<number>(0);
   const [loanHelper, setLoanHelper] = useState<LoanHelper | null>();
 
   useEffect(() => {
-    setLoanHelper(getUserLoanHelper(currentUserLoan, currentLoanType, collateral, debit));
+    const _result = getUserLoanHelper(currentUserLoan, currentLoanType, collateral, debit);
+    setLoanHelper(_result);
   }, [currentLoanType, currentUserLoan, collateral, debit, setLoanHelper]);
 
   const checkOperateStableCurrency = (): boolean => {
@@ -69,16 +70,25 @@ export const LonaActionButton: FC<Props> = ({
   const getParams = () => {
     const params = [token, '0', '0'];
 
-    if (!form.values.value || !loanHelper) {
+    if (!form.values.value || !loanHelper || !currentUserLoan || !currentUserLoanHelper) {
       return params;
     }
 
     switch (type) {
       case 'payback': {
-        params[2] = '-' + stableCoinToDebit(
-          Fixed18.fromNatural(form.values.value),
-          loanHelper.debitExchangeRate
-        ).innerToString();
+        if (
+          Fixed18.fromNatural(form.values.value)
+            .sub(currentUserLoanHelper.debitAmount)
+            .negated()
+            .isLessThan(minmumDebitValue)
+        ) {
+          params[2] = currentUserLoanHelper.debits.negated().innerToString();
+        } else {
+          params[2] = stableCoinToDebit(
+            Fixed18.fromNatural(form.values.value),
+            loanHelper.debitExchangeRate
+          ).negated().innerToString();
+        }
         break;
       }
 
@@ -96,7 +106,15 @@ export const LonaActionButton: FC<Props> = ({
       }
 
       case 'withdraw': {
-        params[1] = '-' + Fixed18.fromNatural(form.values.value).innerToString();
+        if (
+          Fixed18.fromNatural(form.values.value)
+            .sub(currentUserLoanHelper.collaterals)
+            .isLessThan(Fixed18.fromNatural(0.0000001))
+        ) {
+          params[1] = currentUserLoanHelper.collaterals.negated().innerToString();
+        } else {
+          params[1] = Fixed18.fromNatural(form.values.value).negated().innerToString();
+        }
         break;
       }
     }

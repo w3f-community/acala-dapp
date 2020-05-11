@@ -37,7 +37,7 @@ export const BaseTxHistory: FC<Props> = ({
     >
       <Table
         config={config}
-        data={result}
+        data={result.slice(0, 10)}
         showHeader
         empty='No Tx History'
       />

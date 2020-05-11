@@ -9,12 +9,14 @@ import classes from './Copy.module.scss';
 
 interface Props extends BareProps {
   text: string;
+  display?: string;
   render?: () => ReactNode;
   withCopy?: boolean;
 }
 
 export const Copy: FC<Props> = ({
   className,
+  display,
   text,
   render,
   withCopy = true
@@ -24,7 +26,7 @@ export const Copy: FC<Props> = ({
   const handleCopy = () => {
     createNotification({
       icon: 'success',
-      title: `Copy ${text} success`,
+      title: `Copy ${display ? display : text} success`,
       removedDelay: 2000,
       placement: 'top right'
     });

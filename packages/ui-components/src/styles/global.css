@@ -13,14 +13,6 @@ p, ul {
   padding: 0;
 }
 
-.notification--root {
-  z-index: 999;
-  position: absolute;
-  width: 400px;
-  top: 0;
-  right: 16px;
-}
-
 a {
   text-decoration: none;
 }
@@ -30,5 +22,5 @@ input {
 }
 
 p, span {
-  cursor: default;
+  cursor: inherit;
 }

@@ -2,7 +2,9 @@ import React, { FC, useContext } from 'react';
 import { CurrencyId } from '@acala-network/types/interfaces';
 
 import { Card, Table, TableItem } from '@honzon-platform/ui-components';
-import { StakingPoolContext, Token, UserBalance } from '@honzon-platform/react-components';
+import { Token, UserBalance } from '@honzon-platform/react-components';
+
+import { StakingPoolContext } from './StakingPoolProvider';
 
 interface TableData {
   token: CurrencyId;

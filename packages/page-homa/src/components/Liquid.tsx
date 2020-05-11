@@ -1,16 +1,16 @@
 import React, { FC, memo } from 'react';
 
+import { Grid } from '@honzon-platform/ui-components';
+
 import { StakingTokeBalances } from './StakingTokenBalances';
 import { SelectToken } from './SelectToken';
 import { SystemInfo } from './SystemInfo';
-import { Grid } from '@honzon-platform/ui-components';
 import { Console } from './Console';
-import { useApi, useCall } from '@honzon-platform/react-hooks';
 import { StakingPool } from './StakingPool';
+import { Transaction } from './Transaction';
+import { RedeemList } from './RedeemList';
 
 export const Liquid: FC = memo(() => {
-  const { api } = useApi();
-
   return (
     <Grid container
       direction='column'>
@@ -18,6 +18,7 @@ export const Liquid: FC = memo(() => {
         <SelectToken />
       </Grid>
       <Grid container
+        alignItems='stretch'
         item>
         <Grid flex={14}
           item>
@@ -36,7 +37,13 @@ export const Liquid: FC = memo(() => {
         </Grid>
       </Grid>
       <Grid item>
+        <RedeemList />
+      </Grid>
+      <Grid item>
         <StakingPool />
+      </Grid>
+      <Grid item>
+        <Transaction />
       </Grid>
     </Grid>
   );

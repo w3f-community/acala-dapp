@@ -24,7 +24,7 @@ export const Radio: FC<Props> = memo(({
     onClick && onClick();
   }
   return (
-    <label
+    <div
       className={
         clsx(
           classes.root,
@@ -44,7 +44,7 @@ export const Radio: FC<Props> = memo(({
         />
       </span>
       {label ? <div className={classes.label}>{label}</div> : null}
-    </label>
+    </div>
   );
 });
 
