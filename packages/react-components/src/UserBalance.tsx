@@ -28,7 +28,7 @@ export const UserBalance: FC<Props> = memo(({
   const { active } = useAccounts();
   const _account = account !== undefined ? account : active ? active.address : '';
   // FIXME: need fix api-derive type
-  const result = useCall<Balance>((api.derive as any).currencies.balance, [_account, token]);
+  const result = useCall<Balance>('derive.currencies.balance', [_account, token]);
   const price = usePrice(token) as DerivedPrice;
 
   if (!result || !price) {

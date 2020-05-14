@@ -1,4 +1,4 @@
-import React, { FC, memo, ReactNode } from 'react';
+import React, { FC, memo, ReactNode, useEffect, useMemo } from 'react';
 
 import { DerivedPrice } from '@acala-network/api-derive';
 import { convertToFixed18 } from '@acala-network/app-util';
@@ -13,8 +13,9 @@ import { FormatFixed18 } from '../format';
 
 type TableData = DerivedPrice;
 
-const PricesList: FC = () => {
+export const PricesFeedCard: FC = memo(() => {
   const data = usePrice() as DerivedPrice[];
+
   const tableConfig: TableItem<TableData>[] = [
     {
       dataIndex: 'token',
@@ -40,28 +41,18 @@ const PricesList: FC = () => {
     }
   ];
 
-  if (!data) {
-    return null;
-  }
-
-  return (
-    <Table
-      config={tableConfig}
-      data={data}
-      size='small'
-    />
-  );
-};
-
-PricesList.displayName = 'PricesFeedCardList';
-
-export const PricesFeedCard: FC = memo(() => {
-  return (
-    <Card padding={false}
-      header='Price Feed'>
-      <PricesList />
-    </Card>
-  );
+  return useMemo(() => {
+    return (
+      <Card padding={false}
+        header='Price Feed'>
+        <Table
+          config={tableConfig}
+          data={data}
+          size='small'
+        />
+      </Card>
+    );
+  }, [data]);
 });
 
 PricesFeedCard.displayName = 'PricesFeedCard';

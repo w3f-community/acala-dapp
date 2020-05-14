@@ -1,9 +1,10 @@
-import React, { FC } from 'react';
+import React, { FC, useState, useEffect } from 'react';
 
-import { BaseTxHistory, FormatBalance, FormatTime, FormatHash, Token, formatBalance, formatCurrency } from '@honzon-platform/react-components';
-import { TableItem } from '@honzon-platform/ui-components';
-import { ExtrinsicHistoryData, useConstants, useLoan } from '@honzon-platform/react-hooks';
+import { BaseTxHistory, FormatTime, FormatHash, Token, formatBalance, formatCurrency } from '@honzon-platform/react-components';
+import { TableItem, Status } from '@honzon-platform/ui-components';
+import { ExtrinsicHistoryData, useConstants, useApi } from '@honzon-platform/react-hooks';
 import { Fixed18, debitToStableCoin, convertToFixed18 } from '@acala-network/app-util';
+import { Codec } from '@polkadot/types/types';
 
 const ZERO = Fixed18.ZERO;
 
@@ -11,32 +12,49 @@ interface ActionProps {
   collatera: string;
   debit: string;
   token: string;
+  block: number;
 }
 
 const Action: FC<ActionProps> = ({
   collatera,
   debit,
-  token
+  token,
+  block
 }) => {
+  const { api } = useApi();
   const { stableCurrency } = useConstants();
-  const { currentLoanType } = useLoan(token);
   const _collateral = Fixed18.fromParts(collatera);
   const _debit = Fixed18.fromParts(debit);
+  const [debitExchangeRate, setDebitExchangeRate] = useState<Codec>();
+
+  useEffect(() => {
+    if (api && block) {
+      (async () => {
+        const hash = await api.query.system.blockHash(block);
+        const result = await api.query.cdpEngine.debitExchangeRate.at(hash, token);
+        setDebitExchangeRate(result);
+      })();
+    }
+  }, [api, block]);
 
   const message: Array<string> = [];
+
+  if (debitExchangeRate && debitExchangeRate.isEmpty) {
+    return <span>DebitExchangeRate Failed</span>
+  }
 
   if (_collateral.isGreaterThan(ZERO)) {
     message.push(`Deposit ${formatBalance(_collateral)} ${formatCurrency(token)}`);
   }
 
   if (_collateral.isLessThan(ZERO)) {
-    message.push(`'Withdraw ${formatBalance(_collateral.negated())} ${formatCurrency(token)}`);
+    message.push(`Withdraw ${formatBalance(_collateral.negated())} ${formatCurrency(token)}`);
   }
 
   if (_debit.isGreaterThan(ZERO)) {
     message.push(
       `Generate ${formatBalance(
-        debitToStableCoin(_debit, convertToFixed18(currentLoanType?.debitExchangeRate || 0))
+        debitToStableCoin(_debit, convertToFixed18(debitExchangeRate || 0))
       )} ${formatCurrency(stableCurrency)}`
     );
   }
@@ -44,7 +62,7 @@ const Action: FC<ActionProps> = ({
   if (_debit.isLessThan(ZERO)) {
     message.push(
       `Pay Back ${formatBalance(
-        debitToStableCoin(_debit.negated(), convertToFixed18(currentLoanType?.debitExchangeRate || 0))
+        debitToStableCoin(_debit.negated(), convertToFixed18(debitExchangeRate || 0))
       )} ${formatCurrency(stableCurrency)}`
     );
   }
@@ -56,42 +74,55 @@ export const Transaction: FC = () => {
   const config: TableItem<ExtrinsicHistoryData>[] = [
     {
       align: 'left',
+      dataIndex: 'hash',
+      width: 2,
+      render: (value) => <FormatHash hash={value} />,
+      title: 'Tx Hash'
+    },
+    {
+      align: 'left',
+      width: 1,
       dataIndex: 'params',
       render: (value) => <Token token={value[0]} />,
       title: 'Token'
     },
     {
       align: 'left',
-      dataIndex: 'params',
-      render: (value) => (
+      width: 2,
+      render: (data) => (
         <Action
-          collatera={value[1]}
-          debit={value[2]}
-          token={value[0]}
+          collatera={data?.params[1]}
+          debit={data?.params[2]}
+          token={data?.params[0]}
+          block={data?.blockNum}
         />
       ),
       title: 'Action'
     },
     {
       align: 'left',
-      dataIndex: 'hash',
-      render: (value) => <FormatHash hash={value} />,
-      title: 'Tx Hash'
-    },
-    {
-      align: 'right',
       dataIndex: 'time',
+      width: 1,
       render: (value) => (
         <FormatTime time={value} />
       ),
       title: 'When'
+    },
+    {
+      align: 'right',
+      width: 1,
+      dataIndex: 'success',
+      render: (value) => (
+        <Status success={value} />
+      ),
+      title: 'Result'
     }
   ];
 
   return (
     <BaseTxHistory
       config={config}
-      method='adjustLoan'
+      method='adjust_loan'
       section='honzon'
     />
   );

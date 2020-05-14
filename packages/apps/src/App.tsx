@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 
 import { ConnectError, NoAccounts, NoExtensions } from '@honzon-platform/react-components';
 import { UIProvider, Notification, FullLoading } from '@honzon-platform/ui-components';
-import { ApiProvider, AccountProvider } from '@honzon-platform/react-environment';
+import { ApiProvider, AccountProvider, GlobalStoreProvider } from '@honzon-platform/react-environment';
 import { useAppSetting } from '@honzon-platform/react-hooks/useAppSetting';
 
 import { RouterProvider } from './components/RouterProvider';
@@ -24,7 +24,9 @@ const App: FC = () => {
             NoAccounts={<NoAccounts />}
             NoExtensions={<NoExtensions />}
           >
-            <RouterProvider config={routerConfig} />
+            <GlobalStoreProvider>
+              <RouterProvider config={routerConfig} />
+            </GlobalStoreProvider>
           </AccountProvider>
         </ApiProvider>
       </Notification>

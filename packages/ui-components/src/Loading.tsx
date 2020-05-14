@@ -33,3 +33,19 @@ export const FullLoading: FC = () => {
     </div>
   );
 };
+
+export const PageLoading: FC = () => {
+  return (
+    <div className={classes.page}>
+      <Loading/>
+    </div>
+  );
+}
+
+export const CardLoading: FC = () => {
+  return (
+    <div className={classes.card}>
+      <Loading/>
+    </div>
+  );
+}

@@ -74,20 +74,20 @@ export const TxButton: FC<PropsWithChildren<Props>> = ({
   const { api } = useApi();
   const { active } = useAccounts();
   const [isSending, setIsSending] = useState<boolean>(false);
-  const { push } = useHistory();
   const { createNotification } = useNotification();
+  const { refresh } = useHistory();
 
   const _onFailed = (): void => {
-    setIsSending(false);
     onFailed && onFailed();
   };
 
   const _onSuccess = (): void => {
-    setIsSending(false);
     onSuccess && onSuccess();
   };
 
   const _onFinally = (): void => {
+    setIsSending(false);
+    refresh(2000);
     onFinally && onFinally();
   };
 
@@ -103,79 +103,85 @@ export const TxButton: FC<PropsWithChildren<Props>> = ({
 
       return;
     }
-    const account = await api.query.system.account(active.address);
-    const signedTx = await api.tx[section][method](...params).signAsync(
-      active.address,
-      {
-        nonce: account.nonce.toNumber()
-      }
-    );
-
-    const hash = signedTx.hash.toString();
-
-    const notification = createNotification({
-      icon: 'loading',
-      content: <FormatAddress address={hash} />,
-      type: 'info',
-      title: `${section}: ${method}`
-    });
 
     // lock btn click
     setIsSending(true);
 
-    // timeout
-    await Promise.race([
-      new Promise((resolve) => setTimeout(() => resolve('timeout'), TX_TIMEOUT)),
-      new Promise(async (resolve, reject) => {
-        const unsub = await signedTx.send((result) => {
-          if (
-            result.status.isInBlock
-            || result.status.isFinalized
-          ) {
-            resolve(result);
-          } else if(
-            result.status.isUsurped
-            || result.status.isDropped
-            || result.status.isFinalityTimeout
-          ){
-            unsub && unsub();
-            reject(result);
-          }
+    try {
+      const account = await api.query.system.account(active.address);
 
-          if (result.status.isFinalized) {
-            unsub && unsub();
-          } else {
-            extractEvents(api, result as unknown as SubmittableResult, createNotification);
-          }
-        }).catch(reject);
-      })
-    ]).then((result) => {
-      if (result === 'timeout') {
-        notification.update({
-          icon: 'info',
-          type: 'info',
-          title: 'Extrinsic timed out, Please check manually',
-          removedDelay: 4000
-        });
-      } else {
-        notification.update({
-          icon: 'success',
-          type: 'success',
-          removedDelay: 4000
-        });
-        _onSuccess();
-        push(hash, signedTx, addon);
-      }
-    }).catch((error) => {
-      notification.update({
-        icon: 'error',
-        type: 'error',
-        removedDelay: 4000
+      const signedTx = await api.tx[section][method](...params).signAsync(
+        active.address,
+        {
+          nonce: account.nonce.toNumber()
+        }
+      );
+
+      const hash = signedTx.hash.toString();
+
+      const notification = createNotification({
+        icon: 'loading',
+        content: <FormatAddress address={hash} />,
+        type: 'info',
+        title: `${section}: ${method}`
       });
-      _onFailed();
-    }).finally(() => {
-      _onFinally();
-    });
+
+      // timeout
+      await Promise.race([
+        new Promise((resolve) => setTimeout(() => resolve('timeout'), TX_TIMEOUT)),
+        new Promise(async (resolve, reject) => {
+          const unsub = await signedTx.send((result) => {
+            if (
+              result.status.isInBlock
+              || result.status.isFinalized
+            ) {
+              resolve(result);
+            } else if(
+              result.status.isUsurped
+              || result.status.isDropped
+              || result.status.isFinalityTimeout
+            ){
+              unsub && unsub();
+              reject(result);
+            }
+
+            if (result.status.isFinalized) {
+              unsub && unsub();
+            } else {
+              extractEvents(api, result as unknown as SubmittableResult, createNotification);
+            }
+          }).catch(reject);
+        })
+      ]).then((result) => {
+        if (result === 'timeout') {
+          notification.update({
+            icon: 'info',
+            type: 'info',
+            title: 'Extrinsic timed out, Please check manually',
+            removedDelay: 4000
+          });
+        } else {
+          notification.update({
+            icon: 'success',
+            type: 'success',
+            removedDelay: 4000
+          });
+          _onSuccess();
+        }
+      }).catch((error) => {
+        notification.update({
+          icon: 'error',
+          type: 'error',
+          removedDelay: 4000
+        });
+        _onFailed();
+      }).finally(() => {
+        _onFinally();
+      });
+    } catch(e) {
+      // reset isSending
+      setIsSending(false);
+    }
   };
 
   return (

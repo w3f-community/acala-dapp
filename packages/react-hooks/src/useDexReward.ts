@@ -13,10 +13,10 @@ export const useDexReward = (token: CurrencyId | string, account?: AccountId | s
   const { api } = useApi();
   const { active } = useAccounts();
   const _account = account || (active ? active.address : '');
-  const totalInterest = useCall<Balance>(api.query.dex.totalInterest, [token]);
+  const totalInterest = useCall<Balance>('query.dex.totalInterest', [token]);
   const { share, totalShares } = useDexShare(token, _account);
-  const withdrawnInterest = useCall<Balance>(api.query.dex.withdrawnInterest, [token, _account]);
-  const liquidityIncentiveRate = useCall<Balance>(api.query.dex.liquidityIncentiveRate, [token]);
+  const withdrawnInterest = useCall<Balance>('query.dex.withdrawnInterest', [token, _account]);
+  const liquidityIncentiveRate = useCall<Balance>('query.dex.liquidityIncentiveRate', [token]);
   const { dexBaseCurrency } = useConstants();
 
   if (!totalInterest || !share || !totalShares) {

@@ -8,7 +8,7 @@ import { Balance } from '@open-web3/orml-types/interfaces';
 export const SystemInfoCard: FC = () => {
   const { api } = useApi();
   const { stableCurrency } = useConstants();
-  const issuance = useCall<Balance>(api.query.tokens.totalIssuance, [stableCurrency]);
+  const issuance = useCall<Balance>('query.tokens.totalIssuance', [stableCurrency]);
 
   const listConfig: ListConfig[] = [
     {

@@ -21,11 +21,10 @@ export const filterEmptyLoan = (loans: DerivedUserLoan[] | null): DerivedUserLoa
 };
 
 export const useAllLoans = () => {
-  const { api } = useApi();
   const { active } = useAccounts();
-  const loans = useCall<DerivedUserLoan[]>((api.derive as any).loan.allLoans, [active ? active.address : '']) || null;
-  const loanTypes = useCall<DerivedLoanType[]>((api.derive as any).loan.allLoanTypes, []) || [];
-  const loanOverviews = useCall<DerivedLoanOverView[]>((api.derive as any).loan.allLoanOverviews, []) || [];
+  const loans = useCall<DerivedUserLoan[]>('derive.loan.allLoans', [active ? active.address : '']) || null;
+  const loanTypes = useCall<DerivedLoanType[]>('derive.loan.allLoanTypes', []) || [];
+  const loanOverviews = useCall<DerivedLoanOverView[]>('derive.loan.allLoanOverviews', []) || [];
 
   return {
     loans,
@@ -37,8 +36,8 @@ export const useAllLoans = () => {
 export const useLoan = (token: CurrencyId | string) => {
   const { api } = useApi();
   const { active } = useAccounts();
-  const loans = useCall<DerivedUserLoan[]>((api.derive as any).loan.allLoans, [active ? active.address : '']) || [];
-  const loanTypes = useCall<DerivedLoanType[]>((api.derive as any).loan.allLoanTypes, []) || [];
+  const loans = useCall<DerivedUserLoan[]>('derive.loan.allLoans', [active ? active.address : '']) || [];
+  const loanTypes = useCall<DerivedLoanType[]>('derive.loan.allLoanTypes', []) || [];
   const prices = usePrice() as DerivedPrice[] || [];
   const { stableCurrency } = useConstants();
 

@@ -4,11 +4,16 @@ import Dayjs from 'dayjs';
 interface Props {
   time: Date | string;
   formatter?: string;
+  unix?: boolean;
 }
 
 export const FormatTime: FC<Props> = ({
   formatter = 'YYYY/MM/DD HH:mm',
-  time
+  time,
+  unix = true
 }) => {
-  return <span>{Dayjs(time).format(formatter)}</span>;
+  if (unix) {
+    return <span>{Dayjs.unix(Number(time)).format(formatter)}</span>;
+  }
+  return <span>{Dayjs(Number(time)).format(formatter)}</span>;
 };

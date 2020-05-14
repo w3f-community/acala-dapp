@@ -55,6 +55,7 @@ $loader-width-small: 2px;
     }
   }
 }
+
 .fullscreen {
   position: absolute;
   display: flex;
@@ -64,6 +65,27 @@ $loader-width-small: 2px;
   left: 0;
   width: 100%;
   height: 100%;
+}
+
+.page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 80vh;
+  background: #ffffff;
+  border: 1px solid #ebeef5;
+  box-shadow: 0 1px 20px 0 rgba(23, 65, 212, 0.02);
+  border-radius: 12px;
 }
 
 

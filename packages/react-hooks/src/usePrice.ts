@@ -1,12 +1,11 @@
-import { useMemo } from 'react';
+import { useMemo, useContext } from 'react';
 
 import { DerivedPrice } from '@acala-network/api-derive';
 import { CurrencyId } from '@acala-network/types/interfaces';
 import { convertToFixed18 } from '@acala-network/app-util';
 import { TimestampedValue } from '@open-web3/orml-types/interfaces';
 
-import { tokenEq,
-  getValueFromTimestampValue } from '@honzon-platform/react-components';
+import { tokenEq, getValueFromTimestampValue } from '@honzon-platform/react-components';
 
 import { useApi } from './useApi';
 import { useCall } from './useCall';
@@ -31,34 +30,30 @@ const insertPrice = (
   return arr;
 };
 
-
-
 export const usePrice = (token?: CurrencyId | string) => {
   const { api } = useApi();
   const { nativeCurrency } = useConstants();
-  const _price =
-    useCall<DerivedPrice[]>((api.derive as any).price.allPrices, []) || [];
+  const _price = useCall<DerivedPrice[]>('derive.price.allPrices', []);
   const { stakingPool, stakingPoolHelper } = useStakingPool();
   const nativeCurrencyRate = useDexExchangeRate(nativeCurrency);
-  const price = useMemo(() => {
-    if (!_price || _price.length === 0) {
-      return [];
-    }
 
+  const price = useMemo(() => {
     const price: DerivedPrice[] = [];
     const _TimestampedValue = api.registry.get('TimestampedValue')!;
 
-    _price.forEach((item): void => {
+    _price?.forEach((item): void => {
       price.push(item);
     });
 
     // native currency (ACA) price
-    insertPrice(price, {
-      token: nativeCurrency.toString(),
-      price: new _TimestampedValue(api.registry, {
-        value: nativeCurrencyRate.innerToString()
-      }) as TimestampedValue
-    });
+    if (nativeCurrencyRate) {
+      insertPrice(price, {
+        token: nativeCurrency.toString(),
+        price: new _TimestampedValue(api.registry, {
+          value: nativeCurrencyRate.innerToString()
+        }) as TimestampedValue
+      });
+    }
 
     // L-DOT price
     if (stakingPool && stakingPoolHelper) {
@@ -71,7 +66,6 @@ export const usePrice = (token?: CurrencyId | string) => {
         const liquidPrice = convertToFixed18(
           getValueFromTimestampValue(stakingCurrencyPrice.price)
         ).mul(exchangeRate);
-        const _TimestampedValue = api.registry.get('TimestampedValue')!;
 
         insertPrice(price, {
           token: stakingPool.liquidCurrency.toString(),
@@ -83,7 +77,7 @@ export const usePrice = (token?: CurrencyId | string) => {
     }
 
     return price;
-  }, [_price, stakingPool, stakingPoolHelper, nativeCurrencyRate]);
+  }, [api, _price, stakingPool, stakingPoolHelper, nativeCurrencyRate]);
 
   if (token && price) {
     return price.find((item: DerivedPrice) => item.token === token.toString());

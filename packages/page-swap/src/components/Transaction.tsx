@@ -71,7 +71,7 @@ export const Transaction: FC = () => {
   return (
     <BaseTxHistory
       config={config.current}
-      method='swapCurrency'
+      method='swap_currency'
       section='dex'
     />
   );

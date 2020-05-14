@@ -16,7 +16,7 @@ export const AirDropAmount: FC<Props> = memo(({
   const { api } = useApi();
   const { active } = useAccounts();
   const _account = account || (active ? active.address : '');
-  const result = useCall(api.query.airDrop.airDrops, [_account, currency]);
+  const result = useCall('query.airDrop.airDrops', [_account, currency]);
 
   if (!result) {
     return null;

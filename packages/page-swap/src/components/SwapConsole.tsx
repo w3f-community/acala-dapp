@@ -5,7 +5,7 @@ import { useFormik } from 'formik';
 import { CurrencyId } from '@acala-network/types/interfaces';
 
 import { Card, nextTick, IconButton } from '@honzon-platform/ui-components';
-import { BalanceInput, TxButton, SwapContext, numToFixed18Inner, DexExchangeRate } from '@honzon-platform/react-components';
+import { BalanceInput, TxButton, SwapContext, numToFixed18Inner, DexExchangeRate, UserBalance } from '@honzon-platform/react-components';
 import { useFormValidator } from '@honzon-platform/react-hooks';
 
 import classes from './SwapConsole.module.scss';
@@ -37,7 +37,13 @@ const InputArea: FC<InputAreaProps> = memo(({
 }) => {
   return (
     <div className={classes.inputAreaRoot}>
-      <p className={classes.title}>{title}</p>
+      <div className={classes.title}>
+        {title}
+        <p>
+          Balance: 
+          <UserBalance  token={token} />
+        </p>
+      </div>
       <BalanceInput
         className={classes.input}
         currencies={currencies}

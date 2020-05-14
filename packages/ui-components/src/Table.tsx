@@ -1,8 +1,9 @@
-import React, { ReactNode, MouseEvent, EventHandler, useRef, ReactElement } from 'react';
+import React, { ReactNode, MouseEvent, EventHandler, useRef, ReactElement, useCallback, useMemo } from 'react';
 import clsx from 'clsx';
 
 import classes from './Table.module.scss';
 import { randomID } from './utils';
+import { PageLoading } from './Loading';
 
 type CellAlign = 'left' | 'right' | 'center';
 
@@ -27,6 +28,7 @@ type Props<T> = {
   cellClassName?: string;
   empty?: ReactNode;
   size?: 'small' | 'normal'
+  loading?: boolean;
 };
 
 export function Table<T extends { [k: string]: any }> ({
@@ -36,11 +38,14 @@ export function Table<T extends { [k: string]: any }> ({
   rawProps,
   showHeader = false,
   cellClassName,
-  size = 'normal'
+  size = 'normal',
+  loading = false
 }: Props<T>): ReactElement {
   const randomId = useRef<string>(randomID());
+  const totalWidthConfiged = useMemo(() => config.reduce((acc, cur) => acc + (cur.width ? cur.width : 0), 0), [config]);
+  const defaultCellWidth = useMemo(() => `${100 / config.length}%`, [config]);
 
-  const renderItem = (config: TableItem<T>, data: T, index: number): ReactNode => {
+  const renderItem = useCallback((config: TableItem<T>, data: T, index: number): ReactNode => {
     if (!config.render) {
       return config.dataIndex ? data[config.dataIndex] : '';
     }
@@ -50,46 +55,21 @@ export function Table<T extends { [k: string]: any }> ({
     }
 
     return config.render(data[config.dataIndex], data, index);
-  };
+  }, [config]);
 
-  const totalWidthConfiged = config.reduce((acc, cur) => acc + (cur.width ? cur.width : 0), 0);
-  const defaultCellWidth = `${100 / config.length}%`;
+  const renderContent = useCallback(() => {
+    if (loading && !data) {
+      return (
+        <tr className={classes.empty}>
+          <td colSpan={config.length}>
+            <PageLoading />
+          </td>
+        </tr> 
+      );
+    }
 
-  return (
-    <table className={clsx(classes.root, classes[size])}>
-      <colgroup>
-        {
-          config.map((_item, index) => (
-            <col
-              key={`table-header-colgroup-${randomId.current}-${index}`}
-              style={{ width: _item.width ? `${_item.width / totalWidthConfiged}%` : defaultCellWidth }}
-            />
-          ))
-        }
-      </colgroup>
-      {
-        showHeader ? (
-          <thead>
-            <tr>
-              {config.map((item, index) => (
-                <th
-                  className={
-                    clsx(
-                      classes.headerCell,
-                      classes[item.align || 'center']
-                    )
-                  }
-                  key={`table-header-${randomId.current}-${index}`}
-                >
-                  {item.title}
-                </th>
-              ))}
-            </tr>
-          </thead>
-        ) : null
-      }
-      <tbody>
-        {data.map((item, index) => {
+    if (data) {
+      return data.map((item, index) => {
           /* eslint-disable-next-line @typescript-eslint/no-empty-function */
           let onClick: EventHandler<MouseEvent<HTMLTableRowElement>> = () => {};
 
@@ -131,14 +111,55 @@ export function Table<T extends { [k: string]: any }> ({
               ))}
             </tr>
           );
-        })}
+        });
+    }
+
+    if (!data && empty) {
+      return (
+        <tr className={classes.empty}>
+          <td colSpan={config.length}>{empty}</td>
+        </tr>
+      );
+    }
+  }, [loading, data]);
+
+  return (
+    <table className={clsx(classes.root, classes[size])}>
+      <colgroup>
+        {
+          config.map((_item, index) => (
+            <col
+              key={`table-header-colgroup-${randomId.current}-${index}`}
+              style={{ width: _item.width ? `${_item.width / totalWidthConfiged}%` : defaultCellWidth }}
+            />
+          ))
+        }
+      </colgroup>
       {
-        !data.length && empty ? (
-          <tr className={classes.empty}>
-            <td colSpan={config.length}>{empty}</td>
-          </tr>
+        showHeader ? (
+          <thead>
+            <tr>
+              {config.map((item, index) => (
+                <th
+                  className={
+                    clsx(
+                      classes.headerCell,
+                      classes[item.align || 'center']
+                    )
+                  }
+                  key={`table-header-${randomId.current}-${index}`}
+                >
+                  {item.title}
+                </th>
+              ))}
+            </tr>
+          </thead>
         ) : null
       }
+      <tbody>
+        {
+          renderContent()
+        }      
       </tbody>
     </table>
   );

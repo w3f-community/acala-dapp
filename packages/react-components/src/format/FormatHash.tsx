@@ -9,12 +9,18 @@ interface Props {
   hash: string;
   withCopy?: boolean;
   withTooltip?: boolean;
+  withPScan?: boolean;
+}
+
+function getPScanUrl (hash: string) {
+  return `https://acala-testnet.subscan.io/extrinsic/${hash}`;
 }
 
 export const FormatHash: FC<Props> = ({
   hash,
   withCopy = true,
-  withTooltip = true
+  withTooltip = true,
+  withPScan = true
 }) => {
   const renderInner = () => {
     if (withTooltip) {
@@ -24,7 +30,9 @@ export const FormatHash: FC<Props> = ({
           title={hash}
           placement='left'
         >
-          <span>{formatHash(hash)}</span>
+          {
+            withPScan ? <a href={getPScanUrl(hash)} target='_blank'>{formatHash(hash)}</a> : <span>{formatHash(hash)}</span>
+          }
         </Tooltip>
       );
     }

@@ -8,8 +8,8 @@ export const useDexShare = (token: CurrencyId | string, account?: AccountId | st
   const { api } = useApi();
   const { active } = useAccounts();
   const _account = account || (active ? active.address : '');
-  const share = useCall<Share>(api.query.dex.shares, [token, _account]);
-  const totalShares = useCall<Share>(api.query.dex.totalShares, [token]);
+  const share = useCall<Share>('query.dex.shares', [token, _account]);
+  const totalShares = useCall<Share>('query.dex.totalShares', [token]);
 
   return { share, totalShares };
 };

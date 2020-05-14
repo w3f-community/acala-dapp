@@ -7,7 +7,7 @@ import { BalanceWrapper } from '@acala-network/types/interfaces';
 export const WithdrawUnbonded: FC = memo(() => {
   const { api } = useApi();
   const { active } = useAccounts();
-  const result = useCall<BalanceWrapper>((api.rpc as any).stakingPool.getAvailableUnbonded, [active ? active.address : '']);
+  const result = useCall<BalanceWrapper>('rpc.stakingPool.getAvailableUnbonded', [active ? active.address : '']);
 
   if (!result) {
     return null;

@@ -34,8 +34,8 @@ export const useStakingPool = (): useStakingPoolReturnType => {
   const { active } = useAccounts();
   const [stakingPoolHelper, setStakingPoolHelper] = useState<StakingPoolHelper>(null as any as StakingPoolHelper);
   // FIXME: need fix api-derive type
-  const stakingPool = useCall<DerivedStakingPool>((api.derive as any).homa.stakingPool, []);
-  const rewardRate = useCall<Rate>(api.query.polkadotBridge.mockRewardRate, []) as Rate;
+  const stakingPool = useCall<DerivedStakingPool>('derive.homa.stakingPool', []);
+  const rewardRate = useCall<Rate>('query.polkadotBridge.mockRewardRate', []) as Rate;
 
   const [freeList, setFreeList] = useState<FreeItem[]>([]);
   const [redeemList, setRedeemList] = useState<RedeemItem[]>([]);

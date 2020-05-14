@@ -8,6 +8,7 @@ export * from './useAppSetting';
 export * from './useConstants';
 export * from './useExtrinsicHistory';
 export * from './useInterval';
+export * from './useInitialize';
 
 // common
 export * from './useStateWithCallback';

@@ -6,7 +6,7 @@ import { CurrencyId, Balance } from '@acala-network/types/interfaces';
 export const useBalance = (currency: CurrencyId | string): Balance | undefined => {
   const { api } = useApi();
   const { active } = useAccounts();
-  const balance = useCall<Balance>((api.derive as any).currencies.balance, [active!.address, currency]);
+  const balance = useCall<Balance>('derive.currencies.balance', [active!.address, currency]);
 
   return balance;
 };

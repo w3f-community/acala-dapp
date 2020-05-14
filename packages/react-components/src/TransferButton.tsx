@@ -55,6 +55,10 @@ export const TransferButton: FC<Props> = memo(({
     close();
   };
 
+  const handleAccountBlure = () => {
+    form.setFieldValue('account', form.values.account.trim());
+  };
+
   useEffect(() => {
     form.resetForm();
   }, [status]);
@@ -100,6 +104,7 @@ export const TransferButton: FC<Props> = memo(({
               id='account'
               name='account'
               onChange={form.handleChange}
+              onBlur={handleAccountBlure}
               value={form.values.account}
             />
           </FormItem>

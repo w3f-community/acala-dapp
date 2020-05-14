@@ -84,7 +84,7 @@ export const Transaction: FC = () => {
   return (
     <BaseTxHistory
       config={config}
-      method={['mint', 'redeem', 'withdrawRedemption']}
+      method={'mint,redeem,withdrawRedemption'}
       section='homa'
     />
   );

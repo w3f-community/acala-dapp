@@ -6,7 +6,7 @@ import { useCall } from "./useCall";
 
 export const useCouncilMembers = (council: string) => {
   const { api } = useApi();
-  const members = useCall<Vec<AccountId>>(api.query[council].members, []);
+  const members = useCall<Vec<AccountId>>(`query.${council}.members`, []);
 
   return members;
 }

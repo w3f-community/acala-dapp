@@ -107,9 +107,9 @@ export const LonaActionButton: FC<Props> = ({
 
       case 'withdraw': {
         if (
-          Fixed18.fromNatural(form.values.value)
-            .sub(currentUserLoanHelper.collaterals)
-            .isLessThan(Fixed18.fromNatural(0.0000001))
+          currentUserLoanHelper.collaterals
+          .sub(Fixed18.fromNatural(form.values.value))
+          .isLessThan(Fixed18.fromNatural(0.0000001))
         ) {
           params[1] = currentUserLoanHelper.collaterals.negated().innerToString();
         } else {
@@ -266,7 +266,7 @@ export const LonaActionButton: FC<Props> = ({
           name='value'
           onChange={handleChange}
           onMax={handleMax}
-          showMaxBtn
+          showMaxBtn={type !== 'generate'}
           token={checkOperateStableCurrency() ? stableCurrency : token}
           value={form.values.value}
         />

@@ -23,8 +23,8 @@ export const LoanCollateralRate: FC<Props> = memo(({
   const { api } = useApi();
   const { active } = useAccounts();
   const _account = account || (active ? active.address : '');
-  const loans = useCall<DerivedUserLoan[]>((api.derive as any).loan.allLoans, [_account]) || [];
-  const loanTypes = useCall<DerivedLoanType[]>((api.derive as any).loan.allLoanTypes, []) || [];
+  const loans = useCall<DerivedUserLoan[]>('derive.loan.allLoans', [_account]) || [];
+  const loanTypes = useCall<DerivedLoanType[]>('derive.loan.allLoanTypes', []) || [];
   const { stableCurrency } = useConstants();
   const prices = usePrice() as DerivedPrice[] || [];
   const currentUserLoan = loans.find((item): boolean => tokenEq(item.token, token));

@@ -8,7 +8,7 @@ import { useApi } from './useApi';
 export const useDexPool = (token: CurrencyId | string): DerivedDexPool | undefined => {
   const { api } = useApi();
   // FIXME: need fix api-derive type
-  const pool = useCall<DerivedDexPool>((api.derive as any).dex.pool, [token]);
+  const pool = useCall<DerivedDexPool>('derive.dex.pool', [token]);
 
   return pool;
 };
