@@ -16,7 +16,9 @@ export const ProductItem: React.FC<SideBarItem> = memo(({ icon, isExternal, name
         target={target}
       >
         {cloneElement(icon)}
-        {name}
+        <span className={classes.title}>
+          {name}
+        </span>
       </a>
     );
   }
@@ -25,7 +27,9 @@ export const ProductItem: React.FC<SideBarItem> = memo(({ icon, isExternal, name
     <NavLink className={classes.item}
       to={`${path as string}${search}`}>
       {cloneElement(icon)}
-      {name}
+      <span className={classes.title}>
+        {name}
+      </span>
     </NavLink>
   );
 });

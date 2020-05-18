@@ -83,6 +83,7 @@ export const StakingConsole: FC = () => {
 
   return (
     <Grid
+      container
       className={classes.root}
       direction='column'
     >
@@ -103,26 +104,28 @@ export const StakingConsole: FC = () => {
           value={form.values.stakingBalance}
         />
       </Grid>
-      <Grid container
-        item
-        justifyContent='center'>
-        <TxButton
-          className={classes.txBtn}
-          disabled={checkDisabled()}
-          method='mint'
-          onSuccess={resetForm}
-          params={[numToFixed18Inner(form.values.stakingBalance)]}
-          section='homa'
-          size='middle'
-        >
-          Deposit
-        </TxButton>
+      <Grid item>
+        <Grid container justify='center'>
+          <TxButton
+            className={classes.txBtn}
+            disabled={checkDisabled()}
+            method='mint'
+            onSuccess={resetForm}
+            params={[numToFixed18Inner(form.values.stakingBalance)]}
+            section='homa'
+            size='middle'
+          >
+            Deposit
+          </TxButton>
+        </Grid>
       </Grid>
+      <Grid item>
         <List
           itemClassName={classes.listItem}
           config={listConfig}
           data={estimated}
         />
+      </Grid>
     </Grid>
   );
 };

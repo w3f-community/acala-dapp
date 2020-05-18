@@ -1,11 +1,12 @@
 .root {
   display: flex;
-  margin-left: -24px;
+  flex-wrap: wrap;
+  margin: -12px 0 0 -24px;
 }
 
 .item {
   display: flex;
-  margin-left: 24px;
+  margin: 12px 0 0 24px;
   width: 216px;
   height: 64px;
   border: 1px solid #d8d8d8;

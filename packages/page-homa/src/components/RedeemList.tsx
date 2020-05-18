@@ -16,7 +16,7 @@ export const RedeemList = () => {
       <div className={classes.header}>
         <div>Redeem Track</div>
         {
-          currentRedeem && !currentRedeem.isEmpty ? (
+          currentRedeem ? (
             <FormatBalance
               balance={convertToFixed18(currentRedeem?.amount)}
               currency={stakingPool?.stakingCurrency}
@@ -24,7 +24,7 @@ export const RedeemList = () => {
           ) : null
         }
         {
-          currentRedeem && !currentRedeem.isEmpty ? (
+          currentRedeem ? (
             <TxButton
               method='withdrawRedemption'
               section='homa'
@@ -75,19 +75,21 @@ export const RedeemList = () => {
     },
   ];
 
-  return useMemo(() => {
-    return (
-      <Card
-        header={renderHeader()}
-        padding={false}
-      >
-        <Table
-          size='small'
-          showHeader
-          config={tableConfig}
-          data={redeemList}
-        />
-      </Card>
-    );
-  }, [currentRedeem, stakingPool, redeemList]);
+  if (redeemList.length === 0 && !currentRedeem) {
+    return null;
+  }
+
+  return (
+    <Card
+      header={renderHeader()}
+      padding={false}
+    >
+      <Table
+        size='small'
+        showHeader
+        config={tableConfig}
+        data={redeemList}
+      />
+    </Card>
+  );
 };

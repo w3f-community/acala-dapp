@@ -13,9 +13,16 @@ export function useCurrentRedeem () {
       return null;
     }
 
-    return await (api.rpc as any).stakingPool.getAvailableUnbonded(active.address);
+    const result = await (api.rpc as any).stakingPool.getAvailableUnbonded(active.address) as Balance;
+
+    if (result && result.isEmpty) {
+
+      return null;
+    }
+
+    return result;
   }, [api]);
-  const currentRedeem = useInterval<Balance>(callback, 1000 * 60, true);
+  const currentRedeem = useInterval<Balance | null>(callback, 1000 * 60, true);
 
   return currentRedeem;
 };

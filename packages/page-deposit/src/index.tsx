@@ -17,7 +17,7 @@ const PageDeposit: FC = () => {
         <Page.Content>
           <DepositProvider>
           <Grid container direction='row'>
-            <Grid item container direction='column' flex={18}>
+            <Grid item container direction='column' md={12} lg={8}>
               <Grid container
                 direction='row'
                 item>
@@ -41,7 +41,7 @@ const PageDeposit: FC = () => {
                 <Transaction />
               </Grid>
             </Grid>
-            <Grid item container direction='column' flex={6}>
+            <Grid item container direction='column' md={12} lg={4}>
               <Grid item>
                 <WalletBalanceCard />
               </Grid>

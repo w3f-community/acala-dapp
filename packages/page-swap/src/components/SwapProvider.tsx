@@ -1,11 +1,11 @@
 import React, { memo, createContext, FC, PropsWithChildren, useState, useEffect, useCallback, useMemo } from 'react';
-import { isEmpty } from 'lodash';
 
 import { Vec } from '@polkadot/types';
 import { CurrencyId } from '@acala-network/types/interfaces';
 import { Fixed18, calcTargetInOtherToBase, convertToFixed18, calcTargetInBaseToOther, calcTargetInOtherToOther, calcSupplyInOtherToBase, calcSupplyInBaseToOther, calcSupplyInOtherToOther } from '@acala-network/app-util';
-import { useApi, useConstants, useInitialize, useCall } from '@honzon-platform/react-hooks';
 import { DerivedDexPool } from '@acala-network/api-derive';
+
+import { useApi, useConstants, useInitialize } from '@honzon-platform/react-hooks';
 import { tokenEq } from '@honzon-platform/react-components';
 import { PageLoading } from '@honzon-platform/ui-components';
 
@@ -100,6 +100,15 @@ export const SwapProvider: FC<PropsWithChildren<{}>> = memo(({ children }) => {
         targetCurrency: target,
         supplySize: convertToFixed18(targetPool.other).toNumber(),
         targetSize: convertToFixed18(supplyPool.other).toNumber()
+      });
+    }
+
+    if (tokenEq(supply, dexBaseCurrency) && tokenEq(target, dexBaseCurrency)) {
+      setPool({
+        supplyCurrency: supply,
+        targetCurrency: target,
+        supplySize: 0,
+        targetSize: 0
       });
     }
   }, [api.derive, dexBaseCurrency, setPool]);

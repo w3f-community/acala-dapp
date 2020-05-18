@@ -82,7 +82,7 @@ export const RedeemConsole: FC = () => {
     }
 
     if (redeemType === 'WaitForUnbonding') {
-      return stakingPool.currentEra.toNumber() + stakingPool.bondingDuration.toNumber();
+      return stakingPool.currentEra.toNumber() + stakingPool.bondingDuration.toNumber() + 1;
     }
 
     return stakingPoolHelper.currentEra;
@@ -149,6 +149,7 @@ export const RedeemConsole: FC = () => {
 
   return (
     <Grid
+      container
       className={classes.root}
       direction='column'
     >
@@ -211,7 +212,7 @@ export const RedeemConsole: FC = () => {
       </Grid>
       <Grid container
         item
-        justifyContent='center'>
+        justify='center'>
         <Grid item>
           <TxButton
             className={classes.txBtn}

@@ -20,29 +20,27 @@ export const Liquid: FC = memo(() => {
       <Grid container
         alignItems='stretch'
         item>
-        <Grid flex={14}
-          item>
+        <Grid xs={6} item>
           <Console />
         </Grid>
-        <Grid container
-          direction='column'
-          flex={10}
-          item>
-          <Grid item>
-            <StakingTokeBalances />
-          </Grid>
-          <Grid item>
-            <SystemInfo />
+        <Grid item xs={6}>
+          <Grid container>
+            <Grid item xs={12}>
+              <StakingTokeBalances />
+            </Grid>
+            <Grid item xs={12}>
+              <SystemInfo />
+            </Grid>
           </Grid>
         </Grid>
       </Grid>
-      <Grid item>
+      <Grid item xs={12}>
         <RedeemList />
       </Grid>
-      <Grid item>
+      <Grid item xs={12}>
         <StakingPool />
       </Grid>
-      <Grid item>
+      <Grid item xs={12}>
         <Transaction />
       </Grid>
     </Grid>

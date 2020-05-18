@@ -37,7 +37,7 @@ export const formatCurrency = (currency: CurrencyId | string, upper = true): str
 };
 
 export const formatHash = (hash: string): string => {
-  return hash.replace(/(\w{6})\w*?(\w{12}$)/, '$1......$2');
+  return hash.replace(/(\w{6})\w*?(\w{6}$)/, '$1......$2');
 };
 
 export const formatBalance = (balance: Fixed18 | Codec | number | string): Fixed18 => {

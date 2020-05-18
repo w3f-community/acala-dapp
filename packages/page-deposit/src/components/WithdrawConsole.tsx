@@ -1,4 +1,4 @@
-import React, { FC, memo, useState, useContext, useEffect } from 'react';
+import React, { FC, memo, useState, useContext, useEffect, useCallback } from 'react';
 import { noop } from 'lodash';
 import { useFormik } from 'formik';
 
@@ -91,6 +91,10 @@ export const WithdrawConsole: FC = memo(() => {
     return true;
   };
 
+  const handleSuccess = useCallback(() => {
+    form.resetForm();
+  }, [form]);
+
   useEffect(() => {
     form.resetForm();
   }, [otherCurrency])
@@ -132,6 +136,7 @@ export const WithdrawConsole: FC = memo(() => {
           params={[otherCurrency, numToFixed18Inner(form.values.share)]}
           section='dex'
           size='large'
+          onSuccess={handleSuccess}
         >
           Withdraw
         </TxButton>

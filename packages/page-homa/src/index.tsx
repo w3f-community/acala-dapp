@@ -25,7 +25,7 @@ const PageHoma: FC = () => {
         <Page.Title title={'Liquid Asset'} />
             <Page.Content>
                 <Grid container>
-                  <Grid item flex={18}>
+                  <Grid item xs={12}>
                     <Tabs
                       config={tabsConfig}
                       style='button'
