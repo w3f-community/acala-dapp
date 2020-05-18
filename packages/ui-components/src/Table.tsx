@@ -121,7 +121,7 @@ export function Table<T extends { [k: string]: any }> ({
         </tr>
       );
     }
-  }, [loading, data]);
+  }, [loading, data, config]);
 
   return (
     <table className={clsx(classes.root, classes[size])}>

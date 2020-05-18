@@ -18,7 +18,7 @@ export const RedeemList = () => {
         {
           currentRedeem && !currentRedeem.isEmpty ? (
             <FormatBalance
-              balance={convertToFixed18(currentRedeem)}
+              balance={convertToFixed18(currentRedeem?.amount)}
               currency={stakingPool?.stakingCurrency}
             />
           ) : null

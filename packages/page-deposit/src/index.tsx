@@ -1,7 +1,6 @@
-import React, { FC, useState } from 'react';
+import React, { FC } from 'react';
 
 import { Page, Grid } from '@honzon-platform/ui-components';
-import { SwapProvider } from '@honzon-platform/react-components';
 import { UserCard } from './components/UserCard';
 import { SystemCard } from './components/SystemCard';
 import { SelectAction } from './components/SelectAction';
@@ -9,16 +8,16 @@ import { DepositProvider } from './components/Provider';
 import { Console } from './components/Console';
 import { PoolOverview } from './components/PoolOverview';
 import { Transaction } from './components/Transaction';
+import { WalletBalanceCard, PricesFeedCard } from '@honzon-platform/react-components';
 
 const PageDeposit: FC = () => {
   return (
     <Page>
       <Page.Title title='Deposit & Earn' />
-      <SwapProvider>
         <Page.Content>
           <DepositProvider>
-            <Grid container
-              direction='column'>
+          <Grid container direction='row'>
+            <Grid item container direction='column' flex={18}>
               <Grid container
                 direction='row'
                 item>
@@ -42,9 +41,17 @@ const PageDeposit: FC = () => {
                 <Transaction />
               </Grid>
             </Grid>
+            <Grid item container direction='column' flex={6}>
+              <Grid item>
+                <WalletBalanceCard />
+              </Grid>
+              <Grid item>
+                <PricesFeedCard />
+              </Grid>
+            </Grid>
+          </Grid>
           </DepositProvider>
         </Page.Content>
-      </SwapProvider>
     </Page>
   );
 };

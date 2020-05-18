@@ -1,4 +1,4 @@
-import React, { useContext, ChangeEvent, useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { noop } from 'lodash';
 import { useFormik } from 'formik';
 
@@ -108,7 +108,6 @@ export const Generate = () => {
       type: 'number',
       max: maxGenerate?.toNumber() || 0,
       min: minmumDebitValue?.toNumber() || 0,
-      equalMin: false
     }
   });
 
@@ -159,13 +158,6 @@ export const Generate = () => {
     form.setFieldValue('deposit', data);
   };
 
-  const handleGenerateMax = (): void => {
-    const data = maxGenerate?.toNumber() || 0;
-
-    setDebit(data);
-    form.setFieldValue('generate', data);
-  };
-
   useEffect(() => {
     const _result = getUserLoanHelper(currentUserLoan, currentLoanType, collateral, debit)
     setUserLoanHelper(_result);
@@ -174,6 +166,7 @@ export const Generate = () => {
   useEffect(() => {
     const data = Number(form.values.deposit) || 0;
     setCollateral(data);
+    console.log(data);
     setMaxGenerate(getUserLoanHelper(currentUserLoan, currentLoanType, data)?.canGenerate);
   }, [form.values.deposit]);
 
@@ -210,8 +203,6 @@ export const Generate = () => {
             id='generate'
             name='generate'
             onChange={form.handleChange}
-            onMax={handleGenerateMax}
-            showMaxBtn
             token={stableCurrency}
             value={form.values.generate}
           />
@@ -233,7 +224,7 @@ export const Generate = () => {
         <Overview data={overview} />
       </div>
       <div className={classes.tips}>
-        Note: collateralization ratio = amount borrowed / total collateral in USD must be above the required collateral ratio.
+        Note: collateralization ratio = total collateral in USD / amount borrowed must be above the required collateral ratio.
       </div>
       <div className={classes.action}>
         <Button

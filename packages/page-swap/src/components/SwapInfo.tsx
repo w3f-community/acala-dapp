@@ -1,8 +1,8 @@
-import React, { FC, memo, useContext } from 'react';
+import React, { FC, memo } from 'react';
 
 import classes from './SwapConsole.module.scss';
 import { Tag } from '@honzon-platform/ui-components';
-import { FormatBalance, SwapContext, FormatFixed18 } from '@honzon-platform/react-components';
+import { FormatBalance, FormatFixed18 } from '@honzon-platform/react-components';
 import { Fixed18 } from '@acala-network/app-util';
 import { CurrencyId } from '@acala-network/types/interfaces';
 

@@ -29,11 +29,15 @@ export const useConstants = () => {
   // native currency id
   const nativeCurrency = useMemo(() => api.consts.currencies.nativeCurrencyId as CurrencyId, [api]);
 
+  // expect block time
+  const expectedBlockTime = useMemo(() => api.consts.babe.expectedBlockTime.toNumber(), [api]);
+
   return {
     allCurrencyIds,
+    dexCurrencies,
+    dexBaseCurrency,
+    expectedBlockTime,
     stableCurrency,
     nativeCurrency,
-    dexCurrencies,
-    dexBaseCurrency
   }
 };

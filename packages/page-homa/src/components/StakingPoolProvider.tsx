@@ -1,23 +1,30 @@
-import React, { createContext, FC, memo } from 'react';
+import React, { createContext, FC, memo, useState, useEffect } from 'react';
+import { useStakingPool, useStakingPoolReturnType, useInitialize } from '@honzon-platform/react-hooks';
+import { PageLoading } from '@honzon-platform/ui-components';
 
-import { DerivedStakingPool } from '@acala-network/api-derive';
+export type ACTION_TYPE = 'staking' | 'redeem';
 
-import { StakingPoolHelper } from '@acala-network/app-util';
-import { useStakingPool, FreeItem, useStakingPoolReturnType } from '@honzon-platform/react-hooks';
-import { Rate } from '@acala-network/types/interfaces';
+export  interface ContextData extends useStakingPoolReturnType {
+  action: ACTION_TYPE;
+  setAction: (type: ACTION_TYPE) => void;
+}
 
-export const StakingPoolContext = createContext<useStakingPoolReturnType>({} as useStakingPoolReturnType);
+export const StakingPoolContext = createContext<ContextData>({} as ContextData);
 
 export const StakingPoolProvider: FC = memo(({ children }) => {
+  const [action, setAction] = useState<ACTION_TYPE>('staking');
   const result = useStakingPool();
+  const { isInitialized, setEnd } = useInitialize();
 
-  if (!result) {
-    return null;
-  }
+  useEffect(() => {
+    if (result?.stakingPool) {
+      setEnd();
+    }
+  }, [result]);
 
   return (
-    <StakingPoolContext.Provider value={result}>
-      {children}
+    <StakingPoolContext.Provider value={{ ...result, action, setAction }}>
+      {isInitialized ? children : <PageLoading />}
     </StakingPoolContext.Provider>
   );
 });

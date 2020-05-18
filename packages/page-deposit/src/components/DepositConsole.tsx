@@ -7,7 +7,7 @@ import { Fixed18 } from '@acala-network/app-util';
 
 import { Card, nextTick } from '@honzon-platform/ui-components';
 import { useDexExchangeRate, useFormValidator } from '@honzon-platform/react-hooks';
-import { BalanceInput, TxButton, numToFixed18Inner, DexExchangeRate, DexPoolSize, DexUserShare, UserBalance } from '@honzon-platform/react-components';
+import { BalanceInput, TxButton, numToFixed18Inner, DexExchangeRate, DexPoolSize, DexUserShare } from '@honzon-platform/react-components';
 
 import classes from './DepositConsole.module.scss';
 import { ReactComponent as AddIcon } from '../assets/add.svg';
@@ -40,7 +40,6 @@ const InputArea: FC<InputAreaProps> = memo(({
     <div className={classes.inputAreaRoot}>
       <div className={classes.inputAreaTitle}>
         <p>Deposit</p>
-        {token ? <p className={classes.inputAreaBalance}>Balance: <UserBalance token={token} /> </p> : null}
       </div>
       <BalanceInput
         currencies={currencies}

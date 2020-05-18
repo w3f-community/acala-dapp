@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, useCallback } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 
 import { CurrencyId } from '@acala-network/types/interfaces';
 import { convertToFixed18, Fixed18 } from '@acala-network/app-util';
@@ -7,52 +7,47 @@ import { useApi } from './useApi';
 import { useAccounts } from './useAccounts';
 import { useConstants } from './useConstants';
 
+const calcTotalReward = (rewards: Fixed18[], callback: (result: Fixed18) => void) => {
+  const total = rewards.reduce((acc, cur) => {
+    return acc.add(cur);
+  }, Fixed18.ZERO);
+
+  callback(total);
+};
+
+
 export const useDexTotalReward = () => {
   const { api } = useApi();
   const { active } = useAccounts();
   const { dexCurrencies, stableCurrency } = useConstants();
-  const rewards = useRef<{[k in string]: Fixed18}>({});
   const [totalReward, setTotalReward] = useState<Fixed18>(Fixed18.ZERO);
 
-  const getReward = useCallback((currency: CurrencyId) => {
-    api.query.dex.totalInterest(currency, function (_totalInterest) {
-      api.query.dex.withdrawnInterest(currency, active!.address, function (_withdrawnInterest) {
-        api.query.dex.shares(currency, active!.address, function (_share) {
-          api.query.dex.totalShares(currency, function (_totalShares) {
-            const totalInterest = convertToFixed18(_totalInterest);
-            const withdrawnInterest = convertToFixed18(_withdrawnInterest);
-            const share = convertToFixed18(_share);
-            const totalShares = convertToFixed18(_totalShares);
-            const reward = totalInterest.mul(share.div(totalShares)).sub(withdrawnInterest);
+  const getReward = useCallback(async (currency: CurrencyId) => {
+    const _totalInterest = await api.query.dex.totalInterest(currency);
+    const _withdrawnInterest = await api.query.dex.withdrawnInterest(currency, active!.address);
+    const _share = await api.query.dex.shares(currency, active!.address);
+    const _totalShares = await api.query.dex.totalShares(currency);
+    const totalInterest = convertToFixed18(_totalInterest);
+    const withdrawnInterest = convertToFixed18(_withdrawnInterest);
+    const share = convertToFixed18(_share);
+    const totalShares = convertToFixed18(_totalShares);
+    const reward = totalInterest.mul(share.div(totalShares)).sub(withdrawnInterest);
 
-            rewards.current[currency.toString()] = reward;
-            calcTotalReward();
-          });
-        });
-      });
-    });
+    return reward;
   }, [active, api.query.dex]);
 
+  const run = useCallback(() => {
+    api.rpc.chain.subscribeNewHeads(async () => {
+      const result = await Promise.all(dexCurrencies.map(getReward));
+      calcTotalReward(result, (total) => setTotalReward(total));
+    })
+  }, [api, dexCurrencies, getReward, setTotalReward])
+
   useEffect(() => {
-    if (active) {
-      dexCurrencies.forEach((currency) => {
-        getReward(currency);
-      });
+    if (api && active) {
+      run();
     }
-  }, [api, active, dexCurrencies, getReward]);
-
-  const calcTotalReward = () => {
-    const keys = Object.keys(rewards.current);
-    const total = keys.reduce((acc, cur) => {
-      if (rewards.current[cur]) {
-        acc = acc.add(rewards.current[cur]);
-      }
-
-      return acc;
-    }, Fixed18.ZERO);
-
-    setTotalReward(total);
-  };
+  }, [api, active]);
 
   return {
     amount: totalReward,
@@ -63,40 +58,30 @@ export const useDexTotalReward = () => {
 export const useDexTotalSystemReward = () => {
   const { api } = useApi();
   const { dexCurrencies, stableCurrency } = useConstants();
-  const rewards = useRef<{[k in string]: Fixed18}>({});
   const [totalReward, setTotalReward] = useState<Fixed18>(Fixed18.ZERO);
 
-  const getReward = useCallback((currency: CurrencyId) => {
-    api.query.dex.totalInterest(currency, function (_totalInterest) {
-      api.query.dex.totalWithdrawnInterest(currency, function (_withdrawnInterest) {
-        const totalInterest = convertToFixed18(_totalInterest);
-        const withdrawnInterest = convertToFixed18(_withdrawnInterest);
-        const reward = totalInterest.sub(withdrawnInterest);
+  const getReward = useCallback(async (currency: CurrencyId) => {
+    const _totalInterest = await api.query.dex.totalInterest(currency);
+    const _withdrawnInterest = await api.query.dex.totalWithdrawnInterest(currency);
+    const totalInterest = convertToFixed18(_totalInterest);
+    const withdrawnInterest = convertToFixed18(_withdrawnInterest);
+    const reward = totalInterest.sub(withdrawnInterest);
 
-        rewards.current[currency.toString()] = reward;
-        calcTotalReward();
-      });
-    });
+    return reward;
   }, [api.query.dex]);
 
+  const run = useCallback(() => {
+    api.rpc.chain.subscribeNewHeads(async () => {
+      const result = await Promise.all(dexCurrencies.map(getReward));
+      calcTotalReward(result, (total) => setTotalReward(total));
+    })
+  }, [api, dexCurrencies, getReward, setTotalReward])
+
   useEffect(() => {
-    dexCurrencies.forEach((currency) => {
-      getReward(currency);
-    });
-  }, [api, dexCurrencies, getReward]);
-
-  const calcTotalReward = () => {
-    const keys = Object.keys(rewards.current);
-    const total = keys.reduce((acc, cur) => {
-      if (rewards.current[cur]) {
-        acc = acc.add(rewards.current[cur]);
-      }
-
-      return acc;
-    }, Fixed18.ZERO);
-
-    setTotalReward(total);
-  };
+    if (api) {
+      run();
+    }
+  }, [api]);
 
   return {
     amount: totalReward,

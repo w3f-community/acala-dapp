@@ -52,7 +52,6 @@ class Tracker {
 }
 
 const tracker = new Tracker();
-console.log(tracker);
 
 export function useCall <T> (path: string, params: CallParams = [], options: CallOptions<T> = {}): T | undefined {
   const { api } = useApi();

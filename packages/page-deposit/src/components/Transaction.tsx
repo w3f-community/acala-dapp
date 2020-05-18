@@ -1,7 +1,7 @@
 import React, { FC, useRef, useContext } from 'react';
 
 import { BaseTxHistory, FormatBalance, FormatTime, FormatHash } from '@honzon-platform/react-components';
-import { TableItem } from '@honzon-platform/ui-components';
+import { TableItem, Status } from '@honzon-platform/ui-components';
 import { ExtrinsicHistoryData, useConstants } from '@honzon-platform/react-hooks';
 import { Fixed18 } from '@acala-network/app-util';
 import { DepositContext } from './Provider';
@@ -66,12 +66,20 @@ export const Transaction: FC = () => {
       title: 'Deposit/Withdraw'
     },
     {
-      align: 'right',
+      align: 'left',
       dataIndex: 'time',
       render: (value) => (
         <FormatTime time={value} />
       ),
       title: 'When'
+    },
+    {
+      align: 'right',
+      dataIndex: 'success',
+      render: (value) => (
+        <Status success={value} />
+      ),
+      title: 'Result'
     }
   ]);
 

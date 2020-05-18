@@ -1,10 +1,13 @@
-import React, { FC, useContext, useState } from 'react';
-import { Table, TableItem, Radio, Button } from '@honzon-platform/ui-components';
-import { Token, tokenEq, LoanInterestRate, FormatFixed18, UserBalance } from '@honzon-platform/react-components';
+import React, { FC, useContext, useState, useCallback, useMemo, useRef, useEffect } from 'react';
+
 import { DerivedLoanType } from '@acala-network/api-derive';
 import { CurrencyId, Rate } from '@acala-network/types/interfaces';
 import { convertToFixed18 } from '@acala-network/app-util';
-import { useAccounts, useAllLoans } from '@honzon-platform/react-hooks';
+
+import { useAccounts, useAllLoans, useLoan } from '@honzon-platform/react-hooks';
+import { Table, TableItem, Radio, Button } from '@honzon-platform/ui-components';
+import { Token, tokenEq, LoanInterestRate, FormatFixed18, UserBalance } from '@honzon-platform/react-components';
+
 import classes from './SelectCollateral.module.scss';
 import { createProviderContext } from './CreateProvider';
 import { LoanContext } from './LoanProvider';
@@ -15,6 +18,7 @@ export const SelectCollateral: FC = () => {
   const { active } = useAccounts();
   const { setSelectedToken, setStep } = useContext(createProviderContext);
   const { cancelCurrentTab } = useContext(LoanContext);
+  const collateralDisabled = useRef<{[k in string]: boolean}>({});
 
   const onSelect = (token: CurrencyId) => {
     setSelected(token);
@@ -33,15 +37,24 @@ export const SelectCollateral: FC = () => {
     return false;
   };
 
-  const tableConfig: TableItem<DerivedLoanType>[] = [
+  const tableConfig: TableItem<DerivedLoanType>[] = useMemo(() => [
     {
       title: 'Collateral Type',
       width: 2,
       align: 'left',
       dataIndex: 'token',
       render: (token: CurrencyId) => {
+        const { currentUserLoan } = useLoan(token);
+
+        useEffect(() => {
+          if (currentUserLoan?.collaterals.isEmpty) {
+            collateralDisabled.current[currentUserLoan?.token] = true;
+          }
+        }, [currentUserLoan]);
+
         return (
           <Radio
+            disabled={!currentUserLoan?.collaterals.isEmpty}
             checked={tokenEq(token, selected)}
             label={<Token token={token}/>}
             onClick={() => onSelect(token)}
@@ -99,11 +112,13 @@ export const SelectCollateral: FC = () => {
         />
       )
     }
-  ];
+  ], [selected]);
 
-  const handleRowClick = (_event: any, data: DerivedLoanType) => {
-    setSelected(data.token as CurrencyId);
-  };
+  const handleRowClick = useCallback((_event: any, data: DerivedLoanType) => {
+    if (collateralDisabled.current[data.token.toString()]) {
+      setSelected(data.token as CurrencyId);
+    }
+  }, [setSelected]);
 
   return (
     <div className={classes.root}>

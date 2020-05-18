@@ -1,4 +1,4 @@
-import { useMemo, useContext } from 'react';
+import { useMemo } from 'react';
 
 import { DerivedPrice } from '@acala-network/api-derive';
 import { CurrencyId } from '@acala-network/types/interfaces';
@@ -41,7 +41,11 @@ export const usePrice = (token?: CurrencyId | string) => {
     const price: DerivedPrice[] = [];
     const _TimestampedValue = api.registry.get('TimestampedValue')!;
 
-    _price?.forEach((item): void => {
+    if (!_price) {
+      return [];
+    }
+
+    _price.forEach((item): void => {
       price.push(item);
     });
 

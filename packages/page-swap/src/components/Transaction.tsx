@@ -1,7 +1,7 @@
 import React, { FC, useRef } from 'react';
 
 import { BaseTxHistory, FormatBalance, FormatTime, FormatHash, Token, formatBalance, formatCurrency } from '@honzon-platform/react-components';
-import { TableItem } from '@honzon-platform/ui-components';
+import { TableItem, Status } from '@honzon-platform/ui-components';
 import { ExtrinsicHistoryData, useConstants, useLoan } from '@honzon-platform/react-hooks';
 import { Fixed18, debitToStableCoin, convertToFixed18 } from '@acala-network/app-util';
 
@@ -59,12 +59,20 @@ export const Transaction: FC = () => {
       title: 'Action'
     },
     {
-      align: 'right',
+      align: 'left',
       dataIndex: 'time',
       render: (value) => (
         <FormatTime time={value} />
       ),
       title: 'When'
+    },
+    {
+      align: 'right',
+      dataIndex: 'success',
+      render: (value) => (
+        <Status success={value} />
+      ),
+      title: 'Result'
     }
   ]);
 

@@ -1,4 +1,4 @@
-import React, { createContext, useState, FC } from 'react';
+import React, { createContext, useState, FC, useCallback } from 'react';
 import { BareProps } from '@honzon-platform/ui-components/types';
 import { CurrencyId } from '@acala-network/types/interfaces';
 import { useLoan } from '@honzon-platform/react-hooks';
@@ -29,13 +29,13 @@ export const CreateProvider: FC<Props> = ({
   const [generate, setGenerate] = useState<number>(0);
   const _loan = useLoan(selectedToken);
 
-  const setStep = (step: CREATE_STEP) => {
+  const setStep = useCallback((step: CREATE_STEP) => {
     _setStep(step);
-  };
+  }, [_setSelectedToken]);
 
-  const setSelectedToken = (token: CurrencyId) => {
+  const setSelectedToken = useCallback((token: CurrencyId) => {
     _setSelectedToken(token);
-  };
+  }, [_setSelectedToken]);
 
   return (
     <createProviderContext.Provider

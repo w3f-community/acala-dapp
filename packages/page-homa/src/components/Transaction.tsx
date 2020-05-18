@@ -1,14 +1,13 @@
-import React, { FC, useContext, useMemo } from 'react';
+import React, { FC, useContext, useMemo, useCallback } from 'react';
 
 import { BaseTxHistory, FormatBalance, FormatTime, FormatHash } from '@honzon-platform/react-components';
-import { TableItem } from '@honzon-platform/ui-components';
+import { TableItem, Status } from '@honzon-platform/ui-components';
 import { ExtrinsicHistoryData } from '@honzon-platform/react-hooks';
 import { Fixed18 } from '@acala-network/app-util';
 import { StakingPoolContext } from './StakingPoolProvider';
-import { noop } from 'rxjs';
 
 export const Transaction: FC = () => {
-  const { stakingPool } = useContext(StakingPoolContext);
+  const { stakingPool, action } = useContext(StakingPoolContext);
 
   const config = useMemo<TableItem<ExtrinsicHistoryData>[]>(() => [
     {
@@ -29,11 +28,9 @@ export const Transaction: FC = () => {
             />
           );
         }
+
         if (data.method === 'redeem') {
-          let _params = {};
-          try {
-            _params = JSON.parse(data?.params[1]);
-          } catch(e) { noop };
+          const keys = Object.keys(data?.params[1]);
 
           return (
             <>
@@ -41,20 +38,17 @@ export const Transaction: FC = () => {
                 balance={Fixed18.fromParts(data?.params[0] || 0)}
                 currency={stakingPool?.liquidCurrency}
               />
+              {
+
               <span style={{ marginLeft: 8 }}>
-                {(_params as any).Target ? `ERA: ${_params.Target}` : data?.params[1]}
+                {(data?.params[1] as any).Target ? `ERA: ${data?.params[1].Target}` : keys }
               </span>
+              }
             </>
           );
         }
-        if (data.method === 'withdrawIncentiveInterest') {
-          return (
-            <FormatBalance
-              balance={data?.addon?.amount}
-              currency={data?.addon?.currency}
-            />
-          );
-        }
+
+        return '/';
       },
       title: 'Token'
     },
@@ -65,7 +59,7 @@ export const Transaction: FC = () => {
         const paramsMap: Map<string, string> = new Map([
           ['mint', 'Mint & Stake'],
           ['redeem', 'Redeem'],
-          ['withdrawRedemption', 'Withdraw Redemption']
+          ['withdraw_redemption', 'Withdraw Redemption']
         ]);
         return paramsMap.get(value);
       },
@@ -78,13 +72,21 @@ export const Transaction: FC = () => {
         <FormatTime time={value} />
       ),
       title: 'When'
+    },
+    {
+      align: 'right',
+      dataIndex: 'success',
+      render: (value) => (
+        <Status success={value} />
+      ),
+      title: 'Result'
     }
   ], [stakingPool]);
 
   return (
     <BaseTxHistory
       config={config}
-      method={'mint,redeem,withdrawRedemption'}
+      method={''}
       section='homa'
     />
   );

@@ -2,36 +2,41 @@ import React, { FC } from 'react';
 
 import { Page, Grid } from '@honzon-platform/ui-components';
 import { SwapConsole } from './components/SwapConsole';
-import { SwapProvider, WalletBalanceCard } from '@honzon-platform/react-components';
+import { WalletBalanceCard, PricesFeedCard } from '@honzon-platform/react-components';
 import { AllMarkets } from './components/AllMarkets';
 import { Transaction } from './components/Transaction';
+import { SwapProvider } from './components/SwapProvider';
 
 const PageSwap: FC = () => {
   return (
-    <Page>
-      <Page.Title title='Swap' />
-      <SwapProvider>
-        <Page.Content>
-          <Grid direction='column'>
-            <Grid item>
-              <SwapConsole />
-            </Grid>
-            <Grid item>
-              <AllMarkets />
-            </Grid>
-            <Grid container
-            item>
-              <Grid item flex={16}>
-                <Transaction />
+    <SwapProvider>
+      <Page>
+        <Page.Title title='Swap' />
+          <Page.Content>
+            <Grid container direction='row'>
+              <Grid container item direction='column' flex={18}>
+                <Grid item>
+                  <SwapConsole />
+                </Grid>
+                <Grid item>
+                  <AllMarkets />
+                </Grid>
+                <Grid item>
+                  <Transaction />
+                </Grid>
               </Grid>
-              <Grid item flex={8}>
-                <WalletBalanceCard />
+              <Grid container item direction='column' flex={6}>
+                <Grid item>
+                  <WalletBalanceCard />
+                </Grid>
+                <Grid item>
+                  <PricesFeedCard />
+                </Grid>
               </Grid>
             </Grid>
-          </Grid>
-        </Page.Content>
-      </SwapProvider>
-    </Page>
+          </Page.Content>
+      </Page>
+    </SwapProvider>
   );
 };
 

@@ -2,7 +2,6 @@ export * from './common-cards';
 export * from './notices';
 export * from './format';
 export * from './utils';
-export * from './service-providers';
 
 export * from './ApiStatus';
 export * from './BalanceInput';

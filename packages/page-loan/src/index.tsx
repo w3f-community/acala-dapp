@@ -33,7 +33,7 @@ const Inner: FC = () => {
             item>
             <Grid container
               direction='column'
-              flex={16}
+              flex={18}
               item>
               {
                 currentTab === 'overview'
@@ -72,7 +72,7 @@ const Inner: FC = () => {
             </Grid>
             <Grid container
               direction='column'
-              flex={8}
+              flex={6}
               item>
               <Grid item>
                 <WalletBalanceCard />

@@ -1,4 +1,4 @@
-import React, { createContext, FC, useState, useRef, useEffect } from 'react';
+import React, { createContext, FC, useState, useRef, useEffect, useCallback } from 'react';
 import { CurrencyId } from '@acala-network/types/interfaces';
 import { BareProps } from '@honzon-platform/ui-components/types';
 import { useInitialize, useAllLoans } from '@honzon-platform/react-hooks';
@@ -22,31 +22,31 @@ export const LoanProvider: FC<BareProps> = ({
   const prevTabRef = useRef<LoanTab>('overview');
   const [currentTab, _setCurrentTab] = useState<LoanTab>('overview');
   const { loans } = useAllLoans();
-  const { isEnd, setEnd } = useInitialize();
+  const { isInitialized, setEnd } = useInitialize();
+
+  const setCurrentTab = useCallback((tab: LoanTab) => {
+    prevTabRef.current = currentTab;
+    _setCurrentTab(tab);
+  }, [_setCurrentTab]);
+
+  const showOverview = useCallback(() => {
+    setCurrentTab('overview');
+  }, [setCurrentTab]);
+
+  const showCreate = useCallback(() => {
+    prevTabRef.current = currentTab;
+    setCurrentTab('create');
+  }, [setCurrentTab]);
+
+  const cancelCurrentTab = useCallback(() => {
+    setCurrentTab(prevTabRef.current);
+  }, [setCurrentTab]);
 
   useEffect(() => {
     if (loans) {
       setEnd();
     }
   }, [loans]);
-
-  const setCurrentTab = (tab: LoanTab) => {
-    prevTabRef.current = currentTab;
-    _setCurrentTab(tab);
-  };
-
-  const showOverview = () => {
-    setCurrentTab('overview');
-  };
-
-  const showCreate = () => {
-    prevTabRef.current = currentTab;
-    setCurrentTab('create');
-  };
-
-  const cancelCurrentTab = () => {
-    setCurrentTab(prevTabRef.current);
-  };
 
   return (
     <LoanContext.Provider
@@ -58,7 +58,9 @@ export const LoanProvider: FC<BareProps> = ({
         cancelCurrentTab
       }}
     >
-      {!isEnd ? <PageLoading />: children}
+      {
+        isInitialized ? children : <PageLoading />
+      }
     </LoanContext.Provider>
   );
 };

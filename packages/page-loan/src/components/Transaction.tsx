@@ -27,21 +27,32 @@ const Action: FC<ActionProps> = ({
   const _debit = Fixed18.fromParts(debit);
   const [debitExchangeRate, setDebitExchangeRate] = useState<Codec>();
 
+
   useEffect(() => {
     if (api && block) {
       (async () => {
         const hash = await api.query.system.blockHash(block);
         const result = await api.query.cdpEngine.debitExchangeRate.at(hash, token);
+
         setDebitExchangeRate(result);
       })();
     }
   }, [api, block]);
 
-  const message: Array<string> = [];
-
-  if (debitExchangeRate && debitExchangeRate.isEmpty) {
-    return <span>DebitExchangeRate Failed</span>
+  const getDebit = () => {
+    if (!debitExchangeRate || debitExchangeRate.isEmpty) {
+      return 'some';
+    }
+    if (_debit.isGreaterThan(ZERO)) {
+      return formatBalance(debitToStableCoin(_debit, convertToFixed18(debitExchangeRate || 0)));
+    }
+    if (_debit.isLessThan(ZERO)) {
+      return formatBalance(debitToStableCoin(_debit.negated(), convertToFixed18(debitExchangeRate || 0)));
+    }
+    return '';
   }
+
+  const message: Array<string> = [];
 
   if (_collateral.isGreaterThan(ZERO)) {
     message.push(`Deposit ${formatBalance(_collateral)} ${formatCurrency(token)}`);
@@ -50,20 +61,16 @@ const Action: FC<ActionProps> = ({
   if (_collateral.isLessThan(ZERO)) {
     message.push(`Withdraw ${formatBalance(_collateral.negated())} ${formatCurrency(token)}`);
   }
-
+  
   if (_debit.isGreaterThan(ZERO)) {
     message.push(
-      `Generate ${formatBalance(
-        debitToStableCoin(_debit, convertToFixed18(debitExchangeRate || 0))
-      )} ${formatCurrency(stableCurrency)}`
+      `Generate ${getDebit()} ${formatCurrency(stableCurrency)}`
     );
   }
 
   if (_debit.isLessThan(ZERO)) {
     message.push(
-      `Pay Back ${formatBalance(
-        debitToStableCoin(_debit.negated(), convertToFixed18(debitExchangeRate || 0))
-      )} ${formatCurrency(stableCurrency)}`
+      `Pay Back ${getDebit()} ${formatCurrency(stableCurrency)}`
     );
   }
 

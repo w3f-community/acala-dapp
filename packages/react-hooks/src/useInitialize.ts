@@ -7,5 +7,5 @@ export const useInitialize = () => {
     setStatus(true);
   }, [setStatus]);
 
-  return { isEnd: status, setEnd };
+  return { isInitialized: status, setEnd };
 };
