@@ -1,10 +1,10 @@
 {
-  "name": "@honzon-platform/page-homa",
+  "name": "@acala-dapp/page-homa",
   "version": "0.2.0",
-  "description": "honzon homa",
+  "description": "acala-dapp homa",
   "main": "index.js",
   "author": "Acala Developers <hello@acala.network>",
-  "homepage": "https://github.com/AcalaNetwork/honzon-platform#readme",
+  "homepage": "https://github.com/AcalaNetwork/acala-dapp#readme",
   "license": "Apache-2.0",
   "dependencies": {
     "formik": "^2.1.4"

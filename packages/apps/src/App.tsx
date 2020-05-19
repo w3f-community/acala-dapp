@@ -1,9 +1,9 @@
 import React, { FC } from 'react';
 
-import { ConnectError, NoAccounts, NoExtensions } from '@honzon-platform/react-components';
-import { UIProvider, Notification, FullLoading } from '@honzon-platform/ui-components';
-import { ApiProvider, AccountProvider, GlobalStoreProvider } from '@honzon-platform/react-environment';
-import { useAppSetting } from '@honzon-platform/react-hooks/useAppSetting';
+import { ConnectError, NoAccounts, NoExtensions } from '@acala-dapp/react-components';
+import { UIProvider, Notification, FullLoading } from '@acala-dapp/ui-components';
+import { ApiProvider, AccountProvider, GlobalStoreProvider } from '@acala-dapp/react-environment';
+import { useAppSetting } from '@acala-dapp/react-hooks/useAppSetting';
 
 import { RouterProvider } from './components/RouterProvider';
 import { config as routerConfig } from './router-config';
@@ -20,7 +20,7 @@ const App: FC = () => {
           Loading={<FullLoading />}
         >
           <AccountProvider
-            applicationName={'Acala Honzon Platfrom'}
+            applicationName={'Acala Dapp'}
             NoAccounts={<NoAccounts />}
             NoExtensions={<NoExtensions />}
           >

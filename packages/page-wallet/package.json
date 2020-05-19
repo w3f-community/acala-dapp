@@ -1,10 +1,10 @@
 {
-  "name": "@honzon-platform/page-wallet",
+  "name": "@acala-dapp/page-wallet",
   "version": "0.2.0",
   "description": "wallet page",
   "main": "index.js",
   "author": "Acala Developers <hello@acala.network>",
-  "homepage": "https://github.com/AcalaNetwork/honzon-platform#readme",
+  "homepage": "https://github.com/AcalaNetwork/acala-dapp#readme",
   "license": "Apache-2.0",
   "dependencies": {
     "@polkadot/react-identicon": "^0.52.1",

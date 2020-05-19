@@ -4,9 +4,9 @@ import { DerivedLoanType } from '@acala-network/api-derive';
 import { CurrencyId, Rate } from '@acala-network/types/interfaces';
 import { convertToFixed18 } from '@acala-network/app-util';
 
-import { useAccounts, useAllLoans, filterEmptyLoan } from '@honzon-platform/react-hooks';
-import { Table, TableItem, Radio, Button } from '@honzon-platform/ui-components';
-import { Token, tokenEq, LoanInterestRate, FormatFixed18, UserBalance } from '@honzon-platform/react-components';
+import { useAccounts, useAllLoans, filterEmptyLoan } from '@acala-dapp/react-hooks';
+import { Table, TableItem, Radio, Button } from '@acala-dapp/ui-components';
+import { Token, tokenEq, LoanInterestRate, FormatFixed18, UserBalance } from '@acala-dapp/react-components';
 
 import classes from './SelectCollateral.module.scss';
 import { createProviderContext } from './CreateProvider';

@@ -1,11 +1,11 @@
 import React, { ReactElement } from 'react';
 
-import PageDeposit from '@honzon-platform/page-deposit';
-import PageLoan from '@honzon-platform/page-loan';
-import PageHoma from '@honzon-platform/page-homa';
-import PageSwap from '@honzon-platform/page-swap';
-import PageWallet from '@honzon-platform/page-wallet';
-import PageGovernance from '@honzon-platform/page-governance';
+import PageDeposit from '@acala-dapp/page-deposit';
+import PageLoan from '@acala-dapp/page-loan';
+import PageHoma from '@acala-dapp/page-homa';
+import PageSwap from '@acala-dapp/page-swap';
+import PageWallet from '@acala-dapp/page-wallet';
+import PageGovernance from '@acala-dapp/page-governance';
 
 import { MainLayout } from './layouts/Main';
 import { sideBarConfig } from './sidebar-config';

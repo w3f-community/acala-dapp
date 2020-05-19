@@ -1,8 +1,8 @@
 import React, { FC } from 'react';
 
-import { Page, Grid } from '@honzon-platform/ui-components';
+import { Page, Grid } from '@acala-dapp/ui-components';
 import { SwapConsole } from './components/SwapConsole';
-import { WalletBalanceCard, PricesFeedCard } from '@honzon-platform/react-components';
+import { WalletBalanceCard, PricesFeedCard } from '@acala-dapp/react-components';
 import { AllMarkets } from './components/AllMarkets';
 import { Transaction } from './components/Transaction';
 import { SwapProvider } from './components/SwapProvider';

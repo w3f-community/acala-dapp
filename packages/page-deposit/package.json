@@ -1,9 +1,9 @@
 {
-  "name": "@honzon-platform/page-deposit",
+  "name": "@acala-dapp/page-deposit",
   "version": "0.2.0",
   "description": "deposit page",
   "main": "index.js",
   "author": "Acala Developers <hello@acala.network>",
-  "homepage": "https://github.com/AcalaNetwork/honzon-platform#readme",
+  "homepage": "https://github.com/AcalaNetwork/acala-dapp#readme",
   "license": "Apache-2.0"
 }

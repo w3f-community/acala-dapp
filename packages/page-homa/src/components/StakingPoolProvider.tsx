@@ -1,6 +1,6 @@
 import React, { createContext, FC, memo, useState, useEffect } from 'react';
-import { useStakingPool, UseStakingPoolReturnType, useInitialize } from '@honzon-platform/react-hooks';
-import { PageLoading } from '@honzon-platform/ui-components';
+import { useStakingPool, UseStakingPoolReturnType, useInitialize } from '@acala-dapp/react-hooks';
+import { PageLoading } from '@acala-dapp/ui-components';
 
 export type ACTION_TYPE = 'staking' | 'redeem';
 

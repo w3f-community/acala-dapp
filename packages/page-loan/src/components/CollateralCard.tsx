@@ -1,8 +1,8 @@
 import React, { useState, useEffect, FC, ReactNode } from 'react';
 import { isEmpty } from 'lodash';
-import { Card, ListConfig, List, Dropdown, DropdownConfig } from '@honzon-platform/ui-components';
-import { useAllLoans, useLoan } from '@honzon-platform/react-hooks';
-import { formatCurrency, FormatFixed18 } from '@honzon-platform/react-components';
+import { Card, ListConfig, List, Dropdown, DropdownConfig } from '@acala-dapp/ui-components';
+import { useAllLoans, useLoan } from '@acala-dapp/react-hooks';
+import { formatCurrency, FormatFixed18 } from '@acala-dapp/react-components';
 import classes from './CollateralCard.module.scss';
 import { Fixed18 } from '@acala-network/app-util';
 

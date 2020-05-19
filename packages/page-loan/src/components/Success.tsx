@@ -1,5 +1,5 @@
 import React, { FC, useContext } from 'react';
-import { Button } from '@honzon-platform/ui-components';
+import { Button } from '@acala-dapp/ui-components';
 import { ReactComponent as SuccessBg } from '../assets/success-bg.svg';
 
 import classes from './Success.module.scss';

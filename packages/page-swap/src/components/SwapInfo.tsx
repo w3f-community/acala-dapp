@@ -1,8 +1,8 @@
 import React, { FC, memo } from 'react';
 
 import classes from './SwapConsole.module.scss';
-import { Tag } from '@honzon-platform/ui-components';
-import { FormatBalance, FormatFixed18 } from '@honzon-platform/react-components';
+import { Tag } from '@acala-dapp/ui-components';
+import { FormatBalance, FormatFixed18 } from '@acala-dapp/react-components';
 import { Fixed18 } from '@acala-network/app-util';
 import { CurrencyId } from '@acala-network/types/interfaces';
 

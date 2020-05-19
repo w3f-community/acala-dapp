@@ -5,8 +5,8 @@ import { CurrencyId } from '@acala-network/types/interfaces';
 import { DerivedUserLoan, DerivedLoanType, DerivedPrice } from '@acala-network/api-derive';
 import { calcCollateralRatio, debitToUSD, convertToFixed18, collateralToUSD } from '@acala-network/app-util';
 
-import { BareProps } from '@honzon-platform/ui-components/types';
-import { useCall, useAccounts, usePrice, useConstants } from '@honzon-platform/react-hooks';
+import { BareProps } from '@acala-dapp/ui-components/types';
+import { useCall, useAccounts, usePrice, useConstants } from '@acala-dapp/react-hooks';
 
 import { FormatFixed18 } from './format';
 import { tokenEq, getValueFromTimestampValue } from './utils';

@@ -5,9 +5,9 @@ import { CurrencyId } from '@acala-network/types/interfaces';
 import { Fixed18, calcTargetInOtherToBase, convertToFixed18, calcTargetInBaseToOther, calcTargetInOtherToOther, calcSupplyInOtherToBase, calcSupplyInBaseToOther, calcSupplyInOtherToOther } from '@acala-network/app-util';
 import { DerivedDexPool } from '@acala-network/api-derive';
 
-import { useApi, useConstants, useInitialize } from '@honzon-platform/react-hooks';
-import { tokenEq } from '@honzon-platform/react-components';
-import { PageLoading } from '@honzon-platform/ui-components';
+import { useApi, useConstants, useInitialize } from '@acala-dapp/react-hooks';
+import { tokenEq } from '@acala-dapp/react-components';
+import { PageLoading } from '@acala-dapp/ui-components';
 
 export interface PoolData {
   supplyCurrency: CurrencyId;

@@ -1,7 +1,7 @@
 import React, { FC, memo, ReactNode } from 'react';
 
-import { BareProps } from '@honzon-platform/ui-components/types';
-import { Copy } from '@honzon-platform/ui-components';
+import { BareProps } from '@acala-dapp/ui-components/types';
+import { Copy } from '@acala-dapp/ui-components';
 import Identicon from '@polkadot/react-identicon';
 
 import classes from './format.module.scss';

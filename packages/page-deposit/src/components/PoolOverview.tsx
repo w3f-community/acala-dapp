@@ -2,8 +2,8 @@ import React, { FC, memo, useContext, ReactNode } from 'react';
 
 import { CurrencyId } from '@acala-network/types/interfaces';
 
-import { Card, TableItem, Table } from '@honzon-platform/ui-components';
-import { DexPoolSize, DexExchangeRate, DexReward, DexRewardRatio, DexUserShare } from '@honzon-platform/react-components';
+import { Card, TableItem, Table } from '@acala-dapp/ui-components';
+import { DexPoolSize, DexExchangeRate, DexReward, DexRewardRatio, DexUserShare } from '@acala-dapp/react-components';
 
 import { DepositContext } from './Provider';
 import { AccountDexTokens } from './AccountDexTokens';

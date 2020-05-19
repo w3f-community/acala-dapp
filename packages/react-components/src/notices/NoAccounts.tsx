@@ -1,5 +1,5 @@
 import React, { FC, memo } from 'react';
-import { Dialog } from '@honzon-platform/ui-components';
+import { Dialog } from '@acala-dapp/ui-components';
 
 export const NoAccounts: FC = memo(() => {
   const handleRetry = (): void => window.location.reload();

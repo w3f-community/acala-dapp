@@ -1,1 +1,1 @@
-@honzon-platform/page-swap
+@acala-dapp/page-swap

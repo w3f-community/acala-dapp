@@ -3,9 +3,9 @@ import { noop } from 'lodash';
 import { useFormik } from 'formik';
 
 import { Fixed18 } from '@acala-network/app-util';
-import { Grid, List, Radio } from '@honzon-platform/ui-components';
-import { TxButton, BalanceInput, numToFixed18Inner, formatDuration, FormatBalance } from '@honzon-platform/react-components';
-import { useFormValidator } from '@honzon-platform/react-hooks';
+import { Grid, List, Radio } from '@acala-dapp/ui-components';
+import { TxButton, BalanceInput, numToFixed18Inner, formatDuration, FormatBalance } from '@acala-dapp/react-components';
+import { useFormValidator } from '@acala-dapp/react-hooks';
 
 import classes from './RedeemConsole.module.scss';
 import { TargetRedeemList } from './TargetRedeemList';

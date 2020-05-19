@@ -7,8 +7,8 @@ import { Balance as BalanceType } from '@polkadot/types/interfaces';
 import { Fixed18 } from '@acala-network/app-util';
 
 import { CurrencyId } from '@acala-network/types/interfaces';
-import { BareProps } from '@honzon-platform/ui-components/types';
-import { randomID } from '@honzon-platform/ui-components';
+import { BareProps } from '@acala-dapp/ui-components/types';
+import { randomID } from '@acala-dapp/ui-components';
 
 import { formatBalance, formatCurrency, thousandth, padEndDecimal } from '../utils';
 import classes from './format.module.scss';

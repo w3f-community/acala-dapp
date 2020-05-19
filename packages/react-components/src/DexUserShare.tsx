@@ -1,8 +1,8 @@
 import React, { FC, memo } from 'react';
 import AccountId from '@polkadot/types/generic/AccountId';
 import { CurrencyId } from '@acala-network/types/interfaces';
-import { BareProps } from '@honzon-platform/ui-components/types';
-import { useDexShare } from '@honzon-platform/react-hooks';
+import { BareProps } from '@acala-dapp/ui-components/types';
+import { useDexShare } from '@acala-dapp/react-hooks';
 import { FormatFixed18 } from './format';
 import { convertToFixed18 } from '@acala-network/app-util';
 

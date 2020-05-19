@@ -4,8 +4,8 @@ import { CurrencyId } from '@acala-network/types/interfaces';
 import { convertToFixed18 } from '@acala-network/app-util';
 import { DerivedPrice } from '@acala-network/api-derive';
 
-import { usePrice } from '@honzon-platform/react-hooks';
-import { BareProps } from '@honzon-platform/ui-components/types';
+import { usePrice } from '@acala-dapp/react-hooks';
+import { BareProps } from '@acala-dapp/ui-components/types';
 import { FormatFixed18 } from './format';
 import { getValueFromTimestampValue } from './utils';
 

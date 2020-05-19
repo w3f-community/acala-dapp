@@ -1,4 +1,4 @@
-import { useDexPool, useDexShare, useAccounts, useConstants } from '@honzon-platform/react-hooks';
+import { useDexPool, useDexShare, useAccounts, useConstants } from '@acala-dapp/react-hooks';
 import { CurrencyId } from '@acala-network/types/interfaces';
 import { Fixed18, convertToFixed18 } from '@acala-network/app-util';
 

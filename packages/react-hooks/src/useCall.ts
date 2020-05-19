@@ -4,7 +4,7 @@ import { CallParams } from './types';
 import { useEffect, useContext, useMemo } from 'react';
 
 import { useIsAppReady } from './useIsAppReady';
-import { globalStoreContext } from '@honzon-platform/react-environment';
+import { globalStoreContext } from '@acala-dapp/react-environment';
 import { useApi } from './useApi';
 import { ApiPromise } from '@polkadot/api';
 

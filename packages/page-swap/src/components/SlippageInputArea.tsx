@@ -2,9 +2,9 @@ import React, { FC, memo, ReactElement, ChangeEvent } from 'react';
 import { useFormik } from 'formik';
 import { noop } from 'lodash';
 
-import { TagGroup, Tag } from '@honzon-platform/ui-components';
-import { TagInput } from '@honzon-platform/ui-components/TagInput';
-import { useFormValidator } from '@honzon-platform/react-hooks';
+import { TagGroup, Tag } from '@acala-dapp/ui-components';
+import { TagInput } from '@acala-dapp/ui-components/TagInput';
+import { useFormValidator } from '@acala-dapp/react-hooks';
 
 import classes from './SlippageInputArea.module.scss';
 

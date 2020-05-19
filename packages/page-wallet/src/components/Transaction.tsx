@@ -1,8 +1,8 @@
 import React, { FC, ReactNode } from 'react';
 
-import { BaseTxHistory, FormatBalance, FormatTime, FormatHash, FormatAddress } from '@honzon-platform/react-components';
-import { TableItem, Status } from '@honzon-platform/ui-components';
-import { ExtrinsicHistoryData } from '@honzon-platform/react-hooks';
+import { BaseTxHistory, FormatBalance, FormatTime, FormatHash, FormatAddress } from '@acala-dapp/react-components';
+import { TableItem, Status } from '@acala-dapp/ui-components';
+import { ExtrinsicHistoryData } from '@acala-dapp/react-hooks';
 import { Fixed18 } from '@acala-network/app-util';
 import { encodeAddress } from '@polkadot/keyring';
 import { hexToU8a } from '@polkadot/util';

@@ -1,10 +1,10 @@
 import React, { FC, memo, useContext, useState } from 'react';
-import { Card } from '@honzon-platform/ui-components';
+import { Card } from '@acala-dapp/ui-components';
 import { CurrencyId } from '@acala-network/types/interfaces';
-import { TxButton, DexReward, TokenSelector } from '@honzon-platform/react-components';
+import { TxButton, DexReward, TokenSelector } from '@acala-dapp/react-components';
 import { DepositContext } from './Provider';
 import classes from './RewardConsole.module.scss';
-import { useDexReward, useConstants } from '@honzon-platform/react-hooks';
+import { useDexReward, useConstants } from '@acala-dapp/react-hooks';
 import { ReactComponent as RightArrowIcon } from '../assets/right-arrow.svg';
 
 interface InputAreaProps {

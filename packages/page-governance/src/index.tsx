@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 
-import { Page, Grid } from '@honzon-platform/ui-components';
+import { Page, Grid } from '@acala-dapp/ui-components';
 
 import { GovernanceProvider } from './components/provider';
 import { PageTypeSelector } from './components/PageTypeSelector';

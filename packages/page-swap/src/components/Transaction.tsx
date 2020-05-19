@@ -1,8 +1,8 @@
 import React, { FC, useRef, ReactNode } from 'react';
 
-import { BaseTxHistory, FormatBalance, FormatTime, FormatHash } from '@honzon-platform/react-components';
-import { TableItem, Status } from '@honzon-platform/ui-components';
-import { ExtrinsicHistoryData } from '@honzon-platform/react-hooks';
+import { BaseTxHistory, FormatBalance, FormatTime, FormatHash } from '@acala-dapp/react-components';
+import { TableItem, Status } from '@acala-dapp/ui-components';
+import { ExtrinsicHistoryData } from '@acala-dapp/react-hooks';
 import { Fixed18 } from '@acala-network/app-util';
 
 interface ActionProps {

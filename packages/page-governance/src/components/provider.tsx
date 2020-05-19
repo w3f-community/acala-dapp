@@ -1,6 +1,6 @@
 import React, { createContext, FC, useState } from 'react';
 import { PageType } from './type';
-import { BareProps } from '@honzon-platform/ui-components/types';
+import { BareProps } from '@acala-dapp/ui-components/types';
 
 interface GovernanceContextData {
   pageType: PageType;

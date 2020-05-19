@@ -2,7 +2,7 @@ import React, { useState, memo } from 'react';
 
 import { AnyFunction } from '@polkadot/types/types';
 import Identicon from '@polkadot/react-identicon';
-import { Dialog } from '@honzon-platform/ui-components';
+import { Dialog } from '@acala-dapp/ui-components';
 
 import { ReactComponent as CheckedIcon } from './assets/checked.svg';
 import classes from './SelectAccount.module.scss';

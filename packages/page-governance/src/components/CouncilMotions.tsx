@@ -1,8 +1,8 @@
 import React, { FC, ReactNode } from 'react';
-import { Card, Table, TableItem } from '@honzon-platform/ui-components';
-import { useCouncilMembers } from '@honzon-platform/react-hooks';
-import { FormatHash } from '@honzon-platform/react-components';
-import { useProposals } from '@honzon-platform/react-hooks/useProposals';
+import { Card, Table, TableItem } from '@acala-dapp/ui-components';
+import { useCouncilMembers } from '@acala-dapp/react-hooks';
+import { FormatHash } from '@acala-dapp/react-components';
+import { useProposals } from '@acala-dapp/react-hooks/useProposals';
 import { Option } from '@polkadot/types';
 import { Proposal, Votes } from '@polkadot/types/interfaces';
 

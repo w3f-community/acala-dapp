@@ -1,6 +1,6 @@
 import React, { FC, memo } from 'react';
 
-import { Grid } from '@honzon-platform/ui-components';
+import { Grid } from '@acala-dapp/ui-components';
 
 import { StakingTokeBalances } from './StakingTokenBalances';
 import { SelectToken } from './SelectToken';

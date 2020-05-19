@@ -1,19 +1,31 @@
-# honzon-platform
-front end interface for honzon protocol
+![license](https://img.shields.io/badge/License-Apache%202.0-blue?logo=apache&style=flat-square)
 
-## Install
-```base
-git clone git@github.com:AcalaNetwork/honzon-platform.git
-cd honzon-platform
-```
+# Acala-Dapp
 
-## Develop
-```base
-yarn install
-yarn run start
-```
+The Interface Of Acala Dapp
 
-## Build
-```base
-yarn run build
-```
+# Overview
+
++ [apps](https://github.com/AcalaNetwork/acala-dapp/tree/master/packages/apps): the endpoint of the dapp
++ [page-deposit](https://github.com/AcalaNetwork/acala-dapp/tree/master/packages/page-deposit): the page for depositing and withdrawing currencies in swap pool
++ [page-governance](https://github.com/AcalaNetwork/acala-dapp/tree/master/packages/page-governance): the page for governance
++ [page-homa](https://github.com/AcalaNetwork/acala-dapp/tree/master/packages/page-homa): the page for homa protocol
++ [page-loan](https://github.com/AcalaNetwork/acala-dapp/tree/master/packages/page-loan): the page for honzon protocol
++ [page-swap](https://github.com/AcalaNetwork/acala-dapp/tree/master/packages/page-swap): the page for swap currencies
++ [page-wallet](https://github.com/AcalaNetwork/acala-dapp/tree/master/packages/page-wallet): the page for an basic wallet
+
+# Development
+1. Clone this repo
+   ```base
+    git clone git@github.com:AcalaNetwork/acala-dapp.git && cd acala-dapp
+   ```
+
+2. Install dependencies by `yarn`
+   ```base
+     yarn install
+   ```
+
+3. Launch the UI
+   ```base
+     yarn run start
+   ```

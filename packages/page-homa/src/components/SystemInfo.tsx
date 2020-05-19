@@ -1,9 +1,9 @@
 import React, { FC, useContext, ReactNode } from 'react';
 
-import { Card, ListConfig, List } from '@honzon-platform/ui-components';
-import { formatCurrency } from '@honzon-platform/react-components';
+import { Card, ListConfig, List } from '@acala-dapp/ui-components';
+import { formatCurrency } from '@acala-dapp/react-components';
 import { convertToFixed18 } from '@acala-network/app-util';
-import { FormatFixed18 } from '@honzon-platform/react-components/format/FormatFixed18';
+import { FormatFixed18 } from '@acala-dapp/react-components/format/FormatFixed18';
 
 import { StakingPoolContext } from './StakingPoolProvider';
 

@@ -1,5 +1,5 @@
 import { DerivedUserLoan, DerivedLoanType, DerivedLoanOverView, DerivedPrice } from '@acala-network/api-derive';
-import { tokenEq, getValueFromTimestampValue } from '@honzon-platform/react-components';
+import { tokenEq, getValueFromTimestampValue } from '@acala-dapp/react-components';
 import { CurrencyId } from '@acala-network/types/interfaces';
 import { LoanHelper, convertToFixed18, Fixed18, stableCoinToDebit } from '@acala-network/app-util';
 

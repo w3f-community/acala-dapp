@@ -1,5 +1,5 @@
 import React, { FC, memo, useContext, ReactNode } from 'react';
-import { DropdownConfig, Dropdown } from '@honzon-platform/ui-components';
+import { DropdownConfig, Dropdown } from '@acala-dapp/ui-components';
 
 import { ReactComponent as DepositIcon } from '../assets/deposit.svg';
 import { ReactComponent as WithdrawIcon } from '../assets/withdraw.svg';

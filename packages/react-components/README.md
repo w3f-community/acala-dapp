@@ -1,1 +1,1 @@
-@honzon-platform/react-components
+@acala-dapp/react-components

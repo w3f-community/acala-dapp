@@ -1,7 +1,7 @@
 import React, { FC, useContext } from 'react';
 
-import { Page, Grid } from '@honzon-platform/ui-components';
-import { PricesFeedCard, WalletBalanceCard } from '@honzon-platform/react-components';
+import { Page, Grid } from '@acala-dapp/ui-components';
+import { PricesFeedCard, WalletBalanceCard } from '@acala-dapp/react-components';
 
 import { LoanTopBar } from './components/LoanTopBar';
 import { CreateConsole } from './components/CreateConsole';

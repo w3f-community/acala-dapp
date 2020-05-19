@@ -3,8 +3,8 @@ import React, { FC, memo, useState, useEffect } from 'react';
 import { CurrencyId } from '@acala-network/types/interfaces';
 import { Fixed18 } from '@acala-network/app-util';
 
-import { FormatBalance } from '@honzon-platform/react-components';
-import { useDexPool, useConstants } from '@honzon-platform/react-hooks';
+import { FormatBalance } from '@acala-dapp/react-components';
+import { useDexPool, useConstants } from '@acala-dapp/react-hooks';
 import { tokenEq } from './utils';
 
 interface Props {

@@ -4,9 +4,9 @@ import { noop } from 'lodash';
 
 import { CurrencyId } from '@acala-network/types/interfaces';
 
-import { BareProps } from '@honzon-platform/ui-components/types';
-import { useApi, useConstants } from '@honzon-platform/react-hooks';
-import { Dropdown, DropdownConfig } from '@honzon-platform/ui-components';
+import { BareProps } from '@acala-dapp/ui-components/types';
+import { useApi, useConstants } from '@acala-dapp/react-hooks';
+import { Dropdown, DropdownConfig } from '@acala-dapp/ui-components';
 
 import { Token } from './Token';
 import { getCurrencyIdFromName } from './utils';

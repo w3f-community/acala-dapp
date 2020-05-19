@@ -1,6 +1,6 @@
 import React, { FC, useMemo } from 'react';
-import { Card, Table, TableItem } from '@honzon-platform/ui-components';
-import { useHistory, useAccounts, ExtrinsicHistoryData } from '@honzon-platform/react-hooks';
+import { Card, Table, TableItem } from '@acala-dapp/ui-components';
+import { useHistory, useAccounts, ExtrinsicHistoryData } from '@acala-dapp/react-hooks';
 import Pagination from '@material-ui/lab/Pagination';
 
 import classes from './BaseTxHistory.module.scss';

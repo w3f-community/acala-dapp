@@ -1,6 +1,6 @@
 import React, { FC, ReactNode } from 'react';
-import { Card, TableItem, Table } from '@honzon-platform/ui-components';
-import { useApi } from '@honzon-platform/react-hooks';
+import { Card, TableItem, Table } from '@acala-dapp/ui-components';
+import { useApi } from '@acala-dapp/react-hooks';
 import { tokenEq } from '../utils';
 import { AirDropAmount } from '../AirDropAmount';
 import { AirDropCurrencyId } from '@acala-network/types/interfaces';

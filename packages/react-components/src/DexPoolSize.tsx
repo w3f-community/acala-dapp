@@ -2,8 +2,8 @@ import React, { FC } from 'react';
 
 import { CurrencyId } from '@acala-network/types/interfaces';
 
-import { FormatBalance } from '@honzon-platform/react-components';
-import { useDexPool, useConstants } from '@honzon-platform/react-hooks';
+import { FormatBalance } from '@acala-dapp/react-components';
+import { useDexPool, useConstants } from '@acala-dapp/react-hooks';
 
 interface Props {
   token: string | CurrencyId;

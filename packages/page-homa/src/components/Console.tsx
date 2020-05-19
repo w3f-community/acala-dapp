@@ -1,6 +1,6 @@
 import React, { FC, ReactElement, useContext, useCallback, useMemo } from 'react';
 
-import { Card, Tabs } from '@honzon-platform/ui-components';
+import { Card, Tabs } from '@acala-dapp/ui-components';
 
 import { StakingConsole } from './StakingConsole';
 import { RedeemConsole } from './RedeemConsole';

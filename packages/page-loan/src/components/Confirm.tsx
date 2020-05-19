@@ -1,10 +1,10 @@
 import React, { FC, useContext, useMemo, ReactNode } from 'react';
 
-import { FormatBalance, FormatFixed18, TxButton, numToFixed18Inner } from '@honzon-platform/react-components';
+import { FormatBalance, FormatFixed18, TxButton, numToFixed18Inner } from '@acala-dapp/react-components';
 import { createProviderContext } from './CreateProvider';
-import { useConstants } from '@honzon-platform/react-hooks';
+import { useConstants } from '@acala-dapp/react-hooks';
 import { Fixed18, stableCoinToDebit, convertToFixed18 } from '@acala-network/app-util';
-import { List, Button } from '@honzon-platform/ui-components';
+import { List, Button } from '@acala-dapp/ui-components';
 import classes from './Confirm.module.scss';
 import { LoanContext } from './LoanProvider';
 
@@ -182,7 +182,7 @@ export const Confirm: FC = () => {
           method='adjustLoan'
           onSuccess={handleSuccess}
           params={getParams()}
-          section='honzon'
+          section='acala-dapp'
           size='small'
         >
           Confirm

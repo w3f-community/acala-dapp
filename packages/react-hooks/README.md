@@ -1,1 +1,1 @@
-@honzon-platform/react-hooks
+@acala-dapp/react-hooks

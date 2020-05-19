@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { Dialog } from '@honzon-platform/ui-components';
+import { Dialog } from '@acala-dapp/ui-components';
 
 const POLKADOT_EXTENSIONS_ADDRESS = 'https://chrome.google.com/webstore/detail/polkadot%7Bjs%7D-extension/mopnmbcafieddcagagdcbnhejhlodfdd';
 

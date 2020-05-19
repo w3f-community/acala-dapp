@@ -1,6 +1,6 @@
 import React, { FC, ReactElement } from 'react';
 
-import { Page, Tabs, ComingSoon, Grid } from '@honzon-platform/ui-components';
+import { Page, Tabs, ComingSoon, Grid } from '@acala-dapp/ui-components';
 
 import { Liquid } from './components/Liquid';
 import { StakingPoolProvider } from './components/StakingPoolProvider';

@@ -1,7 +1,7 @@
 import React, { FC, ReactNode } from 'react';
 import Tooltip from '@material-ui/core/Tooltip';
 
-import { Copy } from '@honzon-platform/ui-components';
+import { Copy } from '@acala-dapp/ui-components';
 
 import { formatHash } from '../utils';
 

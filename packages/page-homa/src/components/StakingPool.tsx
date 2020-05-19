@@ -1,6 +1,6 @@
 import React, { FC, useContext, ReactNode } from 'react';
-import { Table, Card, TableItem } from '@honzon-platform/ui-components';
-import { Token, FormatBalance, FormatFixed18 } from '@honzon-platform/react-components';
+import { Table, Card, TableItem } from '@acala-dapp/ui-components';
+import { Token, FormatBalance, FormatFixed18 } from '@acala-dapp/react-components';
 import { CurrencyId } from '@acala-network/types/interfaces';
 import { Fixed18 } from '@acala-network/app-util';
 

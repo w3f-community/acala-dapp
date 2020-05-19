@@ -1,8 +1,8 @@
 import React, { FC, ReactNode } from 'react';
-import { Card, ListConfig, List } from '@honzon-platform/ui-components';
-import { FormatFixed18 } from '@honzon-platform/react-components';
+import { Card, ListConfig, List } from '@acala-dapp/ui-components';
+import { FormatFixed18 } from '@acala-dapp/react-components';
 import { Fixed18, convertToFixed18 } from '@acala-network/app-util';
-import { useCall, useConstants } from '@honzon-platform/react-hooks';
+import { useCall, useConstants } from '@acala-dapp/react-hooks';
 import { Balance } from '@open-web3/orml-types/interfaces';
 
 export const SystemInfoCard: FC = () => {

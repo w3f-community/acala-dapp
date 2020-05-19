@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { ApiStatus } from '@honzon-platform/react-components';
+import { ApiStatus } from '@acala-dapp/react-components';
 
 import { Logo } from './Logo';
 import { Products } from './Products';

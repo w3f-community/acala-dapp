@@ -1,1 +1,1 @@
-@honzon-platform/page-loan
+@acala-dapp/page-homa

@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import AccountId from '@polkadot/types/generic/AccountId';
-import { useAccounts, useCall } from '@honzon-platform/react-hooks';
+import { useAccounts, useCall } from '@acala-dapp/react-hooks';
 import { FormatBalance } from './format';
 import { Balance } from '@acala-network/types/interfaces';
 

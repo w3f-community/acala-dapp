@@ -1,7 +1,7 @@
 import React, { FC, useContext } from 'react';
 import { upperFirst } from 'lodash';
-import { Tabs, TabConfig } from '@honzon-platform/ui-components';
-import { useCouncilList } from '@honzon-platform/react-hooks';
+import { Tabs, TabConfig } from '@acala-dapp/ui-components';
+import { useCouncilList } from '@acala-dapp/react-hooks';
 import { governanceContext } from './provider';
 
 export const CouncilSelector: FC = () => {

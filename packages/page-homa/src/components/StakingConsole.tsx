@@ -3,9 +3,9 @@ import { noop } from 'lodash';
 import { useFormik } from 'formik';
 
 import { Fixed18, convertToFixed18 } from '@acala-network/app-util';
-import { Grid, List } from '@honzon-platform/ui-components';
-import { TxButton, BalanceInput, numToFixed18Inner, FormatBalance } from '@honzon-platform/react-components';
-import { useFormValidator, useBalance } from '@honzon-platform/react-hooks';
+import { Grid, List } from '@acala-dapp/ui-components';
+import { TxButton, BalanceInput, numToFixed18Inner, FormatBalance } from '@acala-dapp/react-components';
+import { useFormValidator, useBalance } from '@acala-dapp/react-hooks';
 
 import classes from './StakingConsole.module.scss';
 import { StakingPoolContext } from './StakingPoolProvider';

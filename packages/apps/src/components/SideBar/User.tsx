@@ -1,8 +1,8 @@
 import React, { FC, memo } from 'react';
 
-import { ReactComponent as WalletIcon } from '@honzon-platform/apps/assets/wallet.svg';
-import { useAccounts } from '@honzon-platform/react-hooks';
-import { FormatAddress } from '@honzon-platform/react-components';
+import { ReactComponent as WalletIcon } from '@acala-dapp/apps/assets/wallet.svg';
+import { useAccounts } from '@acala-dapp/react-hooks';
+import { FormatAddress } from '@acala-dapp/react-components';
 
 import { ProductItem } from './ProductItem';
 import classes from './Sidebar.module.scss';

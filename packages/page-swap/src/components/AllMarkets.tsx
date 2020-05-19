@@ -2,8 +2,8 @@ import React, { FC, useContext, ReactNode } from 'react';
 
 import { CurrencyId } from '@acala-network/types/interfaces';
 
-import { Section, Card, Table, TableItem } from '@honzon-platform/ui-components';
-import { Token, DexExchangeRate, DexPoolSize } from '@honzon-platform/react-components';
+import { Section, Card, Table, TableItem } from '@acala-dapp/ui-components';
+import { Token, DexExchangeRate, DexPoolSize } from '@acala-dapp/react-components';
 
 import { SwapContext } from './SwapProvider';
 

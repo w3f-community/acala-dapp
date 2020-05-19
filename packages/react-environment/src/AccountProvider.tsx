@@ -3,9 +3,9 @@ import React, { useState, useEffect, createContext, FC, useCallback, memo, React
 import { web3Accounts, web3Enable, web3FromAddress } from '@polkadot/extension-dapp';
 import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 
-import { useModal, useApi, useStorage } from '@honzon-platform/react-hooks';
-import { SelectAccount } from '@honzon-platform/react-components';
-import { BareProps } from '@honzon-platform/ui-components/types';
+import { useModal, useApi, useStorage } from '@acala-dapp/react-hooks';
+import { SelectAccount } from '@acala-dapp/react-components';
+import { BareProps } from '@acala-dapp/ui-components/types';
 
 type AccountProviderError = 'NO_EXTENSIONS' | 'NO_ACCOUNTS' | '';
 const ACTIVE_ACCOUNT_KEY = 'active-account';
@@ -30,7 +30,7 @@ interface Props extends BareProps {
 export const AccountProvider: FC<Props> = memo(({
   NoAccounts,
   NoExtensions,
-  applicationName = 'Honzon Platform',
+  applicationName = 'acala-dapp Platform',
   children
 }) => {
   const { api } = useApi();

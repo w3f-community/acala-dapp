@@ -1,10 +1,10 @@
 import React, { FC, memo, ReactNode } from 'react';
 
 import { CurrencyId } from '@acala-network/types/interfaces';
-import { Card, List } from '@honzon-platform/ui-components';
-import { useLoan } from '@honzon-platform/react-hooks';
+import { Card, List } from '@acala-dapp/ui-components';
+import { useLoan } from '@acala-dapp/react-hooks';
 import { Fixed18, convertToFixed18 } from '@acala-network/app-util';
-import { FormatFixed18 } from '@honzon-platform/react-components';
+import { FormatFixed18 } from '@acala-dapp/react-components';
 
 interface Props {
   token: CurrencyId | string;

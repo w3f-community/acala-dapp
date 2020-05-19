@@ -1,12 +1,12 @@
 import React, { FC, memo, useContext } from 'react';
-import { Card } from '@honzon-platform/ui-components';
-import { FormatBalance, FormatFixed18 } from '@honzon-platform/react-components';
+import { Card } from '@acala-dapp/ui-components';
+import { FormatBalance, FormatFixed18 } from '@acala-dapp/react-components';
 
 import { ReactComponent as SystemIcon } from '../assets/system.svg';
 import classes from './Card.module.scss';
 import { DepositContext } from './Provider';
 import { convertToFixed18 } from '@acala-network/app-util';
-import { useDexTotalSystemReward } from '@honzon-platform/react-hooks';
+import { useDexTotalSystemReward } from '@acala-dapp/react-hooks';
 
 export const SystemCard: FC = memo(() => {
   const { exchangeFee } = useContext(DepositContext);

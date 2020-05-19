@@ -1,9 +1,9 @@
 import React, { FC } from 'react';
 
-import { Page, Grid } from '@honzon-platform/ui-components';
+import { Page, Grid } from '@acala-dapp/ui-components';
 
 import { UserCard } from './components/UserCard';
-import { WalletBalanceCard, AirDrop } from '@honzon-platform/react-components';
+import { WalletBalanceCard, AirDrop } from '@acala-dapp/react-components';
 import { Transaction } from './components/Transaction';
 
 const PageWallet: FC = () => {

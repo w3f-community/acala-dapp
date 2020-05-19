@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 
-import { ApiContext, ApiData } from '@honzon-platform/react-environment';
+import { ApiContext, ApiData } from '@acala-dapp/react-environment';
 
 /**
  * @name useApi

@@ -4,9 +4,9 @@ import { useFormik } from 'formik';
 
 import { CurrencyId } from '@acala-network/types/interfaces';
 
-import { Card, nextTick, IconButton } from '@honzon-platform/ui-components';
-import { BalanceInput, TxButton, numToFixed18Inner, DexExchangeRate } from '@honzon-platform/react-components';
-import { useFormValidator } from '@honzon-platform/react-hooks';
+import { Card, nextTick, IconButton } from '@acala-dapp/ui-components';
+import { BalanceInput, TxButton, numToFixed18Inner, DexExchangeRate } from '@acala-dapp/react-components';
+import { useFormValidator } from '@acala-dapp/react-hooks';
 
 import classes from './SwapConsole.module.scss';
 import { SwapInfo } from './SwapInfo';

@@ -1,7 +1,7 @@
 import React, { useContext, FC, ReactNode } from 'react';
-import { Card, TableItem, Table } from '@honzon-platform/ui-components';
-import { useCurrentRedeem } from '@honzon-platform/react-hooks';
-import { TxButton, FormatBalance } from '@honzon-platform/react-components';
+import { Card, TableItem, Table } from '@acala-dapp/ui-components';
+import { useCurrentRedeem } from '@acala-dapp/react-hooks';
+import { TxButton, FormatBalance } from '@acala-dapp/react-components';
 
 import classes from './RedeemList.module.scss';
 import { convertToFixed18, Fixed18 } from '@acala-network/app-util';

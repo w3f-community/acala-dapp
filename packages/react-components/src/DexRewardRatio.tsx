@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { CurrencyId } from '@acala-network/types/interfaces';
-import { useDexReward, useApi } from '@honzon-platform/react-hooks';
+import { useDexReward, useApi } from '@acala-dapp/react-hooks';
 import { convertToFixed18, Fixed18 } from '@acala-network/app-util';
 
 import { FormatFixed18 } from './format';

@@ -1,7 +1,7 @@
 import React, { FC, memo, ReactNode } from 'react';
 import clsx from 'clsx';
 import { CurrencyId } from '@acala-network/types/interfaces';
-import { BareProps } from '@honzon-platform/ui-components/types';
+import { BareProps } from '@acala-dapp/ui-components/types';
 
 import classes from './Token.module.scss';
 import { formatCurrency } from './utils';

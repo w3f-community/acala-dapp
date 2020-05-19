@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import FileCopyOutlinedIcon from '@material-ui/icons/FileCopyOutlined';
 import CopyToClipboard from 'react-copy-to-clipboard';
 
-import { useNotification } from '@honzon-platform/react-hooks';
+import { useNotification } from '@acala-dapp/react-hooks';
 import { BareProps } from './types';
 import classes from './Copy.module.scss';
 

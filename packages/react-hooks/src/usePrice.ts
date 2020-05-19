@@ -5,7 +5,7 @@ import { CurrencyId } from '@acala-network/types/interfaces';
 import { convertToFixed18 } from '@acala-network/app-util';
 import { TimestampedValue } from '@open-web3/orml-types/interfaces';
 
-import { tokenEq, getValueFromTimestampValue } from '@honzon-platform/react-components';
+import { tokenEq, getValueFromTimestampValue } from '@acala-dapp/react-components';
 
 import { useApi } from './useApi';
 import { useCall } from './useCall';

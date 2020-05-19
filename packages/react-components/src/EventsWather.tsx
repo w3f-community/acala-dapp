@@ -1,6 +1,6 @@
 import React, { FC, useEffect } from 'react';
 import { isEmpty } from 'lodash';
-import { useApi } from '@honzon-platform/react-hooks';
+import { useApi } from '@acala-dapp/react-hooks';
 
 export const EventsWather: FC = () => {
   const { api } = useApi();

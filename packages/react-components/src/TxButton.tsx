@@ -1,9 +1,9 @@
 import React, { FC, PropsWithChildren, useState } from 'react';
-import { useAccounts, useApi, useNotification, useHistory } from '@honzon-platform/react-hooks';
-import { Button, ButtonProps } from '@honzon-platform/ui-components';
+import { useAccounts, useApi, useNotification, useHistory } from '@acala-dapp/react-hooks';
+import { Button, ButtonProps } from '@acala-dapp/ui-components';
 import { FormatAddress } from './format';
 import { SubmittableResult, ApiPromise } from '@polkadot/api';
-import { CreateNotification } from '@honzon-platform/ui-components/Notification/context';
+import { CreateNotification } from '@acala-dapp/ui-components/Notification/context';
 import { ITuple } from '@polkadot/types/types';
 import { DispatchError } from '@polkadot/types/interfaces';
 

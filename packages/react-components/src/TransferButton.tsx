@@ -2,9 +2,9 @@ import React, { FC, memo } from 'react';
 import { noop } from 'lodash';
 
 import { CurrencyId } from '@acala-network/types/interfaces/types';
-import { Dialog, Button, Input, FormItem } from '@honzon-platform/ui-components';
-import { useModal, useFormValidator } from '@honzon-platform/react-hooks';
-import { BareProps } from '@honzon-platform/ui-components/types';
+import { Dialog, Button, Input, FormItem } from '@acala-dapp/ui-components';
+import { useModal, useFormValidator } from '@acala-dapp/react-hooks';
+import { BareProps } from '@acala-dapp/ui-components/types';
 import { formatCurrency, numToFixed18Inner } from './utils';
 import { useFormik } from 'formik';
 import { TxButton } from './TxButton';

@@ -1,6 +1,6 @@
 import React, { FC, memo } from 'react';
 
-import { SideBarConfig } from '@honzon-platform/apps/types/sidebar';
+import { SideBarConfig } from '@acala-dapp/apps/types/sidebar';
 
 import { ProductItem } from './ProductItem';
 import classes from './Sidebar.module.scss';

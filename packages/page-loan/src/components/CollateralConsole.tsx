@@ -1,8 +1,8 @@
 import React, { FC } from 'react';
 import { CurrencyId } from '@acala-network/types/interfaces';
-import { Card } from '@honzon-platform/ui-components';
-import { Token, FormatBalance } from '@honzon-platform/react-components';
-import { useLoan, useBalance } from '@honzon-platform/react-hooks';
+import { Card } from '@acala-dapp/ui-components';
+import { Token, FormatBalance } from '@acala-dapp/react-components';
+import { useLoan, useBalance } from '@acala-dapp/react-hooks';
 import { convertToFixed18, Fixed18 } from '@acala-network/app-util';
 
 import classes from './LoanConsole.module.scss';

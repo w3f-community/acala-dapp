@@ -1,1 +1,1 @@
-@honzon-platform/page-wallet
+@acala-dapp/page-wallet

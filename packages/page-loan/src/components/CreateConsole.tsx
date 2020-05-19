@@ -1,10 +1,10 @@
 import React, { FC, useContext } from 'react';
-import { Card, Step } from '@honzon-platform/ui-components';
+import { Card, Step } from '@acala-dapp/ui-components';
 import { SelectCollateral } from './SelectCollateral';
 import classes from './CreateConsole.module.scss';
 import { Generate } from './Generate';
 import { CreateProvider, createProviderContext } from './CreateProvider';
-import { useConstants } from '@honzon-platform/react-hooks';
+import { useConstants } from '@acala-dapp/react-hooks';
 import { Confirm } from './Confirm';
 import { Success } from './Success';
 

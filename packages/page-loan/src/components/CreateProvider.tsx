@@ -1,7 +1,7 @@
 import React, { createContext, useState, FC, useCallback } from 'react';
-import { BareProps } from '@honzon-platform/ui-components/types';
+import { BareProps } from '@acala-dapp/ui-components/types';
 import { CurrencyId } from '@acala-network/types/interfaces';
-import { useLoan } from '@honzon-platform/react-hooks';
+import { useLoan } from '@acala-dapp/react-hooks';
 
 type CREATE_STEP = 'select' | 'generate' | 'confirm' | 'success';
 

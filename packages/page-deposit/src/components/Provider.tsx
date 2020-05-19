@@ -1,8 +1,8 @@
 import React, { createContext, memo, FC, useState, useMemo, useCallback } from 'react';
 import { ACTION_TYPE } from '../types';
-import { BareProps } from '@honzon-platform/ui-components/types';
+import { BareProps } from '@acala-dapp/ui-components/types';
 import { CurrencyId, Rate } from '@acala-network/types/interfaces';
-import { useApi } from '@honzon-platform/react-hooks';
+import { useApi } from '@acala-dapp/react-hooks';
 import { Vec } from '@polkadot/types';
 
 interface DepositContextData {

@@ -2,14 +2,14 @@ import React, { FC, memo, FocusEventHandler, useState, ReactNode } from 'react';
 import clsx from 'clsx';
 
 import { CurrencyId } from '@acala-network/types/interfaces';
-import { useApi } from '@honzon-platform/react-hooks';
-import { BareProps } from '@honzon-platform/ui-components/types';
+import { useApi } from '@acala-dapp/react-hooks';
+import { BareProps } from '@acala-dapp/ui-components/types';
 
 import { Token } from './Token';
 import { TokenSelector } from './TokenSelector';
 import { getCurrencyIdFromName } from './utils';
 import classes from './BalanceInput.module.scss';
-import { Button } from '@honzon-platform/ui-components';
+import { Button } from '@acala-dapp/ui-components';
 
 interface Props extends BareProps {
   currencies?: (CurrencyId | string)[];

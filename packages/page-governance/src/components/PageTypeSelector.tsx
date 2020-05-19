@@ -1,5 +1,5 @@
 import React, { FC, useContext } from 'react';
-import { Tabs, TabConfig } from '@honzon-platform/ui-components';
+import { Tabs, TabConfig } from '@acala-dapp/ui-components';
 import { governanceContext } from './provider';
 import { PageType } from './type';
 

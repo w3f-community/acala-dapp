@@ -1,8 +1,8 @@
 import React, { createContext, FC, useState, useRef, useEffect, useCallback } from 'react';
 import { CurrencyId } from '@acala-network/types/interfaces';
-import { BareProps } from '@honzon-platform/ui-components/types';
-import { useInitialize, useAllLoans } from '@honzon-platform/react-hooks';
-import { PageLoading } from '@honzon-platform/ui-components';
+import { BareProps } from '@acala-dapp/ui-components/types';
+import { useInitialize, useAllLoans } from '@acala-dapp/react-hooks';
+import { PageLoading } from '@acala-dapp/ui-components';
 
 type LoanTab = 'overview' | 'create' | (CurrencyId | string);
 

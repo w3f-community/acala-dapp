@@ -1,10 +1,10 @@
 import React, { FC, memo } from 'react';
-import { Card } from '@honzon-platform/ui-components';
-import { FormatBalance } from '@honzon-platform/react-components';
+import { Card } from '@acala-dapp/ui-components';
+import { FormatBalance } from '@acala-dapp/react-components';
 
 import { ReactComponent as UserIcon } from '../assets/user.svg';
 import classes from './Card.module.scss';
-import { useDexTotalReward, useDexTotalDeposit } from '@honzon-platform/react-hooks';
+import { useDexTotalReward, useDexTotalDeposit } from '@acala-dapp/react-hooks';
 
 export const UserCard: FC = memo(() => {
   const totalRewawrd = useDexTotalReward();

@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import Tooltip from '@material-ui/core/Tooltip';
 
 import { Fixed18 } from '@acala-network/app-util';
-import { BareProps } from '@honzon-platform/ui-components/types';
+import { BareProps } from '@acala-dapp/ui-components/types';
 
 import { thousandth, padEndDecimal } from '../utils';
 import classes from './format.module.scss';

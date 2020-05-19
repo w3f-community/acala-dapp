@@ -1,5 +1,5 @@
 import React, { FC, useContext } from 'react';
-import { Grid } from '@honzon-platform/ui-components';
+import { Grid } from '@acala-dapp/ui-components';
 import { LoanContext } from './LoanProvider';
 import { LiquidationCard } from './LiquidationCard';
 import { CollateralizationCard } from './CollateralizationCard';

@@ -1,8 +1,8 @@
 import React, { FC, memo, useContext } from 'react';
 import { noop } from 'lodash';
 
-import { Dropdown } from '@honzon-platform/ui-components';
-import { formatCurrency } from '@honzon-platform/react-components';
+import { Dropdown } from '@acala-dapp/ui-components';
+import { formatCurrency } from '@acala-dapp/react-components';
 
 import classes from './SelectToken.module.scss';
 import { StakingPoolContext } from './StakingPoolProvider';

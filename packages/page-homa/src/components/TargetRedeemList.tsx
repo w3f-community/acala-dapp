@@ -1,7 +1,7 @@
 import React, { FC, useContext, ReactNode } from 'react';
-import { formatDuration, formatCurrency } from '@honzon-platform/react-components';
-import { Dropdown, DropdownConfig } from '@honzon-platform/ui-components';
-import { BareProps } from '@honzon-platform/ui-components/types';
+import { formatDuration, formatCurrency } from '@acala-dapp/react-components';
+import { Dropdown, DropdownConfig } from '@acala-dapp/ui-components';
+import { BareProps } from '@acala-dapp/ui-components/types';
 import classes from './TargetRedeemList.module.scss';
 import { StakingPoolContext } from './StakingPoolProvider';
 

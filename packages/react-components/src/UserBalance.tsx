@@ -4,8 +4,8 @@ import AccountId from '@polkadot/types/generic/AccountId';
 import { CurrencyId, Balance } from '@acala-network/types/interfaces';
 import { convertToFixed18 } from '@acala-network/app-util';
 
-import { useCall, useAccounts, usePrice } from '@honzon-platform/react-hooks';
-import { BareProps } from '@honzon-platform/ui-components/types';
+import { useCall, useAccounts, usePrice } from '@acala-dapp/react-hooks';
+import { BareProps } from '@acala-dapp/ui-components/types';
 import { FormatFixed18, FormatBalance } from './format';
 import { DerivedPrice } from '@acala-network/api-derive';
 import { getValueFromTimestampValue } from './utils';

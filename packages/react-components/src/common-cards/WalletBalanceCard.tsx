@@ -1,8 +1,8 @@
 import React, { FC, memo, ReactNode } from 'react';
 
 import { CurrencyId } from '@acala-network/types/interfaces';
-import { Table, TableItem, Card } from '@honzon-platform/ui-components';
-import { useAccounts, useConstants } from '@honzon-platform/react-hooks';
+import { Table, TableItem, Card } from '@acala-dapp/ui-components';
+import { useAccounts, useConstants } from '@acala-dapp/react-hooks';
 
 import { Token } from '../Token';
 import { UserBalance } from '../UserBalance';

@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 
-import { Page, Grid } from '@honzon-platform/ui-components';
+import { Page, Grid } from '@acala-dapp/ui-components';
 import { UserCard } from './components/UserCard';
 import { SystemCard } from './components/SystemCard';
 import { SelectAction } from './components/SelectAction';
@@ -8,7 +8,7 @@ import { DepositProvider } from './components/Provider';
 import { Console } from './components/Console';
 import { PoolOverview } from './components/PoolOverview';
 import { Transaction } from './components/Transaction';
-import { WalletBalanceCard, PricesFeedCard } from '@honzon-platform/react-components';
+import { WalletBalanceCard, PricesFeedCard } from '@acala-dapp/react-components';
 
 const PageDeposit: FC = () => {
   return (

@@ -1,12 +1,12 @@
 import React, { FC, memo, useContext, useMemo } from 'react';
 import clsx from 'clsx';
-import { Token, LoanCollateralRate } from '@honzon-platform/react-components';
+import { Token, LoanCollateralRate } from '@acala-dapp/react-components';
 import { CurrencyId } from '@acala-network/types/interfaces';
 
 import { ReactComponent as OverviewIcon } from '../assets/overview.svg';
 import { ReactComponent as AddIcon } from '../assets/add.svg';
 import classes from './LoanTopBar.module.scss';
-import { useAllLoans, filterEmptyLoan } from '@honzon-platform/react-hooks';
+import { useAllLoans, filterEmptyLoan } from '@acala-dapp/react-hooks';
 import { LoanContext } from './LoanProvider';
 
 interface LoanItemProps {

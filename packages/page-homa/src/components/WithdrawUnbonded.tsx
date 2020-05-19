@@ -1,7 +1,7 @@
 import React, { FC, memo, useCallback, useState } from 'react';
-import { Card } from '@honzon-platform/ui-components';
-import { TxButton, formatBalance } from '@honzon-platform/react-components';
-import { useAccounts, useCall } from '@honzon-platform/react-hooks';
+import { Card } from '@acala-dapp/ui-components';
+import { TxButton, formatBalance } from '@acala-dapp/react-components';
+import { useAccounts, useCall } from '@acala-dapp/react-hooks';
 import { BalanceWrapper } from '@acala-network/types/interfaces';
 
 export const WithdrawUnbonded: FC = memo(() => {

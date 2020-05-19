@@ -2,11 +2,11 @@ import React, { FC, ReactNode } from 'react';
 import Identicon from '@polkadot/react-identicon';
 import CopyToClipboard from 'react-copy-to-clipboard';
 
-import { Card, Loading, CopyIcon, Button } from '@honzon-platform/ui-components';
+import { Card, Loading, CopyIcon, Button } from '@acala-dapp/ui-components';
 
-import { useAccounts, useNotification } from '@honzon-platform/react-hooks';
+import { useAccounts, useNotification } from '@acala-dapp/react-hooks';
 import classes from './UserCard.module.scss';
-import { FormatAddress } from '@honzon-platform/react-components';
+import { FormatAddress } from '@acala-dapp/react-components';
 
 export const UserCard: FC = () => {
   const { active, openSelectAccount } = useAccounts();

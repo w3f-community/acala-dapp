@@ -1,12 +1,12 @@
 import React from 'react';
 
-import { ReactComponent as DepositSVG } from '@honzon-platform/apps/assets/deposit.svg';
-import { ReactComponent as TwitterSVG } from '@honzon-platform/apps/assets/twitter.svg';
-import { ReactComponent as EmailSVG } from '@honzon-platform/apps/assets/email.svg';
-import { ReactComponent as LoanSVG } from '@honzon-platform/apps/assets/loan.svg';
-import { ReactComponent as ExchangeSVG } from '@honzon-platform/apps/assets/exchange.svg';
-import { ReactComponent as GovernanceSVG } from '@honzon-platform/apps/assets/governance.svg';
-import { ReactComponent as LiquidSVG } from '@honzon-platform/apps/assets/liquid.svg';
+import { ReactComponent as DepositSVG } from '@acala-dapp/apps/assets/deposit.svg';
+import { ReactComponent as TwitterSVG } from '@acala-dapp/apps/assets/twitter.svg';
+import { ReactComponent as EmailSVG } from '@acala-dapp/apps/assets/email.svg';
+import { ReactComponent as LoanSVG } from '@acala-dapp/apps/assets/loan.svg';
+import { ReactComponent as ExchangeSVG } from '@acala-dapp/apps/assets/exchange.svg';
+import { ReactComponent as GovernanceSVG } from '@acala-dapp/apps/assets/governance.svg';
+import { ReactComponent as LiquidSVG } from '@acala-dapp/apps/assets/liquid.svg';
 
 import { SideBarConfig } from './types/sidebar';
 

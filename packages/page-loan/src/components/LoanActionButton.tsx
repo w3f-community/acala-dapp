@@ -5,9 +5,9 @@ import { useFormik } from 'formik';
 import { CurrencyId } from '@acala-network/types/interfaces';
 import { stableCoinToDebit, Fixed18, LoanHelper } from '@acala-network/app-util';
 
-import { Dialog, ButtonProps, Button, List, ListConfig } from '@honzon-platform/ui-components';
-import { useModal, useFormValidator, useLoan, useConstants } from '@honzon-platform/react-hooks';
-import { BalanceInput, TxButton, FormatBalance, FormatFixed18 } from '@honzon-platform/react-components';
+import { Dialog, ButtonProps, Button, List, ListConfig } from '@acala-dapp/ui-components';
+import { useModal, useFormValidator, useLoan, useConstants } from '@acala-dapp/react-hooks';
+import { BalanceInput, TxButton, FormatBalance, FormatFixed18 } from '@acala-dapp/react-components';
 
 import classes from './LoanActionButton.module.scss';
 
@@ -254,7 +254,7 @@ export const LonaActionButton: FC<Props> = ({
               method='adjustLoan'
               onSuccess={_close}
               params={getParams()}
-              section='honzon'
+              section='acala-dapp'
               size='small'
             >
               Confirm

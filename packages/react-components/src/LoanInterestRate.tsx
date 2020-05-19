@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { CurrencyId } from '@acala-network/types/interfaces';
-import { BareProps } from '@honzon-platform/ui-components/types';
-import { useLoan } from '@honzon-platform/react-hooks';
+import { BareProps } from '@acala-dapp/ui-components/types';
+import { useLoan } from '@acala-dapp/react-hooks';
 import { FormatFixed18 } from './format';
 
 interface Props extends BareProps {

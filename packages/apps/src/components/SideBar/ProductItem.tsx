@@ -1,7 +1,7 @@
 import React, { cloneElement, memo } from 'react';
 import { NavLink } from 'react-router-dom';
 
-import { SideBarItem } from '@honzon-platform/apps/types/sidebar';
+import { SideBarItem } from '@acala-dapp/apps/types/sidebar';
 
 import classes from './Sidebar.module.scss';
 

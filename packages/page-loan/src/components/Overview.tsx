@@ -1,9 +1,9 @@
 import React, { FC, useContext, useState, useEffect, ReactNode } from 'react';
-import { Card, TableItem, Table, Button, Step } from '@honzon-platform/ui-components';
-import { useAllLoans, useLoan, useConstants, filterEmptyLoan } from '@honzon-platform/react-hooks';
+import { Card, TableItem, Table, Button, Step } from '@acala-dapp/ui-components';
+import { useAllLoans, useLoan, useConstants, filterEmptyLoan } from '@acala-dapp/react-hooks';
 import { DerivedUserLoan } from '@acala-network/api-derive';
 import { CurrencyId } from '@acala-network/types/interfaces';
-import { Token, LoanInterestRate, FormatBalance, LoanCollateralRate, formatCurrency } from '@honzon-platform/react-components';
+import { Token, LoanInterestRate, FormatBalance, LoanCollateralRate, formatCurrency } from '@acala-dapp/react-components';
 import { ReactComponent as GuideBG } from '../assets/guide-bg.svg';
 import { convertToFixed18 } from '@acala-network/app-util';
 

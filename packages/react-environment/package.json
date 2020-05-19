@@ -1,10 +1,10 @@
 {
-  "name": "@honzon-platform/react-environment",
+  "name": "@acala-dapp/react-environment",
   "version": "0.2.0",
   "description": "react environment",
   "main": "index.js",
-  "author": "Acala Developers <hello@react.network>",
-  "homepage": "https://github.com/AcalaNetwork/honzon-platform#readme",
+  "author": "Acala Developers <hello@acala.network>",
+  "homepage": "https://github.com/AcalaNetwork/acala-dapp#readme",
   "license": "Apache-2.0",
   "dependencies": {
     "@acala-network/api": "beta",

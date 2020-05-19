@@ -1,1 +1,1 @@
-@honzon-platform/page-governance
+@acala-dapp/page-governance

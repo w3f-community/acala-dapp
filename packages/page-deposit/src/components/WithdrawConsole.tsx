@@ -3,10 +3,10 @@ import { noop } from 'lodash';
 import { useFormik } from 'formik';
 
 import { Vec } from '@polkadot/types';
-import { Card } from '@honzon-platform/ui-components';
+import { Card } from '@acala-dapp/ui-components';
 import { CurrencyId, Share } from '@acala-network/types/interfaces';
-import { BalanceInput, TxButton, numToFixed18Inner, DexExchangeRate, DexPoolSize, DexUserShare } from '@honzon-platform/react-components';
-import { useFormValidator, useDexShare } from '@honzon-platform/react-hooks';
+import { BalanceInput, TxButton, numToFixed18Inner, DexExchangeRate, DexPoolSize, DexUserShare } from '@acala-dapp/react-components';
+import { useFormValidator, useDexShare } from '@acala-dapp/react-hooks';
 import { convertToFixed18 } from '@acala-network/app-util';
 
 import { DepositContext } from './Provider';

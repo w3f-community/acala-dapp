@@ -1,1 +1,1 @@
-@honzon-platform/ui-components
+@acala-dapp/ui-components

@@ -1,8 +1,8 @@
 import React, { FC, useState, useEffect, ReactNode } from 'react';
 
-import { BaseTxHistory, FormatTime, FormatHash, Token, formatBalance, formatCurrency } from '@honzon-platform/react-components';
-import { TableItem, Status } from '@honzon-platform/ui-components';
-import { ExtrinsicHistoryData, useConstants, useApi } from '@honzon-platform/react-hooks';
+import { BaseTxHistory, FormatTime, FormatHash, Token, formatBalance, formatCurrency } from '@acala-dapp/react-components';
+import { TableItem, Status } from '@acala-dapp/ui-components';
+import { ExtrinsicHistoryData, useConstants, useApi } from '@acala-dapp/react-hooks';
 import { Fixed18, debitToStableCoin, convertToFixed18 } from '@acala-network/app-util';
 import { Codec } from '@polkadot/types/types';
 
@@ -137,7 +137,7 @@ export const Transaction: FC = () => {
     <BaseTxHistory
       config={config}
       method='adjust_loan'
-      section='honzon'
+      section='acala-dapp'
     />
   );
 };

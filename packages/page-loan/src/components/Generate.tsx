@@ -5,9 +5,9 @@ import { useFormik } from 'formik';
 import { CurrencyId } from '@acala-network/types/interfaces';
 import { convertToFixed18, Fixed18, LoanHelper } from '@acala-network/app-util';
 
-import { BalanceInput, UserBalance, Token, FormatFixed18, Price, LoanInterestRate, FormatBalance, formatCurrency } from '@honzon-platform/react-components';
-import { useFormValidator, useConstants, useBalance } from '@honzon-platform/react-hooks';
-import { Button, List, ListConfig } from '@honzon-platform/ui-components';
+import { BalanceInput, UserBalance, Token, FormatFixed18, Price, LoanInterestRate, FormatBalance, formatCurrency } from '@acala-dapp/react-components';
+import { useFormValidator, useConstants, useBalance } from '@acala-dapp/react-hooks';
+import { Button, List, ListConfig } from '@acala-dapp/ui-components';
 
 import { createProviderContext } from './CreateProvider';
 import classes from './Generate.module.scss';

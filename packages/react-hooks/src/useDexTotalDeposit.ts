@@ -8,7 +8,7 @@ import { useAccounts } from './useAccounts';
 import { useConstants } from './useConstants';
 import { usePrice } from './usePrice';
 import { DerivedPrice, DerivedDexPool } from '@acala-network/api-derive';
-import { tokenEq, getValueFromTimestampValue } from '@honzon-platform/react-components';
+import { tokenEq, getValueFromTimestampValue } from '@acala-dapp/react-components';
 
 interface HooksReturnType {
   amount: Fixed18;

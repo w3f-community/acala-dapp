@@ -1,1 +1,1 @@
-@honzon-platform/page-deposit
+@acala-dapp/page-deposit

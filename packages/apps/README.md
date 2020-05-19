@@ -1,1 +1,1 @@
-@honzon-platform/apps
+@acala-dapp/apps

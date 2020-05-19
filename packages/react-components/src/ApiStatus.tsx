@@ -1,7 +1,7 @@
 import React, { FC, memo } from 'react';
 
-import { useApi } from '@honzon-platform/react-hooks';
-import { BareProps } from '@honzon-platform/ui-components/types';
+import { useApi } from '@acala-dapp/react-hooks';
+import { BareProps } from '@acala-dapp/ui-components/types';
 
 import classes from './ApiStatus.module.scss';
 import clsx from 'clsx';
