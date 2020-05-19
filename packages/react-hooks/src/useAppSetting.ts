@@ -3,7 +3,11 @@ import parse from 'url-parse';
 
 const DEFAULT_ENDPOINT = 'wss://testnet-node-1.acala.laminar.one/ws';
 
-export const useAppSetting = ({ defaultEndpoint } = { defaultEndpoint: DEFAULT_ENDPOINT }) => {
+interface HooksReturnType {
+  endpoint: string;
+}
+
+export const useAppSetting = (): HooksReturnType => {
   const [endpoint, setEndpoint] = useState<string>('');
   const url = parse(window.location.href, true);
 

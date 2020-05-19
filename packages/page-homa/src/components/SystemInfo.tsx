@@ -17,28 +17,31 @@ export const SystemInfo: FC = () => {
   const listConfig: ListConfig[] = [
     {
       key: 'liquidExchangeRate',
-      title: `Exchange Rate (${formatCurrency(stakingPool.stakingCurrency)} / ${formatCurrency(stakingPool.liquidCurrency)})`,
-      render: (data): ReactNode => <FormatFixed18 data={data} />
+      /* eslint-disable-next-line react/display-name */
+      render: (data): ReactNode => <FormatFixed18 data={data} />,
+      title: `Exchange Rate (${formatCurrency(stakingPool.stakingCurrency)} / ${formatCurrency(stakingPool.liquidCurrency)})`
     },
     {
       key: 'maxRatio',
-      title: 'Max Bonding Ratio',
+      /* eslint-disable-next-line react/display-name */
       render: (data): ReactNode => (
         <FormatFixed18
           data={data}
           format='percentage'
         />
-      )
+      ),
+      title: 'Max Bonding Ratio'
     },
     {
       key: 'minRatio',
-      title: 'Min Bonding Ratio',
+      /* eslint-disable-next-line react/display-name */
       render: (data): ReactNode => (
         <FormatFixed18
           data={data}
           format='percentage'
         />
-      )
+      ),
+      title: 'Min Bonding Ratio'
     }
   ];
 
@@ -49,8 +52,8 @@ export const SystemInfo: FC = () => {
   };
 
   return (
-    <Card padding={false}
-      header='System Info'>
+    <Card header='System Info'
+      padding={false}>
       <List config={listConfig}
         data={listData} />
     </Card>

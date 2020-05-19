@@ -1,4 +1,4 @@
-import React, { FC, memo } from 'react';
+import React, { FC, memo, ReactNode } from 'react';
 
 import { CurrencyId } from '@acala-network/types/interfaces';
 import { Card, List } from '@honzon-platform/ui-components';
@@ -17,7 +17,8 @@ export const LiquidationCard: FC<Props> = memo(({
   const listConfig = [
     {
       key: 'price',
-      render: (data: Fixed18) => (
+      /* eslint-disable-next-line react/display-name */
+      render: (data: Fixed18): ReactNode => (
         <FormatFixed18
           data={data}
           prefix='$'
@@ -28,7 +29,8 @@ export const LiquidationCard: FC<Props> = memo(({
     },
     {
       key: 'ratio',
-      render: (data: Fixed18) => (
+      /* eslint-disable-next-line react/display-name */
+      render: (data: Fixed18): ReactNode => (
         <FormatFixed18
           data={data}
           format='percentage'
@@ -38,7 +40,8 @@ export const LiquidationCard: FC<Props> = memo(({
     },
     {
       key: 'penalty',
-      render: (data: Fixed18) => (
+      /* eslint-disable-next-line react/display-name */
+      render: (data: Fixed18): ReactNode => (
         <FormatFixed18
           data={data}
           format='percentage'
@@ -49,15 +52,15 @@ export const LiquidationCard: FC<Props> = memo(({
   ];
 
   const data = {
+    penalty: convertToFixed18(currentLoanType ? currentLoanType.liquidationPenalty : 0),
     price: currentUserLoanHelper?.liquidationPrice,
-    ratio: currentUserLoanHelper?.liquidationRatio,
-    penalty: convertToFixed18(currentLoanType ? currentLoanType.liquidationPenalty : 0)
+    ratio: currentUserLoanHelper?.liquidationRatio
   };
 
   return (
     <Card
-      padding={false}
       header='Liquidation'
+      padding={false}
     >
       <List
         config={listConfig}

@@ -4,7 +4,7 @@ import { CurrencyId } from '@acala-network/types/interfaces';
 import { TxButton, DexReward, TokenSelector } from '@honzon-platform/react-components';
 import { DepositContext } from './Provider';
 import classes from './RewardConsole.module.scss';
-import { useFormValidator, useDexReward, useConstants } from '@honzon-platform/react-hooks';
+import { useDexReward, useConstants } from '@honzon-platform/react-hooks';
 import { ReactComponent as RightArrowIcon } from '../assets/right-arrow.svg';
 
 interface InputAreaProps {
@@ -61,8 +61,8 @@ export const RewardConsole: FC = memo(() => {
         />
         <TxButton
           addon={{
-            currency: otherCurrency.toString(),
-            amount
+            amount,
+            currency: otherCurrency.toString()
           }}
           className={classes.txBtn}
           disabled={checkDisabled()}

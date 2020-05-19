@@ -1,4 +1,4 @@
-import React, { FC, useContext } from 'react';
+import React, { FC, useContext, ReactNode } from 'react';
 import { Table, Card, TableItem } from '@honzon-platform/ui-components';
 import { Token, FormatBalance, FormatFixed18 } from '@honzon-platform/react-components';
 import { CurrencyId } from '@acala-network/types/interfaces';
@@ -7,61 +7,68 @@ import { Fixed18 } from '@acala-network/app-util';
 import { StakingPoolContext } from './StakingPoolProvider';
 
 export const StakingPool: FC = () => {
-  const { rewardRate, stakingPool, stakingPoolHelper } = useContext(StakingPoolContext);
+  const { stakingPool, stakingPoolHelper } = useContext(StakingPoolContext);
   const tableConfig: TableItem<any>[] = [
     {
       align: 'left',
-      title: 'Pool',
       dataIndex: 'token',
-      render: (value: CurrencyId) => (
+      /* eslint-disable-next-line react/display-name */
+      render: (value: CurrencyId): ReactNode => (
         <Token
-          token={value}
           icon
+          token={value}
         />
-      )
+      ),
+      title: 'Pool'
     },
     {
-      title: 'Total',
       dataIndex: 'total',
-      render: (value: Fixed18) => <FormatBalance balance={value} />,
+      /* eslint-disable-next-line react/display-name */
+      render: (value: Fixed18): ReactNode => <FormatBalance balance={value} />,
+      title: 'Total'
     },
     {
-      title: 'Total Bonded',
       dataIndex: 'totalBonded',
-      render: (value: Fixed18) => <FormatBalance balance={value} />,
+      /* eslint-disable-next-line react/display-name */
+      render: (value: Fixed18): ReactNode => <FormatBalance balance={value} />,
+      title: 'Total Bonded'
     },
     {
-      title: 'Total Free',
       dataIndex: 'totalFree',
-      render: (value: Fixed18) => <FormatBalance balance={value} />,
+      /* eslint-disable-next-line react/display-name */
+      render: (value: Fixed18): ReactNode => <FormatBalance balance={value} />,
+      title: 'Total Free'
     },
     {
-      title: 'Unbonding',
       dataIndex: 'totalUnbonding',
-      render: (value: Fixed18) => <FormatBalance balance={value} />,
+      /* eslint-disable-next-line react/display-name */
+      render: (value: Fixed18): ReactNode => <FormatBalance balance={value} />,
+      title: 'Unbonding'
     },
     {
       align: 'right',
-      title: 'Bond Ratio',
       dataIndex: 'bondRatio',
-      render: (value: Fixed18) => (
-          <FormatFixed18
-            data={value}
-            format='percentage'
-          />
-        ),
+      /* eslint-disable-next-line react/display-name */
+      render: (value: Fixed18): ReactNode => (
+        <FormatFixed18
+          data={value}
+          format='percentage'
+        />
+      ),
+      title: 'Bond Ratio'
     }
   ];
   const data = [
     {
+      bondRatio: stakingPoolHelper?.communalBondedRatio,
       token: stakingPool?.stakingCurrency,
       total: stakingPoolHelper?.communalTotal,
       totalBonded: stakingPoolHelper?.totalBonded,
       totalFree: stakingPoolHelper?.communalFree,
-      totalUnbonding: stakingPoolHelper?.unbondingToFree,
-      bondRatio: stakingPoolHelper?.communalBondedRatio
+      totalUnbonding: stakingPoolHelper?.unbondingToFree
     }
-  ]
+  ];
+
   return (
     <Card
       header='Staking Pools'
@@ -74,4 +81,4 @@ export const StakingPool: FC = () => {
       />
     </Card>
   );
-}
+};

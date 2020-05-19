@@ -27,7 +27,7 @@ export const LoanProvider: FC<BareProps> = ({
   const setCurrentTab = useCallback((tab: LoanTab) => {
     prevTabRef.current = currentTab;
     _setCurrentTab(tab);
-  }, [_setCurrentTab]);
+  }, [currentTab]);
 
   const showOverview = useCallback(() => {
     setCurrentTab('overview');
@@ -36,7 +36,7 @@ export const LoanProvider: FC<BareProps> = ({
   const showCreate = useCallback(() => {
     prevTabRef.current = currentTab;
     setCurrentTab('create');
-  }, [setCurrentTab]);
+  }, [currentTab, setCurrentTab]);
 
   const cancelCurrentTab = useCallback(() => {
     setCurrentTab(prevTabRef.current);
@@ -46,16 +46,16 @@ export const LoanProvider: FC<BareProps> = ({
     if (loans) {
       setEnd();
     }
-  }, [loans]);
+  }, [loans, setEnd]);
 
   return (
     <LoanContext.Provider
       value={{
+        cancelCurrentTab,
         currentTab,
         setCurrentTab,
         showCreate,
-        showOverview,
-        cancelCurrentTab
+        showOverview
       }}
     >
       {

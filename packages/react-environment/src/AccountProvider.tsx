@@ -1,4 +1,4 @@
-import React, { useState, useEffect, createContext, FC, useCallback, memo, ReactNode, useMemo } from 'react';
+import React, { useState, useEffect, createContext, FC, useCallback, memo, ReactNode } from 'react';
 
 import { web3Accounts, web3Enable, web3FromAddress } from '@polkadot/extension-dapp';
 import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
@@ -63,7 +63,7 @@ export const AccountProvider: FC<Props> = memo(({
     return true;
   }, [applicationName]);
 
-  const setActiveAccount = async (account: InjectedAccountWithMeta): Promise<void> => {
+  const setActiveAccount = useCallback(async (account: InjectedAccountWithMeta): Promise<void> => {
     try {
       const injector = await web3FromAddress(account.address);
 
@@ -74,7 +74,7 @@ export const AccountProvider: FC<Props> = memo(({
     } catch (e) {
       setReady(false);
     }
-  };
+  }, [api, setActive, setReady, setStorage]);
 
   const openSelectAccount = useCallback((): void => {
     open();
@@ -106,7 +106,7 @@ export const AccountProvider: FC<Props> = memo(({
     }
   }, [accounts, active, getStorage, openSelectAccount, setActiveAccount]);
 
-  const handleAccountSelect = async (account: InjectedAccountWithMeta) => {
+  const handleAccountSelect = async (account: InjectedAccountWithMeta): Promise<void> => {
     await setActiveAccount(account);
     closeSelectAccount();
   };
@@ -128,10 +128,10 @@ export const AccountProvider: FC<Props> = memo(({
       value={{
         accounts,
         active,
+        closeSelectAccount,
         error,
-        ready,
         openSelectAccount,
-        closeSelectAccount
+        ready
       }}
     >
       <SelectAccount

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useCallback, useState } from 'react';
-import { Subject, interval} from 'rxjs';
+import { Subject, interval } from 'rxjs';
 import axios from 'axios';
 
 interface QueryParams {
@@ -22,7 +22,7 @@ export interface ExtrinsicHistoryData {
   [k: string]: any;
 }
 
-function formatHistory (origin: any[]) {
+function formatHistory (origin: any[]): ExtrinsicHistoryData[] {
   if (!origin) {
     return [];
   }
@@ -32,19 +32,19 @@ function formatHistory (origin: any[]) {
 
     try {
       params = JSON.parse(item.params);
-    } catch(_error) {
+    } catch (_error) {
       // swallow error
     }
 
     return {
+      blockNum: item.block_num,
       hash: item.extrinsic_hash,
       method: item.call_module_function,
       params: params.map((item: any) => item.value),
       section: item.call_module,
       signer: item.account_id,
-      time: item.block_timestamp,
-      blockNum: item.block_num,
-      success: item.success
+      success: item.success,
+      time: item.block_timestamp
     };
   });
 }
@@ -77,31 +77,33 @@ const SUBSCAN_TX = 'https://acala-testnet.subscan.io/api/scan/extrinsics';
 
 export const useHistory = (query?: QueryParams): HooksReturnType => {
   const savedQuery = useRef<string>('');
-  const paginationRef = useRef<Pagination>({ currentPage: 0, total: 0, pageSize: 10 });
-  const [pagination, setPagination] = useState<Pagination>({ currentPage: 0, total: 0, pageSize: 10 });
+  const paginationRef = useRef<Pagination>({
+    currentPage: 0,
+    pageSize: 5,
+    total: 0
+  });
+  const [pagination, setPagination] = useState<Pagination>({
+    currentPage: 0,
+    pageSize: 5,
+    total: 0
+  });
   const [data, setData] = useState<ExtrinsicHistoryData[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | undefined>();
 
-  // const { data, loading, error, run } = useRequest({
-  //   url: '',
-  //   method: 'POST',
-  //   manual: true,
-  //   data: {
-  //   },
-  // });
-
   const fetch = useCallback((pagination: Pagination) => {
     setLoading(true);
 
-    axios.post(SUBSCAN_TX, {
+    const url = SUBSCAN_TX;
+
+    axios.post(url, {
       address: query?.signer,
       call: query?.method,
       module: query?.section,
       page: pagination.currentPage,
       row: pagination.pageSize
     }).then((result) => {
-      if (result.status === 200 && result.data.code == 0) {
+      if (result.status === 200 && result.data.code === 0) {
         setData(formatHistory(result?.data?.data?.extrinsics));
         paginationRef.current.total = result?.data?.data?.count;
         setPagination({ ...paginationRef.current });
@@ -119,7 +121,7 @@ export const useHistory = (query?: QueryParams): HooksReturnType => {
     refresh$.subscribe(() => {
       fetch(pagination);
     });
-  }, []);
+  }, [fetch, pagination]);
 
   useEffect(() => {
     if (!query) {
@@ -130,8 +132,7 @@ export const useHistory = (query?: QueryParams): HooksReturnType => {
       fetch(paginationRef.current);
       savedQuery.current = JSON.stringify(query);
     }
-
-  }, [query]);
+  }, [fetch, query]);
 
   const onPaginationChagne = useCallback((data: Partial<Pagination>) => {
     paginationRef.current = {
@@ -140,13 +141,20 @@ export const useHistory = (query?: QueryParams): HooksReturnType => {
     };
 
     fetch(paginationRef.current);
-  }, [setPagination]);
+  }, [fetch]);
 
   const refresh = useCallback((delay = 0) => {
     setTimeout(() => {
       refresh$.next(count++);
-    }, delay)
+    }, delay);
   }, []);
 
-  return { data, loading, error, refresh, pagination, onPaginationChagne };
+  return {
+    data,
+    error,
+    loading,
+    onPaginationChagne,
+    pagination,
+    refresh
+  };
 };

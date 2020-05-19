@@ -1,4 +1,4 @@
-import React, { FC, useContext } from 'react';
+import React, { FC, ReactNode } from 'react';
 import { CurrencyId } from '@acala-network/types/interfaces';
 import { Card, ListConfig, List } from '@honzon-platform/ui-components';
 import { FormatFixed18 } from '@honzon-platform/react-components';
@@ -17,7 +17,8 @@ export const CollateralizationCard: FC<Props> = ({
   const listConfig: ListConfig[] = [
     {
       key: 'currentRatio',
-      render: (data: Fixed18) => (
+      /* eslint-disable-next-line react/display-name */
+      render: (data: Fixed18): ReactNode => (
         <FormatFixed18
           data={data}
           format='percentage'
@@ -28,7 +29,8 @@ export const CollateralizationCard: FC<Props> = ({
     },
     {
       key: 'requiredRatio',
-      render: (data: Fixed18) => (
+      /* eslint-disable-next-line react/display-name */
+      render: (data: Fixed18): ReactNode => (
         <FormatFixed18
           data={data}
           format='percentage'
@@ -38,7 +40,8 @@ export const CollateralizationCard: FC<Props> = ({
     },
     {
       key: 'interestRate',
-      render: (data: Fixed18) => (
+      /* eslint-disable-next-line react/display-name */
+      render: (data: Fixed18): ReactNode => (
         <FormatFixed18
           data={data}
           format='percentage'
@@ -50,14 +53,14 @@ export const CollateralizationCard: FC<Props> = ({
 
   const data = {
     currentRatio: currentUserLoanHelper?.collateralRatio,
-    requiredRatio: currentUserLoanHelper?.requiredCollateralRatio,
-    interestRate: currentUserLoanHelper?.stableFeeAPR
+    interestRate: currentUserLoanHelper?.stableFeeAPR,
+    requiredRatio: currentUserLoanHelper?.requiredCollateralRatio
   };
 
   return (
     <Card
-      padding={false}
       header='Collateralization'
+      padding={false}
     >
       <List
         config={listConfig}

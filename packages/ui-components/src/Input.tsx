@@ -3,14 +3,14 @@ import clsx from 'clsx';
 
 import classes from './Input.module.scss';
 
-interface Props extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size' | 'prefix'> {
+export interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size' | 'prefix'> {
   error?: boolean;
   size?: 'small' | 'large' | 'normal';
   suffix?: ReactNode;
   prefix?: ReactNode;
 }
 
-export const Input: FC<Props> = ({
+export const Input: FC<InputProps> = ({
   className,
   error,
   prefix,
@@ -20,11 +20,11 @@ export const Input: FC<Props> = ({
 }) => {
   const [focused, setFocused] = useState<boolean>(false);
 
-  const onFocus: FocusEventHandler<HTMLInputElement> = (e) => {
+  const onFocus: FocusEventHandler<HTMLInputElement> = () => {
     setFocused(true);
   };
 
-  const onBlur: FocusEventHandler<HTMLInputElement> = (e) => {
+  const onBlur: FocusEventHandler<HTMLInputElement> = () => {
     setFocused(false);
   };
 
@@ -44,9 +44,9 @@ export const Input: FC<Props> = ({
     >
       {prefix ? <span>{prefix}</span> : null}
       <input
-        onFocus={onFocus}
-        onBlur={onBlur}
         className={classes.input}
+        onBlur={onBlur}
+        onFocus={onFocus}
         {...other}
       />
       {suffix ? <span>{suffix}</span> : null}

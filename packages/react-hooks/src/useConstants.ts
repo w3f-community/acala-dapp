@@ -6,12 +6,22 @@ import { Vec } from '@polkadot/types';
 
 import { useApi } from './useApi';
 
-export const useConstants = () => {
+interface HooksReturnType {
+  allCurrencyIds: CurrencyId[];
+  dexBaseCurrency: CurrencyId;
+  dexCurrencies: Vec<CurrencyId>;
+  expectedBlockTime: number;
+  nativeCurrency: CurrencyId;
+  stableCurrency: CurrencyId;
+}
+
+export const useConstants = (): HooksReturnType => {
   const { api } = useApi();
 
   // all currencies id
-  const allCurrencyIds = useMemo(() => {
+  const allCurrencyIds = useMemo((): CurrencyId[] => {
     const tokenList = api.registry.createType('CurrencyId' as any).defKeys as string[];
+
     return tokenList.map((name: string): CurrencyId => {
       return api.registry.createType('CurrencyId' as any, name) as CurrencyId;
     });
@@ -34,10 +44,10 @@ export const useConstants = () => {
 
   return {
     allCurrencyIds,
-    dexCurrencies,
     dexBaseCurrency,
+    dexCurrencies,
     expectedBlockTime,
-    stableCurrency,
     nativeCurrency,
-  }
+    stableCurrency
+  };
 };

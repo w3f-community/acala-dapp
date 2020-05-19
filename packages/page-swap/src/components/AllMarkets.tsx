@@ -12,24 +12,30 @@ export const AllMarkets: FC = () => {
   const _supplyCurrencies = supplyCurrencies.filter((item: string | CurrencyId) => item.toString() !== dexBaseCurrency.toString());
   const tableConfig: TableItem<string | CurrencyId>[] = [
     {
-      title: 'Token Pair',
       align: 'left',
+      /* eslint-disable-next-line react/display-name */
       render: (token: string | CurrencyId): ReactNode => (
         <Token
           icon
           token={token}
         />
-      )
+      ),
+      title: 'Token Pair',
+      width: 1
     },
     {
+      align: 'left',
+      /* eslint-disable-next-line react/display-name */
+      render: (token: string | CurrencyId): ReactNode => <DexExchangeRate supply={token} />,
       title: 'Market Price',
-      align: 'left',
-      render: (token: string | CurrencyId): ReactNode => <DexExchangeRate supply={token} />
+      width: 3
     },
     {
-      title: 'Pool Size',
       align: 'left',
-      render: (token: string | CurrencyId): ReactNode => <DexPoolSize token={token} />
+      /* eslint-disable-next-line react/display-name */
+      render: (token: string | CurrencyId): ReactNode => <DexPoolSize token={token} />,
+      title: 'Pool Size',
+      width: 3
     }
   ];
 

@@ -14,23 +14,23 @@ export const LoanConsole: FC = () => {
       direction='column'>
       <Grid container
         item>
-        <Grid xs={6}
-          item>
+        <Grid item
+          xs={6}>
           <LiquidationCard token={currentTab} />
         </Grid>
-        <Grid xs={6}
-          item>
+        <Grid item
+          xs={6}>
           <CollateralizationCard token={currentTab} />
         </Grid>
       </Grid>
       <Grid container
         item>
-        <Grid xs={6}
-          item>
+        <Grid item
+          xs={6}>
           <BorrowedConsole token={currentTab} />
         </Grid>
-        <Grid xs={6}
-          item>
+        <Grid item
+          xs={6}>
           <CollateralConsole token={currentTab} />
         </Grid>
       </Grid>

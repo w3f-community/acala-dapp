@@ -64,24 +64,24 @@ export const DepositConsole: FC = memo(() => {
   const [otherCurrency, setOtherCurrency] = useState<CurrencyId>(enabledCurrencyIds[0]);
   const rate = useDexExchangeRate(otherCurrency);
   const validator = useFormValidator({
-    other: {
-      type: 'balance',
-      currency: otherCurrency,
-      min: 0
-    },
     base: {
-      type: 'balance',
       currency: baseCurrencyId,
-      min: 0
+      min: 0,
+      type: 'balance'
+    },
+    other: {
+      currency: otherCurrency,
+      min: 0,
+      type: 'balance'
     }
   });
   const form = useFormik({
     initialValues: {
-      other: '',
-      base: ''
+      base: '',
+      other: ''
     },
-    validate: validator,
-    onSubmit: noop
+    onSubmit: noop,
+    validate: validator
   });
 
   const handleOtherInput = (event: React.ChangeEvent<any>): void => {
@@ -91,12 +91,12 @@ export const DepositConsole: FC = memo(() => {
     nextTick(() => { form.setFieldValue('base', Fixed18.fromNatural(value).mul(rate).toNumber()); });
   };
 
-  const handleSuccess = () => {
+  const handleSuccess = (): void => {
     // reset form
     form.resetForm();
   };
 
-  const checkDisabled = () => {
+  const checkDisabled = (): boolean => {
     if (!(form.values.base && form.values.other)) {
       return true;
     }
@@ -110,7 +110,7 @@ export const DepositConsole: FC = memo(() => {
 
   useEffect(() => {
     form.resetForm();
-  }, [otherCurrency])
+  }, [form, otherCurrency]);
 
   return (
     <Card>
@@ -123,7 +123,7 @@ export const DepositConsole: FC = memo(() => {
           onChange={handleOtherInput}
           onTokenChange={setOtherCurrency}
           token={otherCurrency}
-          value={form.values.other as any as number}
+          value={form.values.other as number}
         />
         <AddIcon className={classes.addIcon} />
         <InputArea
@@ -133,7 +133,7 @@ export const DepositConsole: FC = memo(() => {
           name={'base'}
           onChange={form.handleChange}
           token={baseCurrencyId}
-          value={form.values.base as any as number}
+          value={form.values.base as number}
         />
         <TxButton
           className={classes.txBtn}

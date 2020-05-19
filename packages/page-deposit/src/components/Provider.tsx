@@ -1,10 +1,9 @@
-import React, { createContext, memo, FC, useState, useMemo, useCallback, useContext } from 'react';
+import React, { createContext, memo, FC, useState, useMemo, useCallback } from 'react';
 import { ACTION_TYPE } from '../types';
 import { BareProps } from '@honzon-platform/ui-components/types';
 import { CurrencyId, Rate } from '@acala-network/types/interfaces';
 import { useApi } from '@honzon-platform/react-hooks';
 import { Vec } from '@polkadot/types';
-import { globalStoreContext } from '@honzon-platform/react-environment';
 
 interface DepositContextData {
   action: ACTION_TYPE;
@@ -19,7 +18,6 @@ export const DepositContext = createContext<DepositContextData>({} as DepositCon
 export const DepositProvider: FC<BareProps> = memo(({ children }) => {
   const { api } = useApi();
   const [action, _setAction] = useState<ACTION_TYPE>('deposit');
-  const { store } = useContext(globalStoreContext);
 
   const enabledCurrencyIds = useMemo(() => api.consts.dex.enabledCurrencyIds as Vec<CurrencyId>, [api]);
 

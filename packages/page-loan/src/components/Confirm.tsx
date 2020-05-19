@@ -1,34 +1,34 @@
-import React, { FC, useContext, useEffect, useState, useMemo } from 'react';
+import React, { FC, useContext, useMemo, ReactNode } from 'react';
 
 import { FormatBalance, FormatFixed18, TxButton, numToFixed18Inner } from '@honzon-platform/react-components';
 import { createProviderContext } from './CreateProvider';
-import { useLoan, useConstants } from '@honzon-platform/react-hooks';
-import { Fixed18, stableCoinToDebit, convertToFixed18, LoanHelper } from '@acala-network/app-util';
+import { useConstants } from '@honzon-platform/react-hooks';
+import { Fixed18, stableCoinToDebit, convertToFixed18 } from '@acala-network/app-util';
 import { List, Button } from '@honzon-platform/ui-components';
 import classes from './Confirm.module.scss';
 import { LoanContext } from './LoanProvider';
 
-let count = 0;
 export const Confirm: FC = () => {
   const {
-    deposit,
-    generate,
-    selectedToken,
-    setStep,
     currentLoanType,
     currentUserLoan,
-    getUserLoanHelper 
+    deposit,
+    generate,
+    getUserLoanHelper,
+    selectedToken,
+    setStep
   } = useContext(createProviderContext);
   const { cancelCurrentTab } = useContext(LoanContext);
   const { stableCurrency } = useConstants();
   const loanHelper = useMemo(() => {
     return getUserLoanHelper(currentUserLoan, currentLoanType, deposit, generate);
-  }, [generate, deposit, currentUserLoan, currentLoanType])
+  }, [getUserLoanHelper, currentUserLoan, currentLoanType, deposit, generate]);
 
   const listConfig = [
     {
       key: 'depositing',
-      render: (value: number) => {
+      /* eslint-disable-next-line react/display-name */
+      render: (): ReactNode => {
         return (
           <FormatBalance
             balance={deposit}
@@ -40,7 +40,8 @@ export const Confirm: FC = () => {
     },
     {
       key: 'borrowing',
-      render: (value: number) => {
+      /* eslint-disable-next-line react/display-name */
+      render: (): ReactNode => {
         return (
           <FormatBalance
             balance={generate}
@@ -52,7 +53,8 @@ export const Confirm: FC = () => {
     },
     {
       key: 'collateralizationRatio',
-      render: (data: Fixed18) => {
+      /* eslint-disable-next-line react/display-name */
+      render: (data: Fixed18): ReactNode => {
         return (
           <FormatFixed18
             data={data}
@@ -64,7 +66,8 @@ export const Confirm: FC = () => {
     },
     {
       key: 'liquidationRatio',
-      render: (data: Fixed18) => {
+      /* eslint-disable-next-line react/display-name */
+      render: (data: Fixed18): ReactNode => {
         return (
           <FormatFixed18
             data={data}
@@ -76,7 +79,8 @@ export const Confirm: FC = () => {
     },
     {
       key: 'liquidationPenalty',
-      render: (data: Fixed18) => {
+      /* eslint-disable-next-line react/display-name */
+      render: (data: Fixed18): ReactNode => {
         return (
           <FormatFixed18
             data={data}
@@ -88,7 +92,8 @@ export const Confirm: FC = () => {
     },
     {
       key: 'liuqidationPrice',
-      render: (data: Fixed18) => {
+      /* eslint-disable-next-line react/display-name */
+      render: (data: Fixed18): ReactNode => {
         return (
           <FormatFixed18
             data={data}
@@ -100,7 +105,8 @@ export const Confirm: FC = () => {
     },
     {
       key: 'interestRate',
-      render: (data: Fixed18) => {
+      /* eslint-disable-next-line react/display-name */
+      render: (data: Fixed18): ReactNode => {
         return (
           <FormatFixed18
             data={data}
@@ -114,19 +120,19 @@ export const Confirm: FC = () => {
 
   const data = {
     collateralizationRatio: loanHelper?.collateralRatio,
-    liquidationRatio: loanHelper?.liquidationRatio,
+    interestRate: loanHelper?.stableFeeAPR,
     liquidationPenalty: convertToFixed18(currentLoanType?.liquidationPenalty || 0),
-    liuqidationPrice: loanHelper?.liquidationPrice,
-    interestRate: loanHelper?.stableFeeAPR
+    liquidationRatio: loanHelper?.liquidationRatio,
+    liuqidationPrice: loanHelper?.liquidationPrice
   };
 
   const checkDisabled = (): boolean => {
     return false;
   };
 
-  const getParams = () => {
+  const getParams = (): string[] => {
     const _params = [
-      selectedToken,
+      selectedToken.toString(),
       numToFixed18Inner(deposit),
       '0'
     ];
@@ -141,11 +147,11 @@ export const Confirm: FC = () => {
     return _params;
   };
 
-  const handleSuccess = () => {
+  const handleSuccess = (): void => {
     setStep('success');
   };
 
-  const handlePrevious = () => {
+  const handlePrevious = (): void => {
     setStep('generate');
   };
 

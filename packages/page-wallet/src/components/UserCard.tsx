@@ -1,4 +1,4 @@
-import React, { memo, FC, ReactNode } from 'react';
+import React, { FC, ReactNode } from 'react';
 import Identicon from '@polkadot/react-identicon';
 import CopyToClipboard from 'react-copy-to-clipboard';
 
@@ -8,7 +8,7 @@ import { useAccounts, useNotification } from '@honzon-platform/react-hooks';
 import classes from './UserCard.module.scss';
 import { FormatAddress } from '@honzon-platform/react-components';
 
-export const UserCard: FC = memo(() => {
+export const UserCard: FC = () => {
   const { active, openSelectAccount } = useAccounts();
   const { createNotification } = useNotification();
 
@@ -20,9 +20,9 @@ export const UserCard: FC = memo(() => {
     const handleCopy = (): void => {
       createNotification({
         icon: 'success',
-        type: 'success',
+        removedDelay: 2000,
         title: 'Copy Success',
-        removedDelay: 2000
+        type: 'success'
       });
     };
 
@@ -71,4 +71,4 @@ export const UserCard: FC = memo(() => {
       {active ? renderContent() : <Loading />}
     </Card>
   );
-});
+};

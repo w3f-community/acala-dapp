@@ -7,7 +7,7 @@ import { useApi } from './useApi';
 import { useAccounts } from './useAccounts';
 import { useConstants } from './useConstants';
 
-const calcTotalReward = (rewards: Fixed18[], callback: (result: Fixed18) => void) => {
+const calcTotalReward = (rewards: Fixed18[], callback: (result: Fixed18) => void): void => {
   const total = rewards.reduce((acc, cur) => {
     return acc.add(cur);
   }, Fixed18.ZERO);
@@ -15,8 +15,12 @@ const calcTotalReward = (rewards: Fixed18[], callback: (result: Fixed18) => void
   callback(total);
 };
 
+interface HooksReturnType {
+  amount: Fixed18;
+  token: CurrencyId;
+}
 
-export const useDexTotalReward = () => {
+export const useDexTotalReward = (): HooksReturnType => {
   const { api } = useApi();
   const { active } = useAccounts();
   const { dexCurrencies, stableCurrency } = useConstants();
@@ -24,8 +28,8 @@ export const useDexTotalReward = () => {
 
   const getReward = useCallback(async (currency: CurrencyId) => {
     const _totalInterest = await api.query.dex.totalInterest(currency);
-    const _withdrawnInterest = await api.query.dex.withdrawnInterest(currency, active!.address);
-    const _share = await api.query.dex.shares(currency, active!.address);
+    const _withdrawnInterest = await api.query.dex.withdrawnInterest(currency, active?.address);
+    const _share = await api.query.dex.shares(currency, active?.address);
     const _totalShares = await api.query.dex.totalShares(currency);
     const totalInterest = convertToFixed18(_totalInterest);
     const withdrawnInterest = convertToFixed18(_withdrawnInterest);
@@ -39,15 +43,16 @@ export const useDexTotalReward = () => {
   const run = useCallback(() => {
     api.rpc.chain.subscribeNewHeads(async () => {
       const result = await Promise.all(dexCurrencies.map(getReward));
+
       calcTotalReward(result, (total) => setTotalReward(total));
-    })
-  }, [api, dexCurrencies, getReward, setTotalReward])
+    });
+  }, [api, dexCurrencies, getReward, setTotalReward]);
 
   useEffect(() => {
     if (api && active) {
       run();
     }
-  }, [api, active]);
+  }, [api, active, run]);
 
   return {
     amount: totalReward,
@@ -55,7 +60,7 @@ export const useDexTotalReward = () => {
   };
 };
 
-export const useDexTotalSystemReward = () => {
+export const useDexTotalSystemReward = (): HooksReturnType => {
   const { api } = useApi();
   const { dexCurrencies, stableCurrency } = useConstants();
   const [totalReward, setTotalReward] = useState<Fixed18>(Fixed18.ZERO);
@@ -73,15 +78,16 @@ export const useDexTotalSystemReward = () => {
   const run = useCallback(() => {
     api.rpc.chain.subscribeNewHeads(async () => {
       const result = await Promise.all(dexCurrencies.map(getReward));
+
       calcTotalReward(result, (total) => setTotalReward(total));
-    })
-  }, [api, dexCurrencies, getReward, setTotalReward])
+    });
+  }, [api, dexCurrencies, getReward, setTotalReward]);
 
   useEffect(() => {
     if (api) {
       run();
     }
-  }, [api]);
+  }, [api, run]);
 
   return {
     amount: totalReward,

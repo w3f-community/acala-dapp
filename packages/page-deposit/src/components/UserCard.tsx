@@ -14,9 +14,9 @@ export const UserCard: FC = memo(() => {
     <Card
       className={classes.root}
       contentClassName={classes.content}
-      padding={false}
       header='For User'
       headerClassName={classes.header}
+      padding={false}
     >
       <div className={classes.avatar}>
         <UserIcon />

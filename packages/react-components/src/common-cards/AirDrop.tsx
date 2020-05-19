@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, ReactNode } from 'react';
 import { Card, TableItem, Table } from '@honzon-platform/ui-components';
 import { useApi } from '@honzon-platform/react-hooks';
 import { tokenEq } from '../utils';
@@ -12,21 +12,22 @@ export const AirDrop: FC = () => {
     {
       align: 'left',
       key: 'token',
-      title: 'Token',
-      render: (token: string) => tokenEq(token, 'ACA') ? `${token} (Mainnet)` : token
+      render: (token: string): string => tokenEq(token, 'ACA') ? `${token} (Mainnet)` : token,
+      title: 'Token'
     },
     {
       align: 'right',
       key: 'balance',
-      title: 'Balance',
-      render: (token: string) => <AirDropAmount currency={token} />
+      /* eslint-disable-next-line react/display-name */
+      render: (token: string): ReactNode => <AirDropAmount currency={token} />,
+      title: 'Balance'
     }
   ];
 
   return (
     <Card
-      padding={false}
       header='AirDrop'
+      padding={false}
     >
       <Table<string[]>
         config={tableConfig}

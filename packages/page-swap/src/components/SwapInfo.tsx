@@ -15,11 +15,11 @@ interface Props {
 }
 
 export const SwapInfo: FC<Props> = memo(({
-  supplyCurrency,
   slippage,
   supply,
-  targetCurrency,
-  target
+  supplyCurrency,
+  target,
+  targetCurrency
 }) => {
   return (
     <div className={classes.swapInfoRoot}>

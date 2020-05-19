@@ -17,8 +17,8 @@ interface Props {
 
 export const Tabs: FC<Props> = memo(({
   config,
-  style = 'normal',
-  onChange
+  onChange,
+  style = 'normal'
 }) => {
   const [active, setActive] = useState<number>(0);
 
@@ -26,7 +26,7 @@ export const Tabs: FC<Props> = memo(({
     if (config[active]) {
       onChange && onChange(config[active]);
     }
-  }, [active, config])
+  }, [active, config, onChange]);
 
   const onClick = (index: number): void => {
     setActive(index);
@@ -50,9 +50,12 @@ export const Tabs: FC<Props> = memo(({
         }
       </div>
       {
-        config[active]?.render ? (
+        config[active].render ? (
           <div className={classes.tabContent}>
-            {config[active]?.render()}
+            {
+              /* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */
+              config[active].render!()
+            }
           </div>
         ) : null
       }

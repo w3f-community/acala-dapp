@@ -45,9 +45,9 @@ export const config: RouterConfigData[] = [
         path: 'governance'
       },
       {
-        redirectTo: '/loan',
         element: <PageLoan />,
-        path: '/'
+        path: '/',
+        redirectTo: '/loan'
       }
     ],
     element: <MainLayout sideBarProps={{ config: sideBarConfig }} />,

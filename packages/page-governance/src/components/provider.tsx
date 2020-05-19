@@ -1,6 +1,6 @@
-import React, { createContext, FC, useState } from "react";
-import { PageType } from "./type";
-import { BareProps } from "@honzon-platform/ui-components/types";
+import React, { createContext, FC, useState } from 'react';
+import { PageType } from './type';
+import { BareProps } from '@honzon-platform/ui-components/types';
 
 interface GovernanceContextData {
   pageType: PageType;
@@ -17,13 +17,12 @@ export const GovernanceProvider: FC<BareProps> = ({ children }) => {
 
   return (
     <governanceContext.Provider value={{
-      pageType,
-      setPageType,
       councilType,
+      pageType,
       setCouncilType,
+      setPageType
     }}>
       {children}
     </governanceContext.Provider>
   );
-}
-
+};

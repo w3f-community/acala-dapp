@@ -3,14 +3,18 @@ import AccountId from '@polkadot/types/generic/AccountId';
 
 import { useCall } from './useCall';
 import { useDexShare } from './useDexShare';
-import { useApi } from './useApi';
 import { useAccounts } from './useAccounts';
 import { convertToFixed18 } from '@acala-network/app-util';
 import { Balance } from '@polkadot/types/interfaces';
 import { useConstants } from './useConstants';
 
-export const useDexReward = (token: CurrencyId | string, account?: AccountId | string) => {
-  const { api } = useApi();
+interface HooksReturnType {
+  amount: number;
+  token: CurrencyId;
+  rewardRatio: Balance | undefined;
+}
+
+export const useDexReward = (token: CurrencyId | string, account?: AccountId | string): HooksReturnType => {
   const { active } = useAccounts();
   const _account = account || (active ? active.address : '');
   const totalInterest = useCall<Balance>('query.dex.totalInterest', [token]);
@@ -20,9 +24,11 @@ export const useDexReward = (token: CurrencyId | string, account?: AccountId | s
   const { dexBaseCurrency } = useConstants();
 
   if (!totalInterest || !share || !totalShares) {
-    return { amount: 0,
-      token: dexBaseCurrency,
-      rewardRatio: liquidityIncentiveRate };
+    return {
+      amount: 0,
+      rewardRatio: liquidityIncentiveRate,
+      token: dexBaseCurrency
+    };
   }
 
   const _totalInterest = convertToFixed18(totalInterest);
@@ -32,7 +38,7 @@ export const useDexReward = (token: CurrencyId | string, account?: AccountId | s
 
   return {
     amount: _share.div(_totalShares).mul(_totalInterest).sub(_withdrawnInterest).toNumber(),
-    token: dexBaseCurrency,
-    rewardRatio: liquidityIncentiveRate
+    rewardRatio: liquidityIncentiveRate,
+    token: dexBaseCurrency
   };
 };

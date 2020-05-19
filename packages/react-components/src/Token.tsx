@@ -29,9 +29,9 @@ const ICON_CONFIG = {
 
 export const Token: FC<Props> = memo(({
   className,
-  padding = false,
   icon,
   name = true,
+  padding = false,
   token,
   upper = true
 }) => {

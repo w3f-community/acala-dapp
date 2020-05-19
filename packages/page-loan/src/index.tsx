@@ -19,7 +19,8 @@ const Inner: FC = () => {
     <Page>
       <Page.Title title='Self Serviced Loan' />
       <Page.Content>
-        <Grid container direction='column'>
+        <Grid container
+          direction='column'>
           {
             currentTab !== 'create'
               ? (
@@ -33,9 +34,9 @@ const Inner: FC = () => {
             item>
             <Grid container
               direction='column'
-              md={12}
+              item
               lg={8}
-              item>
+              md={12}>
               {
                 currentTab === 'overview'
                   ? (
@@ -73,9 +74,9 @@ const Inner: FC = () => {
             </Grid>
             <Grid container
               direction='column'
-              md={12}
+              item
               lg={4}
-              item>
+              md={12}>
               <Grid item>
                 <WalletBalanceCard />
               </Grid>

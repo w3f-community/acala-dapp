@@ -1,4 +1,4 @@
-import React, { FC, memo } from 'react';
+import React, { FC, memo, ReactNode } from 'react';
 
 import { CurrencyId } from '@acala-network/types/interfaces';
 import { Table, TableItem, Card } from '@honzon-platform/ui-components';
@@ -33,62 +33,69 @@ export const WalletBalanceCard: FC<Props> = memo(({
 
   const _tableConfig: TableItem<TableData>[] = [
     {
-      key: 'token',
       align: 'left',
-      width: 1,
+      key: 'token',
       /* eslint-disable-next-line react/display-name */
-      render: (token: CurrencyId) => <Token token={token} />,
-      title: 'Token'
+      render: (token: CurrencyId): ReactNode => <Token token={token} />,
+      title: 'Token',
+      width: 1
     },
     {
-      key: 'balance',
       align: 'right',
-      width: 2,
+      key: 'balance',
       /* eslint-disable-next-line react/display-name */
-      render: (token: CurrencyId) => (
+      render: (token: CurrencyId): ReactNode => (
         <UserBalance
           token={token}
           withIcon={false}
         />
       ),
-      title: 'Balance'
+      title: 'Balance',
+      width: 2
     },
     {
+      align: 'right',
       key: 'price',
-      align: 'right',
-      width: 2,
       /* eslint-disable-next-line react/display-name */
-      render: (token) => <Price token={token} />,
-      title: 'Price'
+      render: (token): ReactNode => <Price token={token} />,
+      title: 'Price',
+      width: 2
     },
     {
-      key: 'amount',
       align: 'right',
-      width: 2,
+      key: 'amount',
       /* eslint-disable-next-line react/display-name */
-      render: (token: CurrencyId) => (
+      render: (token: CurrencyId): ReactNode => (
         <UserBalance
           token={token}
           withPrice
         />
       ),
-      title: 'Amount'
+      title: 'Amount',
+      width: 2
     },
     {
-      key: 'action',
       align: 'right',
-      title: 'Action',
-      width: 2,
+      key: 'action',
       /* eslint-disable-next-line react/display-name */
-      render: (token: CurrencyId) => <TransferButton token={token} />
+      render: (token: CurrencyId): ReactNode => <TransferButton token={token} />,
+      title: 'Action',
+      width: 2
     }
   ];
-  const tableConfig = _tableConfig.filter((item) => showCell.includes(item.key!));
+
+  const tableConfig = _tableConfig.filter((item) => {
+    if (item.key) {
+      return showCell.includes(item.key);
+    }
+
+    return true;
+  });
 
   return (
     <Card
-      padding={false}
       header={title || 'Wallet Balance'}
+      padding={false}
     >
       <Table
         config={tableConfig}

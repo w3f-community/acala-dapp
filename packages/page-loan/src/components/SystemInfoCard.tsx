@@ -1,19 +1,19 @@
-import React, { FC } from 'react';
+import React, { FC, ReactNode } from 'react';
 import { Card, ListConfig, List } from '@honzon-platform/ui-components';
 import { FormatFixed18 } from '@honzon-platform/react-components';
 import { Fixed18, convertToFixed18 } from '@acala-network/app-util';
-import { useApi, useCall, useConstants } from '@honzon-platform/react-hooks';
+import { useCall, useConstants } from '@honzon-platform/react-hooks';
 import { Balance } from '@open-web3/orml-types/interfaces';
 
 export const SystemInfoCard: FC = () => {
-  const { api } = useApi();
   const { stableCurrency } = useConstants();
   const issuance = useCall<Balance>('query.tokens.totalIssuance', [stableCurrency]);
 
   const listConfig: ListConfig[] = [
     {
       key: 'stableCoinSupply',
-      render: (data: Fixed18) => (
+      /* eslint-disable-next-line react/display-name */
+      render: (data: Fixed18): ReactNode => (
         <FormatFixed18 data={data} />
       ),
       title: `${stableCurrency.toString()} in Supply`
@@ -26,8 +26,8 @@ export const SystemInfoCard: FC = () => {
 
   return (
     <Card
-      padding={false}
       header='System Info'
+      padding={false}
     >
       <List
         config={listConfig}

@@ -40,7 +40,7 @@ export const PageLoading: FC = () => {
       <Loading/>
     </div>
   );
-}
+};
 
 export const CardLoading: FC = () => {
   return (
@@ -48,4 +48,4 @@ export const CardLoading: FC = () => {
       <Loading/>
     </div>
   );
-}
+};

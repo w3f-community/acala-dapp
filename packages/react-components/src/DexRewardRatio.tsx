@@ -1,4 +1,4 @@
-import React, { memo, FC } from 'react';
+import React, { FC } from 'react';
 import { CurrencyId } from '@acala-network/types/interfaces';
 import { useDexReward, useApi } from '@honzon-platform/react-hooks';
 import { convertToFixed18, Fixed18 } from '@acala-network/app-util';
@@ -11,7 +11,7 @@ interface Props {
 
 const YEAR = 365 * 24 * 60 * 60 * 1000;
 
-export const DexRewardRatio: FC<Props> = memo(({ token }) => {
+export const DexRewardRatio: FC<Props> = ({ token }) => {
   const { api } = useApi();
   const { rewardRatio } = useDexReward(token);
   const expectedBlockTime = api.consts.babe.expectedBlockTime.toNumber();
@@ -24,4 +24,4 @@ export const DexRewardRatio: FC<Props> = memo(({ token }) => {
       format='percentage'
     />
   );
-});
+};

@@ -1,11 +1,9 @@
-import React, { FC, useRef } from 'react';
+import React, { FC, useRef, ReactNode } from 'react';
 
-import { BaseTxHistory, FormatBalance, FormatTime, FormatHash, Token, formatBalance, formatCurrency } from '@honzon-platform/react-components';
+import { BaseTxHistory, FormatBalance, FormatTime, FormatHash } from '@honzon-platform/react-components';
 import { TableItem, Status } from '@honzon-platform/ui-components';
-import { ExtrinsicHistoryData, useConstants, useLoan } from '@honzon-platform/react-hooks';
-import { Fixed18, debitToStableCoin, convertToFixed18 } from '@acala-network/app-util';
-
-const ZERO = Fixed18.ZERO;
+import { ExtrinsicHistoryData } from '@honzon-platform/react-hooks';
+import { Fixed18 } from '@acala-network/app-util';
 
 interface ActionProps {
   supply: string;
@@ -24,12 +22,12 @@ const Action: FC<ActionProps> = ({
     <FormatBalance
       pair={[
         {
-          currency: supplyCurrency,
-          balance: Fixed18.fromParts(supply)
+          balance: Fixed18.fromParts(supply),
+          currency: supplyCurrency
         },
         {
-          currency: targetCurrency,
-          balance: Fixed18.fromParts(target)
+          balance: Fixed18.fromParts(target),
+          currency: targetCurrency
         }
       ]}
       pairSymbol='->'
@@ -42,13 +40,16 @@ export const Transaction: FC = () => {
     {
       align: 'left',
       dataIndex: 'hash',
-      render: (value) => <FormatHash hash={value} />,
-      title: 'Tx Hash'
+      /* eslint-disable-next-line react/display-name */
+      render: (value): ReactNode => <FormatHash hash={value} />,
+      title: 'Tx Hash',
+      width: 1
     },
     {
       align: 'left',
       dataIndex: 'params',
-      render: (value) => (
+      /* eslint-disable-next-line react/display-name */
+      render: (value): ReactNode => (
         <Action
           supply={value[1]}
           supplyCurrency={value[0]}
@@ -56,23 +57,28 @@ export const Transaction: FC = () => {
           targetCurrency={value[2]}
         />
       ),
-      title: 'Action'
+      title: 'Action',
+      width: 3
     },
     {
       align: 'left',
       dataIndex: 'time',
-      render: (value) => (
+      /* eslint-disable-next-line react/display-name */
+      render: (value): ReactNode => (
         <FormatTime time={value} />
       ),
-      title: 'When'
+      title: 'When',
+      width: 1
     },
     {
       align: 'right',
       dataIndex: 'success',
-      render: (value) => (
+      /* eslint-disable-next-line react/display-name */
+      render: (value): ReactNode => (
         <Status success={value} />
       ),
-      title: 'Result'
+      title: 'Result',
+      width: 1
     }
   ]);
 

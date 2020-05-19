@@ -21,8 +21,10 @@ export const Radio: FC<Props> = memo(({
     if (disabled) {
       return;
     }
+
     onClick && onClick();
-  }
+  };
+
   return (
     <div
       className={

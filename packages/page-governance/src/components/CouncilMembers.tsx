@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, ReactNode } from 'react';
 import { Card, Table, TableItem } from '@honzon-platform/ui-components';
 import { useCouncilMembers } from '@honzon-platform/react-hooks';
 import AccountId from '@polkadot/types/generic/AccountId';
@@ -7,23 +7,25 @@ import { FormatAddress } from '@honzon-platform/react-components';
 interface Props {
   council: string;
 }
+
 export const CouncilMembers: FC<Props> = ({ council }) => {
   const members = useCouncilMembers(council);
 
   const tableConfig: TableItem<any>[] = [
     {
       align: 'left',
-      title: 'Account',
-      render: (account: AccountId) => {
+      /* eslint-disable-next-line react/display-name */
+      render: (account: AccountId): ReactNode => {
         return (
           <FormatAddress
             address={account.toString()}
-            withFullAddress
             withCopy
+            withFullAddress
             withIcon
           />
         );
-      }
+      },
+      title: 'Account'
     }
   ];
 
@@ -34,10 +36,10 @@ export const CouncilMembers: FC<Props> = ({ council }) => {
   return (
     <Card padding={false}>
       <Table
-        showHeader
         config={tableConfig}
         data={members}
+        showHeader
       />
     </Card>
   );
-}
+};

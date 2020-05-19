@@ -5,7 +5,6 @@ import { BareProps } from '@honzon-platform/ui-components/types';
 import { useDexShare } from '@honzon-platform/react-hooks';
 import { FormatFixed18 } from './format';
 import { convertToFixed18 } from '@acala-network/app-util';
-import { Codec } from '@polkadot/types/types';
 
 interface Props extends BareProps {
   account?: AccountId | string;
@@ -15,7 +14,6 @@ interface Props extends BareProps {
 
 export const DexUserShare: FC<Props> = memo(({
   account,
-  className,
   token,
   withRatio = true
 }) => {

@@ -5,19 +5,19 @@ import { CouncilMembers } from './CouncilMembers';
 import { CouncilMotions } from './CouncilMotions';
 
 export const Content: FC = () => {
-  const { pageType, councilType } = useContext(governanceContext);
+  const { councilType, pageType } = useContext(governanceContext);
 
   if (!pageType || !councilType) {
     return null;
   }
 
   if (pageType === 'council') {
-    return <CouncilMembers council={councilType} />
+    return <CouncilMembers council={councilType} />;
   }
 
   if (pageType === 'motions') {
-    return <CouncilMotions council={councilType} />
+    return <CouncilMotions council={councilType} />;
   }
 
   return null;
-}
+};

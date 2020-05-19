@@ -1,4 +1,4 @@
-import React, { FC, useContext, useCallback } from 'react';
+import React, { FC, useContext, useCallback, ReactNode } from 'react';
 import { noop } from 'lodash';
 import { useFormik } from 'formik';
 
@@ -16,17 +16,17 @@ export const StakingConsole: FC = () => {
 
   const validator = useFormValidator({
     stakingBalance: {
-      type: 'balance',
-      currency: stakingPool && stakingPool.stakingCurrency
+      currency: stakingPool && stakingPool.stakingCurrency,
+      type: 'balance'
     }
   });
 
   const form = useFormik({
     initialValues: {
-      stakingBalance: '' as any as number
+      stakingBalance: (('' as any) as number)
     },
-    validate: validator,
-    onSubmit: noop
+    onSubmit: noop,
+    validate: validator
   });
 
   const resetForm = useCallback(() => {
@@ -38,34 +38,36 @@ export const StakingConsole: FC = () => {
   }
 
   const estimated = {
-    receivedLiquidToken: stakingPoolHelper.convertToLiquid(Fixed18.fromNatural(form.values.stakingBalance)),
-    depositStakingToken: Fixed18.fromNatural(form.values.stakingBalance).mul(convertToFixed18(rewardRate || 0))
+    depositStakingToken: Fixed18.fromNatural(form.values.stakingBalance).mul(convertToFixed18(rewardRate || 0)),
+    receivedLiquidToken: stakingPoolHelper.convertToLiquid(Fixed18.fromNatural(form.values.stakingBalance))
   };
 
   const listConfig = [
     {
       key: 'receivedLiquidToken',
-      title: 'Mint',
-      render: (value: Fixed18) => (
+      /* eslint-disable-next-line react/display-name */
+      render: (value: Fixed18): ReactNode => (
         value.isFinity() ? (<FormatBalance
           balance={value}
           currency={stakingPool.liquidCurrency}
-        />): '~'
-      )
+        />) : '~'
+      ),
+      title: 'Mint'
     },
     {
       key: 'depositStakingToken',
-      title: 'Estimated Profit / Era',
-      render: (value: Fixed18) => (
+      /* eslint-disable-next-line react/display-name */
+      render: (value: Fixed18): ReactNode => (
         value.isFinity() ? (<FormatBalance
           balance={value}
           currency={stakingPool.stakingCurrency}
-        />): '~'
-      )
+        />) : '~'
+      ),
+      title: 'Estimated Profit / Era'
     }
   ];
 
-  const checkDisabled = () => {
+  const checkDisabled = (): boolean => {
     if (!form.values.stakingBalance) {
       return true;
     }
@@ -77,14 +79,14 @@ export const StakingConsole: FC = () => {
     return false;
   };
 
-  const handleMax = () => {
+  const handleMax = (): void => {
     form.setFieldValue('stakingBalance', convertToFixed18(balance || 0).toNumber());
   };
 
   return (
     <Grid
-      container
       className={classes.root}
+      container
       direction='column'
     >
       <Grid item>
@@ -98,14 +100,15 @@ export const StakingConsole: FC = () => {
           id='stakingBalance'
           name='stakingBalance'
           onChange={form.handleChange}
-          token={stakingPool.stakingCurrency}
-          showMaxBtn
           onMax={handleMax}
+          showMaxBtn
+          token={stakingPool.stakingCurrency}
           value={form.values.stakingBalance}
         />
       </Grid>
       <Grid item>
-        <Grid container justify='center'>
+        <Grid container
+          justify='center'>
           <TxButton
             className={classes.txBtn}
             disabled={checkDisabled()}
@@ -121,9 +124,9 @@ export const StakingConsole: FC = () => {
       </Grid>
       <Grid item>
         <List
-          itemClassName={classes.listItem}
           config={listConfig}
           data={estimated}
+          itemClassName={classes.listItem}
         />
       </Grid>
     </Grid>

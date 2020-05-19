@@ -7,7 +7,6 @@ import { Amount, Rate, BlockNumber, Balance } from '@acala-network/types/interfa
 import { useApi } from './useApi';
 import { useCall } from './useCall';
 import { useAccounts } from './useAccounts';
-import { start } from 'repl';
 
 export interface FreeItem {
   era: number;
@@ -19,7 +18,7 @@ export interface RedeemItem {
   balance: Fixed18;
 }
 
-export interface useStakingPoolReturnType {
+export interface UseStakingPoolReturnType {
   stakingPool: DerivedStakingPool | undefined;
   stakingPoolHelper: StakingPoolHelper;
   unbondingDuration: number;
@@ -29,7 +28,7 @@ export interface useStakingPoolReturnType {
   redeemList: RedeemItem[];
 }
 
-export const useStakingPool = (): useStakingPoolReturnType => {
+export const useStakingPool = (): UseStakingPoolReturnType => {
   const { api } = useApi();
   const { active } = useAccounts();
   const [stakingPoolHelper, setStakingPoolHelper] = useState<StakingPoolHelper>(null as any as StakingPoolHelper);
@@ -49,7 +48,7 @@ export const useStakingPool = (): useStakingPoolReturnType => {
     const expectedBlockTime = api.consts.babe.expectedBlockTime;
 
     return expectedBlockTime.toNumber() * eraLength.toNumber() * stakingPool.bondingDuration.toNumber();
-  }, [api, stakingPool])
+  }, [api, stakingPool]);
 
   const eraDuration = useMemo<number>(() => {
     if (!api) {
@@ -60,7 +59,6 @@ export const useStakingPool = (): useStakingPoolReturnType => {
     const expectedBlockTime = api.consts.babe.expectedBlockTime;
 
     return expectedBlockTime.toNumber() * eraLength.toNumber();
-
   }, [api]);
 
   const fetchFreeList = useCallback(async (start: number, duration: number) => {
@@ -93,25 +91,26 @@ export const useStakingPool = (): useStakingPoolReturnType => {
 
       if (!result.isEmpty) {
         list.push({
-          era: i,
-          balance: convertToFixed18(result)
+          balance: convertToFixed18(result),
+          era: i
         });
       }
     }
 
     return list;
-  }, [stakingPool, active]);
+  }, [stakingPool, active, api.query.stakingPool]);
 
   useEffect(() => {
-    (async () => {
+    (async (): Promise<void> => {
       const list = await fetchRedeemList();
+
       setRedeemList(list);
     })();
   }, [fetchRedeemList, setRedeemList]);
 
   useEffect(() => {
     if (stakingPool) {
-      (async () => {
+      (async (): Promise<void> => {
         const list = await fetchFreeList(
           stakingPool.currentEra.toNumber() + 1,
           stakingPool.bondingDuration.toNumber()
@@ -120,7 +119,7 @@ export const useStakingPool = (): useStakingPoolReturnType => {
         setFreeList(list);
       })();
     }
-  }, [stakingPool]);
+  }, [fetchFreeList, stakingPool]);
 
   useEffect(() => {
     if (stakingPool) {
@@ -141,12 +140,12 @@ export const useStakingPool = (): useStakingPoolReturnType => {
   }, [stakingPool]);
 
   return {
+    eraDuration,
+    freeList,
+    redeemList,
+    rewardRate,
     stakingPool,
     stakingPoolHelper,
-    freeList,
-    rewardRate,
-    unbondingDuration,
-    eraDuration,
-    redeemList
+    unbondingDuration
   };
 };

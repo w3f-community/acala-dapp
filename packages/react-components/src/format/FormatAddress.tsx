@@ -1,4 +1,4 @@
-import React, { FC, memo } from 'react';
+import React, { FC, memo, ReactNode } from 'react';
 
 import { BareProps } from '@honzon-platform/ui-components/types';
 import { Copy } from '@honzon-platform/ui-components';
@@ -17,30 +17,30 @@ interface Props extends BareProps {
 export const FormatAddress: FC<Props> = memo(({
   address,
   className,
+  iconWidth = 22,
   withCopy = false,
   withFullAddress = false,
-  withIcon = false,
-  iconWidth = 22
+  withIcon = false
 }) => {
   return (
     <Copy
       className={className}
-      text={address} 
-      render={() => {
+      render={(): ReactNode => {
         return (
           <>
-          {withIcon ? (
-            <Identicon
-              className={classes.icon}
-              size={iconWidth}
-              theme='substrate'
-              value={address}
-            />
-          ) : null }
-            {withFullAddress ? address : address.replace(/(\w{6})\w*?(\w{12}$)/, '$1......$2')}
+            {withIcon ? (
+              <Identicon
+                className={classes.icon}
+                size={iconWidth}
+                theme='substrate'
+                value={address}
+              />
+            ) : null }
+            {withFullAddress ? address : address.replace(/(\w{6})\w*?(\w{6}$)/, '$1......$2')}
           </>
         );
       }}
+      text={address}
       withCopy={withCopy}
     />
   );

@@ -1,4 +1,4 @@
-import React, { FC, memo, ReactElement, useContext, useCallback, useMemo } from 'react';
+import React, { FC, ReactElement, useContext, useCallback, useMemo } from 'react';
 
 import { Card, Tabs } from '@honzon-platform/ui-components';
 
@@ -7,18 +7,20 @@ import { RedeemConsole } from './RedeemConsole';
 import classes from './Console.module.scss';
 import { StakingPoolContext } from './StakingPoolProvider';
 
-export const Console: FC = memo(() => {
+export const Console: FC = () => {
   const { setAction } = useContext(StakingPoolContext);
 
   const config = useMemo(() => [
     {
-      title: 'Mint & Stake',
+      /* eslint-disable-next-line react/display-name */
       render: (): ReactElement => <StakingConsole />,
+      title: 'Mint & Stake',
       value: 'staking'
     },
     {
-      title: 'Redeem',
+      /* eslint-disable-next-line react/display-name */
       render: (): ReactElement => <RedeemConsole />,
+      title: 'Redeem',
       value: 'redeem'
     }
   ], []);
@@ -33,9 +35,7 @@ export const Console: FC = memo(() => {
         config={config}
         onChange={handleChange}
         style='bar'
-        />
+      />
     </Card>
   );
-});
-
-Console.displayName = 'ConsoleController';
+};

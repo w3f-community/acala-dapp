@@ -1,4 +1,4 @@
-import React, { FC, useContext, useState, useEffect } from 'react';
+import React, { FC, useContext, useState, useEffect, ReactNode } from 'react';
 import { Card, TableItem, Table, Button, Step } from '@honzon-platform/ui-components';
 import { useAllLoans, useLoan, useConstants, filterEmptyLoan } from '@honzon-platform/react-hooks';
 import { DerivedUserLoan } from '@acala-network/api-derive';
@@ -53,6 +53,14 @@ export const Guide: FC = () => {
   );
 };
 
+const DebitAmount: FC<{ token: CurrencyId | string }> = ({ token }) => {
+  const { currentUserLoanHelper } = useLoan(token);
+
+  return (
+    <FormatBalance balance={currentUserLoanHelper?.debitAmount} />
+  );
+};
+
 export const Overview: FC = () => {
   const [empty, setEmpty] = useState<boolean | null>(null);
 
@@ -64,7 +72,8 @@ export const Overview: FC = () => {
     {
       align: 'left',
       dataIndex: 'token',
-      render: (token: CurrencyId) => (
+      /* eslint-disable-next-line react/display-name */
+      render: (token: CurrencyId): ReactNode => (
         <Token token={token} />
       ),
       title: 'Token',
@@ -73,46 +82,45 @@ export const Overview: FC = () => {
     {
       align: 'right',
       dataIndex: 'token',
-      render: (token: CurrencyId) => <LoanInterestRate token={token} />,
+      /* eslint-disable-next-line react/display-name */
+      render: (token: CurrencyId): ReactNode => <LoanInterestRate token={token} />,
       title: 'Rate',
       width: 1
     },
     {
       align: 'right',
-      title: 'Deposit',
-      width: 1,
-      render: (data: DerivedUserLoan) => (
+      /* eslint-disable-next-line react/display-name */
+      render: (data: DerivedUserLoan): ReactNode => (
         <FormatBalance
           balance={convertToFixed18(data.collaterals)}
           currency={data.token}
         />
-      )
+      ),
+      title: 'Deposit',
+      width: 1
     },
     {
       align: 'right',
+      /* eslint-disable-next-line react/display-name */
+      render: (data: DerivedUserLoan): ReactNode => {
+        return <DebitAmount token={data.token} />;
+      },
       title: `Debit ${formatCurrency(stableCurrency)}`,
-      width: 2,
-      render: (data: DerivedUserLoan) => {
-        const { currentUserLoanHelper } = useLoan(data.token);
-
-        return (
-          <FormatBalance balance={currentUserLoanHelper?.debitAmount} />
-        );
-      }
+      width: 2
     },
     {
       align: 'right',
-      title: 'Current Ratio',
-      width: 2,
       dataIndex: 'token',
-      render: (token: CurrencyId) => <LoanCollateralRate token={token} />
+      /* eslint-disable-next-line react/display-name */
+      render: (token: CurrencyId): ReactNode => <LoanCollateralRate token={token} />,
+      title: 'Current Ratio',
+      width: 2
     },
     {
       align: 'right',
-      title: '',
-      width: 2,
-      render: (data: DerivedUserLoan) => {
-        const handleClick = () => {
+      /* eslint-disable-next-line react/display-name */
+      render: (data: DerivedUserLoan): ReactNode => {
+        const handleClick = (): void => {
           setCurrentTab(data.token);
         };
 
@@ -125,7 +133,9 @@ export const Overview: FC = () => {
             Manage Loan
           </Button>
         );
-      }
+      },
+      title: '',
+      width: 2
     }
   ];
 
@@ -146,8 +156,8 @@ export const Overview: FC = () => {
 
   return (
     <Card
-      padding={false}
       header='Overview'
+      padding={false}
     >
       {
         loans && (

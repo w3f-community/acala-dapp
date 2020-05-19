@@ -1,4 +1,4 @@
-import React, { FC, memo, useContext } from 'react';
+import React, { FC, memo, useContext, ReactNode } from 'react';
 import { DropdownConfig, Dropdown } from '@honzon-platform/ui-components';
 
 import { ReactComponent as DepositIcon } from '../assets/deposit.svg';
@@ -11,31 +11,34 @@ export const SelectAction: FC = memo(() => {
   const { action, setActiveAction } = useContext(DepositContext);
   const config: DropdownConfig[] = [
     {
-      value: 'deposit',
-      render: () => (
+      /* eslint-disable-next-line react/display-name */
+      render: (): ReactNode => (
         <>
           <DepositIcon />
           <span>Deposit Liquidity</span>
         </>
-      )
+      ),
+      value: 'deposit'
     },
     {
-      value: 'withdraw',
-      render: () => (
+      /* eslint-disable-next-line react/display-name */
+      render: (): ReactNode => (
         <>
           <WithdrawIcon />
           <span>Withdraw Liquidity & Reward</span>
         </>
-      )
+      ),
+      value: 'withdraw'
     },
     {
-      value: 'reward',
-      render: () => (
+      /* eslint-disable-next-line react/display-name */
+      render: (): ReactNode => (
         <>
           <RewardIcon />
           <span>Withdraw System Reward</span>
         </>
-      )
+      ),
+      value: 'reward'
     }
   ];
 

@@ -5,7 +5,7 @@ import { Fixed18 } from '@acala-network/app-util';
 
 import { useCall } from './useCall';
 
-export const useDexExchangeRate = (token: CurrencyId) => {
+export const useDexExchangeRate = (token: CurrencyId): Fixed18 => {
   const pool = useCall<DerivedDexPool>('derive.dex.pool', [token]);
 
   const rate = useMemo(() => {

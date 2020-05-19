@@ -29,7 +29,12 @@
 }
 
 .tagGroup {
-  .root {
+  display: flex;
+
+  > div {
+    margin: 0 8px 0 0;
+  }
+  > span {
     margin: 0 8px 0 0;
   }
 

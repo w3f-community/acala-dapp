@@ -1,10 +1,10 @@
 import React, { createContext, FC, memo, useState, useEffect } from 'react';
-import { useStakingPool, useStakingPoolReturnType, useInitialize } from '@honzon-platform/react-hooks';
+import { useStakingPool, UseStakingPoolReturnType, useInitialize } from '@honzon-platform/react-hooks';
 import { PageLoading } from '@honzon-platform/ui-components';
 
 export type ACTION_TYPE = 'staking' | 'redeem';
 
-export  interface ContextData extends useStakingPoolReturnType {
+export interface ContextData extends UseStakingPoolReturnType {
   action: ACTION_TYPE;
   setAction: (type: ACTION_TYPE) => void;
 }
@@ -20,7 +20,7 @@ export const StakingPoolProvider: FC = memo(({ children }) => {
     if (result?.stakingPool) {
       setEnd();
     }
-  }, [result]);
+  }, [result, setEnd]);
 
   return (
     <StakingPoolContext.Provider value={{ ...result, action, setAction }}>

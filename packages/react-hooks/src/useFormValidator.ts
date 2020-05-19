@@ -4,6 +4,7 @@ import { CurrencyId, Amount } from '@acala-network/types/interfaces';
 import { convertToFixed18, Fixed18 } from '@acala-network/app-util';
 import { ApiPromise } from '@polkadot/api';
 import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
+import { FormikErrors } from 'formik';
 
 interface BalanceConfig {
   type: 'balance';
@@ -31,13 +32,13 @@ type Config = {
   [k in string]: BalanceConfig | NumberConfig | StringConfig;
 }
 
-export const getFormValidator = (configs: Config, api: ApiPromise, active: InjectedAccountWithMeta) => {
-  const numberPattern = /^\-?([1-9]\d*|0)(\.\d{1,6})?$/;
+export function getFormValidator<T> (configs: Config, api: ApiPromise, active: InjectedAccountWithMeta): (values: T) => void | object | Promise<FormikErrors<T>> {
+  const numberPattern = /^([1-9]\d*|0)(\.\d{1,6})?$/;
 
-  return (values: any) => {
+  return (values: any): void | object | Promise<FormikErrors<T>> => {
     const error = {} as any;
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       Object.keys(values).forEach((key): void => {
         const config = configs[key];
         const value = values[key];
@@ -47,7 +48,7 @@ export const getFormValidator = (configs: Config, api: ApiPromise, active: Injec
             const _balance = convertToFixed18(result);
             const _value = Fixed18.fromNatural(value);
             const _max = Fixed18.fromNatural(config.max !== undefined ? config.max : Number.MAX_VALUE);
-            const _min = Fixed18.fromNatural(config.min !== undefined ? config.min : Number.MIN_VALUE);
+            const _min = Fixed18.fromNatural(config.min !== undefined ? config.min : 0);
 
             if (!numberPattern.test(value)) {
               error[key] = 'Not a validate number';
@@ -76,7 +77,7 @@ export const getFormValidator = (configs: Config, api: ApiPromise, active: Injec
             error[key] = `Value is bigger than ${config.max}`;
           }
 
-          if (config.min !== undefined &&  value < config.min) {
+          if (config.min !== undefined && value < config.min) {
             error[key] = `Value is less than ${config.min}`;
           }
 
@@ -109,11 +110,15 @@ export const getFormValidator = (configs: Config, api: ApiPromise, active: Injec
       resolve(error);
     });
   };
-};
+}
 
-export const useFormValidator = (configs: Config) => {
+export function useFormValidator<T extends any> (configs: Config): (values: T) => void | object | Promise<FormikErrors<T>> {
   const { api } = useApi();
   const { active } = useAccounts();
 
-  return getFormValidator(configs, api, active!);
-};
+  if (!active) {
+    return (): object => ({ global: "can't get user address" });
+  }
+
+  return getFormValidator<T>(configs, api, active);
+}

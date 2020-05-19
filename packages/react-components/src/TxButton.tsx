@@ -1,4 +1,4 @@
-import React, { FC, PropsWithChildren, useState, useContext } from 'react';
+import React, { FC, PropsWithChildren, useState } from 'react';
 import { useAccounts, useApi, useNotification, useHistory } from '@honzon-platform/react-hooks';
 import { Button, ButtonProps } from '@honzon-platform/ui-components';
 import { FormatAddress } from './format';
@@ -19,8 +19,8 @@ interface Props extends ButtonProps {
 
 const TX_TIMEOUT = 60 * 1000;
 
-function extractEvents (api: ApiPromise, result: SubmittableResult, createNotification: CreateNotification) {
-  if (!result ||!result.events) {
+function extractEvents (api: ApiPromise, result: SubmittableResult, createNotification: CreateNotification): void {
+  if (!result || !result.events) {
     return;
   }
 
@@ -30,36 +30,37 @@ function extractEvents (api: ApiPromise, result: SubmittableResult, createNotifi
     .map(({ event: { data, method, section } }): void => {
       if (section === 'system' && method === 'ExtrinsicFailed') {
         const [dispatchError] = data as unknown as ITuple<[DispatchError]>;
-          let message = dispatchError.type;
+        let message = dispatchError.type;
 
-          if (dispatchError.isModule) {
-            try {
-              const mod = dispatchError.asModule;
-              const error = api.registry.findMetaError(new Uint8Array([mod.index.toNumber(), mod.error.toNumber()]));
+        if (dispatchError.isModule) {
+          try {
+            const mod = dispatchError.asModule;
+            const error = api.registry.findMetaError(new Uint8Array([mod.index.toNumber(), mod.error.toNumber()]));
 
-              message = `${error.section}.${error.name}`;
-            } catch (error) { }
+            message = `${error.section}.${error.name}`;
+          } catch (error) {
+            // swallow error
           }
+        }
 
-          createNotification({
-            type: 'error',
-            icon: 'error',
-            title: `${section}.${method}`,
-            content: message,
-            removedDelay: 4000
-          });
+        createNotification({
+          content: message,
+          icon: 'error',
+          removedDelay: 4000,
+          title: `${section}.${method}`,
+          type: 'error'
+        });
       } else {
-          createNotification({
-            type: 'info',
-            title: `${section}.${method}`,
-            removedDelay: 4000
-          });
+        createNotification({
+          removedDelay: 4000,
+          title: `${section}.${method}`,
+          type: 'info'
+        });
       }
     });
 }
 
 export const TxButton: FC<PropsWithChildren<Props>> = ({
-  addon,
   children,
   className,
   disabled,
@@ -120,65 +121,67 @@ export const TxButton: FC<PropsWithChildren<Props>> = ({
       const hash = signedTx.hash.toString();
 
       const notification = createNotification({
-        icon: 'loading',
         content: <FormatAddress address={hash} />,
-        type: 'info',
-        title: `${section}: ${method}`
+        icon: 'loading',
+        title: `${section}: ${method}`,
+        type: 'info'
       });
 
       // timeout
       await Promise.race([
         new Promise((resolve) => setTimeout(() => resolve('timeout'), TX_TIMEOUT)),
-        new Promise(async (resolve, reject) => {
-          const unsub = await signedTx.send((result) => {
-            if (
-              result.status.isInBlock
-              || result.status.isFinalized
-            ) {
-              resolve(result);
-            } else if(
-              result.status.isUsurped
-              || result.status.isDropped
-              || result.status.isFinalityTimeout
-            ){
-              unsub && unsub();
-              reject(result);
-            }
+        new Promise((resolve, reject) => {
+          (async (): Promise<void> => {
+            const unsub = await signedTx.send((result) => {
+              if (
+                result.status.isInBlock ||
+                result.status.isFinalized
+              ) {
+                resolve(result);
+              } else if (
+                result.status.isUsurped ||
+                result.status.isDropped ||
+                result.status.isFinalityTimeout
+              ) {
+                unsub && unsub();
+                reject(result);
+              }
 
-            if (result.status.isFinalized) {
-              unsub && unsub();
-            } else {
-              extractEvents(api, result as unknown as SubmittableResult, createNotification);
-            }
-          }).catch(reject);
+              if (result.status.isFinalized) {
+                unsub && unsub();
+              } else {
+                extractEvents(api, result as unknown as SubmittableResult, createNotification);
+              }
+            }).catch(reject);
+          })();
         })
       ]).then((result) => {
         if (result === 'timeout') {
           notification.update({
             icon: 'info',
-            type: 'info',
+            removedDelay: 4000,
             title: 'Extrinsic timed out, Please check manually',
-            removedDelay: 4000
+            type: 'info'
           });
         } else {
           notification.update({
             icon: 'success',
-            type: 'success',
-            removedDelay: 4000
+            removedDelay: 4000,
+            type: 'success'
           });
           _onSuccess();
         }
-      }).catch((error) => {
+      }).catch(() => {
         notification.update({
           icon: 'error',
-          type: 'error',
-          removedDelay: 4000
+          removedDelay: 4000,
+          type: 'error'
         });
         _onFailed();
       }).finally(() => {
         _onFinally();
       });
-    } catch(e) {
+    } catch (e) {
       // reset isSending
       setIsSending(false);
     }

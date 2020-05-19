@@ -14,19 +14,25 @@ export const padEndDecimal = (origin: number | string, dp: number): string => {
   let [i, d] = _origin.split('.');
 
   if (!d) {
-    d = '';
+    return i;
   }
 
-  d = d.padEnd(dp, '0');
+  if (d) {
+    d = d.padEnd(dp, '0');
+  }
 
-  return `${i}.${d}`;
-}; 
+  return [i, d].join('.');
+};
 
 export const thousandth = (num: number): string => {
   return num.toLocaleString('en-IN', { maximumSignificantDigits: 18, minimumFractionDigits: 5 });
 };
 
-export const formatCurrency = (currency: CurrencyId | string, upper = true): string => {
+export const formatCurrency = (currency: CurrencyId | string | undefined, upper = true): string => {
+  if (!currency) {
+    return '';
+  }
+
   const inner = currency.toString();
 
   if (inner.toUpperCase() === 'AUSD') {
@@ -40,7 +46,7 @@ export const formatHash = (hash: string): string => {
   return hash.replace(/(\w{6})\w*?(\w{6}$)/, '$1......$2');
 };
 
-export const formatBalance = (balance: Fixed18 | Codec | number | string): Fixed18 => {
+export const formatBalance = (balance: Fixed18 | Codec | number | string | undefined): Fixed18 => {
   let inner = Fixed18.ZERO;
 
   if (!balance) {
@@ -66,6 +72,7 @@ export const tokenEq = (base: CurrencyId | string, target: CurrencyId | string):
   if (!target || !base) {
     return false;
   }
+
   return base.toString().toUpperCase() === target.toString().toUpperCase();
 };
 

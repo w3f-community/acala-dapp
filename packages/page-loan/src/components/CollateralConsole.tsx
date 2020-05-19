@@ -1,5 +1,4 @@
 import React, { FC } from 'react';
-import { isEmpty } from 'lodash';
 import { CurrencyId } from '@acala-network/types/interfaces';
 import { Card } from '@honzon-platform/ui-components';
 import { Token, FormatBalance } from '@honzon-platform/react-components';
@@ -19,7 +18,7 @@ export const CollateralConsole: FC<Props> = ({
   const { currentLoanType, currentUserLoanHelper } = useLoan(token);
   const balance = useBalance(token);
 
-  if (isEmpty(currentUserLoanHelper) || isEmpty(currentLoanType)) {
+  if (!currentUserLoanHelper || !currentLoanType) {
     return null;
   }
 
@@ -36,8 +35,8 @@ export const CollateralConsole: FC<Props> = ({
             />
           </div>
           <FormatBalance
-            balance={currentUserLoanHelper?.collaterals}
-            currency={currentLoanType!.token}
+            balance={currentUserLoanHelper.collaterals}
+            currency={currentLoanType.token}
           />
         </>
       )}
@@ -47,9 +46,9 @@ export const CollateralConsole: FC<Props> = ({
         <div className={classes.itemContent}>
           <p className={classes.itemTitle}>Required for Safety</p>
           <FormatBalance
-            balance={currentUserLoanHelper?.requiredCollateral}
+            balance={currentUserLoanHelper.requiredCollateral}
             className={classes.itemBalance}
-            currency={currentLoanType!.token}
+            currency={currentLoanType.token}
           />
         </div>
         <LonaActionButton
@@ -64,14 +63,14 @@ export const CollateralConsole: FC<Props> = ({
         <div className={classes.itemContent}>
           <p className={classes.itemTitle}>Able to Withdraw</p>
           <FormatBalance
-            balance={currentUserLoanHelper?.collaterals?.sub(currentUserLoanHelper?.requiredCollateral).max(Fixed18.ZERO)}
+            balance={currentUserLoanHelper.collaterals.sub(currentUserLoanHelper.requiredCollateral).max(Fixed18.ZERO)}
             className={classes.itemBalance}
-            currency={currentLoanType!.token}
+            currency={currentLoanType.token}
           />
         </div>
         <LonaActionButton
           className={classes.itemAction}
-          max={currentUserLoanHelper?.collaterals?.sub(currentUserLoanHelper?.requiredCollateral)}
+          max={currentUserLoanHelper.collaterals.sub(currentUserLoanHelper.requiredCollateral).toNumber()}
           text='Withdraw'
           token={token}
           type='withdraw'

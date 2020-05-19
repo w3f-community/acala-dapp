@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useCallback } from 'react';
+import React, { useContext, FC, ReactNode } from 'react';
 import { Card, TableItem, Table } from '@honzon-platform/ui-components';
 import { useCurrentRedeem } from '@honzon-platform/react-hooks';
 import { TxButton, FormatBalance } from '@honzon-platform/react-components';
@@ -7,11 +7,11 @@ import classes from './RedeemList.module.scss';
 import { convertToFixed18, Fixed18 } from '@acala-network/app-util';
 import { StakingPoolContext } from './StakingPoolProvider';
 
-export const RedeemList = () => {
+export const RedeemList: FC = () => {
   const currentRedeem = useCurrentRedeem();
-  const { stakingPool, redeemList } = useContext(StakingPoolContext);
+  const { redeemList, stakingPool } = useContext(StakingPoolContext);
 
-  const renderHeader = () => {
+  const renderHeader = (): ReactNode => {
     return (
       <div className={classes.header}>
         <div>Redeem Track</div>
@@ -27,8 +27,8 @@ export const RedeemList = () => {
           currentRedeem ? (
             <TxButton
               method='withdrawRedemption'
-              section='homa'
               params={[]}
+              section='homa'
             >
               Withdraw
             </TxButton>
@@ -40,39 +40,48 @@ export const RedeemList = () => {
 
   const tableConfig: TableItem<any>[] = [
     {
-      title: 'Era',
-      dataIndex: 'era',
       align: 'left',
-      render: (era: number) => {
+      dataIndex: 'era',
+      /* eslint-disable-next-line react/display-name */
+      render: (era: number): ReactNode => {
         return era;
-      }
+      },
+      title: 'Era'
     },
     {
-      title: 'Status',
       dataIndex: 'era',
-      render: (era: number) => {
-        if (stakingPool!.currentEra.toNumber() >= era) {
+      /* eslint-disable-next-line react/display-name */
+      render: (era: number): ReactNode => {
+        if (!stakingPool) {
+          return '';
+        }
+
+        if (stakingPool.currentEra.toNumber() >= era) {
           return 'Done';
         }
-        if (stakingPool!.currentEra.toNumber() < era) {
+
+        if (stakingPool.currentEra.toNumber() < era) {
           return 'Redeeming';
         }
+
         return '';
-      }
+      },
+      title: 'Status'
     },
     {
       align: 'right',
-      title: 'Amount',
       dataIndex: 'balance',
-      render: (balance: Fixed18) => {
+      /* eslint-disable-next-line react/display-name */
+      render: (balance: Fixed18): ReactNode => {
         return (
           <FormatBalance
             balance={balance}
             currency={stakingPool?.stakingCurrency}
           />
         );
-      }
-    },
+      },
+      title: 'Amount'
+    }
   ];
 
   if (redeemList.length === 0 && !currentRedeem) {
@@ -85,10 +94,10 @@ export const RedeemList = () => {
       padding={false}
     >
       <Table
-        size='small'
-        showHeader
         config={tableConfig}
         data={redeemList}
+        showHeader
+        size='small'
       />
     </Card>
   );

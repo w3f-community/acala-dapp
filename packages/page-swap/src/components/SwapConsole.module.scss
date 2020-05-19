@@ -51,12 +51,9 @@
 
 .addon {
   display: flex;
+  justify-content: space-between;
   margin-top: 16px;
   font-size: 16px;
   line-height: 19px;
   color: #999999;
-
-  p > {
-    flex: 1;
-  }
 }

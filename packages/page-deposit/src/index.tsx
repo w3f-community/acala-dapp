@@ -14,10 +14,15 @@ const PageDeposit: FC = () => {
   return (
     <Page>
       <Page.Title title='Deposit & Earn' />
-        <Page.Content>
-          <DepositProvider>
-          <Grid container direction='row'>
-            <Grid item container direction='column' md={12} lg={8}>
+      <Page.Content>
+        <DepositProvider>
+          <Grid container
+            direction='row'>
+            <Grid container
+              direction='column'
+              item
+              lg={8}
+              md={12}>
               <Grid container
                 direction='row'
                 item>
@@ -41,7 +46,11 @@ const PageDeposit: FC = () => {
                 <Transaction />
               </Grid>
             </Grid>
-            <Grid item container direction='column' md={12} lg={4}>
+            <Grid container
+              direction='column'
+              item
+              lg={4}
+              md={12}>
               <Grid item>
                 <WalletBalanceCard />
               </Grid>
@@ -50,8 +59,8 @@ const PageDeposit: FC = () => {
               </Grid>
             </Grid>
           </Grid>
-          </DepositProvider>
-        </Page.Content>
+        </DepositProvider>
+      </Page.Content>
     </Page>
   );
 };

@@ -40,5 +40,9 @@
       "@honzon-platform/ui-components": ["ui-components/src"]
     },
     "skipDefaultLibCheck": true
-  }
+  },
+  "exclude": [
+    "build/**/*",
+    "**/build/**/*"
+  ]
 }

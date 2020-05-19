@@ -20,13 +20,13 @@ export const TransferButton: FC<Props> = memo(({
   const { close, status, toggle } = useModal(false);
   const validator = useFormValidator({
     account: {
-      type: 'string',
-      min: 0
+      min: 0,
+      type: 'string'
     },
     amount: {
-      type: 'balance',
       currency: token,
-      min: 0
+      min: 0,
+      type: 'balance'
     }
   });
   const form = useFormik({
@@ -34,11 +34,11 @@ export const TransferButton: FC<Props> = memo(({
       account: '',
       amount: ''
     },
-    validate: validator,
-    onSubmit: noop
+    onSubmit: noop,
+    validate: validator
   });
 
-  const checkDisabled = () => {
+  const checkDisabled = (): boolean => {
     if (!(form.values.account && form.values.amount)) {
       return true;
     }
@@ -50,18 +50,18 @@ export const TransferButton: FC<Props> = memo(({
     return false;
   };
 
-  const onSuccess = () => {
+  const onSuccess = (): void => {
     form.resetForm();
     close();
   };
 
-  const handleAccountBlure = () => {
+  const handleAccountBlure = (): void => {
     form.setFieldValue('account', form.values.account.trim());
   };
 
   useEffect(() => {
     form.resetForm();
-  }, [status]);
+  }, [form, status]);
 
   return (
     <>
@@ -80,7 +80,7 @@ export const TransferButton: FC<Props> = memo(({
               onClick={close}
               size='small'
             >
-              Close 
+              Close
             </Button>
             <TxButton
               disabled={checkDisabled()}
@@ -103,8 +103,8 @@ export const TransferButton: FC<Props> = memo(({
               error={!!form.errors.account}
               id='account'
               name='account'
-              onChange={form.handleChange}
               onBlur={handleAccountBlure}
+              onChange={form.handleChange}
               value={form.values.account}
             />
           </FormItem>

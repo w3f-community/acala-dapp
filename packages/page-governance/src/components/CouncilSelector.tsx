@@ -1,7 +1,6 @@
-import React, { FC, ReactNode, useContext } from 'react';
+import React, { FC, useContext } from 'react';
 import { upperFirst } from 'lodash';
 import { Tabs, TabConfig } from '@honzon-platform/ui-components';
-import { CouncilOverview } from './CouncilOverview';
 import { useCouncilList } from '@honzon-platform/react-hooks';
 import { governanceContext } from './provider';
 
@@ -11,20 +10,20 @@ export const CouncilSelector: FC = () => {
 
   const tabsConfig: TabConfig[] = councilList.map((item: string) => {
     return {
-      value: item,
       title: upperFirst(item),
-    }
+      value: item
+    };
   });
 
-  const handleChange = (active: TabConfig) => {
+  const handleChange = (active: TabConfig): void => {
     setCouncilType(active.value || '');
-  }
+  };
 
   return (
     <Tabs
       config={tabsConfig}
-      style='button'
       onChange={handleChange}
+      style='button'
     />
   );
-}
+};

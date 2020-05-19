@@ -1,5 +1,5 @@
 import { get } from 'lodash';
-import { CallOptions, CallParams } from './types';
+import { CallParams } from './types';
 
 import { useEffect, useContext, useMemo } from 'react';
 
@@ -9,15 +9,15 @@ import { useApi } from './useApi';
 import { ApiPromise } from '@polkadot/api';
 
 class Tracker {
-  private trackerList: {[k in string]: { refCount: number, subscriber: () => Promise<void> }}
+  private trackerList: {[k in string]: { refCount: number; subscriber: () => Promise<void> }}
 
-  constructor() {
+  constructor () {
     this.trackerList = {};
   }
 
-  subscribe (api: ApiPromise, path: string, params: CallParams, key: string, updateFn: (key: string, valeu: any) => void) {
+  subscribe (api: ApiPromise, path: string, params: CallParams, key: string, updateFn: (key: string, valeu: any) => void): void {
     if (!api || !path) {
-      return
+      return;
     }
 
     if (this.trackerList[key]) {
@@ -40,11 +40,11 @@ class Tracker {
 
     this.trackerList[key] = {
       refCount: 1,
-      subscriber,
+      subscriber
     };
   }
 
-  unSubscribe (key: string) {
+  unSubscribe (key: string): void {
     if (this.trackerList[key]) {
       this.trackerList[key].refCount -= 1;
     }
@@ -53,10 +53,10 @@ class Tracker {
 
 const tracker = new Tracker();
 
-export function useCall <T> (path: string, params: CallParams = [], options: CallOptions<T> = {}): T | undefined {
+export function useCall <T> (path: string, params: CallParams = []): T | undefined {
   const { api } = useApi();
   const { appReadyStatus } = useIsAppReady();
-  const { store, setStore } = useContext(globalStoreContext);
+  const { setStore, store } = useContext(globalStoreContext);
   const key = useMemo(() => `${path}${params.toString() ? '-' + params.toString() : ''}`, [path, params]);
 
   // on changes, re-subscribe
@@ -65,8 +65,9 @@ export function useCall <T> (path: string, params: CallParams = [], options: Cal
     if (appReadyStatus) {
       tracker.subscribe(api, path, params, key, setStore);
     }
-    return () => {
-      tracker.unSubscribe(key)
+
+    return (): void => {
+      tracker.unSubscribe(key);
     };
   }, [appReadyStatus, api, path, params, key, setStore]);
 

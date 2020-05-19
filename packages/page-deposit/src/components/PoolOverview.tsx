@@ -1,9 +1,8 @@
-import React, { FC, memo, useContext } from 'react';
+import React, { FC, memo, useContext, ReactNode } from 'react';
 
 import { CurrencyId } from '@acala-network/types/interfaces';
 
 import { Card, TableItem, Table } from '@honzon-platform/ui-components';
-import { useAccounts } from '@honzon-platform/react-hooks';
 import { DexPoolSize, DexExchangeRate, DexReward, DexRewardRatio, DexUserShare } from '@honzon-platform/react-components';
 
 import { DepositContext } from './Provider';
@@ -13,54 +12,60 @@ export const PoolOverview: FC = memo(() => {
   const { enabledCurrencyIds } = useContext(DepositContext);
   const tableConfig: TableItem<CurrencyId>[] = [
     {
-      title: 'Token Pair',
       align: 'left',
-      width: 3,
-      render: (token: CurrencyId) => (
+      /* eslint-disable-next-line react/display-name */
+      render: (token: CurrencyId): ReactNode => (
         <AccountDexTokens token={token} />
-      )
+      ),
+      title: 'Token Pair',
+      width: 3
     },
     {
-      title: 'Exchange Rate',
       align: 'left',
-      width: 3,
-      render: (token: CurrencyId) => (
+      /* eslint-disable-next-line react/display-name */
+      render: (token: CurrencyId): ReactNode => (
         <DexExchangeRate supply={token} />
-      )
+      ),
+      title: 'Exchange Rate',
+      width: 3
     },
     {
-      title: 'Current Pool Size',
       align: 'left',
-      width: 3,
-      render: (token: CurrencyId) => (
+      /* eslint-disable-next-line react/display-name */
+      render: (token: CurrencyId): ReactNode => (
         <DexPoolSize token={token} />
-      )
+      ),
+      title: 'Current Pool Size',
+      width: 3
     },
     {
-      title: 'Pool Share',
       align: 'left',
-      width: 1,
-      render: (token: CurrencyId) => (
+      /* eslint-disable-next-line react/display-name */
+      render: (token: CurrencyId): ReactNode => (
         <DexUserShare token={token} />
-      )
+      ),
+      title: 'Pool Share',
+      width: 1
     },
     {
+      align: 'right',
+      /* eslint-disable-next-line react/display-name */
+      render: (token: CurrencyId): ReactNode => <DexRewardRatio token={token} />,
       title: 'Reward Ratio',
-      align: 'right',
-      width: 1,
-      render: (token: CurrencyId) => <DexRewardRatio token={token} />
+      width: 1
     },
     {
-      title: 'Reward',
       align: 'right',
-      width: 1,
-      render: (token: CurrencyId) => <DexReward token={token} />
+      /* eslint-disable-next-line react/display-name */
+      render: (token: CurrencyId): ReactNode => <DexReward token={token} />,
+      title: 'Reward',
+      width: 1
     }
   ];
 
   return (
-    <Card padding={false}
-      header='Deposit'>
+    <Card header='Deposit'
+      padding={false}>
       <Table
         config={tableConfig}
         data={enabledCurrencyIds}

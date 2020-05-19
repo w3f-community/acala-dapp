@@ -10,7 +10,12 @@ import { usePrice } from './usePrice';
 import { DerivedPrice, DerivedDexPool } from '@acala-network/api-derive';
 import { tokenEq, getValueFromTimestampValue } from '@honzon-platform/react-components';
 
-export const useDexTotalDeposit = () => {
+interface HooksReturnType {
+  amount: Fixed18;
+  token: CurrencyId;
+}
+
+export const useDexTotalDeposit = (): HooksReturnType => {
   const { api } = useApi();
   const { active } = useAccounts();
   const { dexCurrencies, stableCurrency } = useConstants();
@@ -18,12 +23,25 @@ export const useDexTotalDeposit = () => {
   const prices = usePrice() as DerivedPrice[];
   const [totalDeposit, setTotalDeposit] = useState<Fixed18>(Fixed18.ZERO);
 
+  const calcTotalDeposit = useCallback(() => {
+    const keys = Object.keys(deposits.current);
+    const total = keys.reduce((acc, cur) => {
+      if (deposits.current[cur]) {
+        acc = acc.add(deposits.current[cur]);
+      }
+
+      return acc;
+    }, Fixed18.ZERO);
+
+    setTotalDeposit(total);
+  }, [setTotalDeposit]);
+
   const getReward = useCallback((currency: CurrencyId) => {
     const _price = prices.find((item) => tokenEq(item.token, currency));
     const price = _price ? convertToFixed18(getValueFromTimestampValue(_price.price)) : Fixed18.fromNatural(1);
 
     (api.derive as any).dex.pool(currency, function (pool: DerivedDexPool) {
-      api.query.dex.shares(currency, active!.address, function (_share) {
+      api.query.dex.shares(currency, active?.address, function (_share) {
         api.query.dex.totalShares(currency, function (_totalShares) {
           const base = convertToFixed18(pool.base);
           const other = convertToFixed18(pool.other);
@@ -36,7 +54,7 @@ export const useDexTotalDeposit = () => {
         });
       });
     });
-  }, [active, api.derive, api.query.dex, prices]);
+  }, [active, api.derive, api.query.dex, prices, calcTotalDeposit]);
 
   useEffect(() => {
     if (active && prices) {
@@ -45,19 +63,6 @@ export const useDexTotalDeposit = () => {
       });
     }
   }, [api, active, prices, dexCurrencies, getReward]);
-
-  const calcTotalDeposit = () => {
-    const keys = Object.keys(deposits.current);
-    const total = keys.reduce((acc, cur) => {
-      if (deposits.current[cur]) {
-        acc = acc.add(deposits.current[cur]);
-      }
-
-      return acc;
-    }, Fixed18.ZERO);
-
-    setTotalDeposit(total);
-  };
 
   return {
     amount: totalDeposit,

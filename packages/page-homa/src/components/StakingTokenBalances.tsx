@@ -1,4 +1,4 @@
-import React, { FC, useContext } from 'react';
+import React, { FC, useContext, ReactNode } from 'react';
 import { CurrencyId } from '@acala-network/types/interfaces';
 
 import { Card, Table, TableItem } from '@honzon-platform/ui-components';
@@ -16,16 +16,18 @@ export const StakingTokeBalances: FC = () => {
   const tableConfig: TableItem<TableData>[] = [
     {
       align: 'left',
-      title: 'token',
       dataIndex: 'token',
-      render: (data: CurrencyId) => {
+      /* eslint-disable-next-line react/display-name */
+      render: (data: CurrencyId): ReactNode => {
         return <Token token={data} />;
-      }
+      },
+      title: 'token'
     },
     {
-      title: 'balance',
       align: 'right',
-      render: (data: TableData) => <UserBalance token={data.token} />
+      /* eslint-disable-next-line react/display-name */
+      render: (data: TableData): ReactNode => <UserBalance token={data.token} />,
+      title: 'balance'
     }
   ];
 
@@ -39,8 +41,8 @@ export const StakingTokeBalances: FC = () => {
   ];
 
   return (
-    <Card padding={false}
-      header='Balance'>
+    <Card header='Balance'
+      padding={false}>
       <Table config={tableConfig}
         data={tableData}
         size='small'

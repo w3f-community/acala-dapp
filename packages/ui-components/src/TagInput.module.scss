@@ -1,11 +1,45 @@
+@import './styles/index.scss';
+
 .root {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  width: 160px;
+  min-width: 30px;
+  height: 32px;
+  line-height: 28px;
+  margin: 0 8px;
+  padding: 0 8px;
+  border-radius: 13px;
+  background: #f0f0f0;
+  color: #333333;
 
-}
+  border: 1px solid #e1e1e1;
+  background: #ffffff;
 
-.input {
+  &.primary {
+    border: 1px solid $color-primary;
+    background: $color-primary;
+    color: $color-white;
+  }
 
-}
+  &.clickable {
+    cursor: pointer;
+  }
 
-.lab {
+  &.error {
+    border-color: #ff5500;
+  }
 
+  .input {
+    min-width: 0;
+    min-height: 0;
+    height: 70%;
+    border: none;
+
+     > input {
+        font-size: 16px;
+        color: #333333;
+     }
+  }
 }

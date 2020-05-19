@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState, ChangeEvent } from 'react';
+import React, { FC, useEffect, useState, ChangeEvent, ReactNode } from 'react';
 import { noop } from 'lodash';
 import { useFormik } from 'formik';
 
@@ -31,33 +31,34 @@ export const LonaActionButton: FC<Props> = ({
   const { stableCurrency } = useConstants();
   const validator = useFormValidator({
     value: {
-      type: 'number',
       max: max,
-      min: 0
+      min: 0,
+      type: 'number'
     }
   });
   const form = useFormik({
     initialValues: {
-      value: '' as any as number
+      value: (('' as any) as number)
     },
-    validate: validator,
-    onSubmit: noop
+    onSubmit: noop,
+    validate: validator
   });
-  const { getUserLoanHelper, currentUserLoanHelper, currentLoanType, currentUserLoan, minmumDebitValue } = useLoan(token);
+  const { currentLoanType, currentUserLoan, currentUserLoanHelper, getUserLoanHelper, minmumDebitValue } = useLoan(token);
   const [collateral, setCollateral] = useState<number>(0);
   const [debit, setDebit] = useState<number>(0);
   const [loanHelper, setLoanHelper] = useState<LoanHelper | null>();
 
   useEffect(() => {
     const _result = getUserLoanHelper(currentUserLoan, currentLoanType, collateral, debit);
+
     setLoanHelper(_result);
-  }, [currentLoanType, currentUserLoan, collateral, debit, setLoanHelper]);
+  }, [currentLoanType, currentUserLoan, collateral, debit, setLoanHelper, getUserLoanHelper]);
 
   const checkOperateStableCurrency = (): boolean => {
     return type === 'payback' || type === 'generate';
   };
 
-  const getDialogTitle = () => {
+  const getDialogTitle = (): string => {
     const _token = checkOperateStableCurrency() ? stableCurrency : token;
 
     return `${text} ${_token}`;
@@ -67,8 +68,8 @@ export const LonaActionButton: FC<Props> = ({
     open();
   };
 
-  const getParams = () => {
-    const params = [token, '0', '0'];
+  const getParams = (): string[] => {
+    const params = [token.toString(), '0', '0'];
 
     if (!form.values.value || !loanHelper || !currentUserLoan || !currentUserLoanHelper) {
       return params;
@@ -89,6 +90,7 @@ export const LonaActionButton: FC<Props> = ({
             loanHelper.debitExchangeRate
           ).negated().innerToString();
         }
+
         break;
       }
 
@@ -108,13 +110,14 @@ export const LonaActionButton: FC<Props> = ({
       case 'withdraw': {
         if (
           currentUserLoanHelper.collaterals
-          .sub(Fixed18.fromNatural(form.values.value))
-          .isLessThan(Fixed18.fromNatural(0.0000001))
+            .sub(Fixed18.fromNatural(form.values.value))
+            .isLessThan(Fixed18.fromNatural(0.0000001))
         ) {
           params[1] = currentUserLoanHelper.collaterals.negated().innerToString();
         } else {
           params[1] = Fixed18.fromNatural(form.values.value).negated().innerToString();
         }
+
         break;
       }
     }
@@ -137,34 +140,37 @@ export const LonaActionButton: FC<Props> = ({
   const config: ListConfig[] = [
     {
       key: 'borrowed',
-      title: 'Borrowed aUSD',
-      render: (value) => {
+      /* eslint-disable-next-line react/display-name */
+      render: (value): ReactNode => {
         return <FormatBalance balance={value} />;
-      }
+      },
+      title: 'Borrowed aUSD'
     },
     {
       key: 'collateralRate',
-      title: 'New Collateral Ratio',
-      render: (value) => {
+      /* eslint-disable-next-line react/display-name */
+      render: (value): ReactNode => {
         return (
           <FormatFixed18
             data={value}
             format='percentage'
           />
         );
-      }
+      },
+      title: 'New Collateral Ratio'
     },
     {
       key: 'liquidationPrice',
-      title: 'New Liquidation Price',
-      render: (value) => {
+      /* eslint-disable-next-line react/display-name */
+      render: (value): ReactNode => {
         return (
           <FormatFixed18
             data={value}
             prefix='$'
           />
         );
-      }
+      },
+      title: 'New Liquidation Price'
     }
   ];
 
@@ -196,7 +202,7 @@ export const LonaActionButton: FC<Props> = ({
     }
   }, [form.values.value, type, setCollateral, setDebit]);
 
-  const _close = () => {
+  const _close = (): void => {
     setCollateral(0);
     setDebit(0);
     form.resetForm();
@@ -205,7 +211,6 @@ export const LonaActionButton: FC<Props> = ({
 
   const getValueWithCheckFormError = (value: any): any => {
     if (form?.errors?.value) {
-
       return Fixed18.fromNatural(NaN);
     }
 
@@ -218,11 +223,11 @@ export const LonaActionButton: FC<Props> = ({
     liquidationPrice: getValueWithCheckFormError(loanHelper?.liquidationPrice)
   };
 
-  const handleMax = () => {
+  const handleMax = (): void => {
     form.setFieldValue('value', max);
   };
 
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
     form.handleChange(event);
   };
 

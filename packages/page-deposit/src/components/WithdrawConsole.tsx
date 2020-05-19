@@ -16,7 +16,7 @@ import { AccountDexTokens } from './AccountDexTokens';
 import { useDexWithdrawShare } from './useDexWithdrawShare';
 
 interface InputAreaProps {
-  error: string | undefined;
+  error: boolean;
   id: string;
   name: string;
   currencies?: Vec<CurrencyId>;
@@ -49,7 +49,7 @@ const InputArea: FC<InputAreaProps> = memo(({
       <BalanceInput
         currencies={currencies}
         enableTokenSelect
-        error={!!error}
+        error={error}
         id={id}
         name={name}
         onChange={onChange}
@@ -69,21 +69,23 @@ export const WithdrawConsole: FC = memo(() => {
   const { share } = useDexShare(otherCurrency);
   const validator = useFormValidator({
     share: {
-      type: 'number',
+      max: share ? convertToFixed18(share).toNumber() : 0,
       min: 0,
-      max: share ? convertToFixed18(share).toNumber() : 0
+      type: 'number'
     }
   });
   const form = useFormik({
     initialValues: {
-      share: '' as any as number
+      share: (('' as any) as number)
     },
-    validate: validator,
-    onSubmit: noop
+    onSubmit: noop,
+    validate: validator
   });
+
   const withdrawTokens = useDexWithdrawShare(otherCurrency, form.values.share);
-  const _withdrawToken = withdrawTokens.map(item => ({ balance: item.balance?.toNumber(), currency: item.currency?.toString()}));
-  const checkDisabled = () => {
+  const _withdrawToken = withdrawTokens.map((item) => ({ balance: item.balance.toNumber(), currency: item.currency.toString() }));
+
+  const checkDisabled = (): boolean => {
     if (form.values.share && !form.errors.share) {
       return false;
     }
@@ -91,20 +93,20 @@ export const WithdrawConsole: FC = memo(() => {
     return true;
   };
 
-  const handleSuccess = useCallback(() => {
+  const handleSuccess = useCallback((): void => {
     form.resetForm();
   }, [form]);
 
   useEffect(() => {
     form.resetForm();
-  }, [otherCurrency])
+  }, [form, otherCurrency]);
 
   return (
     <Card>
       <div className={classes.main}>
         <InputArea
           currencies={enabledCurrencyIds}
-          error={form.errors.share}
+          error={!!form.errors.share}
           id='share'
           name='share'
           onChange={form.handleChange}
@@ -133,10 +135,10 @@ export const WithdrawConsole: FC = memo(() => {
           className={classes.txBtn}
           disabled={checkDisabled()}
           method='withdrawLiquidity'
+          onSuccess={handleSuccess}
           params={[otherCurrency, numToFixed18Inner(form.values.share)]}
           section='dex'
           size='large'
-          onSuccess={handleSuccess}
         >
           Withdraw
         </TxButton>

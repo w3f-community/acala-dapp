@@ -1,15 +1,15 @@
-import React, { FC, memo, ReactElement } from 'react';
+import React, { FC, ReactElement } from 'react';
 import clsx from 'clsx';
 import Tooltip from '@material-ui/core/Tooltip';
 
 import { Fixed18 } from '@acala-network/app-util';
 import { BareProps } from '@honzon-platform/ui-components/types';
-import { thousandth, padEndDecimal } from '../utils';
 
+import { thousandth, padEndDecimal } from '../utils';
 import classes from './format.module.scss';
 
 interface Props extends BareProps {
-  data: Fixed18;
+  data?: Fixed18;
   format?: 'percentage' | 'number' | 'thousandth';
   prefix?: string;
   primary?: boolean;
@@ -17,14 +17,14 @@ interface Props extends BareProps {
   withPadEndDecimal?: boolean;
 }
 
-export const FormatFixed18: FC<Props> = memo(({
+export const FormatFixed18: FC<Props> = ({
   className,
   data,
   format = 'thousandth',
   prefix,
   primary = false,
-  withTooltip = true,
-  withPadEndDecimal = false
+  withPadEndDecimal = false,
+  withTooltip = true
 }) => {
   if (!data) {
     return null;
@@ -49,31 +49,31 @@ export const FormatFixed18: FC<Props> = memo(({
       _text = data.mul(Fixed18.fromNatural(100)).toString(2, 3) + '%';
     }
 
-    return `${prefix ? prefix : ''}${_text}`;
+    return `${prefix || ''}${_text}`;
   };
 
   const inner = (): ReactElement => (
-      <span
-        className={
-          clsx(
-            className,
-            {
-              [classes.primary]: primary
-            }
-          )
+    <span
+      className={
+        clsx(
+          className,
+          {
+            [classes.primary]: primary
+          }
+        )
 
-        }
-      >
-        {getRenderText()}
-      </span>
+      }
+    >
+      {getRenderText()}
+    </span>
   );
 
   if (withTooltip) {
     return (
       <Tooltip
         arrow
-        title={data.toString(18, 3)}
         placement='left'
+        title={data.toString(18, 3)}
       >
         {
           inner()
@@ -83,7 +83,4 @@ export const FormatFixed18: FC<Props> = memo(({
   }
 
   return inner();
-
-});
-
-FormatFixed18.displayName = 'FormatFixed18';
+};

@@ -11,10 +11,11 @@ export const EventsWather: FC = () => {
     }
 
     api.query.system.events(function (events) {
-      events.map((event) => {
+      events.map(() => {
         // console.log(event.toHuman());
-      })
+      });
     });
   }, [api]);
+
   return <></>;
-}
+};

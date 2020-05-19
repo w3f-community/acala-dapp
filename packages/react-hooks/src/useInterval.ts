@@ -1,12 +1,15 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from 'react';
 
 export function useInterval<T> (callback: () => Promise<T> | T, interval: number, immediately?: boolean): T | null {
   const [data, setData] = useState<T | null>(null);
 
-  const _exec = useCallback(async () => {
-    const result = await callback();
-    setData(result);
-  }, [callback, interval, immediately]);
+  const _exec = useCallback((): void => {
+    (async (): Promise<void> => {
+      const result = await callback();
+
+      setData(result);
+    })();
+  }, [callback]);
 
   useEffect(() => {
     if (immediately) {
@@ -15,10 +18,10 @@ export function useInterval<T> (callback: () => Promise<T> | T, interval: number
 
     const _i = setInterval(_exec, interval);
 
-    return () => {
+    return (): void => {
       clearInterval(_i);
     };
-  }, [_exec, immediately]);
+  }, [_exec, immediately, interval]);
 
   return data;
 }

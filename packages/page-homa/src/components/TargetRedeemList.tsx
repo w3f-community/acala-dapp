@@ -1,4 +1,4 @@
-import React, { FC, useContext } from 'react';
+import React, { FC, useContext, ReactNode } from 'react';
 import { formatDuration, formatCurrency } from '@honzon-platform/react-components';
 import { Dropdown, DropdownConfig } from '@honzon-platform/ui-components';
 import { BareProps } from '@honzon-platform/ui-components/types';
@@ -15,21 +15,22 @@ export const TargetRedeemList: FC<Props> = ({
   onChange,
   value
 }) => {
-  const { freeList, stakingPool, stakingPoolHelper, eraDuration } = useContext(StakingPoolContext);
+  const { eraDuration, freeList, stakingPool, stakingPoolHelper } = useContext(StakingPoolContext);
 
-  const config: DropdownConfig[] = freeList.map(({ era, free }) => {
+  const config: DropdownConfig[] = freeList.map(({ era, free }): DropdownConfig => {
     const duration = formatDuration((era - stakingPoolHelper.currentEra) * eraDuration);
 
     return {
-      value: era,
-      render: () => {
+      /* eslint-disable-next-line react/display-name */
+      render: (): ReactNode => {
         return (
           <div className={classes.item}>
             <span>
-            {`at era ${era}(≈ ${duration} days later) has ${free.div(stakingPoolHelper?.liquidExchangeRate)} ${formatCurrency(stakingPool?.liquidCurrency)} to redeem`}</span>
+              {`at era ${era}(≈ ${duration} days later) has ${free.div(stakingPoolHelper?.liquidExchangeRate)} ${formatCurrency(stakingPool?.liquidCurrency)} to redeem`}</span>
           </div>
         );
-      }
+      },
+      value: era
     };
   });
 
@@ -39,7 +40,7 @@ export const TargetRedeemList: FC<Props> = ({
       config={config}
       menuClassName={classes.menu}
       onChange={onChange}
-      selectedRender={(era) => era}
+      selectedRender={(era): string => era}
       size='small'
       value={value}
     />

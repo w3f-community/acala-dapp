@@ -1,12 +1,15 @@
-import React, { FC, memo } from 'react';
+import React, { FC } from 'react';
+
 import AccountId from '@polkadot/types/generic/AccountId';
 import { CurrencyId } from '@acala-network/types/interfaces';
+import { DerivedUserLoan, DerivedLoanType, DerivedPrice } from '@acala-network/api-derive';
+import { calcCollateralRatio, debitToUSD, convertToFixed18, collateralToUSD } from '@acala-network/app-util';
+
 import { BareProps } from '@honzon-platform/ui-components/types';
-import { useCall, useApi, useAccounts, usePrice, useConstants } from '@honzon-platform/react-hooks';
-import { DerivedUserLoan, DerivedLoanType, DerivedLoanOverView, DerivedPrice } from '@acala-network/api-derive';
+import { useCall, useAccounts, usePrice, useConstants } from '@honzon-platform/react-hooks';
+
 import { FormatFixed18 } from './format';
 import { tokenEq, getValueFromTimestampValue } from './utils';
-import { calcCollateralRatio, debitToUSD, convertToFixed18, collateralToUSD } from '@acala-network/app-util';
 
 interface Props extends BareProps {
   account?: AccountId | string;
@@ -14,13 +17,12 @@ interface Props extends BareProps {
   withTooltip?: boolean;
 }
 
-export const LoanCollateralRate: FC<Props> = memo(({
+export const LoanCollateralRate: FC<Props> = ({
   account,
   className,
   token,
   withTooltip = true
 }) => {
-  const { api } = useApi();
   const { active } = useAccounts();
   const _account = account || (active ? active.address : '');
   const loans = useCall<DerivedUserLoan[]>('derive.loan.allLoans', [_account]) || [];
@@ -56,4 +58,4 @@ export const LoanCollateralRate: FC<Props> = memo(({
       withTooltip={withTooltip}
     />
   );
-});
+};

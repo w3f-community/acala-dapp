@@ -1,4 +1,4 @@
-import React, { FC, memo, useRef } from 'react';
+import React, { FC, memo, useRef, ReactElement } from 'react';
 import { compose, curry, placeholder } from 'lodash/fp';
 import clsx from 'clsx';
 import Tooltip from '@material-ui/core/Tooltip';
@@ -36,30 +36,31 @@ export const FormatBalance: FC<Props> = memo(({
 }) => {
   const pairLength = pair ? pair.length : 0;
   const _id = useRef(randomID());
-  const renderBalance = (data: BalancePair, index: number, useThousandth: boolean, dp: number) => {
-    let _noop = (i: any): any => i;
 
-    let _transform = compose(
+  const renderBalance = (data: BalancePair, index: number, useThousandth: boolean, dp: number): ReactElement => {
+    const _noop = (i: any): any => i;
+
+    const _transform = compose(
       useThousandth ? thousandth : _noop,
       curry(padEndDecimal)(placeholder, 6)
     );
 
     const _balance = formatBalance(data?.balance);
-    const balance = _balance.isNaN ()? _balance.toString() : _transform(_balance.toNumber(dp, 3));
+    const balance = _balance.isNaN() ? _balance.toString() : _transform(_balance.toNumber(dp, 3));
 
     return (
       <span key={`${_id}-${index}`}>
         {balance}
         {data.currency ? <span>{' '}{formatCurrency(data.currency)}</span> : null}
-        {(pairSymbol && index != pairLength - 1) ? <span>{' '}{pairSymbol}{' '}</span> : null}
+        {(pairSymbol && index !== pairLength - 1) ? <span>{' '}{pairSymbol}{' '}</span> : null}
       </span>
     );
   };
 
   return (
     <Tooltip
-      title={pair ? pair.map((data, index) => renderBalance(data, index, false, 18)) : renderBalance({ balance, currency }, -1, false, 18)}
       placement='left'
+      title={pair ? pair.map((data, index) => renderBalance(data, index, false, 18)) : renderBalance({ balance, currency }, -1, false, 18)}
     >
       <span
         className={

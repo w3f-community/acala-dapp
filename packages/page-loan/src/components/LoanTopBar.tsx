@@ -1,4 +1,4 @@
-import React, { FC, memo, useContext } from 'react';
+import React, { FC, memo, useContext, useMemo } from 'react';
 import clsx from 'clsx';
 import { Token, LoanCollateralRate } from '@honzon-platform/react-components';
 import { CurrencyId } from '@acala-network/types/interfaces';
@@ -26,7 +26,7 @@ const LoanItem: FC<LoanItemProps> = memo(({ token }) => {
           }
         )
       }
-      onClick={() => setCurrentTab(token)}
+      onClick={(): void => setCurrentTab(token)}
     >
       <Token
         className={classes.icon}
@@ -97,6 +97,14 @@ const LoanAdd: FC = () => {
 export const LoanTopBar: FC = () => {
   const { loans } = useAllLoans();
 
+  const checkIfNeedAdd = useMemo((): boolean => {
+    if (!loans) {
+      return false;
+    }
+
+    return loans.length !== filterEmptyLoan(loans).length;
+  }, [loans]);
+
   return (
     <div className={classes.root}>
       <LoanOverview />
@@ -108,7 +116,7 @@ export const LoanTopBar: FC = () => {
           />
         ))
       }
-      <LoanAdd />
+      { checkIfNeedAdd ? <LoanAdd /> : null }
     </div>
   );
 };

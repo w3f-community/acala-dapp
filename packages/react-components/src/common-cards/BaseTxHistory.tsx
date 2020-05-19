@@ -15,10 +15,10 @@ interface Props {
 const defaultTableConfig: TableItem<ExtrinsicHistoryData>[] = [
   {
     key: 'tx',
-    title: 'Tx Hash',
-    render: (data) => {
+    render: (data): string => {
       return data.hash;
-    }
+    },
+    title: 'Tx Hash'
   }
 ];
 
@@ -29,7 +29,7 @@ export const BaseTxHistory: FC<Props> = ({
 }) => {
   const { active } = useAccounts();
 
-  const { data, loading, error, pagination, onPaginationChagne } = useHistory({
+  const { data, error, loading, onPaginationChagne, pagination } = useHistory({
     method,
     section,
     signer: active ? active.address : ''
@@ -39,35 +39,40 @@ export const BaseTxHistory: FC<Props> = ({
     return Math.ceil(pagination.total / pagination.pageSize);
   }, [pagination]);
 
-  const handlePaginationChagne = (_event: any, page: number) => {
+  const handlePaginationChagne = (_event: any, page: number): void => {
     onPaginationChagne({ currentPage: page - 1 });
-  }
+  };
 
   return (
     <Card
-      padding={false}
-      header='Transaction'
       className={classes.root}
+      contentClassName={classes.content}
+      header='Transaction'
+      padding={false}
     >
       <Table
-        loading={loading}
         config={config}
         data={data}
-        showHeader
         empty={ error ? 'Service Error' : 'No Tx History' }
+        loading={loading}
+        showHeader
       />
-      <Box
-        className={classes.pagination}
-        display='flex'
-        justifyContent='flex-end'
-      >
-        <Pagination
-          page={pagination.currentPage + 1}
-          count={count}
-          shape="rounded"
-          onChange={handlePaginationChagne}
-        />
-      </Box>
+      {
+        data.length ? (
+          <Box
+            className={classes.pagination}
+            display='flex'
+            justifyContent='flex-end'
+          >
+            <Pagination
+              count={count}
+              onChange={handlePaginationChagne}
+              page={pagination.currentPage + 1}
+              shape='rounded'
+            />
+          </Box>
+        ) : null
+      }
     </Card>
   );
 };

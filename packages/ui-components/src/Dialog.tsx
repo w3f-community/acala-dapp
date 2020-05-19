@@ -3,7 +3,6 @@ import Modal from '@material-ui/core/Modal';
 import Fade from '@material-ui/core/Fade';
 import Backdrop from '@material-ui/core/Backdrop';
 
-
 import { BareProps } from './types';
 import classes from './Dialog.module.scss';
 import { Button } from './Button';
@@ -36,15 +35,15 @@ export const Dialog: FC<Props> = memo(({
 
   return (
     <Modal
-        disableEnforceFocus
-        disableAutoFocus
-        open={visiable}
-        className={classes.mask}
-        closeAfterTransition
-        BackdropComponent={Backdrop}
-        BackdropProps={{ timeout: 500, }}
-        container={$div.current}
-      >
+      BackdropComponent={Backdrop}
+      BackdropProps={{ timeout: 500 }}
+      className={classes.mask}
+      closeAfterTransition
+      container={$div.current}
+      disableAutoFocus
+      disableEnforceFocus
+      open={visiable}
+    >
       <Fade in={visiable}>
         <div className={
           clsx(

@@ -15,5 +15,6 @@ export const FormatTime: FC<Props> = ({
   if (unix) {
     return <span>{Dayjs.unix(Number(time)).format(formatter)}</span>;
   }
+
   return <span>{Dayjs(Number(time)).format(formatter)}</span>;
 };

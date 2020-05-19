@@ -1,5 +1,7 @@
-/build/**
+.eslintrc.js
+build/**
 /node_modules/**
+/packages/**/build/**
 /packages/**/node_modules/**
 /packages/apps/src/serviceWorker.ts
 /packages/apps/config-overrides.js

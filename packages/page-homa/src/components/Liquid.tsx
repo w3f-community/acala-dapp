@@ -17,30 +17,37 @@ export const Liquid: FC = memo(() => {
       <Grid item>
         <SelectToken />
       </Grid>
-      <Grid container
-        alignItems='stretch'
+      <Grid alignItems='stretch'
+        container
         item>
-        <Grid xs={6} item>
+        <Grid item
+          xs={6}>
           <Console />
         </Grid>
-        <Grid item xs={6}>
+        <Grid item
+          xs={6}>
           <Grid container>
-            <Grid item xs={12}>
+            <Grid item
+              xs={12}>
               <StakingTokeBalances />
             </Grid>
-            <Grid item xs={12}>
+            <Grid item
+              xs={12}>
               <SystemInfo />
             </Grid>
           </Grid>
         </Grid>
       </Grid>
-      <Grid item xs={12}>
+      <Grid item
+        xs={12}>
         <RedeemList />
       </Grid>
-      <Grid item xs={12}>
+      <Grid item
+        xs={12}>
         <StakingPool />
       </Grid>
-      <Grid item xs={12}>
+      <Grid item
+        xs={12}>
         <Transaction />
       </Grid>
     </Grid>

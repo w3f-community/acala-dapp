@@ -12,29 +12,38 @@ const PageSwap: FC = () => {
     <SwapProvider>
       <Page>
         <Page.Title title='Swap' />
-          <Page.Content>
-            <Grid container direction='row'>
-              <Grid container item direction='column' md={12} lg={8}>
-                <Grid item>
-                  <SwapConsole />
-                </Grid>
-                <Grid item>
-                  <AllMarkets />
-                </Grid>
-                <Grid item>
-                  <Transaction />
-                </Grid>
+        <Page.Content>
+          <Grid container
+            direction='row'>
+            <Grid container
+              direction='column'
+              item
+              lg={8}
+              md={12}>
+              <Grid item>
+                <SwapConsole />
               </Grid>
-              <Grid container item direction='column' md={12} lg={4}>
-                <Grid item>
-                  <WalletBalanceCard />
-                </Grid>
-                <Grid item>
-                  <PricesFeedCard />
-                </Grid>
+              <Grid item>
+                <AllMarkets />
+              </Grid>
+              <Grid item>
+                <Transaction />
               </Grid>
             </Grid>
-          </Page.Content>
+            <Grid container
+              direction='column'
+              item
+              lg={4}
+              md={12}>
+              <Grid item>
+                <WalletBalanceCard />
+              </Grid>
+              <Grid item>
+                <PricesFeedCard />
+              </Grid>
+            </Grid>
+          </Grid>
+        </Page.Content>
       </Page>
     </SwapProvider>
   );

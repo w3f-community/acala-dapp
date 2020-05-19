@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect } from 'react';
+import React, { FC, useState, useEffect, ReactNode } from 'react';
 
 import { BaseTxHistory, FormatTime, FormatHash, Token, formatBalance, formatCurrency } from '@honzon-platform/react-components';
 import { TableItem, Status } from '@honzon-platform/ui-components';
@@ -16,10 +16,10 @@ interface ActionProps {
 }
 
 const Action: FC<ActionProps> = ({
+  block,
   collatera,
   debit,
-  token,
-  block
+  token
 }) => {
   const { api } = useApi();
   const { stableCurrency } = useConstants();
@@ -27,30 +27,32 @@ const Action: FC<ActionProps> = ({
   const _debit = Fixed18.fromParts(debit);
   const [debitExchangeRate, setDebitExchangeRate] = useState<Codec>();
 
-
   useEffect(() => {
     if (api && block) {
-      (async () => {
+      (async (): Promise<void> => {
         const hash = await api.query.system.blockHash(block);
         const result = await api.query.cdpEngine.debitExchangeRate.at(hash, token);
 
         setDebitExchangeRate(result);
       })();
     }
-  }, [api, block]);
+  }, [api, block, token]);
 
-  const getDebit = () => {
+  const getDebit = (): string | Fixed18 => {
     if (!debitExchangeRate || debitExchangeRate.isEmpty) {
       return 'some';
     }
+
     if (_debit.isGreaterThan(ZERO)) {
       return formatBalance(debitToStableCoin(_debit, convertToFixed18(debitExchangeRate || 0)));
     }
+
     if (_debit.isLessThan(ZERO)) {
       return formatBalance(debitToStableCoin(_debit.negated(), convertToFixed18(debitExchangeRate || 0)));
     }
+
     return '';
-  }
+  };
 
   const message: Array<string> = [];
 
@@ -61,7 +63,7 @@ const Action: FC<ActionProps> = ({
   if (_collateral.isLessThan(ZERO)) {
     message.push(`Withdraw ${formatBalance(_collateral.negated())} ${formatCurrency(token)}`);
   }
-  
+
   if (_debit.isGreaterThan(ZERO)) {
     message.push(
       `Generate ${getDebit()} ${formatCurrency(stableCurrency)}`
@@ -82,47 +84,52 @@ export const Transaction: FC = () => {
     {
       align: 'left',
       dataIndex: 'hash',
-      width: 2,
-      render: (value) => <FormatHash hash={value} />,
-      title: 'Tx Hash'
+      /* eslint-disable-next-line react/display-name */
+      render: (value): ReactNode => <FormatHash hash={value} />,
+      title: 'Tx Hash',
+      width: 1
     },
     {
       align: 'left',
-      width: 1,
       dataIndex: 'params',
-      render: (value) => <Token token={value[0]} />,
-      title: 'Token'
+      /* eslint-disable-next-line react/display-name */
+      render: (value): ReactNode => <Token token={value[0]} />,
+      title: 'Token',
+      width: 1
     },
     {
       align: 'left',
-      width: 2,
-      render: (data) => (
+      /* eslint-disable-next-line react/display-name */
+      render: (data): ReactNode => (
         <Action
+          block={data?.blockNum}
           collatera={data?.params[1]}
           debit={data?.params[2]}
           token={data?.params[0]}
-          block={data?.blockNum}
         />
       ),
-      title: 'Action'
+      title: 'Action',
+      width: 3
     },
     {
       align: 'left',
       dataIndex: 'time',
-      width: 1,
-      render: (value) => (
+      /* eslint-disable-next-line react/display-name */
+      render: (value): ReactNode => (
         <FormatTime time={value} />
       ),
-      title: 'When'
+      title: 'When',
+      width: 1
     },
     {
       align: 'right',
-      width: 1,
       dataIndex: 'success',
-      render: (value) => (
+      /* eslint-disable-next-line react/display-name */
+      render: (value): ReactNode => (
         <Status success={value} />
       ),
-      title: 'Result'
+      title: 'Result',
+      width: 1
     }
   ];
 

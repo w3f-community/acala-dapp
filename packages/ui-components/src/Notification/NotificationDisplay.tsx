@@ -48,7 +48,8 @@ const NotificationCard: FC<NotificationConfig> = (config) => {
   };
 
   return (
-    <Slide direction="left" in>
+    <Slide direction='left'
+      in>
       <div
         className={
           clsx(

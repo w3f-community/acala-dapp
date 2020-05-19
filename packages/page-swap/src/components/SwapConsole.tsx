@@ -5,7 +5,7 @@ import { useFormik } from 'formik';
 import { CurrencyId } from '@acala-network/types/interfaces';
 
 import { Card, nextTick, IconButton } from '@honzon-platform/ui-components';
-import { BalanceInput, TxButton, numToFixed18Inner, DexExchangeRate, UserBalance } from '@honzon-platform/react-components';
+import { BalanceInput, TxButton, numToFixed18Inner, DexExchangeRate } from '@honzon-platform/react-components';
 import { useFormValidator } from '@honzon-platform/react-hooks';
 
 import classes from './SwapConsole.module.scss';
@@ -83,39 +83,39 @@ export const SwapConsole: FC = memo(() => {
     pool,
     setCurrency,
     supplyCurrencies,
-    targetCurrencies,
+    targetCurrencies
   } = useContext(SwapContext);
   const [slippage, setSlippage] = useState<number>(0.005);
 
   const validator = useFormValidator({
     supply: {
-      type: 'balance',
       currency: pool.supplyCurrency,
+      max: pool.supplySize,
       min: 0,
-      max: pool.supplySize
+      type: 'balance'
     },
     target: {
-      type: 'number',
       max: pool.targetSize,
-      min: 0
+      min: 0,
+      type: 'number'
     }
   });
 
   const form = useFormik({
     initialValues: {
-      supply: '' as any as number,
-      target: '' as any as number
+      supply: (('' as any) as number),
+      target: (('' as any) as number)
     },
-    validate: validator,
-    onSubmit: noop
+    onSubmit: noop,
+    validate: validator
   });
 
   const onSwap = useCallback((): void => {
     setCurrency(pool.targetCurrency, pool.supplyCurrency);
     form.resetForm();
-  }, [setCurrency, form]);
+  }, [setCurrency, pool.targetCurrency, pool.supplyCurrency, form]);
 
-  const onSupplyChange = useCallback((event: ChangeEvent<HTMLInputElement>): void => {
+  const onSupplyChange = (event: ChangeEvent<HTMLInputElement>): void => {
     const value = Number(event.currentTarget.value);
 
     calcTarget(pool.supplyCurrency, pool.targetCurrency, value, slippage).then((target) => {
@@ -123,9 +123,9 @@ export const SwapConsole: FC = memo(() => {
     });
 
     form.handleChange(event);
-  }, [calcTarget, pool, form]);
+  };
 
-  const onTargetChange = useCallback((event: ChangeEvent<HTMLInputElement>): void => {
+  const onTargetChange = (event: ChangeEvent<HTMLInputElement>): void => {
     const value = Number(event.currentTarget.value);
 
     calcSupply(pool.supplyCurrency, pool.targetCurrency, value, slippage).then((supply) => {
@@ -133,33 +133,34 @@ export const SwapConsole: FC = memo(() => {
     });
 
     form.handleChange(event);
-  }, [calcSupply, pool, form]);
+  };
 
-  const onSlippageChange = useCallback((slippage: number): void => {
+  const onSlippageChange = (slippage: number): void => {
     const supply = form.values.supply;
+
     setSlippage(slippage);
     calcTarget(pool.supplyCurrency, pool.targetCurrency, supply, slippage).then((target) => {
       nextTick(() => form.setFieldValue('target', target));
     });
-  }, [setSlippage, calcTarget, pool]);
+  };
 
-  const onSupplyTokenChange = useCallback(async (token: CurrencyId): Promise<void> => {
-    setCurrency(token, pool.targetCurrency);
+  const onSupplyTokenChange = async (token: CurrencyId): Promise<void> => {
+    await setCurrency(token, pool.targetCurrency);
 
     calcSupply(token, pool.targetCurrency, form.values.target, slippage).then((supply) => {
       nextTick(() => form.setFieldValue('supply', supply));
     });
-  }, [setCurrency, calcSupply, pool]);
+  };
 
-  const onTargetTokenChange = useCallback(async (token: CurrencyId): Promise<void> => {
+  const onTargetTokenChange = async (token: CurrencyId): Promise<void> => {
     await setCurrency(pool.supplyCurrency, token);
 
     calcTarget(pool.supplyCurrency, token, form.values.supply, slippage).then((target) => {
       nextTick(() => form.setFieldValue('target', target));
     });
-  }, [setCurrency, pool, calcTarget]);
+  };
 
-  const checkDisabled = useCallback((): boolean => {
+  const checkDisabled = (): boolean => {
     if (form.errors.supply || form.errors.target) {
       return true;
     }
@@ -169,7 +170,7 @@ export const SwapConsole: FC = memo(() => {
     }
 
     return false;
-  }, [form]);
+  };
 
   return (
     <Card className={classes.root}
@@ -183,7 +184,7 @@ export const SwapConsole: FC = memo(() => {
           onTokenChange={onSupplyTokenChange}
           title='Pay With'
           token={pool.supplyCurrency}
-          value={form.values.supply as any as number}
+          value={form.values.supply as number}
         />
         <SwapBtn onClick={onSwap} />
         <InputArea
@@ -226,14 +227,14 @@ export const SwapConsole: FC = memo(() => {
       </div>
       <SwapInfo
         slippage={slippage}
-        supplyCurrency={pool?.supplyCurrency}
-        targetCurrency={pool?.targetCurrency}
         supply={form.values.supply}
+        supplyCurrency={pool?.supplyCurrency}
         target={form.values.target}
+        targetCurrency={pool?.targetCurrency}
       />
-      <SlippageInputArea 
+      <SlippageInputArea
+        onChange={onSlippageChange}
         slippage={slippage}
-        onChange={onSlippageChange} 
       />
     </Card>
   );

@@ -1,11 +1,11 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect, ReactNode, FC } from 'react';
 import { noop } from 'lodash';
 import { useFormik } from 'formik';
 
 import { CurrencyId } from '@acala-network/types/interfaces';
 import { convertToFixed18, Fixed18, LoanHelper } from '@acala-network/app-util';
 
-import { BalanceInput, UserBalance, Token, FormatFixed18, Price, LoanInterestRate, FormatBalance, formatCurrency, thousandth } from '@honzon-platform/react-components';
+import { BalanceInput, UserBalance, Token, FormatFixed18, Price, LoanInterestRate, FormatBalance, formatCurrency } from '@honzon-platform/react-components';
 import { useFormValidator, useConstants, useBalance } from '@honzon-platform/react-hooks';
 import { Button, List, ListConfig } from '@honzon-platform/ui-components';
 
@@ -13,62 +13,68 @@ import { createProviderContext } from './CreateProvider';
 import classes from './Generate.module.scss';
 import { LoanContext } from './LoanProvider';
 
-const Overview = ({ data }: any) => {
+const Overview: FC<{ data: any }> = ({ data }) => {
   const listConfig: ListConfig[] = [
     {
       key: 'collateral',
-      title: 'Collateralization',
-      render: (value: CurrencyId) => {
+      /* eslint-disable-next-line react/display-name */
+      render: (value: CurrencyId): ReactNode => {
         return <Token token={value} />;
-      }
+      },
+      title: 'Collateralization'
     },
     {
       key: 'collateralRatio',
-      title: 'Collateralization Ratio',
-      render: (data: Fixed18) => {
+      /* eslint-disable-next-line react/display-name */
+      render: (data: Fixed18): ReactNode => {
         return (
           <FormatFixed18
             data={data}
             format='percentage'
           />
         );
-      }
+      },
+      title: 'Collateralization Ratio'
     },
     {
       key: 'collateral',
-      title: `${formatCurrency(data.collateral)} Price`,
-      render: (data: CurrencyId) => <Price token={data} />
+      /* eslint-disable-next-line react/display-name */
+      render: (data: CurrencyId): ReactNode => <Price token={data} />,
+      title: `${formatCurrency(data.collateral)} Price`
     },
     {
       key: 'collateral',
-      title: 'Interest Rate',
-      render: (token: CurrencyId) => {
+      /* eslint-disable-next-line react/display-name */
+      render: (token: CurrencyId): ReactNode => {
         return <LoanInterestRate token={token} />;
-      }
+      },
+      title: 'Interest Rate'
     },
     {
       key: 'liquidationRatio',
-      title: 'Liquidation Ratio',
-      render: (data: Fixed18) => {
+      /* eslint-disable-next-line react/display-name */
+      render: (data: Fixed18): ReactNode => {
         return (
           <FormatFixed18
             data={data}
             format='percentage'
           />
         );
-      }
+      },
+      title: 'Liquidation Ratio'
     },
     {
       key: 'liquidationPenalty',
-      title: 'Liquidation Penalty',
-      render: (data: Fixed18) => {
+      /* eslint-disable-next-line react/display-name */
+      render: (data: Fixed18): ReactNode => {
         return (
           <FormatFixed18
             data={data}
             format='percentage'
           />
         );
-      }
+      },
+      title: 'Liquidation Penalty'
     }
   ];
 
@@ -83,16 +89,16 @@ const Overview = ({ data }: any) => {
   );
 };
 
-export const Generate = () => {
+export const Generate: FC = () => {
   const {
+    currentLoanType,
+    currentUserLoan,
+    getUserLoanHelper,
+    minmumDebitValue,
     selectedToken,
     setDeposit,
     setGenerate,
-    setStep,
-    currentLoanType,
-    currentUserLoan,
-    minmumDebitValue,
-    getUserLoanHelper
+    setStep
   } = useContext(createProviderContext);
   const { cancelCurrentTab } = useContext(LoanContext);
   const { stableCurrency } = useConstants();
@@ -103,30 +109,34 @@ export const Generate = () => {
   const [userLoanHelper, setUserLoanHelper] = useState<LoanHelper | null>();
 
   const validator = useFormValidator({
-    deposit: { type: 'balance', currency: selectedToken, min: 0 },
+    deposit: {
+      currency: selectedToken,
+      min: 0,
+      type: 'balance'
+    },
     generate: {
-      type: 'number',
-      max: maxGenerate?.toNumber() || 0,
-      min: minmumDebitValue?.toNumber() || 0,
+      max: maxGenerate.toNumber() || 0,
+      min: minmumDebitValue.toNumber() || 0,
+      type: 'number'
     }
   });
 
   const form = useFormik({
     initialValues: {
-      deposit: '' as any as number,
-      generate: '' as any as number
+      deposit: (('' as any) as number),
+      generate: (('' as any) as number)
     },
-    validate: validator,
-    onSubmit: noop
+    onSubmit: noop,
+    validate: validator
   });
 
   const overview = {
     collateral: selectedToken,
     collateralRatio: userLoanHelper?.collateralRatio,
     interestRate: userLoanHelper?.stableFeeAPR,
+    liquidationPenalty: convertToFixed18(currentLoanType?.liquidationPenalty || 0),
     liquidationPrice: userLoanHelper?.liquidationPrice,
-    liquidationRatio: userLoanHelper?.liquidationRatio,
-    liquidationPenalty: convertToFixed18(currentLoanType?.liquidationPenalty || 0)
+    liquidationRatio: userLoanHelper?.liquidationRatio
   };
 
   const handleNext = (): void => {
@@ -139,7 +149,7 @@ export const Generate = () => {
     setStep('select');
   };
 
-  const checkDisabled = () => {
+  const checkDisabled = (): boolean => {
     if (!form.values.deposit || !form.values.generate) {
       return true;
     }
@@ -159,16 +169,21 @@ export const Generate = () => {
   };
 
   useEffect(() => {
-    const _result = getUserLoanHelper(currentUserLoan, currentLoanType, collateral, debit)
+    const _result = getUserLoanHelper(currentUserLoan, currentLoanType, collateral, debit);
+
     setUserLoanHelper(_result);
   }, [collateral, debit, currentLoanType, currentUserLoan, getUserLoanHelper]);
 
   useEffect(() => {
     const data = Number(form.values.deposit) || 0;
+    const helper = getUserLoanHelper(currentUserLoan, currentLoanType, data);
+
     setCollateral(data);
-    console.log(data);
-    setMaxGenerate(getUserLoanHelper(currentUserLoan, currentLoanType, data)?.canGenerate);
-  }, [form.values.deposit]);
+
+    if (helper) {
+      setMaxGenerate(helper.canGenerate);
+    }
+  }, [currentLoanType, currentUserLoan, form.values.deposit, getUserLoanHelper]);
 
   useEffect(() => {
     setDebit(Number(form.values.generate) || 0);

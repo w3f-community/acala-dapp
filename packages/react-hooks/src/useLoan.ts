@@ -20,20 +20,37 @@ export const filterEmptyLoan = (loans: DerivedUserLoan[] | null): DerivedUserLoa
   });
 };
 
-export const useAllLoans = () => {
+interface UseAllLoansReturnType {
+  loanOverviews: DerivedLoanOverView[];
+  loans: DerivedUserLoan[];
+  loanTypes: DerivedLoanType[];
+}
+
+export const useAllLoans = (): UseAllLoansReturnType => {
   const { active } = useAccounts();
-  const loans = useCall<DerivedUserLoan[]>('derive.loan.allLoans', [active ? active.address : '']) || null;
+  const loans = useCall<DerivedUserLoan[]>('derive.loan.allLoans', [active ? active.address : '']) || [];
   const loanTypes = useCall<DerivedLoanType[]>('derive.loan.allLoanTypes', []) || [];
   const loanOverviews = useCall<DerivedLoanOverView[]>('derive.loan.allLoanOverviews', []) || [];
 
   return {
-    loans,
+    loanOverviews,
     loanTypes,
-    loanOverviews
+    loans
   };
 };
 
-export const useLoan = (token: CurrencyId | string) => {
+interface UseLoanRetrunType {
+  collateralPrice: DerivedPrice | undefined;
+  stableCoinPrice: DerivedPrice | undefined;
+  currentLoanType: DerivedLoanType | undefined;
+  currentUserLoan: DerivedUserLoan | undefined;
+  currentUserLoanHelper: LoanHelper | null;
+  getUserLoanHelper: (loan?: DerivedUserLoan, loanType?: DerivedLoanType, collateral?: number, debitAmount?: number) => LoanHelper | null;
+  loans: DerivedUserLoan[];
+  minmumDebitValue: Fixed18;
+}
+
+export const useLoan = (token: CurrencyId | string): UseLoanRetrunType => {
   const { api } = useApi();
   const { active } = useAccounts();
   const loans = useCall<DerivedUserLoan[]>('derive.loan.allLoans', [active ? active.address : '']) || [];
@@ -41,7 +58,7 @@ export const useLoan = (token: CurrencyId | string) => {
   const prices = usePrice() as DerivedPrice[] || [];
   const { stableCurrency } = useConstants();
 
-  const minmumDebitValue = useMemo<Fixed18>(() => convertToFixed18(api.consts.cdpEngine.minimumDebitValue),[api]);
+  const minmumDebitValue = useMemo<Fixed18>(() => convertToFixed18(api.consts.cdpEngine.minimumDebitValue), [api]);
 
   const currentUserLoan = useMemo<DerivedUserLoan | undefined>(() => {
     return loans.find((item): boolean => tokenEq(item.token, token));
@@ -53,7 +70,7 @@ export const useLoan = (token: CurrencyId | string) => {
 
   const stableCoinPrice = useMemo<DerivedPrice | undefined>(() => {
     return prices.find((item): boolean => tokenEq(item.token, stableCurrency));
-  }, [prices]);
+  }, [prices, stableCurrency]);
 
   const collateralPrice = useMemo<DerivedPrice | undefined>(() => {
     if (!token) {
@@ -63,19 +80,14 @@ export const useLoan = (token: CurrencyId | string) => {
     return prices.find((item): boolean => tokenEq(item.token, token));
   }, [prices, token]);
 
-  const getUserLoanHelper = useCallback((
-    loan: DerivedUserLoan | undefined,
-    loanType: DerivedLoanType | undefined,
-    collateral?: number,
-    debitAmount?: number,
-  ): LoanHelper | null => {
+  const getUserLoanHelper = useCallback((loan?: DerivedUserLoan, loanType?: DerivedLoanType, collateral?: number, debitAmount?: number): LoanHelper | null => {
     if (!loan || !loanType || !stableCoinPrice || !collateralPrice) {
       return null;
     }
 
     // calcaulte new collateral & debit
     const _collateral = collateral
-      ? convertToFixed18(loan.collaterals).add(Fixed18.fromNatural(collateral)) 
+      ? convertToFixed18(loan.collaterals).add(Fixed18.fromNatural(collateral))
       : convertToFixed18(loan.collaterals);
 
     const _debit = debitAmount
@@ -102,13 +114,13 @@ export const useLoan = (token: CurrencyId | string) => {
   }, [currentUserLoan, currentLoanType, getUserLoanHelper]);
 
   return {
-    loans,
-    currentUserLoan,
-    currentLoanType,
     collateralPrice,
-    stableCoinPrice,
-    getUserLoanHelper,
+    currentLoanType,
+    currentUserLoan,
     currentUserLoanHelper,
+    getUserLoanHelper,
+    loans,
     minmumDebitValue,
+    stableCoinPrice
   };
 };

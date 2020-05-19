@@ -41,16 +41,16 @@ export const sideBarConfig: SideBarConfig = {
   socialMedia: [
     {
       icon: <EmailSVG />,
+      isExternal: true,
       name: 'Email',
       path: 'mailto:hello@acala.network',
-      isExternal: true,
       target: '_blank'
     },
     {
       icon: <TwitterSVG />,
+      isExternal: true,
       name: 'Twitter',
       path: 'https://twitter.com/AcalaNetwork',
-      isExternal: true,
       target: '_blank'
     }
   ]

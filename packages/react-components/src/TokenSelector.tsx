@@ -1,4 +1,4 @@
-import React, { FC, memo, useEffect, useState } from 'react';
+import React, { FC, memo, useEffect, useState, ReactNode } from 'react';
 import clsx from 'clsx';
 import { noop } from 'lodash';
 
@@ -51,15 +51,16 @@ export const TokenSelector: FC<Props> = memo(({
   }
 
   const config: DropdownConfig[] = _currencies.map((currency: CurrencyId) => ({
-    value: currency,
-    render: () => {
+    /* eslint-disable-next-line react/display-name */
+    render: (): ReactNode => {
       return (
         <Token
           icon
           token={currency}
         />
       );
-    }
+    },
+    value: currency
   }));
 
   return (

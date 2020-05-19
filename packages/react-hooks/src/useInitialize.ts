@@ -1,6 +1,11 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback } from 'react';
 
-export const useInitialize = () => {
+interface HooksReturnType {
+  isInitialized: boolean;
+  setEnd: () => void;
+}
+
+export const useInitialize = (): HooksReturnType => {
   const [status, setStatus] = useState<boolean>(false);
 
   const setEnd = useCallback(() => {

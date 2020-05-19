@@ -4,7 +4,7 @@ import AccountId from '@polkadot/types/generic/AccountId';
 import { CurrencyId, Balance } from '@acala-network/types/interfaces';
 import { convertToFixed18 } from '@acala-network/app-util';
 
-import { useApi, useCall, useAccounts, usePrice } from '@honzon-platform/react-hooks';
+import { useCall, useAccounts, usePrice } from '@honzon-platform/react-hooks';
 import { BareProps } from '@honzon-platform/ui-components/types';
 import { FormatFixed18, FormatBalance } from './format';
 import { DerivedPrice } from '@acala-network/api-derive';
@@ -24,7 +24,6 @@ export const UserBalance: FC<Props> = memo(({
   withIcon = true,
   withPrice = false
 }) => {
-  const { api } = useApi();
   const { active } = useAccounts();
   const _account = account !== undefined ? account : active ? active.address : '';
   // FIXME: need fix api-derive type

@@ -23,16 +23,17 @@ const PageHoma: FC = () => {
     <StakingPoolProvider>
       <Page>
         <Page.Title title={'Liquid Asset'} />
-            <Page.Content>
-                <Grid container>
-                  <Grid item xs={12}>
-                    <Tabs
-                      config={tabsConfig}
-                      style='button'
-                    />
-                  </Grid>
-                </Grid>
-            </Page.Content>
+        <Page.Content>
+          <Grid container>
+            <Grid item
+              xs={12}>
+              <Tabs
+                config={tabsConfig}
+                style='button'
+              />
+            </Grid>
+          </Grid>
+        </Page.Content>
       </Page>
     </StakingPoolProvider>
   );

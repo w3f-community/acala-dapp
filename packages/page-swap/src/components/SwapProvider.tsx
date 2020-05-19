@@ -46,12 +46,13 @@ export const SwapProvider: FC<PropsWithChildren<{}>> = memo(({ children }) => {
   const { dexBaseCurrency } = useConstants();
 
   const supplyCurrencies = useMemo(() => {
-    const result = (api.consts.dex.enabledCurrencyIds as Vec<CurrencyId>).toArray(); 
+    const result = (api.consts.dex.enabledCurrencyIds as Vec<CurrencyId>).toArray();
+
     result.push(dexBaseCurrency);
 
     return result;
-  }, [api]);
-  
+  }, [api.consts.dex.enabledCurrencyIds, dexBaseCurrency]);
+
   const targetCurrencies = useMemo(() => supplyCurrencies.slice(), [supplyCurrencies]);
 
   const defaultSupplyCurrency = useMemo(() => supplyCurrencies[0], [supplyCurrencies]);
@@ -72,8 +73,8 @@ export const SwapProvider: FC<PropsWithChildren<{}>> = memo(({ children }) => {
 
       setPool({
         supplyCurrency: supply,
-        targetCurrency: target,
         supplySize: convertToFixed18(pool.base).toNumber(),
+        targetCurrency: target,
         targetSize: convertToFixed18(pool.other).toNumber()
       });
     }
@@ -84,8 +85,8 @@ export const SwapProvider: FC<PropsWithChildren<{}>> = memo(({ children }) => {
 
       setPool({
         supplyCurrency: supply,
-        targetCurrency: target,
         supplySize: convertToFixed18(pool.other).toNumber(),
+        targetCurrency: target,
         targetSize: convertToFixed18(pool.base).toNumber()
       });
     }
@@ -97,8 +98,8 @@ export const SwapProvider: FC<PropsWithChildren<{}>> = memo(({ children }) => {
 
       setPool({
         supplyCurrency: supply,
-        targetCurrency: target,
         supplySize: convertToFixed18(targetPool.other).toNumber(),
+        targetCurrency: target,
         targetSize: convertToFixed18(supplyPool.other).toNumber()
       });
     }
@@ -106,8 +107,8 @@ export const SwapProvider: FC<PropsWithChildren<{}>> = memo(({ children }) => {
     if (tokenEq(supply, dexBaseCurrency) && tokenEq(target, dexBaseCurrency)) {
       setPool({
         supplyCurrency: supply,
-        targetCurrency: target,
         supplySize: 0,
+        targetCurrency: target,
         targetSize: 0
       });
     }
@@ -149,7 +150,7 @@ export const SwapProvider: FC<PropsWithChildren<{}>> = memo(({ children }) => {
     }
 
     return 0;
-  }, [dexBaseCurrency]);
+  }, [api.derive, dexBaseCurrency, feeRate]);
 
   const calcTarget = useCallback(async (supplyCurrency: CurrencyId, targetCurrency: CurrencyId, supply: number, slippage?: number): Promise<number> => {
     // reload supply pool and target pool
@@ -187,28 +188,28 @@ export const SwapProvider: FC<PropsWithChildren<{}>> = memo(({ children }) => {
     }
 
     return 0;
-  }, [dexBaseCurrency]);
+  }, [api.derive, dexBaseCurrency, feeRate]);
 
   useEffect(() => {
     if (pool.supplyCurrency && !isInitialized) {
       setEnd();
     }
-  }, [pool]);
+  }, [isInitialized, pool, setEnd]);
 
   useEffect(() => {
     setCurrency(defaultSupplyCurrency, dexBaseCurrency);
-  }, [defaultSupplyCurrency, dexBaseCurrency]);
+  }, [defaultSupplyCurrency, dexBaseCurrency, setCurrency]);
 
   return (
     <SwapContext.Provider value={{
-      dexBaseCurrency,
       calcSupply,
       calcTarget,
-      supplyCurrencies,
-      targetCurrencies,
-      setCurrency,
+      dexBaseCurrency,
+      isInitialized,
       pool,
-      isInitialized
+      setCurrency,
+      supplyCurrencies,
+      targetCurrencies
     }}>
       {
         isInitialized ? children : <PageLoading />

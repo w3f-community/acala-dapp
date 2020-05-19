@@ -1,32 +1,34 @@
-import React, { FC, memo } from 'react';
-import { BareProps } from './types';
+import React, { FC } from 'react';
+import clsx from 'clsx';
 
-interface Props extends BareProps {
+import { InputProps, Input } from './Input';
+import classes from './TagInput.module.scss';
+
+interface Props extends InputProps{
   label: string;
-  id: string;
-  name: string;
-  type: string;
-  value: string;
-  onChange: () => void;
 }
 
-export const TagInput: FC<Props> = memo(({
+export const TagInput: FC<Props> = ({
   className,
-  id,
+  error,
   label,
-  name,
-  onChange,
-  value
+  ...inputProps
 }) => {
   return (
-    <div>
-      <input
-        id={id}
-        name={name}
-        onChange={onChange}
-        value={value}
-      />
+    <div
+      className={
+        clsx(
+          className,
+          classes.root,
+          {
+            [classes.error]: error
+          }
+        )
+      }
+    >
+      <Input {...inputProps}
+        className={classes.input} />
       {label ? <span>{label}</span> : null}
     </div>
   );
-});
+};

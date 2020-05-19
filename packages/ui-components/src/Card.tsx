@@ -16,9 +16,9 @@ export const Card: React.FC<Props> = memo(({
   children,
   className,
   contentClassName,
-  padding = true,
   header,
-  headerClassName
+  headerClassName,
+  padding = true
 }) => {
   return (
     <section className={clsx(classes.root, className)}>

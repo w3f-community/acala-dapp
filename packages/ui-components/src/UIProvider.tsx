@@ -1,4 +1,4 @@
-import React, { FC, ReactElement } from 'react';
+import React, { FC } from 'react';
 
 import './styles/index.scss';
 import './styles/global.css';
@@ -7,13 +7,13 @@ import { createMuiTheme, ThemeProvider } from '@material-ui/core';
 const theme = createMuiTheme({
   breakpoints: {
     values: {
-      xs: 0,
+      lg: 1920,
+      md: 1920,
       sm: 600,
-      md: 1366,
-      lg: 1366,
-      xl: 1920,
-    },
-  },
+      xl: 2048,
+      xs: 0
+    }
+  }
 });
 
 export const UIProvider: FC = ({ children }) => {

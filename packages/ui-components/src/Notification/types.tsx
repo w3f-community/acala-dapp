@@ -1,6 +1,5 @@
 import { ReactNode } from 'react';
 
-
 export interface NotificationConfig {
   id: number;
   icon?: ReactNode | 'loading' | 'success' | 'failed';

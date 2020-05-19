@@ -1,6 +1,6 @@
-import React, { FC, memo } from 'react';
+import React, { FC } from 'react';
 import AccountId from '@polkadot/types/generic/AccountId';
-import { useApi, useAccounts, useCall } from '@honzon-platform/react-hooks';
+import { useAccounts, useCall } from '@honzon-platform/react-hooks';
 import { FormatBalance } from './format';
 import { Balance } from '@acala-network/types/interfaces';
 
@@ -9,11 +9,10 @@ interface Props {
   account?: AccountId | string;
 }
 
-export const AirDropAmount: FC<Props> = memo(({
+export const AirDropAmount: FC<Props> = ({
   account,
   currency
 }) => {
-  const { api } = useApi();
   const { active } = useAccounts();
   const _account = account || (active ? active.address : '');
   const result = useCall('query.airDrop.airDrops', [_account, currency]);
@@ -25,6 +24,4 @@ export const AirDropAmount: FC<Props> = memo(({
   return (
     <FormatBalance balance={result as Balance} />
   );
-});
-
-AirDropAmount.displayName = 'AirDropAmount';
+};

@@ -27,19 +27,19 @@ type Props<T> = {
   showHeader?: boolean;
   cellClassName?: string;
   empty?: ReactNode;
-  size?: 'small' | 'normal'
+  size?: 'small' | 'normal';
   loading?: boolean;
 };
 
 export function Table<T extends { [k: string]: any }> ({
+  cellClassName,
   config,
   data,
   empty,
+  loading = false,
   rawProps,
   showHeader = false,
-  cellClassName,
-  size = 'normal',
-  loading = false
+  size = 'normal'
 }: Props<T>): ReactElement {
   const randomId = useRef<string>(randomID());
   const totalWidthConfiged = useMemo(() => config.reduce((acc, cur) => acc + (cur.width ? cur.width : 0), 0), [config]);
@@ -55,7 +55,7 @@ export function Table<T extends { [k: string]: any }> ({
     }
 
     return config.render(data[config.dataIndex], data, index);
-  }, [config]);
+  }, []);
 
   const renderContent = useCallback(() => {
     if (loading && !data) {
@@ -64,64 +64,64 @@ export function Table<T extends { [k: string]: any }> ({
           <td colSpan={config.length}>
             <PageLoading />
           </td>
-        </tr> 
+        </tr>
       );
     }
 
-    if (data) {
+    if (data?.length) {
       return data.map((item, index) => {
-          /* eslint-disable-next-line @typescript-eslint/no-empty-function */
-          let onClick: EventHandler<MouseEvent<HTMLTableRowElement>> = () => {};
+        /* eslint-disable-next-line @typescript-eslint/no-empty-function */
+        let onClick: EventHandler<MouseEvent<HTMLTableRowElement>> = () => {};
 
-          if (!item) {
-            return null;
-          }
+        if (!item) {
+          return null;
+        }
 
-          if (rawProps && rawProps.onClick) {
-            onClick = (event): void => rawProps.onClick(event, item);
-          }
+        if (rawProps && rawProps.onClick) {
+          onClick = (event): void => rawProps.onClick(event, item);
+        }
 
-          return (
-            <tr
-              className={classes.row}
-              key={`table-body-${index}`}
-              {...rawProps}
-              onClick={onClick}
-            >
-              {config.map((configData, configIndex) => (
-                <td
-                  className={
-                    clsx(
-                      classes.cell,
-                      classes[configData.align || 'center'],
-                      cellClassName,
-                      {
-                        first: index === 0
-                      }
-                    )
-                  }
-                  key={`table-cell-${randomId.current}-${index}-${configData.key || configIndex}`}
-                >
-                  <div>
+        return (
+          <tr
+            className={classes.row}
+            key={`table-body-${index}`}
+            {...rawProps}
+            onClick={onClick}
+          >
+            {config.map((configData, configIndex) => (
+              <td
+                className={
+                  clsx(
+                    classes.cell,
+                    classes[configData.align || 'center'],
+                    cellClassName,
                     {
-                      renderItem(configData, item, index)
+                      first: index === 0
                     }
-                  </div>
-                </td>
-              ))}
-            </tr>
-          );
-        });
+                  )
+                }
+                key={`table-cell-${randomId.current}-${index}-${configData.key || configIndex}`}
+              >
+                <div>
+                  {
+                    renderItem(configData, item, index)
+                  }
+                </div>
+              </td>
+            ))}
+          </tr>
+        );
+      });
     }
 
-    if (!data && empty) {
+    if (!data?.length && empty) {
       return (
         <tr className={classes.empty}>
           <td colSpan={config.length}>{empty}</td>
         </tr>
       );
     }
-  }, [loading, data, config]);
+  }, [loading, data, empty, config, rawProps, cellClassName, renderItem]);
 
   return (
     <table className={clsx(classes.root, classes[size])}>
@@ -159,7 +159,7 @@ export function Table<T extends { [k: string]: any }> ({
       <tbody>
         {
           renderContent()
-        }      
+        }
       </tbody>
     </table>
   );

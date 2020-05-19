@@ -1,15 +1,16 @@
-import React, { FC, useState, useContext } from 'react';
+import React, { FC, useContext } from 'react';
 import { Card, Step } from '@honzon-platform/ui-components';
 import { SelectCollateral } from './SelectCollateral';
 import classes from './CreateConsole.module.scss';
 import { Generate } from './Generate';
 import { CreateProvider, createProviderContext } from './CreateProvider';
-import { useApi, useConstants } from '@honzon-platform/react-hooks';
+import { useConstants } from '@honzon-platform/react-hooks';
 import { Confirm } from './Confirm';
 import { Success } from './Success';
 
 const Inner: FC = () => {
   const { selectedToken, step } = useContext(createProviderContext);
+  const { stableCurrency } = useConstants();
 
   const stepConfig = [
     {
@@ -27,8 +28,6 @@ const Inner: FC = () => {
   ];
 
   const renderTips = (): string => {
-    const { stableCurrency } = useConstants();
-
     if (step === 'select') {
       return 'Each collateral type has its own unique risk profiles.';
     }
@@ -67,7 +66,7 @@ const Inner: FC = () => {
   );
 };
 
-export const CreateConsole = () => {
+export const CreateConsole: FC = () => {
   return (
     <CreateProvider>
       <Inner />

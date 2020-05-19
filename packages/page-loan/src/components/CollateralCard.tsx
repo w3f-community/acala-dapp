@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, FC, ReactNode } from 'react';
 import { isEmpty } from 'lodash';
-import { Card, ListConfig, List, Dropdown } from '@honzon-platform/ui-components';
+import { Card, ListConfig, List, Dropdown, DropdownConfig } from '@honzon-platform/ui-components';
 import { useAllLoans, useLoan } from '@honzon-platform/react-hooks';
 import { formatCurrency, FormatFixed18 } from '@honzon-platform/react-components';
 import classes from './CollateralCard.module.scss';
 import { Fixed18 } from '@acala-network/app-util';
 
-export const CollateralCard = () => {
+export const CollateralCard: FC = () => {
   const { loanTypes } = useAllLoans();
   const [active, setActive] = useState<string>('');
   const { currentUserLoanHelper } = useLoan(active);
@@ -14,7 +14,8 @@ export const CollateralCard = () => {
   const listConfig: ListConfig[] = [
     {
       key: 'liquidationRatio',
-      render: (data: Fixed18) => (
+      /* eslint-disable-next-line react/display-name */
+      render: (data: Fixed18): ReactNode => (
         <FormatFixed18
           data={data}
           format='percentage'
@@ -24,7 +25,8 @@ export const CollateralCard = () => {
     },
     {
       key: 'requiredCollateralRatio',
-      render: (data: Fixed18) => (
+      /* eslint-disable-next-line react/display-name */
+      render: (data: Fixed18): ReactNode => (
         <FormatFixed18
           data={data}
           format='percentage'
@@ -34,7 +36,8 @@ export const CollateralCard = () => {
     },
     {
       key: 'interestRate',
-      render: (data: Fixed18) => (
+      /* eslint-disable-next-line react/display-name */
+      render: (data: Fixed18): ReactNode => (
         <FormatFixed18
           data={data}
           format='percentage'
@@ -55,26 +58,25 @@ export const CollateralCard = () => {
   }
 
   const data = {
+    interestRate: currentUserLoanHelper?.stableFeeAPR,
     liquidationRatio: currentUserLoanHelper?.liquidationRatio,
-    requiredCollateralRatio: currentUserLoanHelper?.requiredCollateralRatio,
-    interestRate: currentUserLoanHelper?.stableFeeAPR
+    requiredCollateralRatio: currentUserLoanHelper?.requiredCollateralRatio
   };
 
-  const handleDropdownChange = (value: string) => {
+  const handleDropdownChange = (value: string): void => {
     setActive(value);
   };
 
-  const dropdownConfig = loanTypes.map((item) => {
+  const dropdownConfig = loanTypes.map((item): DropdownConfig => {
     return {
-      value: item.token.toString(),
-      render: () => formatCurrency(item.token)
+      render: (): string => formatCurrency(item.token),
+      value: item.token.toString()
     };
   });
 
   return (
     <Card
       className={classes.root}
-      padding={false}
       header={
         <>
           <p>Collateral</p>
@@ -88,6 +90,7 @@ export const CollateralCard = () => {
         </>
       }
       headerClassName={classes.header}
+      padding={false}
     >
       <List
         config={listConfig}

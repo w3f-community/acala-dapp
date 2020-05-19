@@ -17,17 +17,17 @@ interface Props extends BareProps {
 export const Copy: FC<Props> = ({
   className,
   display,
-  text,
   render,
+  text,
   withCopy = true
 }) => {
   const { createNotification } = useNotification();
 
-  const handleCopy = () => {
+  const handleCopy = (): void => {
     createNotification({
       icon: 'success',
-      title: `Copy ${display ? display : text} success`,
       removedDelay: 2000,
+      title: `Copy ${display || text} success`
     });
   };
 
@@ -36,8 +36,8 @@ export const Copy: FC<Props> = ({
       { render ? render() : text }
       {
         withCopy ? (
-          <CopyToClipboard text={text}
-            onCopy={handleCopy}
+          <CopyToClipboard onCopy={handleCopy}
+            text={text}
           >
             <FileCopyOutlinedIcon />
           </CopyToClipboard>

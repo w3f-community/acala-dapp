@@ -31,7 +31,7 @@ export const CreateProvider: FC<Props> = ({
 
   const setStep = useCallback((step: CREATE_STEP) => {
     _setStep(step);
-  }, [_setSelectedToken]);
+  }, []);
 
   const setSelectedToken = useCallback((token: CurrencyId) => {
     _setSelectedToken(token);
@@ -40,14 +40,14 @@ export const CreateProvider: FC<Props> = ({
   return (
     <createProviderContext.Provider
       value={{
-        step,
-        setStep,
-        selectedToken,
-        setSelectedToken,
         deposit,
-        setDeposit,
         generate,
+        selectedToken,
+        setDeposit,
         setGenerate,
+        setSelectedToken,
+        setStep,
+        step,
         ..._loan
       }}
     >

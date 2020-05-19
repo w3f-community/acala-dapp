@@ -1,15 +1,15 @@
-import React, { FC, memo } from 'react';
+import React, { FC } from 'react';
 
 import { CurrencyId } from '@acala-network/types/interfaces';
 
 import { FormatBalance } from '@honzon-platform/react-components';
-import { useApi, useDexPool, useConstants } from '@honzon-platform/react-hooks';
+import { useDexPool, useConstants } from '@honzon-platform/react-hooks';
 
 interface Props {
   token: string | CurrencyId;
 }
 
-export const DexPoolSize: FC<Props> = memo(({ token }) => {
+export const DexPoolSize: FC<Props> = ({ token }) => {
   const { dexBaseCurrency } = useConstants();
   const pool = useDexPool(token);
 
@@ -20,12 +20,16 @@ export const DexPoolSize: FC<Props> = memo(({ token }) => {
   return (
     <FormatBalance
       pair={[
-        { currency: token, balance: pool.other },
-        { currency: dexBaseCurrency, balance: pool.base }
+        {
+          balance: pool.other,
+          currency: token
+        },
+        {
+          balance: pool.base,
+          currency: dexBaseCurrency
+        }
       ]}
       pairSymbol='/'
     />
   );
-});
-
-DexPoolSize.displayName = 'DexPoolSize';
+};

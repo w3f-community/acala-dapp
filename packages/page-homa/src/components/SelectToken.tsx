@@ -12,21 +12,21 @@ export const SelectToken: FC = memo(() => {
   const DEFAULT_VALUE = 'default';
   const config = [
     {
-      value: DEFAULT_VALUE,
       render: (): string => {
         if (!stakingPool) {
           return '';
         }
 
         return `${formatCurrency(stakingPool.stakingCurrency)}/${formatCurrency(stakingPool.liquidCurrency)}`;
-      }
+      },
+      value: DEFAULT_VALUE
     }
   ];
 
   return (
     <Dropdown
-      className={classes.root}
       activeContentClassName={classes.activeContent}
+      className={classes.root}
       config={config}
       onChange={noop}
       placeholder={''}

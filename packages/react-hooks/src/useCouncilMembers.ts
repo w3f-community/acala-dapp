@@ -1,12 +1,10 @@
-import { useApi } from "@honzon-platform/react-hooks";
-import { Vec } from "@polkadot/types";
-import { AccountId } from "@acala-network/types/interfaces/types";
+import { Vec } from '@polkadot/types';
+import { AccountId } from '@acala-network/types/interfaces/types';
 
-import { useCall } from "./useCall";
+import { useCall } from './useCall';
 
-export const useCouncilMembers = (council: string) => {
-  const { api } = useApi();
+export const useCouncilMembers = (council: string): Vec<AccountId> | undefined => {
   const members = useCall<Vec<AccountId>>(`query.${council}.members`, []);
 
   return members;
-}
+};

@@ -1,4 +1,4 @@
-import React, { FC, memo, FocusEventHandler, useState } from 'react';
+import React, { FC, memo, FocusEventHandler, useState, ReactNode } from 'react';
 import clsx from 'clsx';
 
 import { CurrencyId } from '@acala-network/types/interfaces';
@@ -52,7 +52,7 @@ export const BalanceInput: FC<Props> = memo(({
     token = getCurrencyIdFromName(api, token);
   }
 
-  const renderToken = () => {
+  const renderToken = (): ReactNode => {
     if (enableTokenSelect) {
       return (
         <TokenSelector
@@ -77,11 +77,11 @@ export const BalanceInput: FC<Props> = memo(({
     );
   };
 
-  const onFocus: FocusEventHandler<HTMLInputElement> = (e) => {
+  const onFocus: FocusEventHandler<HTMLInputElement> = () => {
     setFocused(true);
   };
 
-  const onBlur: FocusEventHandler<HTMLInputElement> = (e) => {
+  const onBlur: FocusEventHandler<HTMLInputElement> = () => {
     setFocused(false);
   };
 

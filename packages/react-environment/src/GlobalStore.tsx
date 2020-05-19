@@ -1,4 +1,4 @@
-import React, { createContext, useState, FC, PropsWithChildren, useCallback, useRef } from "react";
+import React, { createContext, useState, FC, PropsWithChildren, useCallback, useRef } from 'react';
 
 interface StoreContextData {
   store: { [k: string]: any };
@@ -17,7 +17,7 @@ export const GlobalStoreProvider: FC<PropsWithChildren<any>> = ({ children }) =>
   }, [_setStore]);
 
   return (
-    <globalStoreContext.Provider value={{store, setStore}}>
+    <globalStoreContext.Provider value={{ setStore, store }}>
       {children}
     </globalStoreContext.Provider>
   );

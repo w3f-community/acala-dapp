@@ -4,7 +4,7 @@ import { CurrencyId } from '@acala-network/types/interfaces';
 import { Fixed18 } from '@acala-network/app-util';
 
 import { FormatBalance } from '@honzon-platform/react-components';
-import { useApi, useDexPool, useConstants } from '@honzon-platform/react-hooks';
+import { useDexPool, useConstants } from '@honzon-platform/react-hooks';
 import { tokenEq } from './utils';
 
 interface Props {
@@ -63,10 +63,13 @@ export const DexExchangeRate: FC<Props> = memo(({ supply, target }) => {
   return (
     <FormatBalance
       pair={[
-        { currency: supplyToken, balance: 1 },
         {
-          currency: targetToken,
-          balance: ratio
+          balance: 1,
+          currency: supplyToken
+        },
+        {
+          balance: ratio,
+          currency: targetToken
         }
       ]}
       pairSymbol='='

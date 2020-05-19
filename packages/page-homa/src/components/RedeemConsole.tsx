@@ -1,4 +1,4 @@
-import React, { FC, useContext, useState, useMemo } from 'react';
+import React, { FC, useContext, useState, useMemo, ReactNode } from 'react';
 import { noop } from 'lodash';
 import { useFormik } from 'formik';
 
@@ -17,6 +17,7 @@ export const RedeemConsole: FC = () => {
   const { freeList, stakingPool, stakingPoolHelper, unbondingDuration } = useContext(StakingPoolContext);
   const [redeemType, setRedeemType] = useState<RedeemType>('Immediately');
   const [era, setEra] = useState<number>(0);
+
   const freeLiquidityCurrencyAmount = useMemo((): number => {
     if (!stakingPoolHelper) {
       return 0;
@@ -24,6 +25,7 @@ export const RedeemConsole: FC = () => {
 
     return stakingPoolHelper.communalFree.div(stakingPoolHelper.liquidExchangeRate).toNumber();
   }, [stakingPoolHelper]);
+
   const freeLiquidityCurrencyAmountInTarget = useMemo((): number => {
     const _result = freeList.find((item): boolean => item.era === era);
 
@@ -32,47 +34,50 @@ export const RedeemConsole: FC = () => {
     }
 
     return _result.free.div(stakingPoolHelper.liquidExchangeRate).toNumber();
-  }, [freeList, era]);
+  }, [freeList, stakingPoolHelper.liquidExchangeRate, era]);
 
-  const getMaxLiquidCurrencyAmount = () => {
+  const getMaxLiquidCurrencyAmount = (): number => {
     if (redeemType === 'Immediately') {
       return freeLiquidityCurrencyAmount;
     }
+
     if (redeemType === 'Target') {
       return freeLiquidityCurrencyAmountInTarget;
     }
+
     if (redeemType === 'WaitForUnbonding') {
       return Number.POSITIVE_INFINITY;
     }
+
     return 0;
   };
 
   const validator = useFormValidator({
     amount: {
-      type: 'balance',
       currency: stakingPool?.liquidCurrency,
+      max: getMaxLiquidCurrencyAmount(),
       min: 0,
-      max: getMaxLiquidCurrencyAmount()
+      type: 'balance'
     },
     target: {
-      type: 'number',
-      min: stakingPoolHelper?.currentEra
+      min: stakingPoolHelper?.currentEra,
+      type: 'number'
     }
   });
   const form = useFormik({
     initialValues: {
-      amount: '' as any as number,
-      target: '' as any as number
+      amount: (('' as any) as number),
+      target: (('' as any) as number)
     },
-    validate: validator,
-    onSubmit: noop
+    onSubmit: noop,
+    validate: validator
   });
 
   if (!stakingPoolHelper || !stakingPool) {
     return null;
   }
 
-  const getTargetEra = () => {
+  const getTargetEra = (): number => {
     if (redeemType === 'Immediately') {
       return stakingPoolHelper.currentEra;
     }
@@ -89,38 +94,40 @@ export const RedeemConsole: FC = () => {
   };
 
   const info = {
-    redeemed: Fixed18.fromNatural(form.values.amount),
-    climeFee: stakingPoolHelper.claimFee(Fixed18.fromNatural(form.values.amount), getTargetEra())
+    climeFee: stakingPoolHelper.claimFee(Fixed18.fromNatural(form.values.amount), getTargetEra()),
+    redeemed: Fixed18.fromNatural(form.values.amount)
   };
 
   const listConfig = [
     {
       key: 'redeemed',
-      title: 'Redeemed',
-      render: (value: Fixed18) => (
+      /* eslint-disable-next-line react/display-name */
+      render: (value: Fixed18): ReactNode => (
         value.isFinity() ? (
           <FormatBalance
             balance={value}
             currency={stakingPool.liquidCurrency}
           />
         ) : '~'
-      )
+      ),
+      title: 'Redeemed'
     },
     {
       key: 'climeFee',
-      title: 'Claim Fee',
-      render: (value: Fixed18) => (
+      /* eslint-disable-next-line react/display-name */
+      render: (value: Fixed18): ReactNode => (
         value.isFinity() ? (
           <FormatBalance
             balance={value}
             currency={stakingPool.liquidCurrency}
           />
         ) : '~'
-      )
+      ),
+      title: 'Claim Fee'
     }
   ];
 
-  const checkDisabled = () => {
+  const checkDisabled = (): boolean => {
     if (!form.values.amount) {
       return true;
     }
@@ -132,7 +139,7 @@ export const RedeemConsole: FC = () => {
     return false;
   };
 
-  const getParams = () => {
+  const getParams = (): string[] => {
     const _params = [
       numToFixed18Inner(form.values.amount),
       redeemType as any
@@ -149,8 +156,8 @@ export const RedeemConsole: FC = () => {
 
   return (
     <Grid
-      container
       className={classes.root}
+      container
       direction='column'
     >
       <Grid item>
@@ -162,12 +169,12 @@ export const RedeemConsole: FC = () => {
             checked={redeemType === 'Immediately'}
             className={classes.item}
             label={`Redeem Now, Total Free is ${freeLiquidityCurrencyAmount} ${stakingPool.liquidCurrency}`}
-            onClick={() => setRedeemType('Immediately')}
+            onClick={(): void => setRedeemType('Immediately')}
           />
           <Radio
-            disabled={!freeList.length}
             checked={redeemType === 'Target'}
             className={classes.item}
+            disabled={!freeList.length}
             label={(
               <div className={classes.targetInput}>
                 <span>Redeem in ERA</span>
@@ -182,16 +189,16 @@ export const RedeemConsole: FC = () => {
                 }
                 {
                   freeLiquidityCurrencyAmountInTarget ? `Free is ${freeLiquidityCurrencyAmountInTarget}` : null
-                }           
+                }
               </div>
             )}
-            onClick={() => setRedeemType('Target')}
+            onClick={(): void => setRedeemType('Target')}
           />
           <Radio
             checked={redeemType === 'WaitForUnbonding'}
             className={classes.item}
             label='Redeem & Wait for Unbounding Period'
-            onClick={() => setRedeemType('WaitForUnbonding')}
+            onClick={(): void => setRedeemType('WaitForUnbonding')}
           />
         </div>
       </Grid>
@@ -231,8 +238,8 @@ export const RedeemConsole: FC = () => {
         item
       >
         <List config={listConfig}
-          itemClassName={classes.listItem}
-          data={info} />
+          data={info}
+          itemClassName={classes.listItem} />
       </Grid>
     </Grid>
   );

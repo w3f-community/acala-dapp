@@ -1,4 +1,4 @@
-import React, { FC, useRef, useContext } from 'react';
+import React, { FC, useRef, useContext, ReactNode } from 'react';
 
 import { BaseTxHistory, FormatBalance, FormatTime, FormatHash } from '@honzon-platform/react-components';
 import { TableItem, Status } from '@honzon-platform/ui-components';
@@ -7,9 +7,9 @@ import { Fixed18 } from '@acala-network/app-util';
 import { DepositContext } from './Provider';
 
 const actionMap: { [key: string]: string } = {
-  'deposit': 'add_liquidity',
-  'withdraw': 'withdraw_liquidity',
-  'reward': 'withdraw_incentive_interest'
+  deposit: 'add_liquidity',
+  reward: 'withdraw_incentive_interest',
+  withdraw: 'withdraw_liquidity'
 };
 
 export const Transaction: FC = () => {
@@ -20,15 +20,18 @@ export const Transaction: FC = () => {
     {
       align: 'left',
       dataIndex: 'hash',
-      render: (value) => <FormatHash hash={value} />,
-      title: 'Tx Hash'
+      /* eslint-disable-next-line react/display-name */
+      render: (value): ReactNode => <FormatHash hash={value} />,
+      title: 'Tx Hash',
+      width: 1
     },
     {
       align: 'left',
-      render: (data: ExtrinsicHistoryData) => {
+      /* eslint-disable-next-line react/display-name */
+      render: (data: ExtrinsicHistoryData): ReactNode => {
         if (data.method === 'add_liquidity') {
           return (
-            <FormatBalance 
+            <FormatBalance
               pair={[
                 {
                   balance: Fixed18.fromParts(data.params[1]),
@@ -43,47 +46,56 @@ export const Transaction: FC = () => {
             />
           );
         }
+
         if (data.method === 'withdraw_incentive_interest') {
           return '/';
         }
+
         if (data.method === 'withdrawIncentiveInterest') {
           return '/';
         }
       },
-      title: 'Token'
+      title: 'Token',
+      width: 3
     },
     {
       align: 'left',
       dataIndex: 'method',
-      render: (value: string) => {
+      /* eslint-disable-next-line react/display-name */
+      render: (value: string): ReactNode => {
         const paramsMap: Map<string, string> = new Map([
           ['add_liquidity', 'Deposit'],
           ['withdraw_liquidity', 'Withdraw'],
           ['withdraw_incentive_interest', 'Withdraw System Reward']
         ]);
+
         return paramsMap.get(value) || value;
       },
-      title: 'Deposit/Withdraw'
+      title: 'Deposit/Withdraw',
+      width: 1
     },
     {
       align: 'left',
       dataIndex: 'time',
-      render: (value) => (
+      /* eslint-disable-next-line react/display-name */
+      render: (value): ReactNode => (
         <FormatTime time={value} />
       ),
-      title: 'When'
+      title: 'When',
+      width: 1
     },
     {
       align: 'right',
       dataIndex: 'success',
-      render: (value) => (
+      /* eslint-disable-next-line react/display-name */
+      render: (value): ReactNode => (
         <Status success={value} />
       ),
-      title: 'Result'
+      title: 'Result',
+      width: 1
     }
   ]);
 
-      // method={['addLiquidity', 'withdrawLiquidity', 'withdrawIncentiveInterest']}
   return (
     <BaseTxHistory
       config={config.current}
