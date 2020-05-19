@@ -1,4 +1,4 @@
-import React, { FC, memo, useState, useContext, useEffect, useCallback } from 'react';
+import React, { FC, memo, useState, useContext, useCallback } from 'react';
 import { noop } from 'lodash';
 import { useFormik } from 'formik';
 
@@ -97,9 +97,12 @@ export const WithdrawConsole: FC = memo(() => {
     form.resetForm();
   }, [form]);
 
-  useEffect(() => {
+  const handleOtherCurrencyChange = (currency: CurrencyId): void => {
+    setOtherCurrency(currency);
+
+    // reset form
     form.resetForm();
-  }, [form, otherCurrency]);
+  };
 
   return (
     <Card>
@@ -110,7 +113,7 @@ export const WithdrawConsole: FC = memo(() => {
           id='share'
           name='share'
           onChange={form.handleChange}
-          onTokenChange={setOtherCurrency}
+          onTokenChange={handleOtherCurrencyChange}
           share={share}
           token={otherCurrency}
           value={form.values.share}

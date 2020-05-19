@@ -1,4 +1,4 @@
-import React, { FC, memo, useEffect } from 'react';
+import React, { FC, memo } from 'react';
 import { noop } from 'lodash';
 
 import { CurrencyId } from '@acala-network/types/interfaces/types';
@@ -17,7 +17,6 @@ export const TransferButton: FC<Props> = memo(({
   children,
   token
 }) => {
-  const { close, status, toggle } = useModal(false);
   const validator = useFormValidator({
     account: {
       min: 0,
@@ -37,6 +36,7 @@ export const TransferButton: FC<Props> = memo(({
     onSubmit: noop,
     validate: validator
   });
+  const { close, status, toggle } = useModal(false, () => form.resetForm());
 
   const checkDisabled = (): boolean => {
     if (!(form.values.account && form.values.amount)) {
@@ -58,10 +58,6 @@ export const TransferButton: FC<Props> = memo(({
   const handleAccountBlure = (): void => {
     form.setFieldValue('account', form.values.account.trim());
   };
-
-  useEffect(() => {
-    form.resetForm();
-  }, [form, status]);
 
   return (
     <>

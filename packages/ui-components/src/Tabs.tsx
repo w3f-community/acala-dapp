@@ -50,7 +50,7 @@ export const Tabs: FC<Props> = memo(({
         }
       </div>
       {
-        config[active].render ? (
+        config[active] && (config[active].render !== undefined) ? (
           <div className={classes.tabContent}>
             {
               /* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */

@@ -1,4 +1,4 @@
-import React, { FC, memo, useState, useContext, useEffect } from 'react';
+import React, { FC, memo, useState, useContext } from 'react';
 import { noop } from 'lodash';
 import { useFormik } from 'formik';
 
@@ -96,6 +96,13 @@ export const DepositConsole: FC = memo(() => {
     form.resetForm();
   };
 
+  const handleOtherCurrencyChange = (currency: CurrencyId): void => {
+    setOtherCurrency(currency);
+
+    // reset form
+    form.resetForm();
+  };
+
   const checkDisabled = (): boolean => {
     if (!(form.values.base && form.values.other)) {
       return true;
@@ -108,10 +115,6 @@ export const DepositConsole: FC = memo(() => {
     return false;
   };
 
-  useEffect(() => {
-    form.resetForm();
-  }, [form, otherCurrency]);
-
   return (
     <Card>
       <div className={classes.main}>
@@ -121,7 +124,7 @@ export const DepositConsole: FC = memo(() => {
           id={'other'}
           name={'other'}
           onChange={handleOtherInput}
-          onTokenChange={setOtherCurrency}
+          onTokenChange={handleOtherCurrencyChange}
           token={otherCurrency}
           value={form.values.other as number}
         />

@@ -33,6 +33,10 @@ export const CouncilMotions: FC<Props> = ({ council }) => {
       render: (_data: Option<Proposal>, index: number): ReactNode => {
         const vote = votes[index];
 
+        if (!vote) {
+          return;
+        }
+
         return `${(vote.value as Votes).threshold || 0} / ${members ? members.length : 0}`;
       },
       title: 'Threshold'
@@ -42,6 +46,10 @@ export const CouncilMotions: FC<Props> = ({ council }) => {
       /* eslint-disable-next-line react/display-name */
       render: (_data: Option<Proposal>, index: number): ReactNode => {
         const vote = votes[index];
+
+        if (!vote) {
+          return;
+        }
 
         return `${(vote.value as Votes).ayes.length || 0} aye, ${(vote.value as Votes).nays.length || 0} nay`;
       },
