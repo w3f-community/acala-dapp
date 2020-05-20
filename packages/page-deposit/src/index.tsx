@@ -12,10 +12,10 @@ import { WalletBalanceCard, PricesFeedCard } from '@acala-dapp/react-components'
 
 const PageDeposit: FC = () => {
   return (
-    <Page>
-      <Page.Title title='Deposit & Earn' />
-      <Page.Content>
-        <DepositProvider>
+    <DepositProvider>
+      <Page>
+        <Page.Title title='Deposit & Earn' />
+        <Page.Content>
           <Grid container
             direction='row'>
             <Grid container
@@ -59,9 +59,9 @@ const PageDeposit: FC = () => {
               </Grid>
             </Grid>
           </Grid>
-        </DepositProvider>
-      </Page.Content>
-    </Page>
+        </Page.Content>
+      </Page>
+    </DepositProvider>
   );
 };
 

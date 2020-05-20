@@ -43,7 +43,7 @@ export const LoanProvider: FC<BareProps> = ({
   }, [setCurrentTab]);
 
   useEffect(() => {
-    if (loans) {
+    if (loans.length !== 0) {
       setEnd();
     }
   }, [loans, setEnd]);

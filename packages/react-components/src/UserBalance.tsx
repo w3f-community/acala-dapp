@@ -41,6 +41,7 @@ export const UserBalance: FC<Props> = memo(({
       <FormatFixed18
         className={className}
         data={_amount}
+        format='thousandth'
         prefix='$'
         withPadEndDecimal
       />

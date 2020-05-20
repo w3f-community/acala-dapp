@@ -25,7 +25,7 @@ export const padEndDecimal = (origin: number | string, dp: number): string => {
 };
 
 export const thousandth = (num: number): string => {
-  return num.toLocaleString('en-IN', { maximumSignificantDigits: 18, minimumFractionDigits: 5 });
+  return num.toLocaleString(undefined, { maximumSignificantDigits: 18, minimumFractionDigits: 5 });
 };
 
 export const formatCurrency = (currency: CurrencyId | string | undefined, upper = true): string => {

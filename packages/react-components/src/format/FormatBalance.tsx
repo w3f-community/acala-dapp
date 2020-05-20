@@ -41,8 +41,8 @@ export const FormatBalance: FC<Props> = memo(({
     const _noop = (i: any): any => i;
 
     const _transform = compose(
-      useThousandth ? thousandth : _noop,
-      curry(padEndDecimal)(placeholder, 6)
+      curry(padEndDecimal)(placeholder, 6),
+      useThousandth ? thousandth : _noop
     );
 
     const _balance = formatBalance(data?.balance);
@@ -60,7 +60,7 @@ export const FormatBalance: FC<Props> = memo(({
   return (
     <Tooltip
       placement='left'
-      title={pair ? pair.map((data, index) => renderBalance(data, index, false, 18)) : renderBalance({ balance, currency }, -1, false, 18)}
+      title={pair ? pair.map((data, index) => renderBalance(data, index, true, 18)) : renderBalance({ balance, currency }, -1, true, 18)}
     >
       <span
         className={

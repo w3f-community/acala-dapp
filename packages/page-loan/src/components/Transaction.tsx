@@ -137,7 +137,7 @@ export const Transaction: FC = () => {
     <BaseTxHistory
       config={config}
       method='adjust_loan'
-      section='acala-dapp'
+      section='honzon'
     />
   );
 };

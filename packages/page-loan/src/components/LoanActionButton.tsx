@@ -254,7 +254,7 @@ export const LonaActionButton: FC<Props> = ({
               method='adjustLoan'
               onSuccess={_close}
               params={getParams()}
-              section='acala-dapp'
+              section='honzon'
               size='small'
             >
               Confirm

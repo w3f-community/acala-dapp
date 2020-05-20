@@ -1,9 +1,11 @@
-import React, { createContext, memo, FC, useState, useMemo, useCallback } from 'react';
+import React, { createContext, memo, FC, useState, useMemo, useCallback, useEffect } from 'react';
 import { ACTION_TYPE } from '../types';
-import { BareProps } from '@acala-dapp/ui-components/types';
 import { CurrencyId, Rate } from '@acala-network/types/interfaces';
-import { useApi } from '@acala-dapp/react-hooks';
 import { Vec } from '@polkadot/types';
+
+import { useApi, useInitialize, useDexExchangeRate } from '@acala-dapp/react-hooks';
+import { BareProps } from '@acala-dapp/ui-components/types';
+import { PageLoading } from '@acala-dapp/ui-components';
 
 interface DepositContextData {
   action: ACTION_TYPE;
@@ -18,6 +20,7 @@ export const DepositContext = createContext<DepositContextData>({} as DepositCon
 export const DepositProvider: FC<BareProps> = memo(({ children }) => {
   const { api } = useApi();
   const [action, _setAction] = useState<ACTION_TYPE>('deposit');
+  const { isInitialized, setEnd } = useInitialize();
 
   const enabledCurrencyIds = useMemo(() => api.consts.dex.enabledCurrencyIds as Vec<CurrencyId>, [api]);
 
@@ -25,9 +28,17 @@ export const DepositProvider: FC<BareProps> = memo(({ children }) => {
 
   const exchangeFee = useMemo(() => api.consts.dex.getExchangeFee as Rate, [api]);
 
+  const exchangeRate = useDexExchangeRate(enabledCurrencyIds[0]);
+
   const setActiveAction = useCallback((type: ACTION_TYPE): void => {
     _setAction(type);
   }, [_setAction]);
+
+  useEffect(() => {
+    if (!exchangeRate.isZero()) {
+      setEnd();
+    }
+  }, [exchangeRate, setEnd]);
 
   return (
     <DepositContext.Provider value={{
@@ -37,7 +48,7 @@ export const DepositProvider: FC<BareProps> = memo(({ children }) => {
       exchangeFee,
       setActiveAction
     }}>
-      {children}
+      { isInitialized ? children : <PageLoading /> }
     </DepositContext.Provider>
   );
 });

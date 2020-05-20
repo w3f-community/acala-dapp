@@ -96,6 +96,10 @@ export const useHistory = (query?: QueryParams): HooksReturnType => {
 
     const url = SUBSCAN_TX;
 
+    if (!query?.section) {
+      return;
+    }
+
     axios.post(url, {
       address: query?.signer,
       call: query?.method,
@@ -118,10 +122,12 @@ export const useHistory = (query?: QueryParams): HooksReturnType => {
   }, [query]);
 
   useEffect(() => {
-    refresh$.subscribe(() => {
-      fetch(pagination);
+    const subscribe = refresh$.subscribe(() => {
+      fetch(paginationRef.current);
     });
-  }, [fetch, pagination]);
+
+    return (): void => subscribe.unsubscribe();
+  }, [fetch]);
 
   useEffect(() => {
     if (!query) {

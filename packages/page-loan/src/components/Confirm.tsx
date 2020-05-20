@@ -182,7 +182,7 @@ export const Confirm: FC = () => {
           method='adjustLoan'
           onSuccess={handleSuccess}
           params={getParams()}
-          section='acala-dapp'
+          section='honzon'
           size='small'
         >
           Confirm
