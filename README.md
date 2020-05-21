@@ -2,7 +2,7 @@
 
 # Acala-Dapp
 
-The Interface Of Acala Dapp
+acala web app with honzon, homa, dex features.  
 
 # Overview
 
@@ -15,17 +15,18 @@ The Interface Of Acala Dapp
 + [page-wallet](https://github.com/AcalaNetwork/acala-dapp/tree/master/packages/page-wallet): the page for an basic wallet
 
 # Development
+
 1. Clone this repo
    ```base
-    git clone git@github.com:AcalaNetwork/acala-dapp.git && cd acala-dapp
+   git clone git@github.com:AcalaNetwork/acala-dapp.git && cd acala-dapp
    ```
 
 2. Install dependencies by `yarn`
    ```base
-     yarn install
+   yarn install
    ```
 
 3. Launch the UI
    ```base
-     yarn run start
+   yarn run start
    ```
