@@ -5,26 +5,26 @@ import Tooltip from '@material-ui/core/Tooltip';
 import { Fixed18 } from '@acala-network/app-util';
 import { BareProps } from '@acala-dapp/ui-components/types';
 
-import { thousandth, padEndDecimal } from '../utils';
+import { thousand, padDecimalPlaces } from '../utils';
 import classes from './format.module.scss';
 
 interface Props extends BareProps {
   data?: Fixed18;
-  format?: 'percentage' | 'number' | 'thousandth';
+  format?: 'percentage' | 'number' | 'thousand';
   prefix?: string;
   primary?: boolean;
   withTooltip?: boolean;
-  withPadEndDecimal?: boolean;
+  withpadDecimalPlaces?: boolean;
 }
 
 export const FormatFixed18: FC<Props> = ({
   className,
   data,
-  format = 'thousandth',
+  format = 'thousand',
   prefix,
   primary = false,
-  withPadEndDecimal = false,
-  withTooltip = true
+  withTooltip = true,
+  withpadDecimalPlaces = false
 }) => {
   if (!data) {
     return null;
@@ -38,11 +38,11 @@ export const FormatFixed18: FC<Props> = ({
     }
 
     if (format === 'number') {
-      _text = withPadEndDecimal ? padEndDecimal(data.toString(6, 3), 6) : data.toString();
+      _text = withpadDecimalPlaces ? padDecimalPlaces(data.toString(6, 3), 6) : data.toString();
     }
 
-    if (format === 'thousandth') {
-      _text = withPadEndDecimal ? padEndDecimal(thousandth(data.toNumber(6, 3)), 6) : thousandth(data.toNumber(6, 3));
+    if (format === 'thousand') {
+      _text = withpadDecimalPlaces ? padDecimalPlaces(thousand(data.toNumber(6, 3)), 6) : thousand(data.toNumber(6, 3));
     }
 
     if (format === 'percentage') {

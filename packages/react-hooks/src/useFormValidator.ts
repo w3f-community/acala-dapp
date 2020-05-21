@@ -1,10 +1,12 @@
-import { useApi } from './useApi';
-import { useAccounts } from './useAccounts';
-import { CurrencyId, Amount } from '@acala-network/types/interfaces';
-import { convertToFixed18, Fixed18 } from '@acala-network/app-util';
+import { FormikErrors } from 'formik';
+
 import { ApiPromise } from '@polkadot/api';
 import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
-import { FormikErrors } from 'formik';
+import { CurrencyId, Amount } from '@acala-network/types/interfaces';
+import { convertToFixed18, Fixed18 } from '@acala-network/app-util';
+
+import { useApi } from './useApi';
+import { useAccounts } from './useAccounts';
 
 interface BalanceConfig {
   type: 'balance';
@@ -59,11 +61,11 @@ export function getFormValidator<T> (configs: Config, api: ApiPromise, active: I
             }
 
             if (_value.isGreaterThan(_max)) {
-              error[key] = `Value is bigger than ${config.max}`;
+              error[key] = `Value is bigger than ${_max.toNumber()}`;
             }
 
             if (_value.isLessThan(_min)) {
-              error[key] = `Value is less than ${config.min}`;
+              error[key] = `Value is less than ${_min.toNumber()}`;
             }
           });
         }
@@ -98,11 +100,11 @@ export function getFormValidator<T> (configs: Config, api: ApiPromise, active: I
           }
 
           if (config.max !== undefined && length > config.max) {
-            error[key] = `Value is more than ${config.max}`;
+            error[key] = `Value's length is bigger than ${config.max}`;
           }
 
           if (config.min !== undefined && length < config.min) {
-            error[key] = `Value is less than ${config.max}`;
+            error[key] = `Value's length is less than ${config.min}`;
           }
         }
       });

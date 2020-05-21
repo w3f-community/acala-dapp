@@ -9,8 +9,14 @@ import { TimestampedValue } from '@open-web3/orml-types/interfaces';
 
 dayjs.extend(duration);
 
-export const padEndDecimal = (origin: number | string, dp: number): string => {
+// works like toFixed but don't round, doesn't support scientific notation
+export const padDecimalPlaces = (origin: number | string, dp: number): string => {
   const _origin = origin.toString();
+
+  if (_origin.includes('e')) {
+    return Number(origin).toFixed(dp);
+  }
+
   let [i, d] = _origin.split('.');
 
   if (!d) {
@@ -18,13 +24,13 @@ export const padEndDecimal = (origin: number | string, dp: number): string => {
   }
 
   if (d) {
-    d = d.padEnd(dp, '0');
+    d = d.length > dp ? d.slice(0, dp) : d.padEnd(dp, '0');
   }
 
   return [i, d].join('.');
 };
 
-export const thousandth = (num: number): string => {
+export const thousand = (num: number): string => {
   return num.toLocaleString(undefined, { maximumSignificantDigits: 18, minimumFractionDigits: 5 });
 };
 

@@ -28,7 +28,7 @@ export const Price: FC<Props> = memo(({
       className={className}
       data={convertToFixed18(getValueFromTimestampValue(price.price))}
       prefix='$'
-      withPadEndDecimal
+      withpadDecimalPlaces
     />
   );
 });

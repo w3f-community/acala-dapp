@@ -10,7 +10,7 @@ import { CurrencyId } from '@acala-network/types/interfaces';
 import { BareProps } from '@acala-dapp/ui-components/types';
 import { randomID } from '@acala-dapp/ui-components';
 
-import { formatBalance, formatCurrency, thousandth, padEndDecimal } from '../utils';
+import { formatBalance, formatCurrency, thousand, padDecimalPlaces } from '../utils';
 import classes from './format.module.scss';
 
 export interface BalancePair {
@@ -37,12 +37,12 @@ export const FormatBalance: FC<Props> = memo(({
   const pairLength = pair ? pair.length : 0;
   const _id = useRef(randomID());
 
-  const renderBalance = (data: BalancePair, index: number, useThousandth: boolean, dp: number): ReactElement => {
+  const renderBalance = (data: BalancePair, index: number, usethousand: boolean, dp: number): ReactElement => {
     const _noop = (i: any): any => i;
 
     const _transform = compose(
-      curry(padEndDecimal)(placeholder, 6),
-      useThousandth ? thousandth : _noop
+      curry(padDecimalPlaces)(placeholder, 6),
+      usethousand ? thousand : _noop
     );
 
     const _balance = formatBalance(data?.balance);

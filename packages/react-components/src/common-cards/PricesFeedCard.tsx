@@ -34,7 +34,7 @@ export const PricesFeedCard: FC = memo(() => {
             className='ac-font-medium'
             data={convertToFixed18(getValueFromTimestampValue(data))}
             prefix='$'
-            withPadEndDecimal
+            withpadDecimalPlaces
           />
         );
       },
