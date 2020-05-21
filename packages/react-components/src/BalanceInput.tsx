@@ -119,7 +119,7 @@ export const BalanceInput: FC<Props> = memo(({
             onClick={onMax}
             type='ghost'
           >
-            max
+            MAX
           </Button>
         ) : null
       }

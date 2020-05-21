@@ -54,7 +54,7 @@ export const useDexTotalDeposit = (): HooksReturnType => {
         });
       });
     });
-  }, [active, api.derive, api.query.dex, prices, calcTotalDeposit]);
+  }, [active?.address, api.derive, api.query.dex, prices, calcTotalDeposit]);
 
   useEffect(() => {
     if (active && prices) {

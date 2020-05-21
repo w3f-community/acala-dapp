@@ -16,13 +16,13 @@ const App: FC = () => {
       <Notification>
         <ApiProvider
           ConnectError={<ConnectError />}
-          endpoint={endpoint}
           Loading={<FullLoading />}
+          endpoint={endpoint}
         >
           <AccountProvider
-            applicationName={'Acala Dapp'}
             NoAccounts={<NoAccounts />}
             NoExtensions={<NoExtensions />}
+            applicationName={'Acala Dapp'}
           >
             <GlobalStoreProvider>
               <RouterProvider config={routerConfig} />

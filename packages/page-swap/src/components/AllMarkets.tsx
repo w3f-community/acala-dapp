@@ -6,6 +6,7 @@ import { Section, Card, Table, TableItem } from '@acala-dapp/ui-components';
 import { Token, DexExchangeRate, DexPoolSize } from '@acala-dapp/react-components';
 
 import { SwapContext } from './SwapProvider';
+import classes from './AllMarkets.module.scss';
 
 export const AllMarkets: FC = () => {
   const { dexBaseCurrency, supplyCurrencies } = useContext(SwapContext);
@@ -45,6 +46,7 @@ export const AllMarkets: FC = () => {
         <Table
           config={tableConfig}
           data={_supplyCurrencies}
+          headerCellClassName={classes.headerCell}
           showHeader
         />
       </Card>

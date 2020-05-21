@@ -26,6 +26,7 @@ type Props<T> = {
   rawProps?: RawProps<T>;
   showHeader?: boolean;
   cellClassName?: string;
+  headerCellClassName?: string;
   empty?: ReactNode;
   size?: 'small' | 'normal';
   loading?: boolean;
@@ -36,6 +37,7 @@ export function Table<T extends { [k: string]: any }> ({
   config,
   data,
   empty,
+  headerCellClassName,
   loading = false,
   rawProps,
   showHeader = false,
@@ -121,7 +123,7 @@ export function Table<T extends { [k: string]: any }> ({
         </tr>
       );
     }
-  }, [loading, data, empty, config, rawProps, cellClassName, renderItem]);
+  }, [loading, data, data?.length, empty, config, rawProps, cellClassName, renderItem]);
 
   return (
     <table className={clsx(classes.root, classes[size])}>
@@ -144,7 +146,8 @@ export function Table<T extends { [k: string]: any }> ({
                   className={
                     clsx(
                       classes.headerCell,
-                      classes[item.align || 'center']
+                      classes[item.align || 'center'],
+                      headerCellClassName
                     )
                   }
                   key={`table-header-${randomId.current}-${index}`}

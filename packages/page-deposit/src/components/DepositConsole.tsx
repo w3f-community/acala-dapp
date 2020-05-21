@@ -7,7 +7,7 @@ import { Fixed18 } from '@acala-network/app-util';
 
 import { Card, nextTick } from '@acala-dapp/ui-components';
 import { useDexExchangeRate, useFormValidator } from '@acala-dapp/react-hooks';
-import { BalanceInput, TxButton, numToFixed18Inner, DexExchangeRate, DexPoolSize, DexUserShare } from '@acala-dapp/react-components';
+import { BalanceInput, TxButton, numToFixed18Inner, DexExchangeRate, DexPoolSize, DexUserShare, UserBalance } from '@acala-dapp/react-components';
 
 import classes from './DepositConsole.module.scss';
 import { ReactComponent as AddIcon } from '../assets/add.svg';
@@ -40,6 +40,7 @@ const InputArea: FC<InputAreaProps> = memo(({
     <div className={classes.inputAreaRoot}>
       <div className={classes.inputAreaTitle}>
         <p>Deposit</p>
+        <div className={classes.inputAreaBalance}>Balance: <UserBalance token={token} /></div>
       </div>
       <BalanceInput
         currencies={currencies}
@@ -91,6 +92,13 @@ export const DepositConsole: FC = memo(() => {
     nextTick(() => { form.setFieldValue('base', Fixed18.fromNatural(value).mul(rate).toNumber()); });
   };
 
+  const handleBaseInput = (event: React.ChangeEvent<any>): void => {
+    const value = Number(event.target.value);
+
+    form.handleChange(event);
+    nextTick(() => { form.setFieldValue('other', Fixed18.fromNatural(value).div(rate).toNumber()); });
+  };
+
   const handleSuccess = (): void => {
     // reset form
     form.resetForm();
@@ -134,7 +142,7 @@ export const DepositConsole: FC = memo(() => {
           error={form.errors.base}
           id={'base'}
           name={'base'}
-          onChange={form.handleChange}
+          onChange={handleBaseInput}
           token={baseCurrencyId}
           value={form.values.base as number}
         />

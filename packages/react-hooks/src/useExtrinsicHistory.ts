@@ -119,7 +119,7 @@ export const useHistory = (query?: QueryParams): HooksReturnType => {
     }).finally(() => {
       setLoading(false);
     });
-  }, [query]);
+  }, [query?.method, query?.section, query?.signer]);
 
   useEffect(() => {
     const subscribe = refresh$.subscribe(() => {

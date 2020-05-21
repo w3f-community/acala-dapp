@@ -42,7 +42,7 @@ const InputArea: FC<InputAreaProps> = memo(({
     <div className={classes.inputAreaRoot}>
       <div className={classes.inputAreaTitle}>
         <p>Pool Shares</p>
-        <p>
+        <p className={classes.inputAreaBalance}>
           Balance: {share ? convertToFixed18(share).toString() : ''}
         </p>
       </div>

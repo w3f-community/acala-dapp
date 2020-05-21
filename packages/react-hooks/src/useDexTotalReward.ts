@@ -38,7 +38,7 @@ export const useDexTotalReward = (): HooksReturnType => {
     const reward = totalInterest.mul(share.div(totalShares)).sub(withdrawnInterest);
 
     return reward;
-  }, [active, api.query.dex]);
+  }, [active?.address, api.query.dex]);
 
   const run = useCallback(() => {
     api.rpc.chain.subscribeNewHeads(async () => {

@@ -6,6 +6,7 @@ html, body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #333333;
+  font-weight: 400;
 }
 
 p, ul {
@@ -23,4 +24,12 @@ input {
 
 p, span {
   cursor: inherit;
+}
+
+.ac-font-medium {
+  font-weight: 500;
+}
+
+.ac-font-black {
+  color: #333333;
 }

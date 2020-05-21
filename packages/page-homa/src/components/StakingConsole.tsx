@@ -107,20 +107,17 @@ export const StakingConsole: FC = () => {
         />
       </Grid>
       <Grid item>
-        <Grid container
-          justify='center'>
-          <TxButton
-            className={classes.txBtn}
-            disabled={checkDisabled()}
-            method='mint'
-            onSuccess={resetForm}
-            params={[numToFixed18Inner(form.values.stakingBalance)]}
-            section='homa'
-            size='middle'
-          >
-            Deposit
-          </TxButton>
-        </Grid>
+        <TxButton
+          className={classes.txBtn}
+          disabled={checkDisabled()}
+          method='mint'
+          onSuccess={resetForm}
+          params={[numToFixed18Inner(form.values.stakingBalance)]}
+          section='homa'
+          size='middle'
+        >
+          Deposit
+        </TxButton>
       </Grid>
       <Grid item>
         <List

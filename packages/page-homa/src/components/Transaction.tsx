@@ -26,8 +26,7 @@ export const Transaction: FC = () => {
             <FormatBalance
               balance={Fixed18.fromParts(data?.params[0] || 0)}
               currency={stakingPool?.stakingCurrency}
-            />
-          );
+            />);
         }
 
         if (data.method === 'redeem') {
@@ -86,7 +85,7 @@ export const Transaction: FC = () => {
       ),
       title: 'Result'
     }
-  ], [stakingPool]);
+  ], [stakingPool?.liquidCurrency, stakingPool?.stakingCurrency]);
 
   return (
     <BaseTxHistory

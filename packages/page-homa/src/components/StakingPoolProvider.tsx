@@ -20,7 +20,7 @@ export const StakingPoolProvider: FC = memo(({ children }) => {
     if (result?.stakingPool) {
       setEnd();
     }
-  }, [result, setEnd]);
+  }, [result, result?.stakingPool, setEnd]);
 
   return (
     <StakingPoolContext.Provider value={{ ...result, action, setAction }}>

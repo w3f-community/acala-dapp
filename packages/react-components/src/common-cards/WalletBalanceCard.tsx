@@ -98,6 +98,7 @@ export const WalletBalanceCard: FC<Props> = memo(({
       padding={false}
     >
       <Table
+        cellClassName={'ac-font-black'}
         config={tableConfig}
         data={allToken}
         showHeader={showHeader}
