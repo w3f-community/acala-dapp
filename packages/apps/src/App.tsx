@@ -9,7 +9,7 @@ import { RouterProvider } from './components/RouterProvider';
 import { config as routerConfig } from './router-config';
 
 const App: FC = () => {
-  const { endpoint } = useAppSetting();
+  const { endpoints } = useAppSetting();
 
   return (
     <UIProvider>
@@ -17,7 +17,7 @@ const App: FC = () => {
         <ApiProvider
           ConnectError={<ConnectError />}
           Loading={<FullLoading />}
-          endpoint={endpoint}
+          endpoints={endpoints}
         >
           <AccountProvider
             NoAccounts={<NoAccounts />}

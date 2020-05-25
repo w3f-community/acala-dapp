@@ -6,7 +6,7 @@ import { EventsWather } from '@acala-dapp/react-components';
 const CONNECT_TIMEOUT = 1000 * 60; // one minute
 
 interface ApiProps {
-  endpoint: string;
+  endpoints: string | string[];
   children: ReactNode;
   ConnectError?: ReactNode;
   Loading?: ReactNode;
@@ -43,7 +43,7 @@ export const ApiProvider: FC<ApiProps> = ({
   ConnectError,
   Loading,
   children,
-  endpoint
+  endpoints,
 }) => {
   const [connectStatus, setConnectStatus] = useState<ConnectStatus>(
     {} as ConnectStatus
@@ -71,14 +71,14 @@ export const ApiProvider: FC<ApiProps> = ({
   };
 
   useEffect(() => {
-    if (!endpoint) {
+    if (!endpoints) {
       return;
     }
 
     // reset connect status
     setConnectStatus({ connected: false, error: false, loading: true });
     // content endpoint
-    const provider = new WsProvider(endpoint);
+    const provider = new WsProvider(endpoints);
     const timeout = (time: number): Promise<void> =>
       new Promise((resolve, reject) => setTimeout(() => { reject(new Error('timeout')); }, time));
 
@@ -94,7 +94,7 @@ export const ApiProvider: FC<ApiProps> = ({
       .catch(() => {
         setConnectStatus({ connected: false, error: true, loading: false });
       });
-  }, [endpoint]);
+  }, [endpoints]);
 
   useEffect(() => {
     if (!connectStatus.connected) return;

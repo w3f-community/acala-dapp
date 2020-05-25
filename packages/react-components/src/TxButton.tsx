@@ -137,7 +137,9 @@ export const TxButton: FC<PropsWithChildren<Props>> = ({
                 result.status.isInBlock ||
                 result.status.isFinalized
               ) {
+                unsub && unsub();
                 resolve(result);
+                extractEvents(api, result as unknown as SubmittableResult, createNotification);
               } else if (
                 result.status.isUsurped ||
                 result.status.isDropped ||
@@ -145,12 +147,6 @@ export const TxButton: FC<PropsWithChildren<Props>> = ({
               ) {
                 unsub && unsub();
                 reject(result);
-              }
-
-              if (result.status.isFinalized) {
-                unsub && unsub();
-              } else {
-                extractEvents(api, result as unknown as SubmittableResult, createNotification);
               }
             }).catch(reject);
           })();
